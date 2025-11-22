@@ -1,10 +1,9 @@
 import React from 'react';
+import HeroOne from './HeroOne';
 
 const Home = () => {
     return (
-        <div className='text-green-800'>
-            home page
-        </div>
+         <HeroOne/>
     );
 };
 
