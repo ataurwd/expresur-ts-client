@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion, Variants } from 'framer-motion'
 import card from './../../assets/card.png'
+import Avatar  from  './../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png'
 
 interface Testimonial {
   text: string
@@ -11,12 +12,12 @@ interface Testimonial {
 
 const Quedicen: React.FC = () => {
   const testimonials: Testimonial[] = [
-    { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
-    { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
-    { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
-    { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
-    { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
-    { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
+    { text: "rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat..... ", name: "Karen", role: "Lorem ipsum dolor", avatar: Avatar },
+    { text: "rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat..... ", name: "Karen", role: "Lorem ipsum dolor", avatar: Avatar },
+    { text: "rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat..... ", name: "Karen", role: "Lorem ipsum dolor", avatar: Avatar },
+    { text: "rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat..... ", name: "Karen", role: "Lorem ipsum dolor", avatar: Avatar },
+    { text: "rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat..... ", name: "Karen", role: "Lorem ipsum dolor", avatar: Avatar },
+    { text: "rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat..... ", name: "Karen", role: "Lorem ipsum dolor", avatar: Avatar },
   ]
 
   const [startIndex, setStartIndex] = useState<number>(0)

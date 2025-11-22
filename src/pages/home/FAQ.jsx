@@ -35,22 +35,6 @@ const FAQ = () => {
     },
   }
 
-  const seamVariants = {
-    hidden: { width: 0 },
-    visible: {
-      width: "100%",
-      transition: { duration: 1.2, ease: "easeInOut", delay: 0.6 },
-    },
-  }
-
-  const dotsVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.8, delay: 1.2 },
-    },
-  }
-
   return (
     <section
       className="
@@ -98,36 +82,18 @@ const FAQ = () => {
           Preguntas Frecuentes (FAQ)
         </motion.h2>
 
-        {/* SEAM */}
-        <div className="flex justify-center mt-6 md:mt-8 mb-10 md:mb-16">
-          <div className="relative w-[250px] md:w-[350px] lg:w-[420px] h-[1px] bg-white/20 rounded-full overflow-hidden">
-            <motion.div
-              variants={seamVariants}
-              className="absolute inset-0 bg-white/40"
-            />
-            <motion.div variants={dotsVariants} className="absolute inset-0 flex items-center justify-center">
-              <div className="flex gap-2 md:gap-3">
-                {Array.from({ length: 16 }).map((_, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 1.3 + i * 0.04, duration: 0.4 }}
-                    className="
-                      block
-                      w-[6px]
-                      h-[6px]
-                      md:w-[8px]
-                      md:h-[8px]
-                      rounded-full
-                      bg-[#F5C65A]
-                    "
-                  />
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
+        {/* ⬇️ FIXED SEAM — ORANGE LINE, 643PX, NO DOTS */}
+        <motion.div className="flex justify-center mt-6 md:mt-8 mb-10 md:mb-16">
+          <div
+            className="
+              bg-[#F5C65A]
+              w-[643px]
+              h-[0px]
+              border-t-[3px]
+              border-[#F5C65A]
+            "
+          ></div>
+        </motion.div>
 
         {/* GRID CONTENT */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 lg:gap-x-20 gap-y-12 md:gap-y-16">
@@ -137,7 +103,6 @@ const FAQ = () => {
               <motion.div
                 key={i}
                 variants={itemVariants}
-                
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <h3
@@ -192,7 +157,6 @@ const FAQ = () => {
               <motion.div
                 key={i}
                 variants={itemVariants}
-                
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <h3
