@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion, Variants } from 'framer-motion'
 import card from './../../assets/card.png'
-import Avatar  from  './../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png'
+import Avatar from './../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png'
 
 interface Testimonial {
   text: string
@@ -50,30 +50,46 @@ const Quedicen: React.FC = () => {
   }
 
   return (
-    <div className="w-full bg-[#026432] py-24 overflow-hidden">
+    <div className="w-full bg-[#026432] overflow-hidden">
+
+      {/* TITLE */}
       <motion.h2
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={titleVariants}
-        className="text-[rgba(243,243,243,1)] font-bold text-[77px] leading-[92px] tracking-[4.77px] text-left max-w-7xl mx-auto mb-20"
+        className="
+          text-[rgba(243,243,243,1)] font-bold 
+          lg:text-[77px] leading-[92px] tracking-[4.77px] 
+          text-left max-w-7xl mx-auto mb-20
+          md:text-[77px] md:leading-[92px]
+          text-4xl leading-snug text-center
+          sm:text-[10px] sm:leading-snug
+        "
       >
         ¿Qué dicen nuestros clientes?
       </motion.h2>
 
       <div className="relative w-full flex items-center justify-center px-12">
-        {/* LEFT ARROW */}
+
+        {/* LEFT ARROW — HIDDEN ON MOBILE */}
         <motion.button
           onClick={prev}
           whileHover={{ scale: 1.2, x: -10 }}
           whileTap={{ scale: 0.9 }}
-          className="absolute left-5 text-orange-400 text-4xl cursor-pointer z-10"
+          className="absolute left-5 text-orange-400 text-4xl cursor-pointer z-10 hidden md:block"
         >
           ❮
         </motion.button>
 
-        {/* VISIBLE CARDS */}
-        <div className="flex justify-center items-start gap-10 w-full max-w-7xl">
+        {/* CARD LIST */}
+        <div
+          className="
+            flex justify-center items-start gap-10 w-full max-w-7xl
+            md:flex-row
+            flex-col
+          "
+        >
           {testimonials
             .slice(startIndex, startIndex + visibleCount)
             .map((item, index) => (
@@ -85,10 +101,19 @@ const Quedicen: React.FC = () => {
                 viewport={{ once: true, margin: "-100px" }}
                 variants={cardVariants}
                 whileHover={{ y: -20, transition: { duration: 0.4, ease: "easeOut" } }}
-                className="flex flex-col items-start"
+                className="flex flex-col items-start mx-auto"
               >
+
+                {/* CARD */}
                 <div
-                  className="w-[456px] h-[385px] pt-[48px] px-[48px] pb-10 flex flex-col justify-start transition-all duration-500"
+                  className="
+                    w-[456px] h-[385px] 
+                    pt-[48px] px-[48px] pb-10 
+                    flex flex-col justify-start
+                    transition-all duration-500
+                    md:w-[456px]
+                    w-[90%]
+                  "
                   style={{
                     backgroundImage: `url(${card})`,
                     backgroundSize: "100% 100%",
@@ -114,18 +139,27 @@ const Quedicen: React.FC = () => {
                   </motion.div>
                 </div>
 
-                {/* Avatar + Name */}
+                {/* AVATAR + INFO - LEFT ALIGNED ON MOBILE */}
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.2 + 1.1, duration: 0.7 }}
-                  className="flex items-center gap-4 mt-6 w-[456px]"
+                  className="
+                    flex items-center gap-4 
+                    mt-6 
+                    w-[456px]
+                    md:w-[456px]
+                    w-[90%]
+                  "
                 >
                   <motion.img
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     src={item.avatar}
                     alt="avatar"
-                    className="w-[90px] h-[90px] rounded-full object-cover border border-[#707070] shadow-lg flex-shrink-0"
+                    className="
+                      w-[90px] h-[90px] rounded-full object-cover 
+                      border border-[#707070] shadow-lg flex-shrink-0
+                    "
                   />
 
                   <div className="flex flex-col items-start">
@@ -137,12 +171,12 @@ const Quedicen: React.FC = () => {
             ))}
         </div>
 
-        {/* RIGHT ARROW */}
+        {/* RIGHT ARROW — HIDDEN ON MOBILE */}
         <motion.button
           onClick={next}
           whileHover={{ scale: 1.2, x: 10 }}
           whileTap={{ scale: 0.9 }}
-          className="absolute right-5 text-orange-400 text-4xl cursor-pointer z-10"
+          className="absolute right-5 text-orange-400 text-4xl cursor-pointer z-10 hidden md:block"
         >
           ❯
         </motion.button>
