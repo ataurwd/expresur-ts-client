@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <>
       {/* Desktop & Tablet Navbar */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
+      <header className="bg-white sticky top-0 z-50">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -107,7 +107,7 @@ const Navbar = () => {
             className="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6">
               <div className="flex justify-between items-center">
                 <img src={Logo} alt="Expresur" className="h-11" />
                 <IconButton onClick={() => setMobileMenuOpen(false)}>
