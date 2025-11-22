@@ -8,7 +8,6 @@ import Newone from './Newone';
 import LogisticsTimeline from './LogisticsTimeline';
 import Nuestros from './Nuestros';
 import Rastrear from './Rastrear';
-import Hero from './Hero';
 
 const Home = () => {
     return (

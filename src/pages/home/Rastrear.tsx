@@ -8,7 +8,7 @@ const Rastrear = () => {
         className="
           w-full
           px-6 lg:px-20
-          py-14 lg:py-20
+         lg:py-20
           grid grid-cols-1 lg:grid-cols-2
           gap-12 lg:gap-20
         "
@@ -16,7 +16,7 @@ const Rastrear = () => {
         {/* LEFT CONTENT */}
         <div className="order-2 lg:order-1 flex flex-col justify-start">
           <h1 className="text-5xl lg:text-6xl xl:text-7xl font-semibold text-orange-500 leading-tight">
-            Rastrear <br /> paquete
+            Rastrear paquete
           </h1>
 
           {/* TEXT WITH CLEAN GAPS */}
@@ -70,15 +70,15 @@ const Rastrear = () => {
         </div>
 
         {/* RIGHT IMAGE (kept EXACT same size) */}
-        <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+        <div className="order-1 lg:order-2 flex justify-center lg:justify-end ">
           <img
             src={rastrearImg}
             alt="Rastrear paquete"
             className="
-              w-full max-w-[1400px]
+              w-[400px] max-w-[1350px]
               h-auto
-              lg:w-[1400px] lg:h-[900px]
-              object-contain drop-shadow-2xl
+              lg:w-[1350px] lg:h-[900px]
+              object-contain drop-shadow-2xl ml-10
             "
           />
         </div>
