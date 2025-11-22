@@ -3,52 +3,60 @@ import icon from '../../assets/Grupo-icon.png'
 
 const LogisticsTimeline = () => {
   return (
-     <div className="w-full bg-[#026432] py-24 overflow-x-visible flex justify-center">
-      {/* Main wrapper must be wide enough to contain the image + line */}
-      <div className="relative" style={{ width: "2087.92px" }}>
-        
-        {/* ICON STRIP IMAGE — EXACT SIZE */}
+    <div className="w-full bg-[#026432] py-24 overflow-x-visible flex justify-center">
+
+      {/* WRAPPER — Desktop unchanged, Mobile adjusts */}
+      <div
+        className="relative 
+          w-[2087.92px] 
+          md:w-[2087.92px]
+          w-full 
+          overflow-hidden
+        "
+      >
+
+        {/* ICON STRIP — Desktop same, Mobile resized */}
         <img
           src={icon}
           alt="Logistics Strip"
-          style={{
-            width: "3087.92px",
-            height: "327.03px",
-          }}
-          className="object-contain mx-auto"
+          className="
+            object-contain mx-auto
+            md:w-[3087.92px] md:h-[327.03px]
+            w-[900px] h-auto
+          "
         />
 
-        {/* YELLOW LINE */}
+        {/* YELLOW LINE — Desktop unchanged */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 bg-[rgba(250,146,29,1)] mt-[120px]"
-          style={{
-            width: "1800px",
-            height: "6px",
-            top: "180px",
-          }}
+          className="
+            absolute left-1/2 -translate-x-1/2 bg-[rgba(250,146,29,1)] mt-[120px]
+            md:w-[1800px] md:h-[6px]
+            md:top-[180px]
+            w-[300px] h-[4px]
+            top-[150px]
+          "
         ></div>
 
-        {/* YELLOW DOTS — EXACT SIZE + 270px GAP */}
+        {/* DOTS — Desktop unchanged, Mobile smaller + closer */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 flex mt-[120px]"
-          style={{
-            gap: "270px",
-            top: "162px",
-          }}
+          className="
+            absolute left-1/2 -translate-x-1/2 flex mt-[120px]
+            md:gap-[270px] md:top-[162px]
+            gap-[40px] 
+            top-[138px]
+          "
         >
-          {Array(7)
-            .fill(0)
-            .map((_, idx) => (
-              <div
-                key={idx}
-                className="rounded-full bg-[rgba(250,146,29,1)]"
-                style={{
-                  width: "38px",
-                  height: "38px",
-                }}
-              ></div>
-            ))}
+          {Array(7).fill(0).map((_, idx) => (
+            <div
+              key={idx}
+              className="rounded-full bg-[rgba(250,146,29,1)]
+                md:w-[38px] md:h-[38px]
+                w-[14px] h-[14px]
+              "
+            ></div>
+          ))}
         </div>
+
       </div>
     </div>
   )
