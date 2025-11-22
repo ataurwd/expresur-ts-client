@@ -54,7 +54,7 @@ const FAQ = () => {
   return (
     <section
       className="
-        bg-[#045f3a]
+        bg-[#026432ff]
         w-full
         max-w-[1944px]
         mx-auto
@@ -137,7 +137,7 @@ const FAQ = () => {
               <motion.div
                 key={i}
                 variants={itemVariants}
-                whileHover={{ x: 10 }}
+                
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <h3
@@ -192,7 +192,7 @@ const FAQ = () => {
               <motion.div
                 key={i}
                 variants={itemVariants}
-                whileHover={{ x: -10 }}
+                
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <h3

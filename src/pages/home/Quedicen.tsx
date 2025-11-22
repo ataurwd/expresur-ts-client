@@ -1,9 +1,16 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import card from './../../assets/card.png'
 
-const Quedicen = () => {
-  const testimonials = [
+interface Testimonial {
+  text: string
+  name: string
+  role: string
+  avatar: string
+}
+
+const Quedicen: React.FC = () => {
+  const testimonials: Testimonial[] = [
     { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
     { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
     { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
@@ -12,7 +19,7 @@ const Quedicen = () => {
     { text: "rápidos, económicos y seguros ...", name: "Karen", role: "Lorem ipsum dolor", avatar: "/mnt/data/5e523848-47c0-47a8-b100-36f3663b4243.png" },
   ]
 
-  const [startIndex, setStartIndex] = useState(0)
+  const [startIndex, setStartIndex] = useState<number>(0)
   const visibleCount = 3
 
   const next = () => {
@@ -27,14 +34,14 @@ const Quedicen = () => {
     }
   }
 
-  const titleVariants = {
+  const titleVariants: Variants = {
     hidden: { opacity: 0, x: -80 },
     visible: { opacity: 1, x: 0, transition: { duration: 1, ease: "easeOut" } }
   }
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 80 },
-    visible: (i) => ({
+    visible: (i: number) => ({
       opacity: 1,
       y: 0,
       transition: { delay: i * 0.2 + 0.4, duration: 0.9, ease: "easeOut" }
@@ -66,55 +73,67 @@ const Quedicen = () => {
 
         {/* VISIBLE CARDS */}
         <div className="flex justify-center items-start gap-10 w-full max-w-7xl">
-          {testimonials.slice(startIndex, startIndex + visibleCount).map((item, index) => (
-            <motion.div
-              key={startIndex + index}
-              custom={index}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={cardVariants}
-              whileHover={{ y: -20, transition: { duration: 0.4, ease: "easeOut" } }}
-              className="flex flex-col items-center"
-            >
-              <div
-                className="w-[456px] h-[385px] pt-[48px] px-[48px] pb-10 flex flex-col justify-start transition-all duration-500"
-                style={{ backgroundImage: `url(${card})`, backgroundSize: "100% 100%", backgroundRepeat: "no-repeat" }}
-              >
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: index * 0.2 + 0.8, duration: 0.8 }}
-                  className="text-[18px] leading-[28px] text-black text-left"
-                >
-                  {item.text}
-                </motion.p>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: index * 0.2 + 1, duration: 0.6 }}
-                  className="flex text-yellow-500 text-xl mt-4"
-                >
-                  ★★★★★
-                </motion.div>
-              </div>
+          {testimonials
+            .slice(startIndex, startIndex + visibleCount)
+            .map((item, index) => (
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 + 1.1, duration: 0.7 }}
-                className="flex flex-col items-center mt-6"
+                key={startIndex + index}
+                custom={index}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={cardVariants}
+                whileHover={{ y: -20, transition: { duration: 0.4, ease: "easeOut" } }}
+                className="flex flex-col items-start"
               >
-                <motion.img
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  src={item.avatar}
-                  alt="avatar"
-                  className="w-[100px] h-[100px] rounded-full object-cover border border-[#707070] shadow-lg"
-                />
-                <h3 className="mt-3 text-white text-lg font-semibold">{item.name}</h3>
-                <p className="text-gray-300 text-sm">{item.role}</p>
+                <div
+                  className="w-[456px] h-[385px] pt-[48px] px-[48px] pb-10 flex flex-col justify-start transition-all duration-500"
+                  style={{
+                    backgroundImage: `url(${card})`,
+                    backgroundSize: "100% 100%",
+                    backgroundRepeat: "no-repeat"
+                  }}
+                >
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: index * 0.2 + 0.8, duration: 0.8 }}
+                    className="text-[18px] leading-[28px] text-black text-left"
+                  >
+                    {item.text}
+                  </motion.p>
+
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: index * 0.2 + 1, duration: 0.6 }}
+                    className="flex text-yellow-500 text-xl mt-4"
+                  >
+                    ★★★★★
+                  </motion.div>
+                </div>
+
+                {/* Avatar + Name */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 + 1.1, duration: 0.7 }}
+                  className="flex items-center gap-4 mt-6 w-[456px]"
+                >
+                  <motion.img
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    src={item.avatar}
+                    alt="avatar"
+                    className="w-[90px] h-[90px] rounded-full object-cover border border-[#707070] shadow-lg flex-shrink-0"
+                  />
+
+                  <div className="flex flex-col items-start">
+                    <h3 className="text-white text-lg font-semibold">{item.name}</h3>
+                    <p className="text-gray-300 text-sm">{item.role}</p>
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
+            ))}
         </div>
 
         {/* RIGHT ARROW */}

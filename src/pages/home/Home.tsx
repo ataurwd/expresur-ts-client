@@ -2,19 +2,19 @@ import React from 'react';
 import HeroOne from './HeroOne';
 import Seccion from './Seccion';
 import FAQ from './FAQ';
-import TiendaOnline  from './tiendaonline'
-import Quedicen from './Quedicen';
+import Quedicen2 from './Quedicen';
+import Newone from './Newone';
+
 
 const Home = () => {
     return (
 <>
          <HeroOne/>
-
-
         <Seccion/>
         <FAQ/>
-        <TiendaOnline/>
-        <Quedicen/>
+        <Newone/>
+        <Quedicen2/>
+        
 </>
     );
 };
