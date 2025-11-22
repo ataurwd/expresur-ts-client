@@ -1,93 +1,46 @@
 import React from "react";
-import { motion, Variants } from "framer-motion";
 import HeroImg from "../../assets/Hero1.png";
 import HeroImg2 from "../../assets/Hero2.png";
-
-const containerVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.12,
-    },
-  },
-};
-
-const textVariant: Variants = {
-  hidden: { opacity: 0, x: -30 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
-const btnVariant: Variants = {
-  hover: { scale: 1.03, boxShadow: "0 10px 30px rgba(0,0,0,0.15)" },
-  tap: { scale: 0.98 },
-};
-
-const imageVariant: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.98 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "circOut" } },
-};
-
-const floatAnim: Variants = {
-  animate: {
-    y: [0, -8, 0],
-    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-  },
-};
+import HeroBg from "../../assets/HeroBg.png";
 
 const HeroOne: React.FC = () => {
   return (
-    <section className="w-full bg-gradient-to-b from-[#005f37] to-[#a8cfc0] lg:h-[873px] py-20 overflow-hidden">
-      {/* wrapper caps display at 1920px and hides overflow */}
+    <section
+      className="hero-one w-full bg-gradient-to-b from-[#005f37] to-[#a8cfc0] lg:h-[873px] py-12 lg:py-20 overflow-hidden relative"
+      style={{
+        backgroundImage: `url(${(HeroBg as any).src ?? HeroBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="w-full max-w-[1920px] mx-auto px-6 relative overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative">
-          {/* LEFT CONTENT */}
-          <motion.div
-            className="text-white space-y-7 mt-[-25%] ml-14"
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-          >
-            <motion.h1
-              variants={textVariant}
-              className="text-4xl md:text-5xl lg:text-7xl font-[600] leading-tight tracking-tight"
-            >
+
+          {/* LEFT CONTENT (original desktop classes preserved) */}
+          <div className="text-white space-y-7 mt-[-25%] ml-14">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-[600] leading-tight tracking-tight">
               PROVEEDOR <br />
               DE SERVICIOS <br />
               LOGÍSTICOS
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              variants={textVariant}
-              className="max-w-xl text-sm md:text-base text-green-100"
-            >
+            <p className="max-w-xl text-sm md:text-base text-green-100">
               Soluciones logísticas integrales — transporte, almacenamiento y distribución con
               tecnología para que tu operación fluya.
-            </motion.p>
+            </p>
 
-            <motion.div variants={textVariant}>
-              <motion.button
-                variants={btnVariant}
-                whileHover="hover"
-                whileTap="tap"
-                type="button"
-                className="inline-flex items-center gap-3 px-6 py-3 bg-white text-green-900 rounded-full font-semibold shadow-lg hover:opacity-95 transition"
-              >
-                SOLICITAR COTIZACIÓN
-              </motion.button>
-            </motion.div>
-          </motion.div>
+            <button
+              type="button"
+              className="inline-flex items-center gap-3 px-6 py-3 bg-white text-green-900 rounded-full font-semibold shadow-lg hover:opacity-95 transition"
+            >
+              SOLICITAR COTIZACIÓN
+            </button>
+          </div>
 
-          {/* RIGHT IMAGES (sizes preserved like original) */}
-          <motion.div
-            className="relative flex justify-center mt-10 md:justify-end"
-            variants={imageVariant}
-            initial="hidden"
-            animate="show"
-            aria-hidden={true}
-          >
-            {/* Background HeroImg2 — same large width classes as before */}
-            <motion.img
+          {/* RIGHT IMAGES (original desktop classes preserved) */}
+          <div className="relative flex justify-center mt-10 md:justify-end" aria-hidden={true}>
+            {/* Background HeroImg2 */}
+            <img
               src={(HeroImg2 as any).src ?? (HeroImg2 as any)}
               alt="Logistics illustration large"
               className="
@@ -95,29 +48,103 @@ const HeroOne: React.FC = () => {
                 w-[700px] sm:w-[1100px] md:w-[1400px] lg:w-[1700px] xl:w-[2100px] 2xl:w-[2400px]
                 mr-[-160px] md:mr-[-380px] lg:mr-[-600px]
               "
-              variants={floatAnim}
-              initial="animate"
-              animate="animate"
             />
 
-            {/* Foreground HeroImg — added specific class 'hero-foreground' */}
-            <motion.img
+            {/* Foreground HeroImg — EXACT FIGMA SIZE */}
+            <img
               src={(HeroImg as any).src ?? (HeroImg as any)}
               alt="Logistics detail"
-              className={
-                "hero-foreground absolute z-30 object-cover rounded-lg " +
-                "w-[320px] sm:w-[480px] md:w-[700px] lg:w-[1000px] xl:w-[1300px] 2xl:w-[1500px] " +
-                "left-1/2 transform -translate-x-1/2 sm:left-auto sm:translate-x-0 " +
-                "sm:right-6 md:right-[-60px] lg:right-[-180px] " +
-                "bottom-[240px] sm:bottom-[-140px] md:bottom-[-220px] lg:bottom-[18%]"
-              }
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.7, ease: "easeOut" }}
+              className=" mr-[-700px]
+                hero-foreground absolute z-30 object-contain max-w-none
+                w-[1459px] h-[866px]
+                left-1/2 transform -translate-x-1/2 sm:left-auto sm:translate-x-0
+                sm:right-6 md:right-[-60px] lg:right-[-20px] mb-[-12%]
+                bottom-[240px] sm:bottom[-120px] md:bottom[-200px] lg:bottom-[20%]
+              "
             />
-          </motion.div>
+          </div>
+
         </div>
       </div>
+
+      {/* MOBILE-ONLY OVERRIDES: these WILL NOT affect desktop (they only run under 768px) */}
+      <style>{`
+        /* Target small devices: max-width 767px (you can adjust breakpoint if needed) */
+        @media (max-width: 767px) {
+          /* make the section padding tighter on mobile */
+          .hero-one { padding-top: 16px !important; padding-bottom: 16px !important; }
+
+          /* LEFT CONTENT: make text compact and readable and center it */
+          .hero-one .text-white {
+            margin-top: 0 !important;
+            margin-left: 0 !important;
+            padding: 12px 6px !important;
+            text-align: center;
+          }
+          .hero-one h1 {
+            font-size: 1.6rem !important; /* ~ text-2xl */
+            line-height: 1.05 !important;
+            letter-spacing: 0 !important;
+          }
+          .hero-one p {
+            font-size: 0.85rem !important; /* slightly larger readable text */
+            max-width: 100% !important;
+            margin: 0 auto 8px auto !important;
+          }
+          .hero-one button {
+            width: 100% !important;
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+          }
+
+          /* RIGHT IMAGES: stack and make images relative so no absolute overlap */
+          .hero-one .relative.flex.justify-center {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 12px;
+          }
+
+          /* Hide the huge background decorative image (that was hidden on xs via hidden sm:block).
+             Instead show a scaled version that won't overflow. */
+          .hero-one img.hidden.sm\\:block {
+            display: block !important; /* ensure visible if Tailwind hidden/visible conflicts */
+            position: static !important;
+            width: 86% !important;
+            max-width: 420px !important;
+            height: auto !important;
+            margin: 0 auto !important;
+            transform: none !important;
+            right: auto !important;
+            mr: 0 !important;
+          }
+
+          /* Foreground image: make it non-absolute, centered and scaled */
+          .hero-one img.hero-foreground {
+            position: static !important;
+            left: auto !important;
+            transform: none !important;
+            right: auto !important;
+            bottom: auto !important;
+            margin: 0 auto !important;
+            width: 86% !important;
+            max-width: 420px !important;
+            height: auto !important;
+            object-fit: contain !important;
+          }
+
+          /* remove any negative margins that cause horizontal scroll */
+          .hero-one img {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+
+          /* small fix: ensure grid columns collapse nicely */
+          .hero-one .grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   );
 };
