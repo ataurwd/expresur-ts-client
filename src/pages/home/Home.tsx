@@ -5,6 +5,7 @@ import FAQ from './FAQ';
 
 import Quedicen from './Quedicen';
 import Newone from './Newone';
+import LogisticsTimeline from './LogisticsTimeline';
 
 const Home = () => {
     return (
@@ -16,6 +17,7 @@ const Home = () => {
         <FAQ/>
         <Newone/>
         <Quedicen/>
+        <LogisticsTimeline/>
 </>
     );
 };
