@@ -206,7 +206,7 @@ const Nuestros: React.FC = () => {
     } w-12 h-12`;
 
   return (
-    <section className="bg-white py-10 mx-auto max-w-[1773px] px-4 sm:px-6 lg:px-8">
+    <section className="bg-white py-10 mx-auto max-w-[1773px] px-4 sm:px-6 lg:px-8 mt-5">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -220,7 +220,7 @@ const Nuestros: React.FC = () => {
           overflow-hidden -mt-[10%]
         "
       >
-        <h2 className="text-center font-semibold mb-8 tracking-wide text-[clamp(1.5rem,3vw,3.25rem)]">
+        <h2 className="text-center text-5xl font-semibold mb-8 tracking-wide ">
           Nuestros servicios
         </h2>
 

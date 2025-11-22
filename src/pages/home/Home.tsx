@@ -12,7 +12,7 @@ import Rastrear from './Rastrear';
 const Home = () => {
     return (
         <>
-         <HeroOne/>
+            <HeroOne/>
          <Nuestros/>
          <Rastrear/>
 
