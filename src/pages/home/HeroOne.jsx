@@ -37,80 +37,89 @@ const floatAnim = {
 
 const HeroOne = () => {
   return (
-    <section className="w-full bg-gradient-to-r lg:h-[673px] from-[#03683A] to-[#DD9E44]
- py-20 overflow-hidden">
-      <div className="max-w-[1400px] my-auto mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* LEFT CONTENT */}
-        <motion.div
-          className="text-white space-y-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <motion.h1
-            variants={textVariant}
-            className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight"
+    <section className="w-full bg-gradient-to-b from-[#005f37] to-[#a8cfc0] lg:h-[873px] py-20 overflow-hidden">
+      {/* wrapper caps display at 1920px and hides overflow */}
+      <div className="w-full max-w-[1920px] mx-auto px-6 relative overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative">
+          {/* LEFT CONTENT */}
+          <motion.div
+            className="text-white space-y-7 mt-[-25%] ml-14"
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
           >
-            PROVEEDOR <br />
-            DE SERVICIOS <br />
-            LOGÍSTICOS
-          </motion.h1>
-
-          <motion.p
-            variants={textVariant}
-            className="max-w-xl text-sm md:text-base text-green-100"
-          >
-            Soluciones logísticas integrales — transporte, almacenamiento y distribución con tecnología para que tu operación fluya.
-          </motion.p>
-
-          <motion.div variants={textVariant}>
-            <motion.button
-              variants={btnVariant}
-              whileHover="hover"
-              whileTap="tap"
-              className="inline-flex items-center gap-3 px-6 py-3 bg-white text-green-900 rounded-full font-semibold shadow-lg hover:opacity-95 transition"
+            <motion.h1
+              variants={textVariant}
+              className="text-4xl md:text-5xl lg:text-7xl font-[600] leading-tight tracking-tight"
             >
-              SOLICITAR COTIZACIÓN
-            </motion.button>
+              PROVEEDOR <br />
+              DE SERVICIOS <br />
+              LOGÍSTICOS
+            </motion.h1>
+
+            <motion.p
+              variants={textVariant}
+              className="max-w-xl text-sm md:text-base text-green-100"
+            >
+              Soluciones logísticas integrales — transporte, almacenamiento y distribución con tecnología para que tu operación fluya.
+            </motion.p>
+
+            <motion.div variants={textVariant}>
+              <motion.button
+                variants={btnVariant}
+                whileHover="hover"
+                whileTap="tap"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-white text-green-900 rounded-full font-semibold shadow-lg hover:opacity-95 transition"
+              >
+                SOLICITAR COTIZACIÓN
+              </motion.button>
+            </motion.div>
           </motion.div>
-        </motion.div>
 
-        {/* RIGHT IMAGE / Illustration area */}
-     <motion.div
-  className="relative flex justify-center mt-10 md:justify-end"
-  variants={imageVariant}
-  initial="hidden"
-  animate="show"
->
-  {/* Background image (img2) */}
-  <motion.img
-    src={HeroImg2}
-    alt="Logistics illustration large"
-    className="w-full max-h-full max-w-lg rounded-xl object-cover z-0"
-    {...floatAnim}
-  />
+          {/* RIGHT IMAGES (sizes preserved like original) */}
+          <motion.div
+            className="relative flex justify-center mt-10 md:justify-end"
+            variants={imageVariant}
+            initial="hidden"
+            animate="show"
+            aria-hidden="true"
+          >
+            {/* Background HeroImg2 — same large width classes as before */}
+            <motion.img
+              src={HeroImg2}
+              alt="Logistics illustration large"
+              className="
+                hidden sm:block max-w-none object-cover z-0
+                w-[700px] sm:w-[1100px] md:w-[1400px] lg:w-[1700px] xl:w-[2100px] 2xl:w-[2400px]
+                mr-[-160px] md:mr-[-380px] lg:mr-[-600px]
+              "
+              {...floatAnim}
+            />
 
-  {/* Overlay image (img1) — always on top */}
-  <motion.img
-    src={HeroImg}
-    alt="Logistics detail"
-    className=" md:block absolute  mt-32  w-full  rounded-lg   object-cover z-20"
-    initial={{ opacity: 0, scale: 0.9, x: -20 }}
-    animate={{ opacity: 1, scale: 1, x: 0 }}
-    transition={{ delay: 0.6, duration: 0.7, ease: "easeOut" }}
-  />
-</motion.div>
-
+            {/* Foreground HeroImg — same large widths */}
+            <motion.img
+              src={HeroImg}
+              alt="Logistics detail"
+              className={
+                "absolute z-30 object-cover rounded-lg " +
+                "w-[320px] sm:w-[480px] md:w-[700px] lg:w-[1000px] xl:w-[1300px] 2xl:w-[1500px] " +
+                "left-1/2 transform -translate-x-1/2 sm:left-auto sm:translate-x-0 " +
+                "sm:right-6 md:right-[-60px] lg:right-[-180px] " +
+                "bottom-[240px] sm:bottom-[-140px] md:bottom-[-220px] lg:bottom-[18%]"
+              }
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.7, ease: "easeOut" }}
+            />
+          </motion.div>
+        </div>
       </div>
 
-   
-
-      {/* Extra CSS for small float & subtle parallax (tailwind-friendly) */}
+      {/* Small-screen adjustment */}
       <style jsx>{`
-        /* keep this small: subtle rounded border for image overlay on small screens */
-        @media (max-width: 767px) {
-          .absolute.-left-12 {
-            display: none;
+        @media (max-width: 420px) {
+          .absolute {
+            bottom: -60px !important;
           }
         }
       `}</style>
