@@ -64,7 +64,7 @@ const HeroOne: React.FC = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
             viewport={{ once: true }}
-            className="relative flex flex-col justify-center lg:justify-end w-full md:w-full -mr-[50%] -mb-[10%]"
+            className="relative flex flex-col justify-center lg:justify-end w-full md:w-full lg:-mr-[50%] lg:-mb-[10%] md:-mr-[40%] md:-mb-[7%]"
           >
             <img
               src={HeroImg}
