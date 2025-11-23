@@ -1,10 +1,10 @@
 // src/pages/home/Nuestros.tsx
 import React, { useEffect, useRef, useState } from "react";
 
-import iconPackage from "../../assets/icon-package.png";
+import iconPackage from "../../assets/icon-pickup.png";
 import iconRemesas from "../../assets/icon-remesas.png";
-import iconPickup from "../../assets/icon-pickup.png";
-import iconConfirm from "../../assets/icon-confirm.png";
+import iconPickup from "../../assets/icon-package.png";
+import iconConfirm from "../../assets/icon-confirm1.png";
 
 type IconType = string | { src?: string } | any;
 
