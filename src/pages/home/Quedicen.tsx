@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import card from "./../../assets/card.png";
 import Avatar from "./../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png";
@@ -73,16 +73,38 @@ const Quedicen: React.FC = () => {
   }, []);
 
   // duplicate list for smooth rendering (visual loop)
-  const loopList = [...testimonials, ...testimonials];
+  const loopList = useMemo(() => [...testimonials, ...testimonials], [testimonials]);
+  const innerSlides = loopList.length; // duplicated length
 
   // index in original testimonials array (0..n-1)
   const [index, setIndex] = useState<number>(0);
   const next = () => setIndex((i) => (i + 1) % testimonials.length);
   const prev = () => setIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
 
-  // compute width and translate in percent so it scales with visibleCount
-  const containerWidthPercent = (loopList.length / visibleCount) * 100;
-  const translateXPercent = -(index * (100 / visibleCount));
+  // compute width and translate in percent relative to inner container so it scales correctly
+  const slideWidthInnerPercent = 100 / innerSlides; // each slide as percent of inner container
+  const containerWidthPercent = (innerSlides / visibleCount) * 100; // inner container width relative to viewport
+  const translateXInnerPercent = -(index * slideWidthInnerPercent); // translate relative to inner container
+
+  // optional: autoplay (keeps behavior similar to other slider)
+  const autoplayRef = useRef<number | null>(null);
+  const isPausedRef = useRef(false);
+  useEffect(() => {
+    const start = () => {
+      stop();
+      autoplayRef.current = window.setInterval(() => {
+        if (!isPausedRef.current) setIndex((i) => (i + 1) % testimonials.length);
+      }, 4000);
+    };
+    const stop = () => {
+      if (autoplayRef.current !== null) {
+        clearInterval(autoplayRef.current);
+        autoplayRef.current = null;
+      }
+    };
+    start();
+    return () => stop();
+  }, [testimonials.length]);
 
   return (
     <div className="w-full bg-[#026432] overflow-hidden py-10">
@@ -106,16 +128,22 @@ const Quedicen: React.FC = () => {
           onClick={prev}
           aria-label="Previous testimonials"
           className="absolute left-3 text-orange-400 text-4xl cursor-pointer z-10 hidden md:flex items-center justify-center"
+          onMouseEnter={() => (isPausedRef.current = true)}
+          onMouseLeave={() => (isPausedRef.current = false)}
         >
           ❮
         </button>
 
         {/* VIEWPORT */}
-        <div className="overflow-hidden w-full max-w-7xl">
+        <div
+          className="overflow-hidden w-full max-w-7xl"
+          onMouseEnter={() => (isPausedRef.current = true)}
+          onMouseLeave={() => (isPausedRef.current = false)}
+        >
           {/* WIDE CONTAINER */}
           <motion.div
             className="flex items-start gap-10"
-            animate={{ x: `${translateXPercent}%` }}
+            animate={{ x: `${translateXInnerPercent}%` }}
             transition={{ duration: 0.55, ease: "easeInOut" }}
             style={{ width: `${containerWidthPercent}%` }}
           >
@@ -123,7 +151,7 @@ const Quedicen: React.FC = () => {
               <div
                 key={i}
                 className="flex flex-col items-start mx-auto"
-                style={{ width: `${100 / loopList.length}%` }}
+                style={{ width: `${slideWidthInnerPercent}%` }}
               >
                 {/* CARD BOX - responsive sizing */}
                 <div className="mx-auto w-full flex justify-center">
@@ -189,6 +217,8 @@ const Quedicen: React.FC = () => {
           onClick={next}
           aria-label="Next testimonials"
           className="absolute right-3 text-orange-400 text-4xl cursor-pointer z-10 hidden md:flex items-center justify-center"
+          onMouseEnter={() => (isPausedRef.current = true)}
+          onMouseLeave={() => (isPausedRef.current = false)}
         >
           ❯
         </button>
