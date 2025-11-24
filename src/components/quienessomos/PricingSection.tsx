@@ -8,7 +8,7 @@ const PricingSection: React.FC = () => {
       {/* ORANGE WRAPPER */}
       
       <div
-        className="rounded-[40px] pt-20 px-6 relative"
+        className="rounded-[40px] pt-20 md:pb-0 pb-5 px-6 relative"
         style={{
           width: "1600px",
           backgroundColor: "#F9921D",
