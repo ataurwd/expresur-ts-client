@@ -1,76 +1,121 @@
 import React, { useState } from "react";
+// FIX: Import the image file so the bundler can provide a correct URL.
+import TrackingImage from "../../assets/rastrear-page-banner-image.png";
 
 const RastrearPage: React.FC = () => {
   const [trackingNumber, setTrackingNumber] = useState("");
   const [email, setEmail] = useState("");
 
-  const TrackingIllustrationPlaceholder: React.FC = () => (
-    <div className="w-full h-auto flex justify-center items-center py-8">
-      <div className="w-11/12 max-w-lg h-64 bg-gray-900/10 border border-dashed border-gray-900/30 rounded-lg flex items-center justify-center text-sm text-gray-800/80">
-        Tracking Illustration Placeholder (Truck and Phone with Map)
-      </div>
-    </div>
-  );
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Tracking logic here...
+    console.log("Tracking:", trackingNumber, "Email:", email);
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div
-        className="
-        w-full max-w-md h-auto rounded-xl shadow-2xl overflow-hidden 
-        bg-gradient-to-b from-green-700 via-orange-500 to-orange-600 
-        p-8 md:p-10
-      "
-      >
-        <div className="text-center mb-10">
+    // Outer Container: Full width, using your custom horizontal gradient
+    <div className="bg-gradient-to-r from-[#4b722d] to-[#e68b19] min-h-screen">
+      {/* Centered Content Area: Max width set to 1400px */}
+      <div className="max-w-[1400px] mx-auto py-10 md:py-20 px-4">
+        {/* Title Block (Always at the very top on all devices) */}
+        <div className="text-center md:text-left">
           <h1
-            className="text-4xl md:text-5xl font-extrabold text-white leading-tight"
+            className="text-5xl md:text-[55px] text-white leading-tight"
             style={{
               textShadow: "0 2px 4px rgba(0,0,0,0.5)",
             }}
           >
-            Package Tracking <br /> is Easy with <br /> Order Number
+            Package Tracking <br />
+            is Easy with <br />
+            Order Number
           </h1>
         </div>
 
-        <div className="space-y-4">
-          <input
-            type="text"
-            placeholder="Número de rastreo"
-            value={trackingNumber}
-            onChange={(e) => setTrackingNumber(e.target.value)}
-            className="
-              w-full p-4 rounded-full border-2 border-white/50 
-              text-gray-800 placeholder-gray-500 text-lg
-              focus:ring-4 focus:ring-green-400 focus:border-green-400
-              transition duration-300 shadow-md
-            "
-          />
+        {/* Main Content Grid: Inputs/Image/Button */}
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          {/* Left Side (Column 1): Inputs and Button */}
+          <div className="md:pr-10">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Input 1: Tracking Number */}
+              <input
+                type="text"
+                placeholder="Número de rastreo"
+                value={trackingNumber}
+                onChange={(e) => setTrackingNumber(e.target.value)}
+                className="
+                        w-full p-4 rounded-full border-2 border-white/50 
+                        text-gray-800 placeholder-gray-500 text-lg shadow-md
+                        focus:ring-4 focus:ring-green-400 focus:border-green-400
+                        transition duration-300
+                    "
+                required
+              />
 
-          <input
-            type="email"
-            placeholder="Correo electrónico"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="
-              w-full p-4 rounded-full border-2 border-white/50 
-              text-gray-800 placeholder-gray-500 text-lg
-              focus:ring-4 focus:ring-green-400 focus:border-green-400
-              transition duration-300 shadow-md
-            "
-          />
+              {/* Input 2: Email */}
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="
+                        w-full p-4 rounded-full border-2 border-white/50 
+                        text-gray-800 placeholder-gray-500 text-lg shadow-md
+                        focus:ring-4 focus:ring-green-400 focus:border-green-400
+                        transition duration-300
+                    "
+              />
 
-          <TrackingIllustrationPlaceholder />
+              {/* --- MOBILE ORDER FIX --- */}
+              {/* For mobile, the Button must come *after* the image, so we hide it here. */}
+              <button
+                type="submit"
+                className="
+                        hidden md:block 
+                        w-full md:w-auto py-3 px-10 mt-6 rounded-xl text-xl font-bold uppercase 
+                        bg-green-800 hover:bg-green-900 text-white shadow-xl 
+                        transition duration-300 ease-in-out transform hover:scale-[1.01]
+                    "
+              >
+                RASTREAR
+              </button>
+            </form>
 
-          <button
-            className="
-              w-full py-3 mt-4 rounded-xl text-2xl font-bold uppercase 
-              bg-green-800 hover:bg-green-900 text-white shadow-xl 
-              transition duration-300 ease-in-out transform 
-              hover:scale-[1.02]
-            "
-          >
-            RASTREAR
-          </button>
+            {/* --- MOBILE IMAGE PLACEMENT --- */}
+            {/* The image is placed here on mobile, between the form and the final button. */}
+            <div className="md:hidden w-full py-8">
+              <img
+                src={TrackingImage}
+                alt="Delivery Truck and Tracking Map Illustration"
+                className="w-full h-auto object-contain max-h-[500px] mx-auto"
+              />
+            </div>
+
+            {/* --- MOBILE BUTTON PLACEMENT --- */}
+            {/* The button is placed here on mobile, after the image. */}
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="
+                    md:hidden 
+                    w-full py-3 mt-6 rounded-full text-xl font-bold uppercase 
+                    bg-green-800 hover:bg-green-900 text-white shadow-xl 
+                    transition duration-300 ease-in-out transform hover:scale-[1.01]
+                "
+            >
+              RASTREAR
+            </button>
+          </div>
+
+          {/* Right Side (Column 2): Desktop Image/Button */}
+          <div className="hidden md:block">
+            {/* DESKTOP IMAGE */}
+            <img
+              src={TrackingImage}
+              alt="Delivery Truck and Tracking Map Illustration"
+              className="w-full h-auto object-contain max-h-[500px] mx-auto"
+            />
+            {/* The desktop button is hidden in the left column */}
+          </div>
         </div>
       </div>
     </div>
