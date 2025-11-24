@@ -3,6 +3,7 @@ import QuienesSomosBanner from '../../components/quienessomos/QuienesSomosBanner
 import Quedicen from '../../components/quienessomos/Quedicen'
 import PricingSection from '../../components/quienessomos/PricingSection'
 import LogisticsTimeline from '../../components/quienessomos/LogisticsTimeline'
+import TeamSection from '../../components/quienessomos/TeamSection'
 
 
 const Quienessomos = () => {
@@ -10,6 +11,7 @@ const Quienessomos = () => {
     <>
       <QuienesSomosBanner />
       <PricingSection />
+      <TeamSection />
       <LogisticsTimeline />
       <Quedicen />
     </>
