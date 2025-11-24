@@ -102,7 +102,7 @@ const Navbar = () => {
 
       {/* Mobile Menu - No Button, Clean Design */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 z-50 lg:hidden" onClick={() => setMobileMenuOpen(false)}>
+        <div className="z-50 fixed inset-0 bg-black bg-opacity-60 z-50 lg:hidden" onClick={() => setMobileMenuOpen(false)}>
           <div 
             className="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
