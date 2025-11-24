@@ -70,11 +70,13 @@ const Navbar = () => {
             {/* Right Side */}
             <div className="flex items-center gap-4">
               {/* Track Button - Desktop Only */}
+              <Link to={"/rasterear"}>
               <button
                 className="hidden lg:flex bg-green-800 hover:bg-[#035230] text-white font-bold px-6 py-2.5 rounded-full shadow-lg"
               >
                 RASTREAR PAQUETE
               </button>
+              </Link>
 
               {/* Social Icons */}
               <div className="hidden md:flex items-center gap-2">
