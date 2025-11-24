@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // FIX: Import the image file so the bundler can provide a correct URL.
 import TrackingImage from "../../assets/rastrear-page-banner-image.png";
+import HeroBg from "../../assets/HeroBg.png";
 
 const RastrearPage: React.FC = () => {
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -14,7 +15,8 @@ const RastrearPage: React.FC = () => {
 
   return (
     // Outer Container: Full width, using your custom horizontal gradient
-    <div className="bg-gradient-to-r from-[#4b722d] to-[#e68b19] min-h-[78vh]">
+    <div className="min-h-[78vh] bg-cover bg-center" 
+        style={{ backgroundImage: `url(${HeroBg})` }}>
       {/* Centered Content Area: Max width set to 1400px */}
       <div className="max-w-[1280px] mx-auto py-10 md:py-20 px-4">
         <div className="flex">
