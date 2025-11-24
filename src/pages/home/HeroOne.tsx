@@ -48,7 +48,7 @@ const HeroOne: React.FC = () => {
           </div>
 
           {/* RIGHT IMAGE */}
-          <div className="relative flex z-[999] flex-col justify-center lg:justify-end w-full md:w-full lg:-mr-[50%] lg:-mb-[10%] md:-mr-[40%] md:-mb-[7%]">
+          <div className="relative flex z-50 flex-col justify-center lg:justify-end w-full md:w-full lg:-mr-[50%] lg:-mb-[10%] md:-mr-[40%] md:-mb-[7%]">
             <img
               src={HeroImg}
               alt="Servicios logísticos"
