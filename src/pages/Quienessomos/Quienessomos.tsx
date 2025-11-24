@@ -1,8 +1,12 @@
 import React from 'react'
+import QuienesSomosBanner from '../../components/quienessomos/QuienesSomosBanner/QuienesSomosBanner'
+
 
 const Quienessomos = () => {
   return (
-    <div>Quienessomos</div>
+    <>
+    <QuienesSomosBanner />
+    </>
   )
 }
 

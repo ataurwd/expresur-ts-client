@@ -4,6 +4,7 @@ import Home from "../pages/home/Home";
 import ErrorPage from "../components/ErrorPage";
 import Quienessomos from "../pages/Quienessomos/Quienessomos";
 import RastrearPage from "../pages/rastrear-page/RastrearPage";
+import OnlineStore from "../pages/onile-store/OnlineStore";
 
 const Routes = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const Routes = createBrowserRouter([
         path: "/rasterear",
         element: <RastrearPage />,
       },
+      {
+        path: "/online-store",
+        element: <OnlineStore/>,
+      }
     ],
   },
 ]);
