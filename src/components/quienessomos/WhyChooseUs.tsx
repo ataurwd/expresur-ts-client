@@ -3,98 +3,66 @@ import Illustration from "../../assets/Grupo-1648.png";
 
 const WhyChooseUs: React.FC = () => {
   return (
-    <div className="w-full flex justify-center relative" style={{ backgroundColor: "#ffffff" }}>
-      <div
-        className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full"
-        style={{
-          paddingTop: "120px",
-          paddingBottom: "120px",
-          paddingLeft: "24px",
-          paddingRight: "24px",
-        }}
-      >
+    <div className="w-full flex justify-center bg-white">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1500px] w-full pt-[60px] md:pt-[120px] px-4 md:px-8">
+        
         {/* LEFT SIDE */}
-        <div className="pr-0 md:pr-12">
-          {/* Title */}
-          <h1
-            className="font-avenir font-bold"
-            style={{
-              fontSize: "48px",
-              color: "rgba(250,146,29,1)",
-            }}
-          >
+        <div className="pr-0 md:pr-16 lg:pr-32">
+          
+          {/* H1 — one line */}
+          <h1 className="font-avenir font-bold text-4xl sm:text-5xl md:text-7xl leading-[40px] sm:leading-[56px] md:leading-[72px] text-[#FA921D] whitespace-normal md:whitespace-nowrap">
             Por qué elegirnos
           </h1>
 
           {/* Subtitle */}
-          <p
-            className="text-gray-600 mt-4"
-            style={{
-              fontSize: "18px",
-              lineHeight: "28px",
-              maxWidth: "480px",
-            }}
-          >
-            En el competitivo mundo empresarial de hoy, la demanda de soluciones de
-            logística eficientes nunca ha sido más crítica.
+          <p className="text-gray-600 mt-4 sm:mt-6 text-[16px] sm:text-[18px] leading-[24px] sm:leading-[30px] max-w-full md:max-w-[520px]">
+            En el competitivo mundo empresarial de hoy, la demanda de soluciones
+            de logística eficientes nunca ha sido más crítica.
           </p>
 
-          {/* FEATURES LIST */}
-          <div className="mt-12 relative">
-            {/* VERTICAL ORANGE LINE */}
-            <div
-              className="absolute"
-              style={{
-                left: "0px",
-                top: "10px",
-                height: "260px",
-                borderLeft: "4px solid rgba(250,146,29,1)",
-              }}
-            />
+          {/* FEATURES */}
+          <div className="mt-8 md:mt-12 relative pl-4 md:pl-10">
+            {/* Vertical line */}
+            <div className="absolute -left-1 md:left-[-4px] top-3 h-[200px] sm:h-[260px] border-l-4 border-[#FA921D]" />
 
-            {/* Each Row */}
-            <ul className="ml-10 space-y-6">
-              <li className="text-[20px]">
-                <span className="text-orange-500 font-bold">30 CARGADORES</span> con experiencia
+            {/* List */}
+            <ul className="  space-y-4 sm:space-y-6 text-[18px] sm:text-[22px] leading-[28px] sm:leading-[32px]">
+              <li>
+                <span className="text-green-700 font-bold">30 CARGADORES</span> con experiencia
               </li>
-
-              <li className="text-[20px]">
+              <li>
                 <span className="text-green-700 font-bold">45 EXPERTOS</span> capacitados en almacén
               </li>
-
-              <li className="text-[20px]">
-                <span className="text-orange-500 font-bold">120 CONDUCTORES</span> de camión expertos
+              <li>
+                <span className="text-green-700 font-bold">120 CONDUCTORES</span> de camión expertos
               </li>
-
-              <li className="text-[20px]">
+              <li>
                 <span className="text-green-700 font-bold">345 PERSONAL</span> de entrega
               </li>
             </ul>
 
-            {/* ORANGE DOTS */}
-            <div className="absolute left-[-9px] top-[10px] w-4 h-4 bg-orange-500 rounded-full" />
-            <div className="absolute left-[-9px] top-[74px] w-4 h-4 bg-orange-500 rounded-full" />
-            <div className="absolute left-[-9px] top-[138px] w-4 h-4 bg-orange-500 rounded-full" />
-            <div className="absolute left-[-9px] top-[202px] w-4 h-4 bg-orange-500 rounded-full" />
+            {/* Dots */}
+            <div className="absolute -left-1 md:left-[-10px] top-[12px] w-3 sm:w-4 h-3 sm:h-4 bg-orange-500 rounded-full" />
+            <div className="absolute -left-1 md:left-[-10px] top-[68px] sm:top-[76px] w-3 sm:w-4 h-3 sm:h-4 bg-orange-500 rounded-full" />
+            <div className="absolute -left-1 md:left-[-10px] top-[124px] sm:top-[140px] w-3 sm:w-4 h-3 sm:h-4 bg-orange-500 rounded-full" />
+            <div className="absolute -left-1 md:left-[-10px] top-[180px] sm:top-[204px] w-3 sm:w-4 h-3 sm:h-4 bg-orange-500 rounded-full" />
           </div>
 
-          {/* BUTTON */}
-          <button
-            className="mt-8 px-10 py-3 rounded-full text-white font-bold"
-            style={{ background: "#0a6f3c", fontSize: "18px" }}
-          >
+          {/* Button */}
+          <button className="mt-10 md:mt-14 px-8 sm:px-12 py-3 sm:py-4 rounded-full text-white font-bold text-[16px] sm:text-[18px] bg-[#0A6F3C]">
             SOLICITAR COTIZACIÓN
           </button>
         </div>
 
-        {/* RIGHT SIDE IMAGE */}
-        <div className="flex justify-center items-center">
+        {/* RIGHT SIDE — Image */}
+        <div className="flex justify-center md:justify-end items-center mt-8 md:mt-0">
           <img
             src={Illustration}
             alt="logistics illustration"
-            className="w-full max-w-[650px] object-contain"
+            className="w-full max-w-[500px] sm:max-w-[700px] md:max-w-[900px] object-contain"
           />
         </div>
+
       </div>
     </div>
   );
