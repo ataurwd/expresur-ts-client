@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Avatar from "./../../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png";
+import Avatar from "../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png";
 interface Testimonial {
   text: string;
   name: string;

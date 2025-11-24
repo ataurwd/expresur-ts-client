@@ -1,6 +1,5 @@
 import React from "react";
-import QuienesSomosImg from "../../../assets/Grupo.png";
-import "./QuienesSomosBanner.css"; // import custom CSS
+import QuienesSomosImg from "../../assets/Grupo.png";
 
 const QuienesSomosBanner: React.FC = () => {
   return (

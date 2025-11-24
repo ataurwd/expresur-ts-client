@@ -1,5 +1,5 @@
 import React from "react";
-import PricingImg from './../../../assets/Grupo-1653.png';
+import PricingImg from '../../assets/Grupo-1653.png';
 
 const PricingSection: React.FC = () => {
   return (
