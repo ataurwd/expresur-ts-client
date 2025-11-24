@@ -17,7 +17,7 @@ const Routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/quienessomos",
+        path: "/quiénes-somos",
         element: <Quienessomos />,
       },
       {
