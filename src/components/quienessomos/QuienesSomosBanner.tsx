@@ -3,7 +3,7 @@ import QuienesSomosImg from "../../assets/Grupo.png";
 
 const QuienesSomosBanner: React.FC = () => {
   return (
-    <div className="w-[1920px] h-[555.7px] bg-gradient-to-r from-green-700 to-orange-300 relative overflow-x-hidden flex items-center px-16 quienes-banner md : w-full md:h[ 269.92px]">
+    <div className="w-[1920px] h-[555.7px] bg-gradient-to-r from-green-700 to-orange-300 relative overflow-x-hidden flex items-center px-16 quienes-banner">
       {/* Background Image */}
       <img
         src={QuienesSomosImg}

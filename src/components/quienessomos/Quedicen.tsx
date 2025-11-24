@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Avatar from "../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png";
+import LogisticsTimeline from "../../pages/home/LogisticsTimeline";
 interface Testimonial {
   text: string;
   name: string;
@@ -153,10 +154,9 @@ const Quedicen: React.FC = () => {
   }, [visibleCount, innerSlides]);
 
   return (
-    <div className="w-full h-[1000px] bg-[#026432] overflow-hidden py-10">
+    <div className="w-full bg-[#026432] overflow-hidden py-10">
      
-
-
+    
 
       <h2
         className="

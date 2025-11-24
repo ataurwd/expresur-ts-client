@@ -1,10 +1,12 @@
 import React from "react";
 import PricingImg from '../../assets/Grupo-1653.png';
 
+
 const PricingSection: React.FC = () => {
   return (
     <div className="flex justify-center w-full md:py-20 py-10 bg-white">
       {/* ORANGE WRAPPER */}
+      
       <div
         className="rounded-[40px] pt-20 px-6 relative"
         style={{
