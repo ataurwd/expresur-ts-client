@@ -25,7 +25,7 @@ const Routes = createBrowserRouter([
         element: <RastrearPage />,
       },
       {
-        path: "/online-store",
+        path: "/tienda",
         element: <OnlineStore/>,
       }
     ],
