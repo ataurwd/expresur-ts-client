@@ -14,7 +14,7 @@ const RastrearPage: React.FC = () => {
 
   return (
     // Outer Container: Full width, using your custom horizontal gradient
-    <div className="bg-gradient-to-r from-[#4b722d] to-[#e68b19]">
+    <div className="bg-gradient-to-r from-[#4b722d] to-[#e68b19] min-h-[78vh]">
       {/* Centered Content Area: Max width set to 1400px */}
       <div className="max-w-[1280px] mx-auto py-10 md:py-20 px-4">
         <div className="flex">
@@ -111,7 +111,7 @@ const RastrearPage: React.FC = () => {
             <img
               src={TrackingImage}
               alt="Delivery Truck and Tracking Map Illustration"
-              className="w-full h-auto object-contain max-h-[900px] mx-auto"
+              className="w-full h-auto object-contain max-h-[1100px] mx-auto"
             />
             {/* The desktop button is hidden in the left column */}
           </div>
