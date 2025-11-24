@@ -91,6 +91,7 @@ const PricingSection: React.FC = () => {
 
               <div className="flex justify-center my-4">
                 <img
+                  alt="priceing"
                   src={PricingImg}
                   className="w-[125px] h-[125px] object-contain"
                 />
