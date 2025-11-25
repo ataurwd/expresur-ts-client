@@ -14,7 +14,7 @@ const QuienesSomosBanner: React.FC = () => {
       >
         <div className="relative w-full overflow-x-hidden">
           <div className="hidden md:block">
-            <h1 className="py-52 md:pl-52 lg:text-9xl md:text-7xl sm:text-4xl text-white uppercase">
+            <h1 className="py-52 md:pl-32 lg:pl-52 lg:text-9xl md:text-6xl  text-white uppercase">
               Quiénes Somos
             </h1>
           </div>
