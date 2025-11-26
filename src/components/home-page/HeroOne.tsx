@@ -2,8 +2,13 @@ import React from "react";
 import HeroImg from "../../assets/Hero1.png";
 import HeroImg2 from "../../assets/Hero2.png";
 import HeroBg from "../../assets/HeroBg.png";
+import { useAuth } from "../../context/AuthContext";
 
 const HeroOne: React.FC = () => {
+
+  const userData = useAuth();
+  console.log(userData.users)
+
   return (
     <section
       className="relative overflow-hidden w-full min-h-[90vh] md:min-h-[80vh] bg-gradient-to-b from-[#005f37] to-[#a8cfc0]"
