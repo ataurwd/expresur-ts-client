@@ -1,16 +1,25 @@
-import React from 'react';
+// src/users/Login.tsx
+import React, { FormEvent } from 'react';
 import { Helmet } from 'react-helmet';
-import { FaGoogle, FaFacebookF, FaBox } from "react-icons/fa";
-import { MdTrackChanges, MdSecurity } from "react-icons/md";
+import { FaGoogle, FaFacebookF, FaBox } from 'react-icons/fa';
+import { MdTrackChanges, MdSecurity } from 'react-icons/md';
 
-const Login = () => {
+const Login: React.FC = () => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // TODO: replace with real auth logic (call API, handle errors, redirect)
+    console.log('submitted');
+    alert('Sign in submitted (implement real auth logic).');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-[#046838]/20 to-gray-900 relative overflow-hidden">
 
-       <Helmet>
+      <Helmet>
         <title>Login | Logistics Dashboard</title>
         <meta name="description" content="Log in to manage shipments and track logistics" />
       </Helmet>
+
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#046838] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
         <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#FA921D] rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-blob animation-delay-2000"></div>
@@ -24,12 +33,12 @@ const Login = () => {
           <div className="p-10 lg:p-16 flex flex-col justify-center bg-gradient-to-br from-white/95 via-white/90 to-white/85 backdrop-blur-2xl">
             <div className="max-w-md mx-auto w-full">
 
-              {/* তোমার লোগো */}
+              {/* Logo */}
               <div className="flex justify-center mb-10">
-                <img 
-                  className="w-64 object-contain" 
-                  src="https://i.ibb.co.com/7xjs7YjB/Expresur-02-1-removebg-preview.webp" 
-                  alt="Expresur Logo" 
+                <img
+                  className="w-64 object-contain"
+                  src="https://i.ibb.co/7xjs7YjB/Expresur-02-1-removebg-preview.webp"
+                  alt="Expresur Logo"
                 />
               </div>
 
@@ -38,20 +47,22 @@ const Login = () => {
                 Log in to track shipments, manage logistics, and stay ahead.
               </p>
 
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <input
                   type="email"
                   placeholder="you@company.com"
                   className="w-full px-5 py-4 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#046838] focus:border-[#046838] transition-all duration-300 placeholder-gray-400 text-gray-800 font-medium"
+                  required
                 />
 
                 <input
                   type="password"
                   placeholder="••••••••"
                   className="w-full px-5 py-4 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#046838] focus:border-[#046838] transition-all duration-300 placeholder-gray-400 text-gray-800 font-medium"
+                  required
                 />
 
-                {/* তোমার কালারে গ্রেডিয়েন্ট বাটন */}
+                {/* Gradient button */}
                 <button
                   type="submit"
                   className="w-full bg-gradient-to-r from-[#046838] to-[#035230] hover:from-[#035230] hover:to-[#024025] text-white font-bold py-4 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
@@ -71,6 +82,23 @@ const Login = () => {
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl hover:shadow transition text-gray-800"
+                    onClick={() => alert('Continue with Google (implement)')}
+                  >
+                    {React.createElement(FaGoogle as any, { className: 'text-xl text-red-500' })}
+                    <span className="font-medium">Google</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl hover:shadow transition text-gray-800"
+                    onClick={() => alert('Continue with Facebook (implement)')}
+                  >
+                    {React.createElement(FaFacebookF as any, { className: 'text-xl text-blue-600' })}
+                    <span className="font-medium">Facebook</span>
+                  </button>
                 </div>
               </div>
 
@@ -83,7 +111,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Right Side - Hero Section (তোমার কালারে) */}
+          {/* Right Side - Hero Section */}
           <div className="hidden lg:flex relative bg-gradient-to-br from-[#046838] via-[#046838] to-[#035230] p-16 flex-col justify-center items-start text-white">
             <div className="max-w-lg">
               <h1 className="text-5xl font-bold mb-6 leading-tight">
@@ -98,7 +126,7 @@ const Login = () => {
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="p-4 bg-[#FA921D]/20 backdrop-blur-md rounded-2xl">
-                    <MdTrackChanges className="text-3xl text-[#FA921D]" />
+                    {React.createElement(MdTrackChanges as any, { className: 'text-3xl text-[#FA921D]' })}
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold">Live Tracking Dashboard</h3>
@@ -108,7 +136,7 @@ const Login = () => {
 
                 <div className="flex items-center gap-4">
                   <div className="p-4 bg-[#FA921D]/20 backdrop-blur-md rounded-2xl">
-                    <MdSecurity className="text-3xl text-[#FA921D]" />
+                    {React.createElement(MdSecurity as any, { className: 'text-3xl text-[#FA921D]' })}
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold">100% Secure Platform</h3>
@@ -120,14 +148,14 @@ const Login = () => {
 
             {/* Floating Elements */}
             <div className="absolute top-10 right-10 opacity-20">
-              <FaBox className="text-9xl animate-float" />
+              {React.createElement(FaBox as any, { className: 'text-9xl animate-float' })}
             </div>
           </div>
         </div>
       </div>
 
       {/* Animation Styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes blob {
           0% { transform: translate(0px, 0px) scale(1); }
           33% { transform: translate(30px, -50px) scale(1.1); }
