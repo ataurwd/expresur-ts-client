@@ -10,6 +10,7 @@ import AdminDashboard from "../dashboard/admin-dashboard/AdminDashboard";
 import UserDashboard from "../dashboard/user-dashboard/UserDashboard";
 import Login from "../users/Login";
 import Register from "../users/Register";
+import RecogidaPage from "../pages/Recogida/Recogida";
 
 const Routes = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const Routes = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path:"/recogida",
+        element: <RecogidaPage/>
       },
     ],
   },
