@@ -5,9 +5,6 @@ import ErrorPage from "../components/ErrorPage";
 import Quienessomos from "../pages/Quienessomos/Quienessomos";
 import RastrearPage from "../pages/rastrear-page/RastrearPage";
 import OnlineStore from "../pages/onile-store/OnlineStore";
-import Dashboard from "../layout/Dashboard";
-import AdminDashboard from "../dashboard/admin-dashboard/AdminDashboard";
-import UserDashboard from "../dashboard/user-dashboard/UserDashboard";
 
 const Routes = createBrowserRouter([
   {
@@ -29,8 +26,16 @@ const Routes = createBrowserRouter([
       },
       {
         path: "/tienda",
-        element: <OnlineStore/>,
-      }
+        element: <OnlineStore />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
     ],
   },
   {

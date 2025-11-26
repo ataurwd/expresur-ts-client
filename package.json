@@ -19,9 +19,12 @@
     "match-sorter": "^8.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-helmet": "^6.1.0",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.9.6",
     "react-scripts": "5.0.1",
     "sort-by": "^1.2.0",
+    "sweetalert2": "^11.26.3",
     "swiper": "^12.0.3",
     "web-vitals": "^2.1.4"
   },
