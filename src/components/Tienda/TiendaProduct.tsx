@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Star, ShoppingCart, Search, ChevronDown } from "lucide-react";
+import { ChevronDown, Search, ShoppingCart, Star } from "lucide-react";
+import { useState } from "react";
 
 interface Product {
   id: number;

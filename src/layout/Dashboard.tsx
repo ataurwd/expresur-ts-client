@@ -2,7 +2,6 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import UserDashboard from "../dashboard/user-dashboard/UserDashboard";
 import AdminSidebar from "../dashboard/admin-dashboard/AdminDashboard";
-import { User } from "lucide-react";
 
 const Dashboard = () => {
   return (
