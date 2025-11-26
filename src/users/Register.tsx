@@ -2,95 +2,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet'; // if you get TS7016 for react-helmet, see notes below
 import {  FaCheckCircle, FaShieldAlt, FaTachometerAlt } from 'react-icons/fa';
-import Swal from 'sweetalert2';
-import { useLocation, useNavigate } from 'react-router-dom';
+
 
 const Register: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const firstName = (formData.get('firstName') as string | null)?.trim() || '';
-    const lastName = (formData.get('lastName') as string | null)?.trim() || '';
-    const name = `${firstName} ${lastName}`.trim();
-    const email = (formData.get('email') as string | null)?.trim() || '';
-    const password = (formData.get('password') as string | null) || '';
-
-    // Basic validation
-    if (!firstName || !lastName) {
-      Swal.fire({
-        title: 'Missing name',
-        text: 'Please provide your first and last name',
-        icon: 'warning',
-      });
-      return;
-    }
-
-    if (!email) {
-      Swal.fire({
-        title: 'Missing email',
-        text: 'Please provide a valid email address',
-        icon: 'warning',
-      });
-      return;
-    }
-
-    // Validate password
-    if (password.length < 6) {
-      Swal.fire({
-        title: 'Weak Password',
-        text: 'Password must be at least 6 characters long',
-        icon: 'error',
-      });
-      return;
-    }
-
-    const hasUpperCase = /[A-Z]/;
-    const hasLowerCase = /[a-z]/;
-
-    if (!hasUpperCase.test(password)) {
-      Swal.fire({
-        title: 'Password Error',
-        text: 'Password must contain at least one uppercase letter',
-        icon: 'error',
-      });
-      return;
-    }
-
-    if (!hasLowerCase.test(password)) {
-      Swal.fire({
-        title: 'Password Error',
-        text: 'Password must contain at least one lowercase letter',
-        icon: 'error',
-      });
-      return;
-    }
-
-    // TEMP SUCCESS (no backend)
-    Swal.fire({
-      title: 'Registration Successful!',
-      text: 'Backend connection coming soon',
-      icon: 'success',
-      timer: 1500,
-      showConfirmButton: false,
-    });
-
-    // Example: navigate to login or dashboard
-    navigate('/');
-  };
-
-  const HandelGoogleLogin = () => {
-    Swal.fire({
-      title: 'Google Login Disabled',
-      text: 'We will integrate Google/Authius later.',
-      icon: 'info',
-    });
-  };
-
+ 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden">
       <Helmet>
@@ -122,7 +37,7 @@ const Register: React.FC = () => {
               <h2 className="text-4xl font-bold text-gray-800 mb-4">Start Your Journey Today</h2>
               <p className="text-gray-600 mb-8">Create your account and get full access to real-time tracking.</p>
 
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              <form className="space-y-5">
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
