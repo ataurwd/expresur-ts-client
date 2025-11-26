@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Logo from "../../assets/Grupo 1.png";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 import {
   Drawer,
@@ -13,7 +15,7 @@ import {
   Box,
   Avatar,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
@@ -31,8 +33,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Logout,
-} from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
+} from "@mui/icons-material";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 type Props = {
   adminName?: string;
@@ -45,24 +47,36 @@ const drawerWidth = 260;
 const collapsedWidth = 65;
 
 const adminMenuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard/admin' },
-  { text: 'Users', icon: <PeopleIcon />, path: '/dashboard/users' },
-  { text: 'Packages', icon: <InventoryIcon />, path: '/dashboard/packages' },
-  { text: 'Consolidations', icon: <ConsolidateIcon />, path: '/dashboard/consolidations' },
-  { text: 'Shipments', icon: <LocalShippingIcon />, path: '/dashboard/shipments' },
-  { text: 'Cuba Shipments', icon: <FlightIcon />, path: '/dashboard/cuba' },
-  { text: 'Pickup Requests', icon: <LocalTaxiIcon />, path: '/dashboard/pickup' },
-  { text: 'Payments', icon: <PaymentIcon />, path: '/dashboard/payments' },
-  { text: 'Rates', icon: <RatesIcon />, path: '/dashboard/rates' },
-  { text: 'Tracking', icon: <TrackingIcon />, path: '/dashboard/tracking' },
-  { text: 'Reports', icon: <ReportsIcon />, path: '/dashboard/reports' },
-  { text: 'Admins', icon: <AdminsIcon />, path: '/dashboard/admins' },
-  { text: 'Settings', icon: <SettingsIcon />, path: '/dashboard/settings' },
+  { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
+  { text: "Users", icon: <PeopleIcon />, path: "/dashboard/users" },
+  { text: "Packages", icon: <InventoryIcon />, path: "/dashboard/packages" },
+  {
+    text: "Consolidations",
+    icon: <ConsolidateIcon />,
+    path: "/dashboard/consolidations",
+  },
+  {
+    text: "Shipments",
+    icon: <LocalShippingIcon />,
+    path: "/dashboard/shipments",
+  },
+  { text: "Cuba Shipments", icon: <FlightIcon />, path: "/dashboard/cuba" },
+  {
+    text: "Pickup Requests",
+    icon: <LocalTaxiIcon />,
+    path: "/dashboard/pickup",
+  },
+  { text: "Payments", icon: <PaymentIcon />, path: "/dashboard/payments" },
+  { text: "Rates", icon: <RatesIcon />, path: "/dashboard/rates" },
+  { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/tracking" },
+  { text: "Reports", icon: <ReportsIcon />, path: "/dashboard/reports" },
+  { text: "Admins", icon: <AdminsIcon />, path: "/dashboard/admins" },
+  { text: "Settings", icon: <SettingsIcon />, path: "/dashboard/settings" },
 ];
 
 export default function AdminSidebar({
-  adminName = 'Admin Name',
-  adminEmail = 'admin@expresur.com',
+  adminName = "Admin Name",
+  adminEmail = "admin@expresur.com",
   avatarUrl,
   defaultOpen = true,
 }: Props) {
@@ -73,10 +87,12 @@ export default function AdminSidebar({
   const handleToggle = () => setOpen((prev) => !prev);
 
   const handleLogout = () => {
-    // Replace with real logout (auth context / redux / API)
-    // Example: auth.logout(); navigate('/login');
-    alert('Logout clicked — implement auth logout logic here.');
-  };
+  Cookies.remove("currentUser"); // remove cookie
+  toast.success("Logged out successfully!", {
+    duration: 1500,
+  });
+  navigate("/"); // redirect to home
+};
 
   return (
     <Drawer
@@ -85,69 +101,79 @@ export default function AdminSidebar({
       sx={{
         width: open ? drawerWidth : collapsedWidth,
         flexShrink: 0,
-        '& .MuiDrawer-paper': {
+        "& .MuiDrawer-paper": {
           width: open ? drawerWidth : collapsedWidth,
-          boxSizing: 'border-box',
-          background: 'linear-gradient(180deg, #166534 0%, #166534 100%)', // same green gradient
-          color: '#fff',
-          transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          overflowX: 'hidden',
-          borderRight: 'none',
+          boxSizing: "border-box",
+          background: "linear-gradient(180deg, #166534 0%, #166534 100%)", // same green gradient
+          color: "#fff",
+          transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          overflowX: "hidden",
+          borderRight: "none",
         },
       }}
     >
       {/* Header - Logo + Toggle */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          p: 2,
+        }}
+      >
         <Typography
           variant="h6"
           noWrap
           sx={{
             fontWeight: 700,
             opacity: open ? 1 : 0,
-            transition: 'opacity 0.2s',
+            transition: "opacity 0.2s",
             fontFamily: '"Poppins", sans-serif',
           }}
         >
-                    <img className='w-2/3' src={Logo} alt="" />
-
+          <Link to={"/"}>
+            <img className="w-2/3" src={Logo} alt="" />
+          </Link>
         </Typography>
-        <IconButton onClick={handleToggle} sx={{ color: '#fff' }}>
+        <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
           {open ? <ChevronLeft /> : <ChevronRight />}
         </IconButton>
       </Box>
 
-      <Divider sx={{ backgroundColor: '#475569' }} />
+      <Divider sx={{ backgroundColor: "#475569" }} />
 
       {/* Menu Items */}
       <List sx={{ flexGrow: 1, pt: 2 }}>
         {adminMenuItems.map((item) => {
           const isSelected = location.pathname === item.path;
           return (
-            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+            <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 onClick={() => navigate(item.path)}
                 selected={isSelected}
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
+                  justifyContent: open ? "initial" : "center",
                   px: 2.5,
                   mx: 1,
                   mb: 0.5,
                   borderRadius: 2,
-                  transition: 'all 0.2s',
-                  backgroundColor: isSelected ? 'rgba(99, 102, 241, 0.3)' : 'transparent',
-                  '&:hover': {
-                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                    transform: 'translateX(4px)',
+                  transition: "all 0.2s",
+                  backgroundColor: isSelected
+                    ? "rgba(99, 102, 241, 0.3)"
+                    : "transparent",
+                  "&:hover": {
+                    backgroundColor: "rgba(99, 102, 241, 0.2)",
+                    transform: "translateX(4px)",
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                    color: '#fff',
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                    color: "#fff",
                   }}
                 >
                   {item.icon}
@@ -156,7 +182,7 @@ export default function AdminSidebar({
                   primary={item.text}
                   sx={{
                     opacity: open ? 1 : 0,
-                    transition: 'opacity 0.2s 0.1s',
+                    transition: "opacity 0.2s 0.1s",
                   }}
                 />
               </ListItemButton>
@@ -166,20 +192,20 @@ export default function AdminSidebar({
       </List>
 
       {/* Bottom - Profile + Logout */}
-      <Box sx={{ p: 2, borderTop: '1px solid #475569', mt: 'auto' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+      <Box sx={{ p: 2, borderTop: "1px solid #475569", mt: "auto" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
           <Avatar
             src={avatarUrl}
-            sx={{ bgcolor: '#4f46e5', width: 40, height: 40 }}
+            sx={{ bgcolor: "#4f46e5", width: 40, height: 40 }}
           >
-            {(!avatarUrl && adminName) ? adminName.charAt(0).toUpperCase() : null}
+            {!avatarUrl && adminName ? adminName.charAt(0).toUpperCase() : null}
           </Avatar>
           {open && (
             <Box>
               <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                 {adminName}
               </Typography>
-              <Typography variant="caption" sx={{ color: '#94a3b8' }}>
+              <Typography variant="caption" sx={{ color: "#94a3b8" }}>
                 {adminEmail}
               </Typography>
             </Box>
@@ -190,19 +216,19 @@ export default function AdminSidebar({
           onClick={handleLogout}
           sx={{
             borderRadius: 2,
-            color: '#fca5a5',
-            '&:hover': {
-              backgroundColor: 'rgba(239, 68, 68, 0.2)',
-              transform: 'translateX(4px)',
+            color: "#fca5a5",
+            "&:hover": {
+              backgroundColor: "rgba(239, 68, 68, 0.2)",
+              transform: "translateX(4px)",
             },
           }}
         >
           <ListItemIcon
             sx={{
-              color: '#fca5a5',
+              color: "#fca5a5",
               minWidth: 0,
-              mr: open ? 3 : 'auto',
-              justifyContent: 'center',
+              mr: open ? 3 : "auto",
+              justifyContent: "center",
             }}
           >
             <Logout />

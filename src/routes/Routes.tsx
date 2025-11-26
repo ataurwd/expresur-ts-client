@@ -76,14 +76,14 @@ const Routes = createBrowserRouter([
     path: "dashboard",
     element: <Dashboard />,
     children: [
-      {
-        path: "admin-dashboard",
-        element: <AdminDashboard/>
-      },
-      {
-        path: "user-dashboard",
-        element: <UserDashboard/>
-      },
+      // {
+      //   path: "admin-dashboard",
+      //   element: <AdminDashboard/>
+      // },
+      // {
+      //   path: "user-dashboard",
+      //   element: <UserDashboard/>
+      // },
       {
         path: "locker",
         element: <Locker/>
@@ -124,7 +124,7 @@ const Routes = createBrowserRouter([
       // admin routes can be added here
       {
         path: "admin",
-        element: <AdminDashboard/>
+        element: <Admins/>
       },
       {
         path: "users",
@@ -137,10 +137,6 @@ const Routes = createBrowserRouter([
        {
         path: "settings",
         element: <Admin_Settings/>
-      },
-      {
-        path: "admins",
-        element: <Admins/>
       },
       {
         path: "consolidations",

@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     duration: 1800,
   });
 
-    navigate("/"); // Redirect to home
+    navigate("/dashboard/"); // Redirect to home
   };
 
   return (
