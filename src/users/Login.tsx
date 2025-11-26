@@ -3,8 +3,11 @@ import React, { FormEvent } from 'react';
 import { Helmet } from 'react-helmet';
 import { FaGoogle, FaFacebookF, FaBox } from 'react-icons/fa';
 import { MdTrackChanges, MdSecurity } from 'react-icons/md';
+import { useAuth } from '../context/AuthContext';
 
 const Login: React.FC = () => {
+
+  const allUser = useAuth();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-[#046838]/20 to-gray-900 relative overflow-hidden">
