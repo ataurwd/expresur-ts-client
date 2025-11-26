@@ -1,7 +1,7 @@
 // src/pages/Register.tsx
 import React from 'react';
 import { Helmet } from 'react-helmet'; // if you get TS7016 for react-helmet, see notes below
-import { FaGoogle, FaFacebookF, FaCheckCircle, FaShieldAlt, FaTachometerAlt } from 'react-icons/fa';
+import {  FaCheckCircle, FaShieldAlt, FaTachometerAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from 'react-router-dom';
 
