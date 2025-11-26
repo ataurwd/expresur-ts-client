@@ -71,14 +71,6 @@ const Login = () => {
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-4">
-                  <button className="flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
-                    <FaGoogle className="text-xl text-red-500" />
-                    <span className="font-medium text-gray-700">Google</span>
-                  </button>
-                  <button className="flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
-                    <FaFacebookF className="text-xl text-blue-600" />
-                    <span className="font-medium text-gray-700">Facebook</span>
-                  </button>
                 </div>
               </div>
 

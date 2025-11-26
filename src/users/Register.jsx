@@ -133,24 +133,27 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    type="button"
-                    onClick={HandelGoogleLogin}
-                    className="flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-xl"
-                  >
-                    <FaGoogle className="text-red-500" />
-                    <span className="font-medium">Google</span>
-                  </button>
+                {/* 
+<div className="grid grid-cols-2 gap-4">
+  <button
+    type="button"
+    onClick={HandelGoogleLogin}
+    className="flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition"
+  >
+    <FaGoogle className="text-red-500" />
+    <span className="font-medium">Google</span>
+  </button>
 
-                  <button
-                    type="button"
-                    className="flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-xl opacity-50 cursor-not-allowed"
-                  >
-                    <FaFacebookF className="text-blue-600" />
-                    <span className="font-medium">Facebook</span>
-                  </button>
-                </div>
+  <button
+    type="button"
+    className="flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition"
+  >
+    <FaFacebookF className="text-blue-600" />
+    <span className="font-medium">Facebook</span>
+  </button>
+</div>
+*/}
+
               </div>
 
               <p className="mt-8 text-center text-gray-600">
