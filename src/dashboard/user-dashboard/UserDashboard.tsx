@@ -35,15 +35,15 @@ const collapsedWidth = 65;
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { text: 'Locker', icon: <Lock />, path: '/locker' },
-  { text: 'Packages', icon: <Package2 />, path: '/packages' },
-  { text: 'Consolidate', icon: <Merge />, path: '/consolidate' },
-  { text: 'Shipments', icon: <LocalShipping />, path: '/shipments' },
-  { text: 'Create Shipment', icon: <AddBox />, path: '/create-shipment' },
-  { text: 'Cuba Shipping', icon: <Flight />, path: '/cuba-shipping' },
-  { text: 'Pickup', icon: <LocalTaxi />, path: '/pickup' },
-  { text: 'Payments', icon: <Payment />, path: '/payments' },
-  { text: 'Profile', icon: <Person />, path: '/profile' },
+  { text: 'Locker', icon: <Lock />, path: '/dashboard/locker' },
+  { text: 'Packages', icon: <Package2 />, path: '/dashboard/packages' },
+  { text: 'Consolidate', icon: <Merge />, path: '/dashboard/consolidate' },
+  { text: 'Shipments', icon: <LocalShipping />, path: '/dashboard/shipments' },
+  { text: 'Create Shipment', icon: <AddBox />, path: '/dashboard/create-shipment' },
+  { text: 'Cuba Shipping', icon: <Flight />, path: '/dashboard/cuba-shipping' },
+  { text: 'Pickup', icon: <LocalTaxi />, path: '/dashboard/pickup' },
+  { text: 'Payments', icon: <Payment />, path: '/dashboard/payments' },
+  { text: 'Profile', icon: <Person />, path: '/dashboard/profile' },
 ];
 
 export default function UserDashboard() {

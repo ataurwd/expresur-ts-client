@@ -10,6 +10,15 @@ import AdminDashboard from "../dashboard/admin-dashboard/AdminDashboard";
 import UserDashboard from "../dashboard/user-dashboard/UserDashboard";
 import Login from "../users/Login";
 import Register from "../users/Register";
+import Locker from "../dashboard/user-dashboard/Locker";
+import Consolidate from "../dashboard/user-dashboard/Consolidate";
+import Shipments from "../dashboard/user-dashboard/Shipments";
+import CreateShipment from "../dashboard/user-dashboard/CreateShipment";
+import CubaShipping from "../dashboard/user-dashboard/CubaShipping";
+import Pickup from "../dashboard/user-dashboard/Pickup";
+import Profile from "../dashboard/user-dashboard/Profile";
+import Payments from "../dashboard/user-dashboard/Payments";
+import Packages from "../dashboard/user-dashboard/Packages";
 
 const Routes = createBrowserRouter([
   {
@@ -54,7 +63,43 @@ const Routes = createBrowserRouter([
       {
         path: "user-dashboard",
         element: <UserDashboard/>
-      }
+      },
+      {
+        path: "locker",
+        element: <Locker/>
+      },
+      {
+        path: "packages",
+        element: <Packages/>
+      },
+      {
+        path: "consolidate",
+        element: <Consolidate/>
+      },
+      {
+        path: "shipments",
+        element: <Shipments/>
+      },
+      {
+        path: "create-shipment",
+        element: <CreateShipment/>
+      },
+      {
+        path: "cuba-shipping",
+        element: <CubaShipping/>
+      },
+      {
+        path: "pickup",
+        element: <Pickup/>
+      },
+      {
+        path: "payments",
+        element: <Payments/>
+      },
+      {
+        path: "profile",
+        element: <Profile/>
+      },
     ]
   }
 ]);
