@@ -10,6 +10,16 @@ import AdminDashboard from "../dashboard/admin-dashboard/AdminDashboard";
 import UserDashboard from "../dashboard/user-dashboard/UserDashboard";
 import Login from "../users/Login";
 import Register from "../users/Register";
+import RecogidaPage from "../pages/Recogida/Recogida";
+import Locker from "../dashboard/user-dashboard/Locker";
+import Packages from "../dashboard/user-dashboard/Packages";
+import Consolidate from "../dashboard/user-dashboard/Consolidate";
+import Shipments from "../dashboard/user-dashboard/Shipments";
+import CreateShipment from "../dashboard/user-dashboard/CreateShipment";
+import CubaShipping from "../dashboard/user-dashboard/CubaShipping";
+import Pickup from "../dashboard/user-dashboard/Pickup";
+import Payments from "../dashboard/user-dashboard/Payments";
+import Profile from "../dashboard/user-dashboard/Profile";
 
 const Routes = createBrowserRouter([
   {
