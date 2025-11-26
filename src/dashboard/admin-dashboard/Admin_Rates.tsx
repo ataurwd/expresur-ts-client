@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Pickup = () => {
+const Admin_Rates = () => {
     return (
         <div>
-            pickup
+            Rates
         </div>
     );
 };
 
-export default Pickup;
+export default Admin_Rates;

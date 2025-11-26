@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Payments = () => {
+const Admin_Reports = () => {
     return (
         <div>
-            payment
+            reports
         </div>
     );
 };
 
-export default Payments;
+export default Admin_Reports;

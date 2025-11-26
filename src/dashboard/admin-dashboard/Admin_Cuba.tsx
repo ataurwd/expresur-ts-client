@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Cuba = () => {
+const Admin_Cuba = () => {
     return (
         <div>
-            cuba
+            Cuba
         </div>
     );
 };
 
-export default Cuba;
+export default Admin_Cuba;

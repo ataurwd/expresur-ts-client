@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Shipments = () => {
+const Admin_Shipments = () => {
     return (
         <div>
             shipments 
@@ -8,4 +8,4 @@ const Shipments = () => {
     );
 };
 
-export default Shipments;
+export default Admin_Shipments;

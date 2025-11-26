@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Packages = () => {
+const Admin_Pickup = () => {
     return (
         <div>
-            packages
+            Pickup
         </div>
     );
 };
 
-export default Packages;
+export default Admin_Pickup;

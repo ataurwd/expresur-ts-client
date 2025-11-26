@@ -20,8 +20,18 @@ import CubaShipping from "../dashboard/user-dashboard/CubaShipping";
 import Pickup from "../dashboard/user-dashboard/Pickup";
 import Payments from "../dashboard/user-dashboard/Payments";
 import Profile from "../dashboard/user-dashboard/Profile";
-import users from './../dashboard/admin-dashboard/Users';
 import Users from "./../dashboard/admin-dashboard/Users";
+import Admin_Rates from "../dashboard/admin-dashboard/Admin_Rates";
+import Admin_Settings from "../dashboard/admin-dashboard/Admin_Settings";
+import Admins from "../dashboard/admin-dashboard/Admins";
+import Admin_Consolidations from "../dashboard/admin-dashboard/Admin_Consolidations";
+import Admin_Cuba from "../dashboard/admin-dashboard/Admin_Cuba";
+import Admin_Packages from "../dashboard/admin-dashboard/Admin_Packages";
+import Admin_Payments from "../dashboard/admin-dashboard/Admin_Payments";
+import Admin_Pickup from "../dashboard/admin-dashboard/Admin_Pickup";
+import Admin_Reports from "../dashboard/admin-dashboard/Admin_Reports";
+import Admin_Shipments from "../dashboard/admin-dashboard/Admin_Shipments";
+import Admin_Tracking from "../dashboard/admin-dashboard/Admin_Tracking";
 
 
 
@@ -119,7 +129,51 @@ const Routes = createBrowserRouter([
       {
         path: "users",
         element: <Users/>
-      }
+      },
+      {
+        path: "rates",
+        element: <Admin_Rates/>
+      },
+       {
+        path: "settings",
+        element: <Admin_Settings/>
+      },
+      {
+        path: "admins",
+        element: <Admins/>
+      },
+      {
+        path: "consolidations",
+        element: <Admin_Consolidations/>
+      },
+      {
+        path: "cuba",
+        element: <Admin_Cuba/>
+      },
+      {
+        path: "packages",
+        element: <Admin_Packages/>
+      },
+      {
+        path: "payments",
+        element: <Admin_Payments/>
+      },
+      {
+        path: "pickup",
+        element: <Admin_Pickup/>
+      },
+      {
+        path: "reports",
+        element: <Admin_Reports/>
+      },
+      {
+        path: "shipments",
+        element: <Admin_Shipments/>
+      },
+      {
+        path: "tracking",
+        element: <Admin_Tracking/>
+      },
       
     ]
   }

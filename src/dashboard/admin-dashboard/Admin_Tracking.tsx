@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Tracking = () => {
+const Admin_Tracking = () => {
     return (
         <div>
             tracking
@@ -8,4 +8,4 @@ const Tracking = () => {
     );
 };
 
-export default Tracking;
+export default Admin_Tracking;
