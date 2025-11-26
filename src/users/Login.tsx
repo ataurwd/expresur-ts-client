@@ -5,6 +5,7 @@ import { MdSecurity, MdTrackChanges } from "react-icons/md";
 import { useAuth } from "../context/AuthContext";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login: React.FC = () => {
   const { users } = useAuth();
@@ -27,7 +28,9 @@ const Login: React.FC = () => {
 
     Cookies.set("currentUser", JSON.stringify(user), { expires: 1 });
 
-    alert(`Login successful! Welcome, ${user.name}`);
+      toast.success(`Welcome back, ${user.name}!`, {
+    duration: 1800,
+  });
 
     navigate("/"); // Redirect to home
   };
