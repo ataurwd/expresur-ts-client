@@ -20,6 +20,8 @@ import CubaShipping from "../dashboard/user-dashboard/CubaShipping";
 import Pickup from "../dashboard/user-dashboard/Pickup";
 import Payments from "../dashboard/user-dashboard/Payments";
 import Profile from "../dashboard/user-dashboard/Profile";
+import users from './../dashboard/admin-dashboard/Users';
+import Users from "./../dashboard/admin-dashboard/Users";
 
 
 
@@ -108,6 +110,16 @@ const Routes = createBrowserRouter([
         path: "profile",
         element: <Profile/>
       },
+
+      // admin routes can be added here
+      {
+        path: "admin",
+        element: <AdminDashboard/>
+      },
+      {
+        path: "users",
+        element: <Users/>
+      }
       
     ]
   }

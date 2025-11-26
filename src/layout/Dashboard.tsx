@@ -1,12 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import UserDashboard from "../dashboard/user-dashboard/UserDashboard";
+import AdminSidebar from "../dashboard/admin-dashboard/AdminDashboard";
+import { User } from "lucide-react";
 
 const Dashboard = () => {
   return (
     <div className="flex">
       <div>
-        welcome to the User 
+        <AdminSidebar />
       </div>
       <div className="flex-1">
         <Outlet />

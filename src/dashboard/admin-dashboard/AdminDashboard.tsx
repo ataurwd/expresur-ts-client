@@ -43,8 +43,8 @@ const drawerWidth = 260;
 const collapsedWidth = 65;
 
 const adminMenuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin' },
-  { text: 'Users', icon: <PeopleIcon />, path: '/admin/users' },
+  { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard/admin' },
+  { text: 'Users', icon: <PeopleIcon />, path: '/dashboard/users' },
   { text: 'Packages', icon: <InventoryIcon />, path: '/admin/packages' },
   { text: 'Consolidations', icon: <ConsolidateIcon />, path: '/admin/consolidations' },
   { text: 'Shipments', icon: <LocalShippingIcon />, path: '/admin/shipments' },
