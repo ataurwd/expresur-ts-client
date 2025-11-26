@@ -98,7 +98,7 @@ const Login: React.FC = () => {
 
               <p className="mt-8 text-center text-gray-600">
                 New here?{" "}
-                <a href="/signup" className="font-bold text-[#FA921D] hover:text-[#e07f00] transition">
+                <a href="/register" className="font-bold text-[#FA921D] hover:text-[#e07f00] transition">
                   Create an account
                 </a>
               </p>
