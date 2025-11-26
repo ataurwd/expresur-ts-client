@@ -6,7 +6,7 @@ const Dashboard = () => {
   return (
     <div className="flex">
       <div>
-        welcome to the User Dashboard
+        welcome to the User 
       </div>
       <div className="flex-1">
         <Outlet />

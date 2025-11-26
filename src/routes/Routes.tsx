@@ -21,6 +21,9 @@ import Pickup from "../dashboard/user-dashboard/Pickup";
 import Payments from "../dashboard/user-dashboard/Payments";
 import Profile from "../dashboard/user-dashboard/Profile";
 
+
+
+
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -105,6 +108,7 @@ const Routes = createBrowserRouter([
         path: "profile",
         element: <Profile/>
       },
+      
     ]
   }
 ]);

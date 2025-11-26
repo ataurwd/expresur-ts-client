@@ -5,12 +5,6 @@ import { FaGoogle, FaFacebookF, FaBox } from 'react-icons/fa';
 import { MdTrackChanges, MdSecurity } from 'react-icons/md';
 
 const Login: React.FC = () => {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // TODO: replace with real auth logic (call API, handle errors, redirect)
-    console.log('submitted');
-    alert('Sign in submitted (implement real auth logic).');
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-[#046838]/20 to-gray-900 relative overflow-hidden">
@@ -47,7 +41,7 @@ const Login: React.FC = () => {
                 Log in to track shipments, manage logistics, and stay ahead.
               </p>
 
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form className="space-y-6" >
                 <input
                   type="email"
                   placeholder="you@company.com"
