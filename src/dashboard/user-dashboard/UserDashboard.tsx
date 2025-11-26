@@ -1,5 +1,7 @@
 // src/components/Sidebar.tsx
+
 import React, { useState } from 'react';
+import Logo from "../../assets/Grupo 1.png";
 import {
   Drawer,
   List,
@@ -86,7 +88,7 @@ export default function UserDashboard() {
             fontFamily: '"Poppins", sans-serif'
           }}
         >
-          CargoPro
+          <img className='w-2/3' src={Logo} alt="" />
         </Typography>
         <IconButton onClick={handleToggle} sx={{ color: '#fff' }}>
           {open ? <ChevronLeft /> : <ChevronRight />}
