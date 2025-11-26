@@ -4,11 +4,11 @@ import UserDashboard from "../dashboard/user-dashboard/UserDashboard";
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className="flex">
       <div>
-        welcome to dashboard
+        welcome to the User Dashboard
       </div>
-      <div>
+      <div className="flex-1">
         <Outlet />
       </div>
     </div>
