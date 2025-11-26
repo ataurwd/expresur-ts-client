@@ -45,17 +45,17 @@ const collapsedWidth = 65;
 const adminMenuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard/admin' },
   { text: 'Users', icon: <PeopleIcon />, path: '/dashboard/users' },
-  { text: 'Packages', icon: <InventoryIcon />, path: '/admin/packages' },
-  { text: 'Consolidations', icon: <ConsolidateIcon />, path: '/admin/consolidations' },
-  { text: 'Shipments', icon: <LocalShippingIcon />, path: '/admin/shipments' },
-  { text: 'Cuba Shipments', icon: <FlightIcon />, path: '/admin/cuba' },
-  { text: 'Pickup Requests', icon: <LocalTaxiIcon />, path: '/admin/pickup' },
-  { text: 'Payments', icon: <PaymentIcon />, path: '/admin/payments' },
-  { text: 'Rates', icon: <RatesIcon />, path: '/admin/rates' },
-  { text: 'Tracking', icon: <TrackingIcon />, path: '/admin/tracking' },
-  { text: 'Reports', icon: <ReportsIcon />, path: '/admin/reports' },
-  { text: 'Admins', icon: <AdminsIcon />, path: '/admin/admins' },
-  { text: 'Settings', icon: <SettingsIcon />, path: '/admin/settings' },
+  { text: 'Packages', icon: <InventoryIcon />, path: '/dashboard/packages' },
+  { text: 'Consolidations', icon: <ConsolidateIcon />, path: '/dashboard/consolidations' },
+  { text: 'Shipments', icon: <LocalShippingIcon />, path: '/dashboard/shipments' },
+  { text: 'Cuba Shipments', icon: <FlightIcon />, path: '/dashboard/cuba' },
+  { text: 'Pickup Requests', icon: <LocalTaxiIcon />, path: '/dashboard/pickup' },
+  { text: 'Payments', icon: <PaymentIcon />, path: '/dashboard/payments' },
+  { text: 'Rates', icon: <RatesIcon />, path: '/dashboard/rates' },
+  { text: 'Tracking', icon: <TrackingIcon />, path: '/dashboard/tracking' },
+  { text: 'Reports', icon: <ReportsIcon />, path: '/dashboard/reports' },
+  { text: 'Admins', icon: <AdminsIcon />, path: '/dashboard/admins' },
+  { text: 'Settings', icon: <SettingsIcon />, path: '/dashboard/settings' },
 ];
 
 export default function AdminSidebar({
