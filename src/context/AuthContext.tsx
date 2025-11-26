@@ -13,24 +13,28 @@ const fakeUsersFromDB = [
     name: "Tyrion Lannister",
     email: "tyrion@example.com",
     role: "admin",
+    password: "123456",
   },
   {
     _id: "uid_002",
     name: "Arya Stark",
     email: "arya@example.com",
     role: "user",
+    password: "123456",
   },
   {
     _id: "uid_003",
     name: "Jon Snow",
     email: "jon@example.com",
     role: "user",
+    password: "123456",
   },
   {
     _id: "uid_004",
     name: "Daenerys Targaryen",
     email: "daenerys@example.com",
     role: "user",
+    password: "123456",
   },
 ];
 
@@ -39,6 +43,7 @@ interface User {
   name: string;
   email: string;
   role: string;
+  password: string;
 }
 
 interface AuthContextType {

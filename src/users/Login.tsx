@@ -1,17 +1,45 @@
-// src/users/Login.tsx
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import { FaBox, FaFacebookF, FaGoogle } from 'react-icons/fa';
-import { MdSecurity, MdTrackChanges } from 'react-icons/md';
+import React, { useState } from "react";
+import { Helmet } from "react-helmet";
+import { FaBox, FaFacebookF, FaGoogle } from "react-icons/fa";
+import { MdSecurity, MdTrackChanges } from "react-icons/md";
+import { useAuth } from "../context/AuthContext";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
+  const { users } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    setError("");
+
+    const user = users.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (!user) {
+      setError("Invalid email or password!");
+      return;
+    }
+
+    Cookies.set("currentUser", JSON.stringify(user), { expires: 1 });
+
+    alert(`Login successful! Welcome, ${user.name}`);
+
+    navigate("/"); // Redirect to home
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-[#046838]/20 to-gray-900 relative overflow-hidden">
-
       <Helmet>
         <title>Login | Logistics Dashboard</title>
-        <meta name="description" content="Log in to manage shipments and track logistics" />
+        <meta
+          name="description"
+          content="Log in to manage shipments and track logistics"
+        />
       </Helmet>
 
       <div className="absolute inset-0 overflow-hidden">
@@ -22,11 +50,9 @@ const Login: React.FC = () => {
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-0 shadow-2xl rounded-3xl overflow-hidden backdrop-blur-xl bg-white/10 border border-white/20">
-
           {/* Left Side - Login Form */}
           <div className="p-10 lg:p-16 flex flex-col justify-center bg-gradient-to-br from-white/95 via-white/90 to-white/85 backdrop-blur-2xl">
             <div className="max-w-md mx-auto w-full">
-
               {/* Logo */}
               <div className="flex justify-center mb-10">
                 <img
@@ -36,15 +62,25 @@ const Login: React.FC = () => {
                 />
               </div>
 
-              <h2 className="text-4xl font-bold text-[#046838] mb-3">Welcome Back!</h2>
+              <h2 className="text-4xl font-bold text-[#046838] mb-3">
+                Welcome Back!
+              </h2>
               <p className="text-gray-600 mb-10">
                 Log in to track shipments, manage logistics, and stay ahead.
               </p>
 
-              <form className="space-y-6" >
+              <form
+                className="space-y-6"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleLogin();
+                }}
+              >
                 <input
                   type="email"
                   placeholder="you@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-5 py-4 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#046838] focus:border-[#046838] transition-all duration-300 placeholder-gray-400 text-gray-800 font-medium"
                   required
                 />
@@ -52,6 +88,8 @@ const Login: React.FC = () => {
                 <input
                   type="password"
                   placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-5 py-4 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#046838] focus:border-[#046838] transition-all duration-300 placeholder-gray-400 text-gray-800 font-medium"
                   required
                 />
@@ -63,6 +101,9 @@ const Login: React.FC = () => {
                 >
                   Sign In Securely
                 </button>
+
+                {/* Error message */}
+                {error && <p className="text-red-500 mt-2">{error}</p>}
               </form>
 
               <div className="mt-8">
@@ -71,7 +112,9 @@ const Login: React.FC = () => {
                     <div className="w-full border-t border-gray-300"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+                    <span className="px-4 bg-white text-gray-500 font-medium">
+                      Or continue with
+                    </span>
                   </div>
                 </div>
 
@@ -79,18 +122,22 @@ const Login: React.FC = () => {
                   <button
                     type="button"
                     className="flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl hover:shadow transition text-gray-800"
-                    onClick={() => alert('Continue with Google (implement)')}
+                    onClick={() => alert("Continue with Google (implement)")}
                   >
-                    {React.createElement(FaGoogle as any, { className: 'text-xl text-red-500' })}
+                    {React.createElement(FaGoogle as any, {
+                      className: "text-xl text-red-500",
+                    })}
                     <span className="font-medium">Google</span>
                   </button>
 
                   <button
                     type="button"
                     className="flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl hover:shadow transition text-gray-800"
-                    onClick={() => alert('Continue with Facebook (implement)')}
+                    onClick={() => alert("Continue with Facebook (implement)")}
                   >
-                    {React.createElement(FaFacebookF as any, { className: 'text-xl text-blue-600' })}
+                    {React.createElement(FaFacebookF as any, {
+                      className: "text-xl text-blue-600",
+                    })}
                     <span className="font-medium">Facebook</span>
                   </button>
                 </div>
@@ -98,7 +145,10 @@ const Login: React.FC = () => {
 
               <p className="mt-8 text-center text-gray-600">
                 New here?{" "}
-                <a href="/register" className="font-bold text-[#FA921D] hover:text-[#e07f00] transition">
+                <a
+                  href="/register"
+                  className="font-bold text-[#FA921D] hover:text-[#e07f00] transition"
+                >
                   Create an account
                 </a>
               </p>
@@ -114,27 +164,40 @@ const Login: React.FC = () => {
                 <span className="text-[#FA921D]">Reimagined</span>
               </h1>
               <p className="text-xl text-green-100 mb-10 leading-relaxed">
-                Track every package, optimize routes, and deliver faster than ever with Bangladesh’s most trusted logistics platform.
+                Track every package, optimize routes, and deliver faster than
+                ever with Bangladesh’s most trusted logistics platform.
               </p>
 
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="p-4 bg-[#FA921D]/20 backdrop-blur-md rounded-2xl">
-                    {React.createElement(MdTrackChanges as any, { className: 'text-3xl text-[#FA921D]' })}
+                    {React.createElement(MdTrackChanges as any, {
+                      className: "text-3xl text-[#FA921D]",
+                    })}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold">Live Tracking Dashboard</h3>
-                    <p className="text-green-100">See every shipment in real-time</p>
+                    <h3 className="text-xl font-semibold">
+                      Live Tracking Dashboard
+                    </h3>
+                    <p className="text-green-100">
+                      See every shipment in real-time
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <div className="p-4 bg-[#FA921D]/20 backdrop-blur-md rounded-2xl">
-                    {React.createElement(MdSecurity as any, { className: 'text-3xl text-[#FA921D]' })}
+                    {React.createElement(MdSecurity as any, {
+                      className: "text-3xl text-[#FA921D]",
+                    })}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold">100% Secure Platform</h3>
-                    <p className="text-green-100">Bank-level encryption & protection</p>
+                    <h3 className="text-xl font-semibold">
+                      100% Secure Platform
+                    </h3>
+                    <p className="text-green-100">
+                      Bank-level encryption & protection
+                    </p>
                   </div>
                 </div>
               </div>
@@ -142,7 +205,9 @@ const Login: React.FC = () => {
 
             {/* Floating Elements */}
             <div className="absolute top-10 right-10 opacity-20">
-              {React.createElement(FaBox as any, { className: 'text-9xl animate-float' })}
+              {React.createElement(FaBox as any, {
+                className: "text-9xl animate-float",
+              })}
             </div>
           </div>
         </div>
