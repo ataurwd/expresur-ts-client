@@ -1,7 +1,6 @@
 // src/pages/Register.tsx
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import Cookies from "js-cookie";
 import {
   FaCheckCircle,
   FaShieldAlt,
@@ -13,9 +12,11 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const Icon = React.memo(({ icon: IconComponent, className }: { icon: any; className?: string }) => (
-  <IconComponent className={className} />
-));
+const Icon = React.memo(
+  ({ icon: IconComponent, className }: { icon: any; className?: string }) => (
+    <IconComponent className={className} />
+  )
+);
 
 const Register: React.FC = () => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -40,6 +41,7 @@ const Register: React.FC = () => {
   const removePhoto = () => {
     if (photoPreview?.startsWith("blob:")) URL.revokeObjectURL(photoPreview);
     setPhotoPreview(null);
+
     const input = document.getElementById("profilePhotoInput") as HTMLInputElement;
     if (input) input.value = "";
   };
@@ -48,8 +50,8 @@ const Register: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Exactly like your AddTask style
-    const elements = e.currentTarget.elements;
+    const form = e.currentTarget; // prevents null issue
+    const elements = form.elements;
 
     const firstName = (elements.namedItem("firstName") as HTMLInputElement).value.trim();
     const lastName = (elements.namedItem("lastName") as HTMLInputElement).value.trim();
@@ -58,15 +60,14 @@ const Register: React.FC = () => {
     const username = (elements.namedItem("username") as HTMLInputElement).value.trim() || null;
     const password = (elements.namedItem("password") as HTMLInputElement).value;
     const confirmPassword = (elements.namedItem("confirmPassword") as HTMLInputElement).value;
+
     const country = (elements.namedItem("country") as HTMLInputElement).value.trim();
     const state = (elements.namedItem("state") as HTMLInputElement).value.trim();
     const city = (elements.namedItem("city") as HTMLInputElement).value.trim();
     const address = (elements.namedItem("address") as HTMLInputElement).value.trim();
     const postalCode = (elements.namedItem("postalCode") as HTMLInputElement).value.trim();
 
-    const userEmail = Cookies.get("email") || email;
-
-    // Simple validation
+    // Validation
     if (!email.includes("@")) {
       alert("Please enter a valid email");
       setIsSubmitting(false);
@@ -83,7 +84,7 @@ const Register: React.FC = () => {
       return;
     }
 
-    // Get photo file
+    // Photo file
     const photoInput = document.getElementById("profilePhotoInput") as HTMLInputElement;
     const profilePhoto = photoInput?.files?.[0] || null;
 
@@ -99,16 +100,15 @@ const Register: React.FC = () => {
       city,
       address,
       postalCode,
-      userEmail,
+      userEmail: email,
       profilePhoto: profilePhoto ? profilePhoto.name : "None",
     };
 
-    console.log("Registration Submitted:", formData);
-
+    console.log("REGISTRATION SUBMITTED:", formData);
 
     setTimeout(() => {
       alert("Account created successfully!");
-      e.currentTarget.reset();
+      form.reset(); // FIXED — works safely
       removePhoto();
       setIsSubmitting(false);
     }, 1000);
@@ -133,18 +133,20 @@ const Register: React.FC = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-12">
         <div className="grid lg:grid-cols-2 gap-0 bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl ring-1 ring-black/5 overflow-hidden">
 
-          {/* LEFT: Form */}
+          {/* LEFT SIDE (FORM) */}
           <div className="p-8 lg:p-16 flex flex-col justify-center">
             <div className="max-w-lg mx-auto w-full">
+
               <img
                 src="https://i.ibb.co/7xjs7YjB/Expresur-02-1-removebg-preview.webp"
-                alt="Expresur Logo"
+                alt="Logo"
                 className="h-12 lg:h-16 object-contain mb-10"
               />
 
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
                 Welcome to the Future of Logistics
               </h2>
+
               <p className="text-lg text-gray-600 mb-10">
                 Join thousands of businesses delivering smarter and faster.
               </p>
@@ -161,13 +163,14 @@ const Register: React.FC = () => {
                   <TextField label="Phone Number" name="phone" type="tel" required fullWidth />
                   <TextField label="Username (Optional)" name="username" fullWidth />
 
+                  {/* PHOTO UPLOAD */}
                   <div className="flex items-center gap-6">
                     {photoPreview ? (
                       <div className="relative group">
                         <img
                           src={photoPreview}
                           alt="Preview"
-                          className="w-20 h-16 rounded-full object-cover ring-4 ring-[#046838]/10 shadow-lg"
+                          className="w-20 h-26 rounded-full object-cover ring-4 ring-[#046838]/10 shadow-lg"
                         />
                         <button
                           type="button"
@@ -178,10 +181,14 @@ const Register: React.FC = () => {
                         </button>
                       </div>
                     ) : (
-                      <div className="w-20 h-16  rounded-full bg-gray-200 border-2 border-dashed border-gray-400 flex items-center justify-center">
+                      <label
+                        htmlFor="profilePhotoInput"
+                        className="w-20 h-16 rounded-full bg-gray-200 border-2 border-dashed border-gray-400 flex items-center justify-center cursor-pointer"
+                      >
                         <Icon icon={FaUpload} className="text-gray-400 text-2xl" />
-                      </div>
+                      </label>
                     )}
+
                     <input
                       id="profilePhotoInput"
                       type="file"
@@ -191,8 +198,10 @@ const Register: React.FC = () => {
                     />
                   </div>
 
+                  {/* DELIVERY ADDRESS */}
                   <div className="pt-6 border-t border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-800 mb-5">Delivery Address</h3>
+
                     <TextField label="Country" name="country" required fullWidth sx={{ mb: 3 }} />
                     <TextField label="State" name="state" required fullWidth sx={{ mb: 3 }} />
                     <TextField label="City" name="city" required fullWidth sx={{ mb: 3 }} />
@@ -204,10 +213,10 @@ const Register: React.FC = () => {
                   <TextField label="Confirm Password" name="confirmPassword" type="password" required fullWidth />
 
                   <div className="flex items-center gap-3">
-                    <input type="checkbox" id="terms" required className="w-5 h-5 text-[#046838] rounded" />
+                    <input type="checkbox" id="terms" required className="w-5 h-5" />
                     <label htmlFor="terms" className="text-sm text-gray-600">
                       I agree to the <span className="text-[#046838] font-medium">Terms</span> and{" "}
-                      <span className="text-[#046838] font-medium">Privacy Policy</span>
+                      <span className="text-[#046838] font-medium">Privacy Policy</span>.
                     </label>
                   </div>
 
@@ -237,16 +246,19 @@ const Register: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT: Hero */}
+          {/* RIGHT SIDE */}
           <div className="hidden lg:block relative bg-gradient-to-br from-[#046838] to-[#035230] p-16 text-white overflow-hidden">
             <div className="absolute inset-0 bg-black/10" />
             <div className="relative z-10 max-w-lg">
+
               <h1 className="text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
                 Join Thousands of <span className="text-[#FA921D]">Smart Businesses</span>
               </h1>
+
               <p className="text-xl text-green-100 mb-12">
                 Real-time tracking, AI-optimized routes, and unbreakable security — all in one platform.
               </p>
+
               <div className="space-y-10">
                 {features.map((item, i) => (
                   <div key={i} className="flex items-start gap-6 group">
@@ -260,8 +272,10 @@ const Register: React.FC = () => {
                   </div>
                 ))}
               </div>
+
             </div>
           </div>
+
         </div>
       </div>
     </div>
