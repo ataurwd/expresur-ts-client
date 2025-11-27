@@ -88,6 +88,15 @@ const Register: React.FC = () => {
     const photoInput = document.getElementById("profilePhotoInput") as HTMLInputElement;
     const profilePhoto = photoInput?.files?.[0] || null;
 
+    // Separate delivery address object
+    const deliveryAddress = {
+      country,
+      state,
+      city,
+      address,
+      postalCode,
+    };
+
     const formData = {
       firstName,
       lastName,
@@ -95,20 +104,16 @@ const Register: React.FC = () => {
       phone,
       username,
       password,
-      country,
-      state,
-      city,
-      address,
-      postalCode,
       userEmail: email,
       profilePhoto: profilePhoto ? profilePhoto.name : "None",
+      deliveryAddress, // separate address object
     };
 
     console.log("REGISTRATION SUBMITTED:", formData);
 
     setTimeout(() => {
       alert("Account created successfully!");
-      form.reset(); // FIXED — works safely
+      form.reset(); // safe reset
       removePhoto();
       setIsSubmitting(false);
     }, 1000);
