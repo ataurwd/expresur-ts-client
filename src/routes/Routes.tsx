@@ -10,7 +10,6 @@ import Admin_Reports from "../dashboard/admin-dashboard/Admin_Reports";
 import Admin_Settings from "../dashboard/admin-dashboard/Admin_Settings";
 import Admin_Shipments from "../dashboard/admin-dashboard/Admin_Shipments";
 import Admin_Tracking from "../dashboard/admin-dashboard/Admin_Tracking";
-import Admins from "../dashboard/admin-dashboard/Admins";
 import Consolidate from "../dashboard/user-dashboard/Consolidate";
 import CreateShipment from "../dashboard/user-dashboard/CreateShipment";
 import CubaShipping from "../dashboard/user-dashboard/CubaShipping";
@@ -30,6 +29,7 @@ import Login from "../users/Login";
 import Register from "../users/Register";
 import Users from "./../dashboard/admin-dashboard/Users";
 import Layout from "../layout/Layout";
+import Admin_Admins from "../dashboard/admin-dashboard/Admin_Admins";
 
 
 
@@ -121,8 +121,8 @@ const Routes = createBrowserRouter([
 
       // admin routes can be added here
       {
-        path: "admin",
-        element: <Admins/>
+        path: "admins",
+        element: <Admin_Admins/>
       },
       {
         path: "users",
