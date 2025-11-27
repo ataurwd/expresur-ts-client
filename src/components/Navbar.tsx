@@ -49,8 +49,8 @@ const Navbar = () => {
     <>
       <div className="bg-green-800 pr-3 md:pr-8 flex justify-between md:justify-end gap-2">
         <div className="flex justify-center items-center gap-4 text-white pl-3 md:pl-0">
-          <button className="text-[15px]">Login</button>
-          <button className="text-[15px]">SignUp</button>
+          <button className="text-[15px]"><a href="/login">Login</a></button>
+          <button className="text-[15px]"><a href="/register">Register</a></button>
         </div>
         <div className="flex justify-end items-end gap-2">
           <IconButton sx={{ color: "#fff" }}>
