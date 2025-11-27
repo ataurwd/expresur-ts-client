@@ -11,6 +11,7 @@ import {
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
+import { toast } from "sonner";
 
 const Icon = React.memo(
   ({ icon: IconComponent, className }: { icon: any; className?: string }) => (
@@ -106,13 +107,16 @@ const Register: React.FC = () => {
       password,
       userEmail: email,
       profilePhoto: profilePhoto ? profilePhoto.name : "None",
-      deliveryAddress, // separate address object
+      deliveryAddress,
+      role: "user",
     };
 
     console.log("REGISTRATION SUBMITTED:", formData);
 
     setTimeout(() => {
-      alert("Account created successfully!");
+       toast.success(`Welcome back, ${formData.firstName}!`, {
+    duration: 1800,
+  });
       form.reset(); // safe reset
       removePhoto();
       setIsSubmitting(false);
