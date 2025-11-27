@@ -21,7 +21,6 @@ import Pickup from "../dashboard/user-dashboard/Pickup";
 import Profile from "../dashboard/user-dashboard/Profile";
 import Shipments from "../dashboard/user-dashboard/Shipments";
 import Dashboard from "../layout/Dashboard";
-import Layout from "../layout/Layout";
 import Home from "../pages/home/Home";
 import OnlineStore from "../pages/onile-store/OnlineStore";
 import Quienessomos from "../pages/Quienessomos/Quienessomos";
@@ -30,6 +29,7 @@ import RecogidaPage from "../pages/Recogida/Recogida";
 import Login from "../users/Login";
 import Register from "../users/Register";
 import Users from "./../dashboard/admin-dashboard/Users";
+import Layout from "../layout/Layout";
 
 
 
