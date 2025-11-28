@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Admin_Packages = () => {
+const AdminPackages = () => {
     return (
         <div>
             Packages
@@ -8,4 +8,4 @@ const Admin_Packages = () => {
     );
 };
 
-export default Admin_Packages;
+export default AdminPackages;

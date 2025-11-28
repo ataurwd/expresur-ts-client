@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Admin_Consolidations = () => {
+const AdminConsolidations = () => {
     return (
         <div>
             Consolidations
@@ -8,4 +8,4 @@ const Admin_Consolidations = () => {
     );
 };
 
-export default Admin_Consolidations;
+export default AdminConsolidations;

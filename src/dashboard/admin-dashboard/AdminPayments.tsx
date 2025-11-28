@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Admin_Payments = () => {
+const AdminPayments = () => {
     return (
         <div>
             Payments
@@ -8,4 +8,4 @@ const Admin_Payments = () => {
     );
 };
 
-export default Admin_Payments;
+export default AdminPayments;
