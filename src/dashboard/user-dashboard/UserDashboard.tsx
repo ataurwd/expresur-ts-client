@@ -31,7 +31,7 @@ import {
   ChevronRight,
   Logout,
 } from "@mui/icons-material";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
 import { Package2 } from "lucide-react";
 
 const drawerWidth = 260;
@@ -55,7 +55,6 @@ const menuItems = [
 ];
 
 export default function UserDashboard() {
-  // নিজের ভিতরেই state ম্যানেজ করছে
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,13 +64,14 @@ export default function UserDashboard() {
   };
 
   const handleLogout = () => {
-  Cookies.remove("currentUser"); // remove cookie
-  toast.success("Logged out successfully!", {
-    duration: 1500,
-  });
-  navigate("/"); // redirect to home
-};
+    Cookies.remove("currentUser"); // remove cookie
+    toast.success("Logged out successfully!", {
+      duration: 1500,
+    });
+    navigate("/"); // redirect to home
+  };
 
+  const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
 
   return (
     <Drawer
@@ -110,9 +110,9 @@ export default function UserDashboard() {
             fontFamily: '"Poppins", sans-serif',
           }}
         >
-          <Link to={"/"}>
-            <img className="w-2/3" src={Logo} alt="" />
-          </Link>
+          <NavLink to={"/"} style={{ display: "inline-block" }}>
+            <img className="w-2/3" src={Logo} alt="logo" />
+          </NavLink>
         </Typography>
         <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
           {open ? <ChevronLeft /> : <ChevronRight />}
@@ -123,49 +123,70 @@ export default function UserDashboard() {
 
       {/* Menu Items */}
       <List sx={{ flexGrow: 1, pt: 2 }}>
-        {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              onClick={() => navigate(item.path)}
-              selected={location.pathname === item.path}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-                mx: 1,
-                mb: 0.5,
-                borderRadius: 2,
-                transition: "all 0.2s",
-                backgroundColor:
-                  location.pathname === item.path
-                    ? "rgba(99, 102, 241, 0.3)"
-                    : "transparent",
-                "&:hover": {
-                  backgroundColor: "rgba(99, 102, 241, 0.2)",
-                  transform: "translateX(4px)",
-                },
-              }}
-            >
-              <ListItemIcon
+        {menuItems.map((item) => {
+          // Make ALL routes use exact matching by default so Dashboard won't stay active on subroutes.
+          // If you want prefix behaviour for any path, add it to `prefixMatchPaths`.
+          const prefixMatchPaths: string[] = []; // e.g. ['/some-path'] to allow prefix match
+          const endMatch = !prefixMatchPaths.includes(item.path); // true => exact match
+
+          const match = matchPath(
+            { path: normalize(item.path), end: endMatch },
+            normalize(location.pathname)
+          );
+          const isSelected = !!match;
+
+          return (
+            <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                component={(props: any) => (
+                  <NavLink {...props} to={item.path} end={endMatch} />
+                )}
+                selected={isSelected}
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                  color: location.pathname === item.path ? "#fff" : "#fff",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                  mx: 1,
+                  mb: 0.5,
+                  borderRadius: 2,
+                  transition: "all 0.2s",
+
+                  // ACTIVE (Bottle Green) — matches AdminSidebar
+                  backgroundColor: isSelected
+                    ? "rgba(6, 78, 59, 0.35)"
+                    : "transparent",
+
+                  "&:hover": {
+                    backgroundColor: "rgba(6, 78, 59, 0.25)",
+                    transform: "translateX(4px)",
+                  },
+
+                  "&.active": {
+                    backgroundColor: "rgba(6, 78, 59, 0.35)",
+                  },
                 }}
               >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.text}
-                sx={{
-                  opacity: open ? 1 : 0,
-                  transition: "opacity 0.2s 0.1s",
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                    color: "#fff",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    opacity: open ? 1 : 0,
+                    transition: "opacity 0.2s 0.1s",
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
 
       {/* Bottom - Profile + Logout */}
