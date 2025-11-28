@@ -70,7 +70,7 @@ const adminMenuItems = [
   { text: "Rates", icon: <RatesIcon />, path: "/dashboard/admin_rates" },
   { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/admin_tracking" },
   { text: "Reports", icon: <ReportsIcon />, path: "/dashboard/admin_reports" },
-  { text: "Admins", icon: <AdminsIcon />, path: "/dashboard/admins" },
+
   { text: "Settings", icon: <SettingsIcon />, path: "/dashboard/admin_settings" },
 ];
 
