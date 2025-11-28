@@ -145,11 +145,11 @@ const Routes = createBrowserRouter([
         element: <AdminCuba/>
       },
       {
-        path: "adminpackages",
+        path: "admin_packages",
         element: <AdminPackages/>
       },
       {
-        path: "payments",
+        path: "admin_payments",
         element: <AdminPayments/>
       },
       {
@@ -161,7 +161,7 @@ const Routes = createBrowserRouter([
         element: <AdminReports/>
       },
       {
-        path: "shipments",
+        path: "admin_shipments",
         element: <AdminShipments/>
       },
       {

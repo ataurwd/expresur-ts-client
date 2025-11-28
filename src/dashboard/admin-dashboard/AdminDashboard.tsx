@@ -49,7 +49,7 @@ const collapsedWidth = 65;
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
   { text: "Users", icon: <PeopleIcon />, path: "/dashboard/users" },
-  { text: "Packages", icon: <InventoryIcon />, path: "/dashboard/adminpackages" },
+  { text: "Packages", icon: <InventoryIcon />, path: "/dashboard/admin_packages" },
   {
     text: "Consolidations",
     icon: <ConsolidateIcon />,
@@ -58,7 +58,7 @@ const adminMenuItems = [
   {
     text: "Shipments",
     icon: <LocalShippingIcon />,
-    path: "/dashboard/shipments",
+    path: "/dashboard/admin_shipments",
   },
   { text: "Cuba Shipments", icon: <FlightIcon />, path: "/dashboard/cuba" },
   {
@@ -66,7 +66,7 @@ const adminMenuItems = [
     icon: <LocalTaxiIcon />,
     path: "/dashboard/pickup",
   },
-  { text: "Payments", icon: <PaymentIcon />, path: "/dashboard/payments" },
+  { text: "Payments", icon: <PaymentIcon />, path: "/dashboard/admin_payments" },
   { text: "Rates", icon: <RatesIcon />, path: "/dashboard/rates" },
   { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/tracking" },
   { text: "Reports", icon: <ReportsIcon />, path: "/dashboard/reports" },
