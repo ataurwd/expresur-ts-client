@@ -143,7 +143,7 @@ export default function AdminShipmentsResponsive() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
           <div>
             <h2 className="text-2xl font-semibold text-gray-800">Shipments</h2>
-            <p className="text-sm text-gray-500">Admin Dashboard — Shipments (bottle-green theme)</p>
+         
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
@@ -176,12 +176,7 @@ export default function AdminShipmentsResponsive() {
                 Reset
               </button>
 
-              <button
-                onClick={() => alert("Simulated: Create shipment")}
-                className="px-4 py-2 bg-[#166534] text-white rounded-md shadow hover:bg-[#14572b] transition"
-              >
-                New Shipment
-              </button>
+         
             </div>
           </div>
         </div>
