@@ -1,15 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
-import Admin_Consolidations from "../dashboard/admin-dashboard/Admin_Consolidations";
-import Admin_Cuba from "../dashboard/admin-dashboard/Admin_Cuba";
-import Admin_Packages from "../dashboard/admin-dashboard/Admin_Packages";
-import Admin_Payments from "../dashboard/admin-dashboard/Admin_Payments";
-import Admin_Pickup from "../dashboard/admin-dashboard/Admin_Pickup";
-import Admin_Rates from "../dashboard/admin-dashboard/Admin_Rates";
-import Admin_Reports from "../dashboard/admin-dashboard/Admin_Reports";
-import Admin_Settings from "../dashboard/admin-dashboard/Admin_Settings";
-import Admin_Shipments from "../dashboard/admin-dashboard/Admin_Shipments";
-import Admin_Tracking from "../dashboard/admin-dashboard/Admin_Tracking";
 import Consolidate from "../dashboard/user-dashboard/Consolidate";
 import CreateShipment from "../dashboard/user-dashboard/CreateShipment";
 import CubaShipping from "../dashboard/user-dashboard/CubaShipping";
@@ -29,7 +19,17 @@ import Login from "../users/Login";
 import Register from "../users/Register";
 import Users from "./../dashboard/admin-dashboard/Users";
 import Layout from "../layout/Layout";
-import Admin_Admins from "../dashboard/admin-dashboard/Admin_Admins";
+import AdminAdmins from "../dashboard/admin-dashboard/AdminAdmins";
+import AdminTracking from "../dashboard/admin-dashboard/AdminTracking";
+import AdminShipments from "../dashboard/admin-dashboard/AdminShipments";
+import AdminReports from "../dashboard/admin-dashboard/AdminReports";
+import AdminPickup from "../dashboard/admin-dashboard/AdminPickup";
+import AdminPayments from "../dashboard/admin-dashboard/AdminPayments";
+import AdminPackages from "../dashboard/admin-dashboard/AdminPackages";
+import AdminCuba from "../dashboard/admin-dashboard/AdminCuba";
+import AdminConsolidations from "../dashboard/admin-dashboard/AdminConsolidations";
+import AdminSettings from "../dashboard/admin-dashboard/AdminSettings";
+import AdminRates from "../dashboard/admin-dashboard/AdminRates";
 
 
 
@@ -122,7 +122,7 @@ const Routes = createBrowserRouter([
       // admin routes can be added here
       {
         path: "admins",
-        element: <Admin_Admins/>
+        element: <AdminAdmins/>
       },
       {
         path: "users",
@@ -130,43 +130,43 @@ const Routes = createBrowserRouter([
       },
       {
         path: "rates",
-        element: <Admin_Rates/>
+        element: <AdminRates/>
       },
        {
         path: "settings",
-        element: <Admin_Settings/>
+        element: <AdminSettings/>
       },
       {
         path: "consolidations",
-        element: <Admin_Consolidations/>
+        element: <AdminConsolidations/>
       },
       {
         path: "cuba",
-        element: <Admin_Cuba/>
+        element: <AdminCuba/>
       },
       {
         path: "packages",
-        element: <Admin_Packages/>
+        element: <AdminPackages/>
       },
       {
         path: "payments",
-        element: <Admin_Payments/>
+        element: <AdminPayments/>
       },
       {
         path: "pickup",
-        element: <Admin_Pickup/>
+        element: <AdminPickup/>
       },
       {
         path: "reports",
-        element: <Admin_Reports/>
+        element: <AdminReports/>
       },
       {
         path: "shipments",
-        element: <Admin_Shipments/>
+        element: <AdminShipments/>
       },
       {
         path: "tracking",
-        element: <Admin_Tracking/>
+        element: <AdminTracking/>
       },
       
     ]

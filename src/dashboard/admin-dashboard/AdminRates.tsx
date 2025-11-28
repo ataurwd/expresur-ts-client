@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Admin_Rates = () => {
+const AdminRates = () => {
     return (
         <div>
             Rates
@@ -8,4 +8,4 @@ const Admin_Rates = () => {
     );
 };
 
-export default Admin_Rates;
+export default AdminRates;

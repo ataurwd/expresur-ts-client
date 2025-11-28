@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Admin_Cuba = () => {
+const AdminAdmins = () => {
     return (
         <div>
-            Cuba
+            ADmin
         </div>
     );
 };
 
-export default Admin_Cuba;
+export default AdminAdmins;
