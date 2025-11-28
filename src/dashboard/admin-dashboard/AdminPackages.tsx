@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo, useState } from "react";
 
-const AdminPackages = () => {
+const Admin_Packages = () => {
     return (
         <div>
             Packages
@@ -8,4 +8,4 @@ const AdminPackages = () => {
     );
 };
 
-export default AdminPackages;
+export default Admin_Packages;
