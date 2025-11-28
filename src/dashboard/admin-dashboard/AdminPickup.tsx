@@ -46,10 +46,7 @@ const AdminPickup = () => {
           </h1>
           <p className="text-gray-600 mt-1">Manage international & domestic Cuba pickups</p>
         </div>
-        <button className="flex items-center gap-2.5 px-6 py-3.5 bg-green-700 text-white font-medium rounded-2xl hover:bg-green-800 transform hover:scale-105 transition-all shadow-lg">
-          <PlusCircle size={20} />
-          New Pickup Request
-        </button>
+      
       </div>
 
       {/* Filters */}

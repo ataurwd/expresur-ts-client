@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from "react";
 
-// ------------------ TYPES ------------------
+/** ---------------- Types ---------------- */
 type CubaShippingMethod =
   | "Air (10–15 days)"
   | "Maritime (20–30 days)"
   | "Express (3–5 days)";
+
 type CubaShipmentStatus =
   | "pending"
   | "processing"
@@ -28,17 +29,17 @@ interface CubaShipment {
   trackingEvents: { timestamp: string; location: string; details: string }[];
 }
 
-// ------------------ MOCK DATA & RATES ------------------
+/** ------------------ THEME ------------------ */
+const BOTTLE = "#166534";
+const BOTTLE_DARK = "#14572b";
 
-// Placeholder for Cuba Rate Table (Section 5)
-// In a real app, this would be fetched from a database.
+/** ------------------ RATES & DATA (unchanged) ------------------ */
 const CubaRates = {
   "Air (10–15 days)": 4.5, // $4.50 per lb
   "Maritime (20–30 days)": 2.0, // $2.00 per lb
   "Express (3–5 days)": 7.0, // $7.00 per lb
 };
 
-// Initial Mock Shipments (Expanded to demonstrate effective pagination)
 const initialShipments: CubaShipment[] = [
   {
     id: "CU004",
@@ -1177,7 +1178,7 @@ const initialShipments: CubaShipment[] = [
   },
 ];
 
-// Tailwind classes for badges
+/** ---------------- Tailwind classes for badges (unchanged colors) ---------------- */
 const statusColors: Record<CubaShipmentStatus, string> = {
   pending: "bg-yellow-100 text-yellow-800",
   processing: "bg-blue-100 text-blue-800",
@@ -1188,7 +1189,7 @@ const statusColors: Record<CubaShipmentStatus, string> = {
   in_customs: "bg-orange-100 text-orange-800",
 };
 
-// ------------------ MODAL COMPONENT (Tailwind) ------------------
+/** ------------------ MODAL ------------------ */
 const Modal: React.FC<{ onClose: () => void; children: React.ReactNode }> = ({
   onClose,
   children,
@@ -1197,7 +1198,8 @@ const Modal: React.FC<{ onClose: () => void; children: React.ReactNode }> = ({
     <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
       {children}
       <button
-        className="mt-5 w-full px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition duration-150"
+        className="mt-5 w-full px-4 py-2 text-white font-semibold rounded-lg"
+        style={{ backgroundColor: BOTTLE }}
         onClick={onClose}
       >
         Close
@@ -1206,7 +1208,7 @@ const Modal: React.FC<{ onClose: () => void; children: React.ReactNode }> = ({
   </div>
 );
 
-// ------------------ MAIN COMPONENT ------------------
+/** ------------------ MAIN COMPONENT ------------------ */
 const AdminCuba: React.FC = () => {
   const [shipments, setShipments] = useState<CubaShipment[]>(initialShipments);
   const [filterStatus, setFilterStatus] = useState<CubaShipmentStatus | "all">(
@@ -1217,20 +1219,17 @@ const AdminCuba: React.FC = () => {
   );
   const [trackingModal, setTrackingModal] = useState<CubaShipment | null>(null);
 
-  // New Tracking Event State
   const [newTrackingDetail, setNewTrackingDetail] = useState("");
   const [newTrackingLocation, setNewTrackingLocation] = useState("");
 
-  // ---------- PAGINATION STATE ----------
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10; // Number of items per page
+  const rowsPerPage = 10;
 
   const filteredShipments = useMemo(() => {
     if (filterStatus === "all") return shipments;
     return shipments.filter((s) => s.status === filterStatus);
   }, [shipments, filterStatus]);
 
-  // ---------- PAGINATION CALCULATIONS ----------
   const totalPages = Math.ceil(filteredShipments.length / rowsPerPage);
 
   const paginatedShipments = useMemo(() => {
@@ -1247,7 +1246,6 @@ const AdminCuba: React.FC = () => {
     setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   };
 
-  // Logic to determine which page buttons to show (for ellipses)
   const getPageNumbers = (
     totalPages: number,
     currentPage: number,
@@ -1261,37 +1259,29 @@ const AdminCuba: React.FC = () => {
       return pages;
     }
 
-    // Always show first and last page
     pages.push(1);
-
-    // Determine the range around the current page
     let start = Math.max(2, currentPage - 1);
     let end = Math.min(totalPages - 1, currentPage + 1);
 
-    if (currentPage === 1) end = Math.min(totalPages - 1, 3); // More pages near start
-    if (currentPage === totalPages) start = Math.max(2, totalPages - 3); // More pages near end
+    if (currentPage === 1) end = Math.min(totalPages - 1, 3);
+    if (currentPage === totalPages) start = Math.max(2, totalPages - 3);
 
-    // Add leading ellipsis if needed
     if (start > 2) {
       pages.push("...");
     }
 
-    // Add middle pages
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
 
-    // Add trailing ellipsis if needed
     if (end < totalPages - 1) {
       pages.push("...");
     }
 
-    // Ensure the last page is included if totalPages > 1
     if (totalPages > 1 && pages[pages.length - 1] !== totalPages) {
       pages.push(totalPages);
     }
 
-    // Final deduplication for robustness
     return pages.filter(
       (page, index) =>
         page !== pages[index - 1] &&
@@ -1301,7 +1291,6 @@ const AdminCuba: React.FC = () => {
 
   const pageNumbers = getPageNumbers(totalPages, currentPage);
 
-  // -------- Manual Update Tracking Function (Section 7) --------
   const handleAddTrackingEvent = (shipmentId: string) => {
     if (!newTrackingDetail || !newTrackingLocation) return;
 
@@ -1309,7 +1298,7 @@ const AdminCuba: React.FC = () => {
       prev.map((s) => {
         if (s.id === shipmentId) {
           const newEvent = {
-            timestamp: new Date().toISOString().slice(0, 16).replace("T", " "), // YYYY-MM-DD HH:MM
+            timestamp: new Date().toISOString().slice(0, 16).replace("T", " "),
             location: newTrackingLocation,
             details: newTrackingDetail,
           };
@@ -1324,13 +1313,12 @@ const AdminCuba: React.FC = () => {
         return s;
       })
     );
-    // Reset modal state
+
     setNewTrackingDetail("");
     setNewTrackingLocation("");
     setTrackingModal(null);
   };
 
-  // -------- Manual Status Change (Section 7) --------
   const handleStatusChange = (
     shipmentId: string,
     newStatus: CubaShipmentStatus
@@ -1348,23 +1336,22 @@ const AdminCuba: React.FC = () => {
     );
   };
 
-  // -------- Display Utility --------
   const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="mb-6 text-3xl font-bold border-b pb-2">
+      <h2 className="mb-6 text-3xl font-bold border-b pb-2" style={{ color: BOTTLE }}>
         Cuba Shipments Management
       </h2>
 
-      {/* Rate Table Summary (Section 5) */}
-      <div className="mb-8 p-4 bg-white rounded-xl shadow-md border border-indigo-100">
-        <h3 className="text-xl font-semibold mb-3">
+      {/* Rate Table Summary */}
+      <div className="mb-8 p-4 bg-white rounded-xl shadow-md border" style={{ borderColor: "#e6f3ea" }}>
+        <h3 className="text-xl font-semibold mb-3" style={{ color: BOTTLE }}>
           Cuba Shipping Rate Structure (Pre-set Rates)
         </h3>
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-indigo-50 border-b">
+            <tr className="bg-green-50 border-b">
               <th className="p-2 text-left">Method</th>
               <th className="p-2 text-center">Transit Time</th>
               <th className="p-2 text-right">Price per lb (USD)</th>
@@ -1374,10 +1361,8 @@ const AdminCuba: React.FC = () => {
             {Object.entries(CubaRates).map(([method, rate]) => (
               <tr key={method} className="hover:bg-gray-50">
                 <td className="p-2 font-medium">{method}</td>
-                <td className="p-2 text-center">
-                  {method.split("(")[1].replace(")", "")}
-                </td>
-                <td className="p-2 text-right font-bold text-green-700">
+                <td className="p-2 text-center">{method.split("(")[1].replace(")", "")}</td>
+                <td className="p-2 text-right font-bold" style={{ color: BOTTLE }}>
                   {formatPrice(rate)}
                 </td>
               </tr>
@@ -1392,9 +1377,10 @@ const AdminCuba: React.FC = () => {
           value={filterStatus}
           onChange={(e) => {
             setFilterStatus(e.target.value as CubaShipmentStatus | "all");
-            setCurrentPage(1); // Reset to page 1 on filter change
+            setCurrentPage(1);
           }}
-          className="p-2 rounded-lg border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm"
+          className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-opacity-50"
+          style={{ borderColor: "#e6f3ea", backgroundColor: "white" }}
         >
           <option value="all">All Statuses</option>
           {Object.keys(statusColors).map((status) => (
@@ -1404,37 +1390,22 @@ const AdminCuba: React.FC = () => {
           ))}
         </select>
         <p className="text-gray-600">
-          Total Filtered Shipments:{" "}
-          <span className="font-bold">{filteredShipments.length}</span>
+          Total Filtered Shipments: <span className="font-bold">{filteredShipments.length}</span>
         </p>
       </div>
 
       {/* Shipments Table */}
-      <div className="rounded-xl shadow-lg overflow-hidden border border-gray-200">
+      <div className="rounded-xl shadow-lg overflow-hidden border" style={{ borderColor: "#e6f3ea" }}>
         <table className="w-full border-collapse bg-white">
-          <thead className="bg-indigo-50 border-b border-gray-200">
+          <thead className="bg-green-50 border-b" style={{ borderColor: "#e6f3ea" }}>
             <tr>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
-                Tracking #
-              </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
-                Locker ID
-              </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
-                Recipient
-              </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
-                Weight (lbs)
-              </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
-                Price
-              </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
-                Status
-              </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
-                Actions
-              </th>
+              <th className="p-3 font-semibold text-left text-sm text-gray-700">Tracking #</th>
+              <th className="p-3 font-semibold text-left text-sm text-gray-700">Locker ID</th>
+              <th className="p-3 font-semibold text-left text-sm text-gray-700">Recipient</th>
+              <th className="p-3 font-semibold text-left text-sm text-gray-700">Weight (lbs)</th>
+              <th className="p-3 font-semibold text-left text-sm text-gray-700">Price</th>
+              <th className="p-3 font-semibold text-left text-sm text-gray-700">Status</th>
+              <th className="p-3 font-semibold text-left text-sm text-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -1442,21 +1413,13 @@ const AdminCuba: React.FC = () => {
               paginatedShipments.map((s) => (
                 <tr
                   key={s.id}
-                  className="border-b border-gray-100 transition duration-150 hover:bg-indigo-50"
+                  className="border-b transition duration-150 hover:bg-green-50"
                 >
-                  <td className="p-3 text-sm font-medium text-gray-900">
-                    {s.trackingNumber}
-                  </td>
-                  <td className="p-3 text-sm text-gray-600">
-                    {s.lockerIdentifier}
-                  </td>
-                  <td className="p-3 text-sm text-gray-700">
-                    {s.recipientName}
-                  </td>
-                  <td className="p-3 text-sm text-gray-700">
-                    {s.weightLbs.toFixed(1)}
-                  </td>
-                  <td className="p-3 text-sm font-bold text-green-700">
+                  <td className="p-3 text-sm font-medium text-gray-900">{s.trackingNumber}</td>
+                  <td className="p-3 text-sm text-gray-600">{s.lockerIdentifier}</td>
+                  <td className="p-3 text-sm text-gray-700">{s.recipientName}</td>
+                  <td className="p-3 text-sm text-gray-700">{s.weightLbs.toFixed(1)}</td>
+                  <td className="p-3 text-sm font-bold" style={{ color: BOTTLE }}>
                     {formatPrice(s.price)}
                   </td>
                   <td className="p-3">
@@ -1468,9 +1431,8 @@ const AdminCuba: React.FC = () => {
                           e.target.value as CubaShipmentStatus
                         )
                       }
-                      className={`px-3 py-1 text-xs font-semibold rounded-md border appearance-none cursor-pointer ${statusColors[
-                        s.status
-                      ].replace("bg-", "border-")}`}
+                      className={`px-3 py-1 text-xs font-semibold rounded-md border appearance-none cursor-pointer`}
+                      style={{ borderColor: "#e6edf0" }}
                     >
                       {Object.keys(statusColors).map((status) => (
                         <option
@@ -1486,13 +1448,15 @@ const AdminCuba: React.FC = () => {
                   <td className="p-3 whitespace-nowrap">
                     <button
                       onClick={() => setSelectedShipment(s)}
-                      className="px-3 py-1 mr-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 transition duration-150"
+                      className="px-3 py-1 mr-2 text-sm font-medium text-white rounded-md shadow-sm"
+                      style={{ backgroundColor: BOTTLE }}
                     >
                       View Details
                     </button>
                     <button
                       onClick={() => setTrackingModal(s)}
-                      className="px-3 py-1 text-sm font-medium text-white bg-purple-600 rounded-md shadow-sm hover:bg-purple-700 transition duration-150"
+                      className="px-3 py-1 text-sm font-medium text-white rounded-md shadow-sm"
+                      style={{ backgroundColor: BOTTLE_DARK }}
                     >
                       Add Tracking
                     </button>
@@ -1510,7 +1474,7 @@ const AdminCuba: React.FC = () => {
         </table>
       </div>
 
-      {/* PROFESSIONAL PAGINATION */}
+      {/* PAGINATION */}
       {totalPages > 1 && (
         <div className="mt-6 flex flex-col md:flex-row justify-between items-center p-4">
           <p className="text-sm text-gray-600 mb-4 md:mb-0">
@@ -1523,11 +1487,10 @@ const AdminCuba: React.FC = () => {
             className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
             aria-label="Pagination"
           >
-            {/* Previous Button */}
             <button
               onClick={goToPrevPage}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center rounded-l-md px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center rounded-l-md px-3 py-2 border bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <svg
                 className="h-5 w-5 mr-1"
@@ -1545,11 +1508,10 @@ const AdminCuba: React.FC = () => {
               Previous
             </button>
 
-            {/* Page Numbers/Ellipsis */}
             {pageNumbers.map((page, index) => (
               <React.Fragment key={index}>
                 {page === "..." ? (
-                  <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                  <span className="relative inline-flex items-center px-4 py-2 border bg-white text-sm font-medium text-gray-700">
                     ...
                   </span>
                 ) : (
@@ -1558,9 +1520,14 @@ const AdminCuba: React.FC = () => {
                     aria-current={currentPage === page ? "page" : undefined}
                     className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium transition duration-150 ${
                       currentPage === page
-                        ? "z-10 bg-indigo-600 border-indigo-500 text-white shadow-md"
-                        : "bg-white border-gray-300 text-gray-700 hover:bg-indigo-50"
+                        ? "z-10 border-[#14572b] text-white shadow-md"
+                        : "bg-white border-gray-300 text-gray-700 hover:bg-green-50"
                     }`}
+                    style={
+                      currentPage === page
+                        ? { backgroundColor: BOTTLE }
+                        : undefined
+                    }
                   >
                     {page}
                   </button>
@@ -1568,11 +1535,10 @@ const AdminCuba: React.FC = () => {
               </React.Fragment>
             ))}
 
-            {/* Next Button */}
             <button
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className="relative inline-flex items-center rounded-r-md px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center rounded-r-md px-3 py-2 border bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               Next
               <svg
@@ -1593,7 +1559,7 @@ const AdminCuba: React.FC = () => {
         </div>
       )}
 
-      {/* SHIPMENT DETAILS MODAL (View) */}
+      {/* DETAILS MODAL */}
       {selectedShipment && (
         <Modal onClose={() => setSelectedShipment(null)}>
           <h3 className="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">
@@ -1603,9 +1569,8 @@ const AdminCuba: React.FC = () => {
           <p className="mb-2">
             <b className="font-semibold text-gray-700">Status:</b>
             <span
-              className={`ml-2 px-3 py-1 text-sm font-semibold rounded-full ${
-                statusColors[selectedShipment.status]
-              }`}
+              className={`ml-2 px-3 py-1 text-sm font-semibold rounded-full ${statusColors[selectedShipment.status]
+                }`}
             >
               {selectedShipment.status.replace("_", " ")}
             </span>
@@ -1618,11 +1583,14 @@ const AdminCuba: React.FC = () => {
           <h4 className="font-bold mt-4 mb-2 text-lg text-gray-800">
             Timeline (Customer View)
           </h4>
-          <div className="space-y-4 border-l-2 border-indigo-200 pl-4">
+          <div className="space-y-4 border-l-2 pl-4" style={{ borderColor: "#dbeede" }}>
             {selectedShipment.trackingEvents.map((event, index) => (
               <div key={index} className="relative">
-                <span className="absolute -left-6 top-1 block h-3 w-3 rounded-full bg-indigo-500 border-2 border-white"></span>
-                <p className="text-sm font-semibold text-indigo-600">
+                <span
+                  className="absolute -left-6 top-1 block h-3 w-3 rounded-full border-2 border-white"
+                  style={{ backgroundColor: BOTTLE }}
+                />
+                <p className="text-sm font-semibold" style={{ color: BOTTLE }}>
                   {event.timestamp.slice(0, 10)} @ {event.location}
                 </p>
                 <p className="text-sm text-gray-700">{event.details}</p>
@@ -1632,7 +1600,7 @@ const AdminCuba: React.FC = () => {
         </Modal>
       )}
 
-      {/* ADD MANUAL TRACKING MODAL (Section 7) */}
+      {/* ADD MANUAL TRACKING MODAL */}
       {trackingModal && (
         <Modal
           onClose={() => {
@@ -1645,8 +1613,8 @@ const AdminCuba: React.FC = () => {
             Add New Tracking Event
           </h3>
           <p className="mb-4 text-sm text-gray-600">
-            Shipment: **{trackingModal.trackingNumber}** to **
-            {trackingModal.recipientName}**
+            Shipment: <strong>{trackingModal.trackingNumber}</strong> to{" "}
+            <strong>{trackingModal.recipientName}</strong>
           </p>
 
           <div className="space-y-3">
@@ -1659,7 +1627,8 @@ const AdminCuba: React.FC = () => {
                 value={newTrackingLocation}
                 onChange={(e) => setNewTrackingLocation(e.target.value)}
                 placeholder="e.g., Havana Port, Miami Cargo"
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2"
+                style={{ borderColor: "#e6f3ea", outlineColor: BOTTLE }}
               />
             </div>
             <div>
@@ -1671,7 +1640,8 @@ const AdminCuba: React.FC = () => {
                 onChange={(e) => setNewTrackingDetail(e.target.value)}
                 placeholder="e.g., Arrived in Cuba and proceeding to customs"
                 rows={3}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2"
+                style={{ borderColor: "#e6f3ea", outlineColor: BOTTLE }}
               />
             </div>
           </div>
@@ -1679,7 +1649,10 @@ const AdminCuba: React.FC = () => {
           <button
             onClick={() => handleAddTrackingEvent(trackingModal.id)}
             disabled={!newTrackingDetail || !newTrackingLocation}
-            className="mt-5 w-full px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-150 disabled:bg-gray-400"
+            className="mt-5 w-full px-4 py-2 text-white font-semibold rounded-lg transition duration-150 disabled:bg-gray-400"
+            style={{
+              backgroundColor: BOTTLE,
+            }}
           >
             Confirm Manual Update
           </button>
