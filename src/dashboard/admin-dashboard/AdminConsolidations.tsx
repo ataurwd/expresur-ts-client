@@ -349,14 +349,14 @@ const AdminConsolidations: React.FC = () => {
         .status-booked-text { color: ${PRIMARY_COLOR}; }
       `}</style>
       
-      <h2 className="mb-6 text-4xl font-extrabold pb-3 text-gray-800 border-b-4 border-[${PRIMARY_COLOR}]">
+      <h2 className="mb-4 text-2xl font-semibold text-gray-800">
         EXPRESUR Consolidation & Shipment Hub
       </h2>
 
       {/* SECTION 1: Pending Locker Items & Consolidation Creation */}
-      <div className="mb-8 p-6 bg-white rounded-xl shadow-2xl border-t-4 border-[${SECONDARY_COLOR}]">
+      <div className="mb-8 p-6 bg-white rounded-xl shadow-2xl border-t-4">
         <h3 className="text-2xl font-semibold mb-4 flex items-center text-gray-800">
-          <span className="text-secondary mr-2">📦</span> Pending Items by Locker ({lockerIds.length})
+          <span className="text-secondary mr-2"></span> Pending Items by Locker ({lockerIds.length})
         </h3>
         
         {/* Locker Selection */}
@@ -390,7 +390,7 @@ const AdminConsolidations: React.FC = () => {
       {/* SECTION 2: Existing Consolidations List */}
       <div className="p-6 bg-white rounded-xl shadow-2xl border-t-4 border-[${PRIMARY_COLOR}]">
         <h3 className="text-2xl font-semibold mb-4 flex items-center text-gray-800">
-          <span className="text-primary mr-2">🚢</span> Active Consolidations ({consolidations.length})
+          <span className="text-primary mr-2"></span> Active Consolidations ({consolidations.length})
         </h3>
 
         <div className="overflow-x-auto rounded-xl border border-gray-200">
