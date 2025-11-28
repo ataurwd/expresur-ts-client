@@ -93,7 +93,7 @@ export default function AdminPackagesResponsive() {
 
   return (
     <div className="p-6 bg-[#f7faf7] min-h-screen">
-      <div className="max-w-6xl mx-auto">
+      <div className=" mx-auto">
 
         {/* Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
