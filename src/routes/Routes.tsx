@@ -121,7 +121,7 @@ const Routes = createBrowserRouter([
 
       // admin routes can be added here
       {
-        path: "admins",
+        path: "admin",
         element: <AdminAdmins/>
       },
       {

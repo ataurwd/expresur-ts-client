@@ -1,174 +1,370 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from "react";
 
-type User = {
+/* TYPES */
+type Package = {
   id: string;
   name: string;
-  email: string;
-  role: string;
-  status: 'active' | 'inactive';
-  joined: string;
+  price: string;
+  status: "active" | "inactive";
+  type: string;
+  truckStatus: "moving" | "stopped" | "offline";
+  created: string;
+  features: string[];
+  location: {
+    city: string;
+    lat: number;
+    lng: number;
+    lastUpdate: string;
+  };
 };
 
-export default function Users() {
-  const [query, setQuery] = useState('');
+/* --- 🔥 Fake Location Truck Data --- */
+const FAKE_PACKAGES: Package[] = [
+  {
+    id: "p1",
+    name: "Basic Cargo",
+    price: "$29",
+    status: "active",
+    type: "Small",
+    truckStatus: "moving",
+    created: "2024-01-15",
+    features: ["5 KG max", "City delivery", "1 vehicle"],
+    location: {
+      city: "Dhaka",
+      lat: 23.8103,
+      lng: 90.4125,
+      lastUpdate: "2025-01-12 10:22 AM",
+    },
+  },
+  {
+    id: "p2",
+    name: "Business Cargo",
+    price: "$99",
+    status: "active",
+    type: "Medium",
+    truckStatus: "stopped",
+    created: "2024-02-10",
+    features: ["50 KG max", "Intercity", "5 vehicles"],
+    location: {
+      city: "Chattogram",
+      lat: 22.3569,
+      lng: 91.7832,
+      lastUpdate: "2025-01-12 09:40 AM",
+    },
+  },
+  {
+    id: "p3",
+    name: "Premium Cargo",
+    price: "$199",
+    status: "inactive",
+    type: "Large",
+    truckStatus: "offline",
+    created: "2024-03-08",
+    features: ["100 KG max", "Nationwide shipment", "20 vehicles"],
+    location: {
+      city: "Sylhet",
+      lat: 24.8949,
+      lng: 91.8687,
+      lastUpdate: "2025-01-11 04:10 PM",
+    },
+  },
+  {
+    id: "p4",
+    name: "Enterprise Trucks",
+    price: "Custom",
+    status: "active",
+    type: "Fleet",
+    truckStatus: "moving",
+    created: "2024-04-22",
+    features: ["Unlimited cargo", "Full Bangladesh", "50+ vehicles"],
+    location: {
+      city: "Khulna",
+      lat: 22.8456,
+      lng: 89.5403,
+      lastUpdate: "2025-01-12 11:10 AM",
+    },
+  },
+];
+
+/* Helpers */
+function formatDate(d: string) {
+  return new Date(d).toLocaleDateString();
+}
+
+function useDebounce<T>(v: T, delay = 300) {
+  const [value, setValue] = useState(v);
+  useEffect(() => {
+    const id = setTimeout(() => setValue(v), delay);
+    return () => clearTimeout(id);
+  }, [v]);
+  return value;
+}
+
+export default function AdminPackages() {
+  /* --- Search | Filters | Sorting | Pagination --- */
+  const [query, setQuery] = useState("");
+  const debounced = useDebounce(query);
+
+  const [filterType, setFilterType] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterTruck, setFilterTruck] = useState("all");
+
   const [page, setPage] = useState(1);
-  const [perPage] = useState(8);
-  const [sortBy, setSortBy] = useState<keyof User>('name');
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [perPage] = useState(6);
 
-  // --- Fake data ---
-  const fakeUsers: User[] = useMemo(() => ([
-    { id: 'u1', name: 'Arif Hossain', email: 'arif@example.com', role: 'Admin', status: 'active', joined: '2024-02-11' },
-    { id: 'u2', name: 'Sabba K', email: 'sabba@example.com', role: 'Manager', status: 'active', joined: '2024-05-03' },
-    { id: 'u3', name: 'Rumana Akter', email: 'rumana@example.com', role: 'Editor', status: 'inactive', joined: '2023-10-25' },
-    { id: 'u4', name: 'Jahidul Islam', email: 'jahid@example.com', role: 'Support', status: 'active', joined: '2022-08-14' },
-    { id: 'u5', name: 'Lima Sultana', email: 'lima@example.com', role: 'Editor', status: 'active', joined: '2024-01-01' },
-    { id: 'u6', name: 'Tarek Rahman', email: 'tarek@example.com', role: 'Viewer', status: 'inactive', joined: '2021-12-12' },
-    { id: 'u7', name: 'Nadia Noor', email: 'nadia@example.com', role: 'Manager', status: 'active', joined: '2023-06-05' },
-    { id: 'u8', name: 'Imran H', email: 'imran@example.com', role: 'Viewer', status: 'active', joined: '2020-03-30' },
-    { id: 'u9', name: 'Papon K', email: 'papon@example.com', role: 'Support', status: 'active', joined: '2022-11-20' },
-    { id: 'u10', name: 'Fariha Binte', email: 'fariha@example.com', role: 'Editor', status: 'active', joined: '2024-06-07' },
-    { id: 'u11', name: 'Rifat Chowdhury', email: 'rifat@example.com', role: 'Viewer', status: 'inactive', joined: '2019-09-18' },
-    { id: 'u12', name: 'Sadia S', email: 'sadia@example.com', role: 'Admin', status: 'active', joined: '2024-09-28' }
-  ]), []);
+  const [sortBy, setSortBy] = useState<keyof Package>("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
-  // --- Helpers ---
-  function formatDate(d: string) {
-    const date = new Date(d);
-    return date.toLocaleDateString();
-  }
+  const [packages] = useState(FAKE_PACKAGES);
+  const [selected, setSelected] = useState<Package | null>(null);
 
-  function avatarInitials(name: string) {
-    return name.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
-  }
-
-  // --- Filtering, sorting ---
+  /* Filter + Search + Sort */
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let list = fakeUsers.filter(u =>
-      u.name.toLowerCase().includes(q) ||
-      u.email.toLowerCase().includes(q) ||
-      u.role.toLowerCase().includes(q)
-    );
+    const q = debounced.toLowerCase();
 
-    list = list.sort((a,b) => {
+    let list = packages.filter((p) => {
+      const matchesSearch =
+        p.name.toLowerCase().includes(q) ||
+        p.type.toLowerCase().includes(q) ||
+        p.location.city.toLowerCase().includes(q);
+
+      const matchesType = filterType === "all" || p.type === filterType;
+      const matchesStatus = filterStatus === "all" || p.status === filterStatus;
+      const matchesTruck =
+        filterTruck === "all" || p.truckStatus === filterTruck;
+
+      return matchesSearch && matchesType && matchesStatus && matchesTruck;
+    });
+
+    // sorting
+    list = list.sort((a, b) => {
       const aVal = (a as any)[sortBy];
       const bVal = (b as any)[sortBy];
-      if (aVal === bVal) return 0;
-      if (sortDir === 'asc') return aVal > bVal ? 1 : -1;
-      return aVal < bVal ? 1 : -1;
+      return sortDir === "asc"
+        ? String(aVal).localeCompare(String(bVal))
+        : String(bVal).localeCompare(String(aVal));
     });
 
     return list;
-  }, [query, sortBy, sortDir, fakeUsers]);
+  }, [debounced, filterType, filterStatus, filterTruck, packages, sortBy, sortDir]);
 
+  /* Pagination */
   const total = filtered.length;
-  const pageCount = Math.max(1, Math.ceil(total / perPage));
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
+  const pageCount = Math.ceil(total / perPage);
 
-  function toggleSort(column: keyof User) {
-    if (sortBy === column) setSortDir(prev => prev === 'asc' ? 'desc' : 'asc');
-    else { setSortBy(column); setSortDir('asc'); }
+  function toggleSort(col: keyof Package) {
+    if (sortBy === col) setSortDir(sortDir === "asc" ? "desc" : "asc");
+    else {
+      setSortBy(col);
+      setSortDir("asc");
+    }
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-[480px]">
+    <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-semibold">Users</h2>
-            <p className="text-sm text-gray-500">Manage application users — search, sort and perform actions.</p>
-          </div>
-          <div className="flex gap-3 items-center">
-            <input
-              value={query}
-              onChange={e=>{ setQuery(e.target.value); setPage(1); }}
-              placeholder="Search by name, email or role..."
-              className="px-3 py-2 border rounded-md shadow-sm text-sm w-64 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            />
-            <button className="px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">New User</button>
-          </div>
+
+        {/* HEADER */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold">Cargo Packages + Truck Tracking</h2>
+
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search package / city / type ..."
+            className="px-3 py-2 border rounded-md w-72"
+          />
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
-          <table className="min-w-full table-auto">
+        {/* FILTERS */}
+        <div className="flex gap-3 mb-4">
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="px-3 py-2 border rounded-md"
+          >
+            <option value="all">All Types</option>
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
+            <option value="Fleet">Fleet</option>
+          </select>
+
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-3 py-2 border rounded-md"
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+
+          <select
+            value={filterTruck}
+            onChange={(e) => setFilterTruck(e.target.value)}
+            className="px-3 py-2 border rounded-md"
+          >
+            <option value="all">All Trucks</option>
+            <option value="moving">Moving</option>
+            <option value="stopped">Stopped</option>
+            <option value="offline">Offline</option>
+          </select>
+        </div>
+
+        {/* TABLE */}
+        <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
+          <table className="min-w-full">
             <thead className="bg-gray-100 border-b">
               <tr>
-                <th className="text-left p-4">User</th>
-                <th className="text-left p-4 cursor-pointer" onClick={()=>toggleSort('email')}>Email</th>
-                <th className="text-left p-4 cursor-pointer" onClick={()=>toggleSort('role')}>Role</th>
-                <th className="text-left p-4 cursor-pointer" onClick={()=>toggleSort('status')}>Status</th>
-                <th className="text-left p-4 cursor-pointer" onClick={()=>toggleSort('joined')}>Joined</th>
-                <th className="text-right p-4">Actions</th>
+                <th className="p-4">Package</th>
+                <th className="p-4">Price</th>
+                <th className="p-4 cursor-pointer" onClick={() => toggleSort("type")}>
+                  Type {sortBy === "type" ? (sortDir === "asc" ? "▲" : "▼") : ""}
+                </th>
+                <th className="p-4">Location (City)</th>
+                <th className="p-4">Truck Status</th>
+                <th className="p-4">Last Update</th>
+                <th className="p-4 cursor-pointer" onClick={() => toggleSort("created")}>
+                  Created {sortBy === "created" ? (sortDir === "asc" ? "▲" : "▼") : ""}
+                </th>
+                <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
+
             <tbody>
-              {paged.map(u => (
-                <tr key={u.id} className="border-b hover:bg-gray-50">
-                  <td className="p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-indigo-100 text-indigo-800 font-semibold">{avatarInitials(u.name)}</div>
-                    <div>
-                      <div className="font-medium">{u.name}</div>
-                      <div className="text-xs text-gray-500">{u.email}</div>
-                    </div>
-                  </td>
-                  <td className="p-4">{u.email}</td>
+              {paged.map((p) => (
+                <tr key={p.id} className="border-b hover:bg-gray-50">
+                  <td className="p-4 font-medium">{p.name}</td>
+                  <td className="p-4">{p.price}</td>
+                  <td className="p-4">{p.type}</td>
+
+                  {/* CITY */}
                   <td className="p-4">
-                    <span className="inline-block px-2 py-1 text-xs rounded-md border text-gray-700">{u.role}</span>
+                    <div>{p.location.city}</div>
                   </td>
+
+                  {/* TRUCK STATUS */}
                   <td className="p-4">
-                    {u.status === 'active' ? (
-                      <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Active</span>
-                    ) : (
-                      <span className="inline-block px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Inactive</span>
+                    {p.truckStatus === "moving" && (
+                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-md">
+                        🚚 Moving
+                      </span>
+                    )}
+                    {p.truckStatus === "stopped" && (
+                      <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-md">
+                        ⛔ Stopped
+                      </span>
+                    )}
+                    {p.truckStatus === "offline" && (
+                      <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-md">
+                        🔌 Offline
+                      </span>
                     )}
                   </td>
-                  <td className="p-4">{formatDate(u.joined)}</td>
+
+                  <td className="p-4 text-sm">{p.location.lastUpdate}</td>
+
+                  <td className="p-4 text-sm">{formatDate(p.created)}</td>
+
                   <td className="p-4 text-right">
-                    <div className="inline-flex gap-2">
-                      <button className="px-3 py-1 border rounded-md text-sm hover:bg-gray-50">Edit</button>
-                      <button className="px-3 py-1 border rounded-md text-sm text-red-600 hover:bg-red-50">Delete</button>
-                    </div>
+                    <button
+                      onClick={() => setSelected(p)}
+                      className="px-3 py-1 border rounded-md"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               ))}
 
               {paged.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-gray-500">No users found.</td>
+                  <td colSpan={8} className="text-center p-6 text-gray-500">
+                    No packages found.
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between mt-4">
-          <div className="text-sm text-gray-600">Showing {total === 0 ? 0 : start + 1} - {Math.min(start + perPage, total)} of {total} users</div>
-          <div className="flex items-center gap-2">
+        {/* PAGINATION */}
+        <div className="flex justify-between mt-4">
+          <span className="text-sm text-gray-500">
+            Showing {start + 1}-{Math.min(start + perPage, total)} of {total}
+          </span>
+
+          <div className="flex gap-2">
             <button
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              className="px-3 py-1 border rounded-md disabled:opacity-50"
               disabled={page === 1}
-            >Prev</button>
-            <div className="flex items-center gap-1">
-              {Array.from({length: pageCount}).map((_,i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i+1)}
-                  className={`px-3 py-1 rounded-md ${page===i+1 ? 'bg-indigo-600 text-white' : 'border'}`}
-                >{i+1}</button>
-              ))}
-            </div>
+              onClick={() => setPage(page - 1)}
+              className="px-3 py-1 border rounded-md"
+            >
+              Prev
+            </button>
+
+            {Array.from({ length: pageCount }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`px-3 py-1 rounded-md ${
+                  page === i + 1 ? "bg-indigo-600 text-white" : "border"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+
             <button
-              onClick={() => setPage(p => Math.min(pageCount, p + 1))}
-              className="px-3 py-1 border rounded-md disabled:opacity-50"
               disabled={page === pageCount}
-            >Next</button>
+              onClick={() => setPage(page + 1)}
+              className="px-3 py-1 border rounded-md"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
+
+      {/* MODAL */}
+      {selected && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-[90%] max-w-lg">
+
+            <h3 className="text-xl font-bold mb-3">{selected.name}</h3>
+
+            <div className="space-y-2">
+              <p><b>Price:</b> {selected.price}</p>
+              <p><b>Type:</b> {selected.type}</p>
+              <p><b>Truck Status:</b> {selected.truckStatus}</p>
+              <p><b>City:</b> {selected.location.city}</p>
+              <p><b>Coordinates:</b> {selected.location.lat}, {selected.location.lng}</p>
+            </div>
+
+            <div className="mt-4 w-full h-40 bg-gray-300 rounded-md flex items-center justify-center text-sm text-gray-700">
+              (Fake Map Placeholder)
+              <br />
+              lat: {selected.location.lat} / lng: {selected.location.lng}
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setSelected(null)}
+                className="px-4 py-2 border rounded-md"
+              >
+                Close
+              </button>
+              <button className="px-4 py-2 bg-indigo-600 text-white rounded-md">
+                Edit
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
