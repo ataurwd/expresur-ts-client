@@ -388,7 +388,7 @@ const AdminConsolidations: React.FC = () => {
       </div>
 
       {/* SECTION 2: Existing Consolidations List */}
-      <div className="p-6 bg-white rounded-xl shadow-2xl border-t-4 border-[${PRIMARY_COLOR}]">
+      <div className="p-6 bg-white rounded-xl shadow-2xl border-t-4">
         <h3 className="text-2xl font-semibold mb-4 flex items-center text-gray-800">
           <span className="text-primary mr-2"></span> Active Consolidations ({consolidations.length})
         </h3>
