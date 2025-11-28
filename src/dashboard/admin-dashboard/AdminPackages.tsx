@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React from 'react';
 
-const Admin_Packages = () => {
+const AdminPackages = () => {
     return (
         <div>
-            Packages
+            Packages gfjytu7cv bnybv 45 56
         </div>
     );
 };
 
-export default Admin_Packages;
+export default AdminPackages;
