@@ -16,7 +16,7 @@ type Package = {
   status: "active" | "inactive";
 };
 
-/** --------------- Fake data (lots) --------------- */
+/** --------------- Fake data (same as provided) --------------- */
 const PACKAGES: Package[] = [
   { id: "PKG-1001", name: "Plan Básico", price: "39 USD/mes", category: "Pequeñas Empresas", storage: "20 GB", users: "3 Usuarios", speed: "Normal", security: "Protección estándar", support: "Soporte por Email", description: "Ideal para pequeños negocios y emprendedores en Cuba.", created: "2024-01-12", status: "active" },
   { id: "PKG-1002", name: "Plan Inicial", price: "49 USD/mes", category: "Pequeñas Empresas", storage: "50 GB", users: "5 Usuarios", speed: "Alta", security: "Firewall Básico", support: "Email + Chat", description: "Paquete con herramientas esenciales para la gestión diaria.", created: "2024-02-10", status: "active" },
@@ -24,8 +24,6 @@ const PACKAGES: Package[] = [
   { id: "PKG-1004", name: "Plan Premium", price: "249 USD/mes", category: "Empresas Medianas", storage: "500 GB", users: "Ilimitados", speed: "Ultra", security: "Auditorías + Seguridad Avanzada", support: "Soporte 24/7", description: "Escalabilidad y automatización avanzada.", created: "2024-04-12", status: "active" },
   { id: "PKG-1005", name: "Suite Corporativa", price: "Precio Personalizado", category: "Grandes Organizaciones", storage: "Ilimitado", users: "Ilimitados", speed: "Ultra Max", security: "Cumplimiento GDPR + SOC2", support: "Equipo Dedicado 24/7", description: "Infraestructura dedicada para grandes compañías.", created: "2023-11-18", status: "active" },
   { id: "PKG-1006", name: "Plan Avanzado Internacional", price: "299 USD/mes", category: "Empresas Internacionales", storage: "1 TB", users: "50 Usuarios", speed: "Ultra Global", security: "Cifrado Multi-Región", support: "Soporte Multilingüe", description: "Conectividad global para operaciones fuera de Cuba.", created: "2024-06-01", status: "active" },
-
-  // extra rows for pagination / navigation
   { id: "PKG-1007", name: "Starter Light", price: "19 USD/mes", category: "Micro", storage: "5 GB", users: "1 Usuario", speed: "Básica", security: "SSL", support: "Email", description: "Muy económico para pruebas.", created: "2024-07-05", status: "inactive" },
   { id: "PKG-1008", name: "SMB Growth", price: "79 USD/mes", category: "Pequeñas Empresas", storage: "120 GB", users: "15 Usuarios", speed: "Mejorada", security: "Firewall", support: "Email + Chat", description: "Ideal para pymes que crecen rápido.", created: "2024-08-13", status: "active" },
   { id: "PKG-1009", name: "Cross-Border", price: "159 USD/mes", category: "Empresas Internacionales", storage: "300 GB", users: "40 Usuarios", speed: "Premium", security: "Cifrado", support: "Soporte Multilingüe", description: "Optimizado para envíos y operaciones internacionales.", created: "2024-09-20", status: "active" },
@@ -45,8 +43,8 @@ function parseNumericPrice(price: string) {
   return Number(String(m[0]).replace(/,/g, ""));
 }
 
-/** -------------- Component -------------- */
-export default function AdminPackages() {
+/** -------------- Responsive Component -------------- */
+export default function AdminPackagesResponsive() {
   const [query, setQuery] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [perPage] = useState<number>(6);
@@ -98,37 +96,39 @@ export default function AdminPackages() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
           <div>
             <h2 className="text-2xl font-semibold text-gray-800">Packages</h2>
             <p className="text-sm text-gray-500">Shining Company — Paquetes (verde dashboard)</p>
           </div>
 
-          <div className="flex gap-3 items-center">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
             <input
               value={query}
               onChange={(e) => { setQuery(e.target.value); setPage(1); }}
               placeholder="Buscar por nombre, categoría..."
-              className="px-3 py-2 border rounded-md shadow-sm w-72 focus:outline-none focus:ring-2 focus:ring-[#166534]"
+              className="px-3 py-2 border rounded-md shadow-sm w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-[#166534]"
             />
-            <button
-              onClick={() => { setQuery(""); setCategoryFilter("all"); setStatusFilter("all"); setPage(1); }}
-              className="px-3 py-2 border rounded-md"
-            >
-              Reset
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setQuery(""); setCategoryFilter("all"); setStatusFilter("all"); setPage(1); }}
+                className="px-3 py-2 border rounded-md"
+              >
+                Reset
+              </button>
 
-            <button
-              onClick={() => alert("Nueva acción: Create package (simulado)")}
-              className="px-4 py-2 bg-[#166534] text-white rounded-md shadow hover:bg-[#14572b] transition"
-            >
-              New Package
-            </button>
+              <button
+                onClick={() => alert("Nueva acción: Create package (simulado)")}
+                className="px-4 py-2 bg-[#166534] text-white rounded-md shadow hover:bg-[#14572b] transition"
+              >
+                New Package
+              </button>
+            </div>
           </div>
         </div>
 
         {/* KPI cards (small) */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-lg p-4 shadow">
             <div className="text-xs text-gray-500">Total Paquetes</div>
             <div className="text-2xl font-bold text-[#166534]">{PACKAGES.length}</div>
@@ -157,7 +157,7 @@ export default function AdminPackages() {
         {/* Filters row */}
         <div className="bg-white rounded-lg p-4 shadow mb-4">
           <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 flex-wrap items-center">
               <div>
                 <label className="text-xs text-gray-500">Categoría</label>
                 <select value={categoryFilter} onChange={(e)=>{ setCategoryFilter(e.target.value); setPage(1); }} className="ml-2 px-3 py-2 border rounded-md">
@@ -182,7 +182,7 @@ export default function AdminPackages() {
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 items-center">
               <div className="text-sm text-gray-500">Vista rápida</div>
               <button onClick={()=>{ setSortDir('asc'); setSortBy('name'); }} className="px-3 py-2 border rounded-md">A→Z</button>
               <button onClick={()=>{ setSortDir('desc'); setSortBy('name'); }} className="px-3 py-2 border rounded-md">Z→A</button>
@@ -190,8 +190,8 @@ export default function AdminPackages() {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
+        {/* Desktop table (md and up) */}
+        <div className="hidden md:block bg-white rounded-xl shadow-sm overflow-x-auto">
           <table className="min-w-full">
             <thead className="bg-[#166534] text-white">
               <tr>
@@ -251,8 +251,49 @@ export default function AdminPackages() {
           </table>
         </div>
 
+        {/* Mobile cards (smaller screens) */}
+        <div className="md:hidden space-y-3">
+          {paged.map(p => (
+            <article key={p.id} className="bg-white rounded-lg shadow p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-[#166534] text-white flex items-center justify-center font-semibold">{p.name.split(" ").map(s=>s[0]).slice(0,2).join("")}</div>
+                  <div>
+                    <div className="font-medium text-gray-800">{p.name}</div>
+                    <div className="text-xs text-gray-500">{p.category} • {fmtDate(p.created)}</div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <div className="font-semibold">{p.price}</div>
+                  <div className="text-xs mt-1">
+                    <span className={`inline-block mt-2 px-2 py-1 rounded-full ${p.status==='active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{p.status === 'active' ? 'Activo' : 'Inactivo'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 mt-3">{p.description}</p>
+
+              <div className="mt-3 flex flex-wrap gap-2 text-sm text-gray-700">
+                <div className="px-2 py-1 border rounded">Usuarios: {p.users}</div>
+                <div className="px-2 py-1 border rounded">Almac.: {p.storage}</div>
+                <div className="px-2 py-1 border rounded">Vel.: {p.speed}</div>
+              </div>
+
+              <div className="mt-4 flex gap-2 justify-end">
+                <button onClick={()=>setSelected(p)} className="px-3 py-1 border rounded-md text-sm">Detalles</button>
+                <button onClick={()=>alert(`Edit ${p.name} (simulado)`)} className="px-3 py-1 bg-[#166534] text-white rounded-md text-sm hover:bg-[#14572b]">Editar</button>
+              </div>
+            </article>
+          ))}
+
+          {paged.length === 0 && (
+            <div className="text-center text-gray-500">No se encontraron paquetes.</div>
+          )}
+        </div>
+
         {/* Pagination */}
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex flex-col md:flex-row items-center justify-between mt-4 gap-3">
           <div className="text-sm text-gray-600">Showing {total === 0 ? 0 : start + 1} - {Math.min(start + perPage, total)} of {total}</div>
           <div className="flex items-center gap-2">
             <button disabled={page===1} onClick={()=>setPage(p=>Math.max(1,p-1))} className="px-3 py-1 border rounded-md disabled:opacity-50">Prev</button>

@@ -95,7 +95,7 @@ const FAKE_PACKAGES: Package[] = [
     truckStatus: "moving",
     created: "2024-05-12",
     features: ["2 KG limit", "Inside Dhaka", "Fast delivery"],
-    location: { city: "Narayanganj", lat: 23.6238, lng: 90.5000, lastUpdate: "2025-01-12 08:00 AM" },
+    location: { city: "Narayanganj", lat: 23.6238, lng: 90.5, lastUpdate: "2025-01-12 08:00 AM" },
   },
   {
     id: "p6",
@@ -219,7 +219,7 @@ function useDebounce<T>(v: T, delay = 300) {
   useEffect(() => {
     const id = setTimeout(() => setValue(v), delay);
     return () => clearTimeout(id);
-  }, [v]);
+  }, [v, delay]);
   return value;
 }
 
@@ -263,6 +263,12 @@ export default function AdminPackages() {
     list = list.sort((a, b) => {
       const aVal = (a as any)[sortBy];
       const bVal = (b as any)[sortBy];
+      // if sorting by created (date), compare Date
+      if (sortBy === "created") {
+        const da = new Date(a.created).getTime();
+        const db = new Date(b.created).getTime();
+        return sortDir === "asc" ? da - db : db - da;
+      }
       return sortDir === "asc"
         ? String(aVal).localeCompare(String(bVal))
         : String(bVal).localeCompare(String(aVal));
@@ -272,13 +278,21 @@ export default function AdminPackages() {
   }, [debounced, filterType, filterStatus, filterTruck, packages, sortBy, sortDir]);
 
   /* Pagination */
+  useEffect(() => {
+    // if page out of range after filters change, reset to 1
+    setPage((p) => {
+      const pageCountLocal = Math.max(1, Math.ceil(filtered.length / perPage));
+      return p > pageCountLocal ? 1 : p;
+    });
+  }, [filtered.length, perPage]);
+
   const total = filtered.length;
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
-  const pageCount = Math.ceil(total / perPage);
+  const pageCount = Math.max(1, Math.ceil(total / perPage));
 
   function toggleSort(col: keyof Package) {
-    if (sortBy === col) setSortDir(sortDir === "asc" ? "desc" : "asc");
+    if (sortBy === col) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     else {
       setSortBy(col);
       setSortDir("asc");
@@ -286,27 +300,29 @@ export default function AdminPackages() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold">Cargo Packages + Truck Tracking</h2>
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold">Cargo Packages + Truck Tracking</h2>
 
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search package / city / type ..."
-            className="px-3 py-2 border rounded-md w-72"
-          />
+          <div className="w-full md:w-72">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search package / city / type ..."
+              className="px-3 py-2 border rounded-md w-full"
+            />
+          </div>
         </div>
 
         {/* FILTERS */}
-        <div className="flex gap-3 mb-4">
+        <div className="flex flex-wrap gap-3 mb-4">
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-3 py-2 border rounded-md w-full sm:w-auto"
           >
             <option value="all">All Types</option>
             <option value="Small">Small</option>
@@ -318,7 +334,7 @@ export default function AdminPackages() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-3 py-2 border rounded-md w-full sm:w-auto"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -328,33 +344,42 @@ export default function AdminPackages() {
           <select
             value={filterTruck}
             onChange={(e) => setFilterTruck(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-3 py-2 border rounded-md w-full sm:w-auto"
           >
             <option value="all">All Trucks</option>
             <option value="moving">Moving</option>
             <option value="stopped">Stopped</option>
             <option value="offline">Offline</option>
           </select>
+
+          <div className="ml-auto flex items-center gap-2">
+            <button
+              onClick={() => { setFilterType("all"); setFilterStatus("all"); setFilterTruck("all"); setQuery(""); }}
+              className="px-3 py-2 border rounded-md text-sm"
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
-        {/* TABLE */}
-        <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
+        {/* TABLE (desktop) */}
+        <div className="hidden md:block bg-white rounded-xl shadow-sm overflow-x-auto">
           <table className="min-w-full">
             <thead className="bg-gray-100 border-b">
               <tr>
-                <th className="p-4">Package</th>
-                <th className="p-4">Price</th>
+                <th className="p-4 text-left">Package</th>
+                <th className="p-4 text-left">Price</th>
                 <th
-                  className="p-4 cursor-pointer"
+                  className="p-4 text-left cursor-pointer select-none"
                   onClick={() => toggleSort("type")}
                 >
                   Type {sortBy === "type" ? (sortDir === "asc" ? "▲" : "▼") : ""}
                 </th>
-                <th className="p-4">Location (City)</th>
-                <th className="p-4">Truck Status</th>
-                <th className="p-4">Last Update</th>
+                <th className="p-4 text-left">Location (City)</th>
+                <th className="p-4 text-left">Truck Status</th>
+                <th className="p-4 text-left">Last Update</th>
                 <th
-                  className="p-4 cursor-pointer"
+                  className="p-4 text-left cursor-pointer select-none"
                   onClick={() => toggleSort("created")}
                 >
                   Created{" "}
@@ -370,25 +395,22 @@ export default function AdminPackages() {
                   <td className="p-4 font-medium">{p.name}</td>
                   <td className="p-4">{p.price}</td>
                   <td className="p-4">{p.type}</td>
-
-                  {/* CITY */}
                   <td className="p-4">{p.location.city}</td>
 
-                  {/* TRUCK STATUS */}
                   <td className="p-4">
                     {p.truckStatus === "moving" && (
-                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-md">
-                        🚚 Moving
+                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-md inline-flex items-center gap-1">
+                        🚚 <span>Moving</span>
                       </span>
                     )}
                     {p.truckStatus === "stopped" && (
-                      <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-md">
-                        ⛔ Stopped
+                      <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-md inline-flex items-center gap-1">
+                        ⛔ <span>Stopped</span>
                       </span>
                     )}
                     {p.truckStatus === "offline" && (
-                      <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-md">
-                        🔌 Offline
+                      <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-md inline-flex items-center gap-1">
+                        🔌 <span>Offline</span>
                       </span>
                     )}
                   </td>
@@ -400,7 +422,7 @@ export default function AdminPackages() {
                   <td className="p-4 text-right">
                     <button
                       onClick={() => setSelected(p)}
-                      className="px-3 py-1 rounded-md text-white"
+                      className="px-3 py-1 rounded-md text-white text-sm"
                       style={{ backgroundColor: "#166534" }}
                     >
                       View
@@ -420,10 +442,70 @@ export default function AdminPackages() {
           </table>
         </div>
 
+        {/* CARD LIST (mobile) */}
+        <div className="md:hidden space-y-3">
+          {paged.map((p) => (
+            <div key={p.id} className="bg-white rounded-lg p-4 shadow-sm border">
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="font-medium text-sm">{p.name}</div>
+                  <div className="text-xs text-gray-500">{p.location.city} • {p.type}</div>
+                </div>
+
+                <div className="text-right">
+                  <div className="text-sm font-semibold">{p.price}</div>
+                  <div className="text-xs">{formatDate(p.created)}</div>
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-center gap-2 flex-wrap">
+                {p.truckStatus === "moving" && (
+                  <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-md inline-flex items-center gap-1">
+                    🚚 Moving
+                  </span>
+                )}
+                {p.truckStatus === "stopped" && (
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-md inline-flex items-center gap-1">
+                    ⛔ Stopped
+                  </span>
+                )}
+                {p.truckStatus === "offline" && (
+                  <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-md inline-flex items-center gap-1">
+                    🔌 Offline
+                  </span>
+                )}
+
+                <div className="ml-auto flex gap-2">
+                  <button
+                    onClick={() => setSelected(p)}
+                    className="px-3 py-1 rounded-md text-white text-sm"
+                    style={{ backgroundColor: "#166534" }}
+                  >
+                    View
+                  </button>
+                  <button
+                    className="px-3 py-1 border rounded-md text-sm"
+                    onClick={() => { navigator.clipboard?.writeText(`${p.name} • ${p.location.city}`); }}
+                    title="Copy quick info"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {paged.length === 0 && (
+            <div className="text-center p-6 text-gray-500 bg-white rounded-md shadow-sm">
+              No packages found.
+            </div>
+          )}
+        </div>
+
         {/* PAGINATION */}
-        <div className="flex justify-between mt-4">
+        <div className="flex flex-col md:flex-row md:justify-between items-center gap-3 mt-4">
           <span className="text-sm text-gray-500">
-            Showing {start + 1}-{Math.min(start + perPage, total)} of {total}
+            Showing {total === 0 ? 0 : start + 1}-{Math.min(start + perPage, total)} of {total}
           </span>
 
           <div className="flex gap-2">
@@ -435,20 +517,18 @@ export default function AdminPackages() {
               Prev
             </button>
 
-            {Array.from({ length: pageCount }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setPage(i + 1)}
-                className={`px-3 py-1 rounded-md ${
-                  page === i + 1
-                    ? "text-white"
-                    : "border"
-                }`}
-                style={page === i + 1 ? { backgroundColor: "#166534" } : {}}
-              >
-                {i + 1}
-              </button>
-            ))}
+            <div className="hidden sm:flex gap-2">
+              {Array.from({ length: pageCount }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i + 1)}
+                  className={`px-3 py-1 rounded-md ${page === i + 1 ? "text-white" : "border"}`}
+                  style={page === i + 1 ? { backgroundColor: "#166534" } : {}}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
 
             <button
               disabled={page === pageCount}
@@ -463,8 +543,8 @@ export default function AdminPackages() {
 
       {/* MODAL */}
       {selected && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 w-[90%] max-w-lg">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-lg">
             <h3 className="text-xl font-bold mb-3">{selected.name}</h3>
 
             <div className="space-y-2">
@@ -473,6 +553,16 @@ export default function AdminPackages() {
               <p><b>Truck Status:</b> {selected.truckStatus}</p>
               <p><b>City:</b> {selected.location.city}</p>
               <p><b>Coordinates:</b> {selected.location.lat}, {selected.location.lng}</p>
+              <p><b>Last update:</b> {selected.location.lastUpdate}</p>
+
+              <div>
+                <b>Features:</b>
+                <ul className="list-disc list-inside">
+                  {selected.features.map((f, idx) => (
+                    <li key={idx} className="text-sm">{f}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <div className="mt-4 w-full h-40 bg-gray-200 rounded-md flex items-center justify-center text-sm text-gray-600">
