@@ -26,7 +26,6 @@ const dummyPayments: Payment[] = [
   { id: "PMT-4091", customer: "Jorge Herrera", email: "jorge.herrera@proton.me", amount: 650.00, currency: "USD", method: "Bank Transfer", status: "Paid", date: "2025-02-03", transactionId: "bt_20250203_JH", invoiceId: "INV-2025-082" },
   { id: "PMT-4090", customer: "Isabel Torres", email: "isabel.torres@gmail.com", amount: 78.40, currency: "EUR", method: "Credit Card", status: "Paid", date: "2025-02-02", transactionId: "tx_1K9mPx2eZvKYlo2E", invoiceId: "INV-2025-081" },
   { id: "PMT-4089", customer: "Miguel Ruiz", email: "miguel.ruiz@cubamail.cu", amount: 210.00, currency: "USD", method: "Crypto", status: "Paid", date: "2025-02-01", transactionId: "crypto_usdt_0x9f...a1b2", invoiceId: "INV-2025-080" },
-  // ... 10 more realistic ones
   { id: "PMT-4088", customer: "Laura Vega", email: "laura.vega@icloud.com", amount: 399.00, currency: "USD", method: "Credit Card", status: "Paid", date: "2025-01-31", transactionId: "tx_1K9mPx2eZvKYlo2F", invoiceId: "INV-2025-079" },
   { id: "PMT-4087", customer: "Diego Morales", email: "diego.m@gmail.com", amount: 167.25, currency: "EUR", method: "PayPal", status: "Pending", date: "2025-01-30", transactionId: "paypal_pending_001", invoiceId: "INV-2025-078" },
   { id: "PMT-4086", customer: "Camila Ortega", email: "camila.ortega@yahoo.es", amount: 550.00, currency: "USD", method: "Bank Transfer", status: "Paid", date: "2025-01-29", transactionId: "bt_20250129_CO", invoiceId: "INV-2025-077" },
@@ -65,7 +64,7 @@ const AdminPayments = () => {
   return (
     <>
       <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 to-white min-h-screen">
-        {/* Header */}
+
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
             <DollarSign className="text-green-700" />
@@ -74,7 +73,6 @@ const AdminPayments = () => {
           <p className="text-gray-600 mt-2">Monitor all customer payments and transactions</p>
         </div>
 
-        {/* Filters */}
         <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-lg p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
@@ -106,11 +104,13 @@ const AdminPayments = () => {
           </div>
         </div>
 
-        {/* Payments Table */}
         <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-2xl font-bold text-gray-800">All Transactions</h2>
-            <p className="text-sm text-gray-500 mt-1">{dummyPayments.length} payments • Total: ${dummyPayments.reduce((a, p) => p.status === "Paid" ? a + p.amount : a, 0).toFixed(2)}</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {dummyPayments.length} payments • Total: $
+              {dummyPayments.reduce((a, p) => p.status === "Paid" ? a + p.amount : a, 0).toFixed(2)}
+            </p>
           </div>
 
           <div className="overflow-x-auto">
@@ -126,62 +126,70 @@ const AdminPayments = () => {
                   <th className="px-6 py-4 text-center font-semibold">Action</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-gray-200">
                 {dummyPayments.map((payment) => (
-                  <tr key={payment.id} className="hover:bg-gray-50 transition group">
+                  <tr key={payment.id}>
                     <td className="px-6 py-4 font-semibold text-green-700">{payment.id}</td>
+
                     <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-gray-900">{payment.customer}</p>
-                        <p className="text-xs text-gray-500">{payment.email}</p>
-                      </div>
+                      <p className="font-medium text-gray-900">{payment.customer}</p>
+                      <p className="text-xs text-gray-500">{payment.email}</p>
                     </td>
+
                     <td className="px-6 py-4 font-semibold">
                       {payment.currency} {payment.amount.toFixed(2)}
                     </td>
+
                     <td className="px-6 py-4 hidden sm:table-cell">
                       <div className="flex items-center gap-2">
                         <CreditCard size={14} />
                         {payment.method}
                       </div>
                     </td>
+
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1.5 rounded-full text-xs font-bold ${getStatusBadge(payment.status)}`}>
                         {payment.status}
                       </span>
                     </td>
+
                     <td className="px-6 py-4 text-gray-600 hidden md:table-cell">
                       <div className="flex items-center gap-2">
                         <Calendar size={14} />
                         {new Date(payment.date).toLocaleDateString()}
                       </div>
                     </td>
+
                     <td className="px-6 py-4 text-center">
                       <button
                         onClick={() => openModal(payment)}
-                        className="text-green-700 font-medium hover:bg-green-50 px-4 py-2 rounded-lg transition opacity-0 group-hover:opacity-100"
+                        className="text-green-700 font-medium px-4 py-2 rounded-lg transition"
                       >
                         View Details →
                       </button>
                     </td>
+
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         </div>
       </div>
 
-      {/* Modal Popup */}
       {isModalOpen && selectedPayment && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
             <div className="p-8">
+
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900">Payment Details</h3>
                   <p className="text-green-700 font-semibold text-lg mt-1">{selectedPayment.id}</p>
                 </div>
+
                 <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
                   <X size={28} />
                 </button>
@@ -196,6 +204,7 @@ const AdminPayments = () => {
                     </p>
                     <p className="text-sm text-gray-600">{selectedPayment.email}</p>
                   </div>
+
                   <div>
                     <p className="text-sm text-gray-500">Amount</p>
                     <p className="text-3xl font-bold text-green-700">
@@ -211,6 +220,7 @@ const AdminPayments = () => {
                       {selectedPayment.status}
                     </span>
                   </div>
+
                   <div>
                     <p className="text-sm text-gray-500">Payment Method</p>
                     <p className="font-medium">{selectedPayment.method}</p>
@@ -222,31 +232,45 @@ const AdminPayments = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-gray-500">Transaction ID</p>
-                    <p className="font-mono text-xs bg-gray-100 px-3 py-2 rounded-lg mt-1">{selectedPayment.transactionId}</p>
+                    <p className="font-mono text-xs bg-gray-100 px-3 py-2 rounded-lg mt-1">
+                      {selectedPayment.transactionId}
+                    </p>
                   </div>
+
                   <div>
                     <p className="text-gray-500">Invoice ID</p>
-                    <p className="font-mono text-xs bg-gray-100 px-3 py-2 rounded-lg mt-1">{selectedPayment.invoiceId}</p>
+                    <p className="font-mono text-xs bg-gray-100 px-3 py-2 rounded-lg mt-1">
+                      {selectedPayment.invoiceId}
+                    </p>
                   </div>
                 </div>
+
                 {selectedPayment.notes && (
                   <div>
                     <p className="text-gray-500 text-sm">Notes</p>
                     <p className="text-gray-700 bg-gray-50 p-4 rounded-lg mt-1">{selectedPayment.notes}</p>
                   </div>
                 )}
+
                 <div>
                   <p className="text-gray-500 text-sm">Payment Date</p>
                   <p className="font-medium flex items-center gap-2">
                     <Calendar size={16} />
-                    {new Date(selectedPayment.date).toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    {new Date(selectedPayment.date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </p>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
       )}
+
     </>
   );
 };

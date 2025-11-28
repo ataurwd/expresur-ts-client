@@ -46,7 +46,6 @@ const AdminPickup = () => {
           </h1>
           <p className="text-gray-600 mt-1">Manage international & domestic Cuba pickups</p>
         </div>
-      
       </div>
 
       {/* Filters */}
@@ -110,7 +109,7 @@ const AdminPickup = () => {
               {dummyData.map((pickup) => (
                 <tr
                   key={pickup.id}
-                  className="hover:bg-gray-50/70 transition-all duration-200 group"
+                  className="hover:bg-gray-50/70 transition-all duration-200"
                 >
                   <td className="px-6 py-5 font-semibold text-green-700">{pickup.id}</td>
                   <td className="px-6 py-5">
@@ -143,7 +142,8 @@ const AdminPickup = () => {
                     </span>
                   </td>
                   <td className="px-6 py-5 text-center">
-                    <div className="flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* Buttons always visible (no opacity/group-hover) */}
+                    <div className="flex items-center justify-center gap-3">
                       <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
                         <Eye size={16} /> View
                       </button>
