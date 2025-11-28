@@ -145,7 +145,7 @@ const Routes = createBrowserRouter([
         element: <AdminCuba/>
       },
       {
-        path: "packages",
+        path: "adminpackages",
         element: <AdminPackages/>
       },
       {
