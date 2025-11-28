@@ -28,13 +28,12 @@ import {
   CurrencyExchange as RatesIcon,
   TrackChanges as TrackingIcon,
   BarChart as ReportsIcon,
-  AdminPanelSettings as AdminsIcon,
   Settings as SettingsIcon,
   ChevronLeft,
   ChevronRight,
   Logout,
 } from "@mui/icons-material";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
 
 type Props = {
   adminName?: string;
@@ -70,7 +69,6 @@ const adminMenuItems = [
   { text: "Rates", icon: <RatesIcon />, path: "/dashboard/admin_rates" },
   { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/admin_tracking" },
   { text: "Reports", icon: <ReportsIcon />, path: "/dashboard/admin_reports" },
-
   { text: "Settings", icon: <SettingsIcon />, path: "/dashboard/admin_settings" },
 ];
 
@@ -87,12 +85,14 @@ export default function AdminSidebar({
   const handleToggle = () => setOpen((prev) => !prev);
 
   const handleLogout = () => {
-  Cookies.remove("currentUser"); // remove cookie
-  toast.success("Logged out successfully!", {
-    duration: 1500,
-  });
-  navigate("/"); // redirect to home
-};
+    Cookies.remove("currentUser");
+    toast.success("Logged out successfully!", {
+      duration: 1500,
+    });
+    navigate("/");
+  };
+
+  const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
 
   return (
     <Drawer
@@ -104,7 +104,7 @@ export default function AdminSidebar({
         "& .MuiDrawer-paper": {
           width: open ? drawerWidth : collapsedWidth,
           boxSizing: "border-box",
-          background: "linear-gradient(180deg, #166534 0%, #166534 100%)", // same green gradient
+          background: "linear-gradient(180deg, #166534 0%, #166534 100%)",
           color: "#fff",
           transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           overflowX: "hidden",
@@ -112,7 +112,7 @@ export default function AdminSidebar({
         },
       }}
     >
-      {/* Header - Logo + Toggle */}
+      {/* Header */}
       <Box
         sx={{
           display: "flex",
@@ -131,9 +131,9 @@ export default function AdminSidebar({
             fontFamily: '"Poppins", sans-serif',
           }}
         >
-          <Link to={"/"}>
+          <NavLink to={"/"} style={{ display: "inline-block" }}>
             <img className="w-2/3" src={Logo} alt="" />
-          </Link>
+          </NavLink>
         </Typography>
         <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
           {open ? <ChevronLeft /> : <ChevronRight />}
@@ -145,11 +145,19 @@ export default function AdminSidebar({
       {/* Menu Items */}
       <List sx={{ flexGrow: 1, pt: 2 }}>
         {adminMenuItems.map((item) => {
-          const isSelected = location.pathname === item.path;
+          const endMatch = item.path === "/dashboard/admin" ? false : true;
+          const match = matchPath(
+            { path: normalize(item.path), end: endMatch },
+            normalize(location.pathname)
+          );
+          const isSelected = !!match;
+
           return (
             <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
-                onClick={() => navigate(item.path)}
+                component={(props: any) => (
+                  <NavLink {...props} to={item.path} end={endMatch} />
+                )}
                 selected={isSelected}
                 sx={{
                   minHeight: 48,
@@ -159,12 +167,19 @@ export default function AdminSidebar({
                   mb: 0.5,
                   borderRadius: 2,
                   transition: "all 0.2s",
+
+                  // ACTIVE (Bottle Green)
                   backgroundColor: isSelected
-                    ? "rgba(99, 102, 241, 0.3)"
+                    ? "rgba(6, 78, 59, 0.35)" // deep bottle green tint
                     : "transparent",
+
                   "&:hover": {
-                    backgroundColor: "rgba(99, 102, 241, 0.2)",
+                    backgroundColor: "rgba(6, 78, 59, 0.25)",
                     transform: "translateX(4px)",
+                  },
+
+                  "&.active": {
+                    backgroundColor: "rgba(6, 78, 59, 0.35)",
                   },
                 }}
               >
@@ -178,6 +193,7 @@ export default function AdminSidebar({
                 >
                   {item.icon}
                 </ListItemIcon>
+
                 <ListItemText
                   primary={item.text}
                   sx={{
@@ -191,7 +207,7 @@ export default function AdminSidebar({
         })}
       </List>
 
-      {/* Bottom - Profile + Logout */}
+      {/* Bottom Profile + Logout */}
       <Box sx={{ p: 2, borderTop: "1px solid #475569", mt: "auto" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
           <Avatar
@@ -200,6 +216,7 @@ export default function AdminSidebar({
           >
             {!avatarUrl && adminName ? adminName.charAt(0).toUpperCase() : null}
           </Avatar>
+
           {open && (
             <Box>
               <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -233,6 +250,7 @@ export default function AdminSidebar({
           >
             <Logout />
           </ListItemIcon>
+
           <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
         </ListItemButton>
       </Box>
