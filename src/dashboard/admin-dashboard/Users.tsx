@@ -84,6 +84,129 @@ const FAKE_PACKAGES: Package[] = [
       lastUpdate: "2025-01-12 11:10 AM",
     },
   },
+
+  /* ▶️ NEW FAKE DATA (More Pages) */
+  {
+    id: "p5",
+    name: "Express Mini",
+    price: "$15",
+    status: "active",
+    type: "Small",
+    truckStatus: "moving",
+    created: "2024-05-12",
+    features: ["2 KG limit", "Inside Dhaka", "Fast delivery"],
+    location: { city: "Narayanganj", lat: 23.6238, lng: 90.5000, lastUpdate: "2025-01-12 08:00 AM" },
+  },
+  {
+    id: "p6",
+    name: "Heavy Duty Load",
+    price: "$299",
+    status: "active",
+    type: "Large",
+    truckStatus: "stopped",
+    created: "2024-06-01",
+    features: ["300 KG", "Full BD", "10 Trucks"],
+    location: { city: "Rajshahi", lat: 24.3745, lng: 88.6042, lastUpdate: "2025-01-11 06:45 PM" },
+  },
+  {
+    id: "p7",
+    name: "Food Courier",
+    price: "$45",
+    status: "inactive",
+    type: "Small",
+    truckStatus: "offline",
+    created: "2024-06-20",
+    features: ["Perishable goods", "Fast lane", "Thermo box"],
+    location: { city: "Gazipur", lat: 23.9999, lng: 90.4203, lastUpdate: "2025-01-10 01:22 PM" },
+  },
+  {
+    id: "p8",
+    name: "Mega Transport Fleet",
+    price: "$499",
+    status: "active",
+    type: "Fleet",
+    truckStatus: "moving",
+    created: "2024-07-15",
+    features: ["100+ Trucks", "BD-Wide", "Tracking"],
+    location: { city: "Rangpur", lat: 25.7439, lng: 89.2752, lastUpdate: "2025-01-12 12:30 PM" },
+  },
+  {
+    id: "p9",
+    name: "Corporate Logistics",
+    price: "$399",
+    status: "active",
+    type: "Large",
+    truckStatus: "moving",
+    created: "2024-08-10",
+    features: ["Corporate-only", "Fleet support", "Insurance"],
+    location: { city: "Barishal", lat: 22.7010, lng: 90.3535, lastUpdate: "2025-01-11 09:45 AM" },
+  },
+  {
+    id: "p10",
+    name: "School Supply Cargo",
+    price: "$79",
+    status: "active",
+    type: "Medium",
+    truckStatus: "stopped",
+    created: "2024-09-01",
+    features: ["Books & Uniform", "Intercity", "Secure"],
+    location: { city: "Comilla", lat: 23.4607, lng: 91.1809, lastUpdate: "2025-01-12 10:30 AM" },
+  },
+  {
+    id: "p11",
+    name: "Electronics Transport",
+    price: "$159",
+    status: "inactive",
+    type: "Medium",
+    truckStatus: "offline",
+    created: "2024-09-21",
+    features: ["Electronics", "Anti-shock", "Safe handling"],
+    location: { city: "Bogura", lat: 24.8481, lng: 89.3720, lastUpdate: "2025-01-09 07:10 PM" },
+  },
+  {
+    id: "p12",
+    name: "Garments Bulk Cargo",
+    price: "$299",
+    status: "active",
+    type: "Large",
+    truckStatus: "moving",
+    created: "2024-10-15",
+    features: ["Export goods", "Warehouse support", "Fast clearance"],
+    location: { city: "Savar", lat: 23.8285, lng: 90.2667, lastUpdate: "2025-01-12 11:05 AM" },
+  },
+  {
+    id: "p13",
+    name: "Medicine Cooled Truck",
+    price: "$199",
+    status: "active",
+    type: "Medium",
+    truckStatus: "moving",
+    created: "2024-11-03",
+    features: ["Cold chain", "Pharmacy", "Fast care"],
+    location: { city: "Mymensingh", lat: 24.7471, lng: 90.4203, lastUpdate: "2025-01-12 07:50 AM" },
+  },
+  {
+    id: "p14",
+    name: "Luxury Car Shifting",
+    price: "$499",
+    status: "inactive",
+    type: "Large",
+    truckStatus: "stopped",
+    created: "2024-11-29",
+    features: ["Car lift", "Insurance", "Specialist driver"],
+    location: { city: "Jessore", lat: 23.1778, lng: 89.1804, lastUpdate: "2025-01-10 05:00 PM" },
+  },
+  {
+    id: "p15",
+    name: "Mega Bulk Freight",
+    price: "Custom",
+    status: "active",
+    type: "Fleet",
+    truckStatus: "moving",
+    created: "2024-12-05",
+    features: ["Ships + Trucks", "Import/Export", "Industrial cargo"],
+    location: { city: "Mongla Port", lat: 22.4836, lng: 89.6008, lastUpdate: "2025-01-12 01:00 PM" },
+  },
 ];
 
 /* Helpers */
@@ -110,7 +233,7 @@ export default function AdminPackages() {
   const [filterTruck, setFilterTruck] = useState("all");
 
   const [page, setPage] = useState(1);
-  const [perPage] = useState(6);
+  const [perPage] = useState(8);
 
   const [sortBy, setSortBy] = useState<keyof Package>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
@@ -221,14 +344,21 @@ export default function AdminPackages() {
               <tr>
                 <th className="p-4">Package</th>
                 <th className="p-4">Price</th>
-                <th className="p-4 cursor-pointer" onClick={() => toggleSort("type")}>
+                <th
+                  className="p-4 cursor-pointer"
+                  onClick={() => toggleSort("type")}
+                >
                   Type {sortBy === "type" ? (sortDir === "asc" ? "▲" : "▼") : ""}
                 </th>
                 <th className="p-4">Location (City)</th>
                 <th className="p-4">Truck Status</th>
                 <th className="p-4">Last Update</th>
-                <th className="p-4 cursor-pointer" onClick={() => toggleSort("created")}>
-                  Created {sortBy === "created" ? (sortDir === "asc" ? "▲" : "▼") : ""}
+                <th
+                  className="p-4 cursor-pointer"
+                  onClick={() => toggleSort("created")}
+                >
+                  Created{" "}
+                  {sortBy === "created" ? (sortDir === "asc" ? "▲" : "▼") : ""}
                 </th>
                 <th className="p-4 text-right">Actions</th>
               </tr>
@@ -242,9 +372,7 @@ export default function AdminPackages() {
                   <td className="p-4">{p.type}</td>
 
                   {/* CITY */}
-                  <td className="p-4">
-                    <div>{p.location.city}</div>
-                  </td>
+                  <td className="p-4">{p.location.city}</td>
 
                   {/* TRUCK STATUS */}
                   <td className="p-4">
@@ -272,7 +400,8 @@ export default function AdminPackages() {
                   <td className="p-4 text-right">
                     <button
                       onClick={() => setSelected(p)}
-                      className="px-3 py-1 border rounded-md"
+                      className="px-3 py-1 rounded-md text-white"
+                      style={{ backgroundColor: "#166534" }}
                     >
                       View
                     </button>
@@ -311,8 +440,11 @@ export default function AdminPackages() {
                 key={i}
                 onClick={() => setPage(i + 1)}
                 className={`px-3 py-1 rounded-md ${
-                  page === i + 1 ? "bg-indigo-600 text-white" : "border"
+                  page === i + 1
+                    ? "text-white"
+                    : "border"
                 }`}
+                style={page === i + 1 ? { backgroundColor: "#166534" } : {}}
               >
                 {i + 1}
               </button>
@@ -333,7 +465,6 @@ export default function AdminPackages() {
       {selected && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
           <div className="bg-white rounded-lg p-6 w-[90%] max-w-lg">
-
             <h3 className="text-xl font-bold mb-3">{selected.name}</h3>
 
             <div className="space-y-2">
@@ -344,8 +475,8 @@ export default function AdminPackages() {
               <p><b>Coordinates:</b> {selected.location.lat}, {selected.location.lng}</p>
             </div>
 
-            <div className="mt-4 w-full h-40 bg-gray-300 rounded-md flex items-center justify-center text-sm text-gray-700">
-              (Fake Map Placeholder)
+            <div className="mt-4 w-full h-40 bg-gray-200 rounded-md flex items-center justify-center text-sm text-gray-600">
+              (Fake Map)
               <br />
               lat: {selected.location.lat} / lng: {selected.location.lng}
             </div>
@@ -357,11 +488,13 @@ export default function AdminPackages() {
               >
                 Close
               </button>
-              <button className="px-4 py-2 bg-indigo-600 text-white rounded-md">
+              <button
+                className="px-4 py-2 text-white rounded-md"
+                style={{ backgroundColor: "#166534" }}
+              >
                 Edit
               </button>
             </div>
-
           </div>
         </div>
       )}

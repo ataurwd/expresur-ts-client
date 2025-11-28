@@ -9,6 +9,9 @@ import {
   CartesianGrid,
 } from "recharts";
 
+/** PRIMARY THEME COLOR */
+const PRIMARY = "#166534"; // as you requested (#166534)
+
 /** ---------- SINGLE ADMIN ---------- */
 const ADMIN = {
   id: "a1",
@@ -110,14 +113,14 @@ export default function AdminAdmins() {
   const totalFiltered = useMemo(() => filteredRows.reduce((s,r) => s + r.amount, 0), [filteredRows]);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-[#f7faf7] min-h-screen">
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold">Admin Panel</h1>
-            <p className="text-sm text-gray-500">Single-admin dashboard — quick overview & income table</p>
+            <h1 className="text-2xl font-semibold text-gray-900">Admin Panel</h1>
+            <p className="text-sm text-gray-600">Single-admin dashboard — quick overview & income table</p>
           </div>
 
           <div className="text-right">
@@ -130,25 +133,25 @@ export default function AdminAdmins() {
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="text-xs text-gray-500">Total Users</div>
-            <div className="text-2xl font-bold">{QUICK.usersCount}</div>
+            <div className="text-2xl font-bold text-gray-900">{QUICK.usersCount}</div>
             <div className="text-xs text-gray-400 mt-1">Registered users</div>
           </div>
 
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="text-xs text-gray-500">Parcels Delivered</div>
-            <div className="text-2xl font-bold">{QUICK.parcelsDelivered}</div>
+            <div className="text-2xl font-bold text-gray-900">{QUICK.parcelsDelivered}</div>
             <div className="text-xs text-gray-400 mt-1">Total deliveries</div>
           </div>
 
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="text-xs text-gray-500">Pickup Requests</div>
-            <div className="text-2xl font-bold">{QUICK.pickupRequests}</div>
+            <div className="text-2xl font-bold text-gray-900">{QUICK.pickupRequests}</div>
             <div className="text-xs text-gray-400 mt-1">Pending pickups</div>
           </div>
 
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="text-xs text-gray-500">Income (filtered)</div>
-            <div className="text-2xl font-bold text-indigo-700">${totalFiltered.toLocaleString()}</div>
+            <div className="text-2xl font-bold" style={{ color: PRIMARY }}>${totalFiltered.toLocaleString()}</div>
             <div className="text-xs text-gray-400 mt-1">Sum of visible rows</div>
           </div>
         </div>
@@ -158,7 +161,7 @@ export default function AdminAdmins() {
           {/* chart */}
           <div className="lg:col-span-2 bg-white rounded-lg p-4 shadow">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-md font-medium">Monthly Revenue</h3>
+              <h3 className="text-md font-medium text-gray-900">Monthly Revenue</h3>
               <div className="text-sm text-gray-500">Last 6 months</div>
             </div>
 
@@ -169,7 +172,7 @@ export default function AdminAdmins() {
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="revenue" stroke="#4f46e5" strokeWidth={2} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="revenue" stroke={PRIMARY} strokeWidth={2} dot={{ r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -177,7 +180,7 @@ export default function AdminAdmins() {
 
           {/* filters */}
           <div className="bg-white rounded-lg p-4 shadow">
-            <h4 className="font-medium mb-3">Filters</h4>
+            <h4 className="font-medium mb-3 text-gray-900">Filters</h4>
 
             <div className="space-y-3 text-sm">
               <div>
@@ -231,8 +234,8 @@ export default function AdminAdmins() {
         {/* Income table */}
         <div className="bg-white rounded-lg p-4 shadow mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-md font-medium">Income table</h3>
-            <div className="text-sm text-gray-500">Showing {filteredRows.length} rows — Total: ${totalFiltered.toLocaleString()}</div>
+            <h3 className="text-md font-medium text-gray-900">Income table</h3>
+            <div className="text-sm text-gray-500">Showing {filteredRows.length} rows — Total: <span style={{ color: PRIMARY }}>${totalFiltered.toLocaleString()}</span></div>
           </div>
 
           <div className="overflow-x-auto">
@@ -254,7 +257,9 @@ export default function AdminAdmins() {
                     <td className="p-2">{row.orderId ?? "—"}</td>
                     <td className="p-2">{row.customer ?? "—"}</td>
                     <td className="p-2">{row.type}</td>
-                    <td className={`p-2 text-right ${row.amount < 0 ? "text-red-600" : "text-green-700"}`}>${row.amount.toLocaleString()}</td>
+                    <td className={`p-2 text-right ${row.amount < 0 ? "text-red-600" : ""}`}>
+                      <span style={{ color: row.amount < 0 ? undefined : PRIMARY }}>${row.amount.toLocaleString()}</span>
+                    </td>
                   </tr>
                 ))}
 
@@ -270,8 +275,12 @@ export default function AdminAdmins() {
 
         {/* Footer quick actions */}
         <div className="flex gap-3">
-          <button onClick={() => alert("Export CSV (simulated)")} className="px-4 py-2 border rounded-md">Export CSV</button>
-          <button onClick={() => alert("Download report (simulated)")} className="px-4 py-2 bg-indigo-600 text-white rounded-md">Download report</button>
+          <button onClick={() => alert("Export CSV (simulated)")} className="px-4 py-2 border rounded-md" style={{ borderColor: PRIMARY, color: PRIMARY }}>
+            Export CSV
+          </button>
+          <button onClick={() => alert("Download report (simulated)")} className="px-4 py-2 text-white rounded-md" style={{ backgroundColor: PRIMARY }}>
+            Download report
+          </button>
         </div>
 
       </div>
