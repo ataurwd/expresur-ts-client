@@ -1,5 +1,14 @@
-import React from 'react';
-import { Search, Filter, PlusCircle, Eye, UserCheck, MapPin, Calendar, Package } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import {
+  Search,
+  Filter,
+  Eye,
+  UserCheck,
+  MapPin,
+  Calendar,
+  Package,
+  X,
+} from "lucide-react";
 
 interface Pickup {
   id: string;
@@ -7,11 +16,11 @@ interface Pickup {
   phone: string;
   origin: string;
   destination: string;
-  date: string;
+  date: string; // ISO date string like "2025-02-03"
   status: "Pending" | "Assigned" | "In Transit" | "Completed" | "Cancelled";
 }
 
-const dummyData: Pickup[] = [
+const initialData: Pickup[] = [
   { id: "PK-0047", customer: "María González", phone: "+34 612 345 678", origin: "Barcelona, Spain", destination: "Havana, Cuba", date: "2025-02-03", status: "Pending" },
   { id: "PK-0046", customer: "Carlos Pérez", phone: "+53 5 123 4567", origin: "Santiago de Cuba", destination: "Miami, USA", date: "2025-02-01", status: "Assigned" },
   { id: "PK-0045", customer: "Ana López", phone: "+34 678 901 234", origin: "Valencia, Spain", destination: "Camagüey, Cuba", date: "2025-01-30", status: "In Transit" },
@@ -24,7 +33,18 @@ const dummyData: Pickup[] = [
   { id: "PK-0038", customer: "Miguel Ruiz", phone: "+53 5 555 1234", origin: "Havana, Cuba", destination: "Panama City, Panama", date: "2025-01-28", status: "Cancelled" },
 ];
 
-const AdminPickup = () => {
+const AdminPickup: React.FC = () => {
+  const [pickups, setPickups] = useState<Pickup[]>(initialData);
+  const [selected, setSelected] = useState<Pickup | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  // Filter state (controlled inputs)
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("All");
+  const [dateFilter, setDateFilter] = useState<string>("");
+
+  // Helpers
   const getStatusColor = (status: Pickup["status"]) => {
     switch (status) {
       case "Pending": return "bg-yellow-100 text-yellow-800 border border-yellow-300";
@@ -35,10 +55,56 @@ const AdminPickup = () => {
     }
   };
 
+  const openModal = (pickup: Pickup) => {
+    setSelected(pickup);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelected(null);
+  };
+
+  const handleAssign = (id: string) => {
+    setPickups(prev => prev.map(p => (p.id === id ? { ...p, status: "Assigned" } : p)));
+    setNotice(`Pickup ${id} assigned.`);
+    setTimeout(() => setNotice(null), 2000);
+  };
+
+  const formatDate = (d: string) => new Date(d).toLocaleDateString("en-GB");
+
+  // === Filtering logic (live) ===
+  const filteredPickups = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+
+    return pickups.filter(p => {
+      // status filter
+      if (statusFilter !== "All" && p.status !== statusFilter) return false;
+
+      // date filter (exact date match)
+      if (dateFilter) {
+        // compare as YYYY-MM-DD strings
+        if (p.date !== dateFilter) return false;
+      }
+
+      // search: check id, customer, phone, origin, destination
+      if (term === "") return true;
+      const hay = `${p.id} ${p.customer} ${p.phone} ${p.origin} ${p.destination}`.toLowerCase();
+      return hay.includes(term);
+    });
+  }, [pickups, searchTerm, statusFilter, dateFilter]);
+
+  // Quick reset
+  const resetFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("All");
+    setDateFilter("");
+  };
+
   return (
     <div className="p-4 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
             <Package className="text-green-700" />
@@ -46,7 +112,26 @@ const AdminPickup = () => {
           </h1>
           <p className="text-gray-600 mt-1">Manage international & domestic Cuba pickups</p>
         </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={resetFilters}
+            className="text-sm px-3 py-2 border rounded-lg hover:bg-gray-50"
+          >
+            Reset Filters
+          </button>
+          <div className="text-sm px-3 py-2 rounded-lg bg-gray-100">
+            Showing {filteredPickups.length} / {pickups.length}
+          </div>
+        </div>
       </div>
+
+      {/* Notice */}
+      {notice && (
+        <div className="mb-4 px-4 py-2 rounded-lg bg-green-50 text-green-800 border border-green-200 inline-block">
+          {notice}
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white/80 backdrop-blur-sm border border-gray-200 p-5 rounded-2xl shadow-lg mb-8">
@@ -54,43 +139,54 @@ const AdminPickup = () => {
           <div className="relative">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
             <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               type="text"
-              placeholder="Search customer..."
+              placeholder="Search by ID, customer, phone, origin..."
               className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none transition"
             />
           </div>
 
-          <select className="px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none transition">
-            <option>All Status</option>
-            <option>Pending</option>
-            <option>Assigned</option>
-            <option>In Transit</option>
-            <option>Completed</option>
-            <option>Cancelled</option>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none transition"
+          >
+            <option value="All">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Assigned">Assigned</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
           </select>
 
           <input
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
             type="date"
             className="px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none transition"
           />
 
-          <button className="flex items-center justify-center gap-2 bg-green-700 text-white px-6 py-3 rounded-xl hover:bg-green-800 transition shadow-md hover:shadow-xl">
+          <button
+            onClick={() => { /* optional: kept for UX parity */ }}
+            className="flex items-center justify-center gap-2 bg-green-700 text-white px-6 py-3 rounded-xl hover:bg-green-800 transition shadow-md hover:shadow-xl"
+          >
             <Filter size={18} />
-            Apply Filters
+            Apply
           </button>
         </div>
       </div>
 
       {/* Table Card */}
       <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <MapPin className="text-green-700" />
-            All Pickup Requests
+            <h2 className="text-2xl font-bold text-gray-800">All Pickup Requests</h2>
             <span className="ml-3 text-sm font-normal text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              {dummyData.length} active
+              {pickups.length} total
             </span>
-          </h2>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -106,11 +202,8 @@ const AdminPickup = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {dummyData.map((pickup) => (
-                <tr
-                  key={pickup.id}
-                  className="hover:bg-gray-50/70 transition-all duration-200"
-                >
+              {filteredPickups.map((pickup) => (
+                <tr key={pickup.id} className="transition-all duration-200">
                   <td className="px-6 py-5 font-semibold text-green-700">{pickup.id}</td>
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
@@ -133,7 +226,7 @@ const AdminPickup = () => {
                   <td className="px-6 py-5 hidden md:table-cell text-gray-600">
                     <div className="flex items-center gap-2">
                       <Calendar size={14} />
-                      {new Date(pickup.date).toLocaleDateString("en-GB")}
+                      {formatDate(pickup.date)}
                     </div>
                   </td>
                   <td className="px-6 py-5">
@@ -142,24 +235,93 @@ const AdminPickup = () => {
                     </span>
                   </td>
                   <td className="px-6 py-5 text-center">
-                    {/* Buttons always visible (no opacity/group-hover) */}
                     <div className="flex items-center justify-center gap-3">
-                      <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
+                      <button
+                        onClick={() => openModal(pickup)}
+                        className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition"
+                        aria-label={`View ${pickup.id}`}
+                      >
                         <Eye size={16} /> View
                       </button>
-                      {pickup.status === "Pending" && (
-                        <button className="text-green-700 hover:text-green-900 font-medium flex items-center gap-1 hover:bg-green-50 px-3 py-1.5 rounded-lg transition">
+
+                      {pickup.status === "Pending" ? (
+                        <button
+                          onClick={() => handleAssign(pickup.id)}
+                          className="text-green-700 hover:text-green-900 font-medium flex items-center gap-1 hover:bg-green-50 px-3 py-1.5 rounded-lg transition"
+                          aria-label={`Assign ${pickup.id}`}
+                        >
                           <UserCheck size={16} /> Assign
                         </button>
+                      ) : (
+                        <div className="text-sm text-gray-500 px-3 py-1.5 rounded-lg border border-gray-100">—</div>
                       )}
                     </div>
                   </td>
                 </tr>
               ))}
+
+              {filteredPickups.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-10 text-center text-gray-500">
+                    No pickups match your filters.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && selected && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-bold">{selected.id}</h3>
+                  <p className="text-sm text-gray-500">{selected.customer} • {selected.phone}</p>
+                </div>
+                <button onClick={closeModal} className="text-gray-600 hover:text-gray-800">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm text-gray-500">Route</p>
+                  <p className="font-medium">{selected.origin} → <span className="text-green-700">{selected.destination}</span></p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Date</p>
+                  <p className="font-medium">{formatDate(selected.date)}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <p className="font-medium">{selected.status}</p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                {selected.status === "Pending" && (
+                  <button
+                    onClick={() => {
+                      handleAssign(selected.id);
+                      setSelected(prev => (prev ? { ...prev, status: "Assigned" } : prev));
+                    }}
+                    className="bg-green-700 text-white px-4 py-2 rounded-lg"
+                  >
+                    <UserCheck size={14} className="inline-block mr-1" /> Assign
+                  </button>
+                )}
+                <button onClick={closeModal} className="px-4 py-2 rounded-lg border">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
