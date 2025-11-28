@@ -547,7 +547,7 @@ const AdminShipments: React.FC = () => {
       {/* SHIPMENTS TABLE */}
       <div className="rounded-xl shadow-lg overflow-hidden border border-gray-200">
         <table className="w-full border-collapse bg-white">
-          <thead className="bg-gray-100 border-b border-gray-200">
+          <thead className="bg-green-700 border-b border-gray-200">
             <tr>
               {[
                 "Tracking",
@@ -558,7 +558,7 @@ const AdminShipments: React.FC = () => {
                 "Created",
                 "Actions",
               ].map((h, index) => (
-                <th key={index} className="p-3 font-semibold text-left text-sm text-gray-700 uppercase tracking-wider">
+                <th key={index} className="p-3 font-semibold text-left text-sm text-white uppercase tracking-wider">
                   {h}
                 </th>
               ))}
@@ -589,13 +589,13 @@ const AdminShipments: React.FC = () => {
                 <td className="p-3 whitespace-nowrap">
                   <button 
                     onClick={() => setSelected(s)}
-                    className="px-3 py-1 mr-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150"
+                    className="px-3 py-1 mr-2 text-sm font-medium text-white bg-green-700 rounded-md shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150"
                   >
                     View
                   </button>
                   <button 
                     onClick={() => setUpdateModal(s)}
-                    className="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150"
+                    className="px-3 py-1 text-sm font-medium text-white bg-green-700 rounded-md shadow-sm hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150"
                   >
                     Update
                   </button>
@@ -634,7 +634,7 @@ const AdminShipments: React.FC = () => {
               onClick={() => setCurrentPage(i + 1)}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition duration-150 ${
                 currentPage === i + 1
-                  ? "bg-green-600 text-white shadow-md hover:bg-green-700"
+                  ? "bg-green-700 text-white shadow-md hover:bg-green-800"
                   : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
               }`}
             >

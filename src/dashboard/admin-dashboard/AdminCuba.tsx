@@ -1353,7 +1353,7 @@ const AdminCuba: React.FC = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="mb-6 text-3xl font-bold border-b pb-2">
+      <h2 className="mb-4 text-2xl font-semibold text-gray-800">
         Cuba Shipments Management
       </h2>
 
@@ -1364,7 +1364,7 @@ const AdminCuba: React.FC = () => {
         </h3>
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-indigo-50 border-b">
+            <tr className="bg-green-700 text-white border-b">
               <th className="p-2 text-left">Method</th>
               <th className="p-2 text-center">Transit Time</th>
               <th className="p-2 text-right">Price per lb (USD)</th>
@@ -1412,27 +1412,27 @@ const AdminCuba: React.FC = () => {
       {/* Shipments Table */}
       <div className="rounded-xl shadow-lg overflow-hidden border border-gray-200">
         <table className="w-full border-collapse bg-white">
-          <thead className="bg-indigo-50 border-b border-gray-200">
+          <thead className="bg-green-700 border-b border-gray-200">
             <tr>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
+              <th className="p-3 font-semibold text-left text-sm text-white">
                 Tracking #
               </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
+              <th className="p-3 font-semibold text-left text-sm text-white">
                 Locker ID
               </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
+              <th className="p-3 font-semibold text-left text-sm text-white">
                 Recipient
               </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
+              <th className="p-3 font-semibold text-left text-sm text-white">
                 Weight (lbs)
               </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
+              <th className="p-3 font-semibold text-left text-sm text-white">
                 Price
               </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
+              <th className="p-3 font-semibold text-left text-sm text-white">
                 Status
               </th>
-              <th className="p-3 font-semibold text-left text-sm text-gray-700">
+              <th className="p-3 font-semibold text-left text-sm text-white">
                 Actions
               </th>
             </tr>
@@ -1486,13 +1486,13 @@ const AdminCuba: React.FC = () => {
                   <td className="p-3 whitespace-nowrap">
                     <button
                       onClick={() => setSelectedShipment(s)}
-                      className="px-3 py-1 mr-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 transition duration-150"
+                      className="px-3 py-1 mr-2 text-sm font-medium text-white bg-green-700 rounded-md shadow-sm hover:bg-green-800 transition duration-150"
                     >
                       View Details
                     </button>
                     <button
                       onClick={() => setTrackingModal(s)}
-                      className="px-3 py-1 text-sm font-medium text-white bg-purple-600 rounded-md shadow-sm hover:bg-purple-700 transition duration-150"
+                      className="px-3 py-1 text-sm font-medium text-white bg-green-700 rounded-md shadow-sm hover:bg-green-800 transition duration-150"
                     >
                       Add Tracking
                     </button>
@@ -1558,7 +1558,7 @@ const AdminCuba: React.FC = () => {
                     aria-current={currentPage === page ? "page" : undefined}
                     className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium transition duration-150 ${
                       currentPage === page
-                        ? "z-10 bg-indigo-600 border-indigo-500 text-white shadow-md"
+                        ? "z-10 bg-green-700 border-green-500 text-white shadow-md"
                         : "bg-white border-gray-300 text-gray-700 hover:bg-indigo-50"
                     }`}
                   >
