@@ -6,13 +6,12 @@ import LogisticsTimeline from '../../components/quienessomos/LogisticsTimeline'
 import TeamSection from '../../components/quienessomos/TeamSection'
 import WhyChooseUs from '../../components/quienessomos/WhyChooseUs'
 
-
 const Quienessomos = () => {
   return (
     <>
       <QuienesSomosBanner />
       <WhyChooseUs />
-      <PricingSection />
+      {/* <PricingSection /> */}
       <TeamSection />
       <LogisticsTimeline />
       <Quedicen />
