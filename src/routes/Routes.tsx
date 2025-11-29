@@ -31,7 +31,6 @@ import AdminConsolidations from "../dashboard/admin-dashboard/AdminConsolidation
 import AdminSettings from "../dashboard/admin-dashboard/AdminSettings";
 import AdminRates from "../dashboard/admin-dashboard/AdminRates";
 import FAQPage from "../pages/FAQPage/FAQPage";
-import Contact from "../pages/Contact/Contact";
 
 
 
@@ -100,6 +99,10 @@ const Routes = createBrowserRouter([
       {
         path: "packages",
         element: <Packages/>
+      },
+      {
+        path:"user-dashboard",
+        element: <DashbordUser/>
       },
       {
         path: "consolidate",
