@@ -52,7 +52,7 @@ const TeamSection: React.FC = () => {
 
   return (
     <section className="py-20 grid grid-cols-1 lg:grid-cols-2 
-                        ml-4 mr-4 sm:ml-6 sm:mr-6 md:ml-16 md:mr-16 lg:ml-[184px] lg:mr-[263.5px]">
+                        ml-6 mr-6 sm:ml-6 sm:mr-6 md:ml-16 md:mr-16 lg:ml-[210px] lg:mr-[263.5px]">
       
       {/* LEFT SIDE */}
       <div className="max-w-lg mb-12 lg:mb-0">
