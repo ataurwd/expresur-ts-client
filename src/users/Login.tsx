@@ -248,6 +248,8 @@ import { useAuth } from "../context/AuthContext";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import Logo from "../assets/Grupo 1.png";
+
 
 const Login: React.FC = () => {
   const { users } = useAuth();
@@ -307,7 +309,7 @@ const Login: React.FC = () => {
               <div className="flex justify-center mb-10">
                 <img
                   className="w-64 object-contain"
-                  src="https://i.ibb.co/7xjs7YjB/Expresur-02-1-removebg-preview.webp"
+                  src={Logo}
                   alt="Expresur Logo"
                 />
               </div>
