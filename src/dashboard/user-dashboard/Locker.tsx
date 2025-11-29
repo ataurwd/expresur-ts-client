@@ -54,32 +54,6 @@ export default function Locker() {
     URL.revokeObjectURL(url);
   }
 
-  function renderBarcode(id: string) {
-    // simple SVG barcode-like placeholder (no external lib)
-    const bars = id.split("").map((c, i) => (c.charCodeAt(0) % 2 === 0 ? 1 : 3));
-    return (
-      <svg width="100%" height="60" viewBox={`0 0 ${bars.length * 6} 60`} xmlns="http://www.w3.org/2000/svg">
-        <rect width="100%" height="60" fill="#fff" />
-        {bars.map((w, i) => (
-          <rect key={i} x={i * 6} y={0} width={3} height={60} fill="#111" opacity={w / 3} />
-        ))}
-      </svg>
-    );
-  }
-
-  function renderQR(id: string) {
-    // tiny QR placeholder using SVG (visually represents a QR, not scannable)
-    return (
-      <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="rounded-sm bg-white p-1">
-        <rect x="2" y="2" width="30" height="30" fill="#111" />
-        <rect x="64" y="2" width="30" height="30" fill="#111" />
-        <rect x="2" y="64" width="30" height="30" fill="#111" />
-        <rect x="40" y="40" width="12" height="12" fill="#111" />
-        <rect x="56" y="56" width="6" height="6" fill="#111" />
-      </svg>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className=" mx-auto px-4">
@@ -96,8 +70,11 @@ export default function Locker() {
             <button onClick={handleCopy} className="px-3 py-2 bg-[#166534] text-white rounded-md shadow">{copied ? "Copied" : "Copy Locker ID"}</button>
             <button onClick={handleDownloadJSON} className="px-3 py-2 border rounded-md">Download JSON</button>
             <button onClick={() => window.print()} className="px-3 py-2 border rounded-md">Print</button>
-            <div className="flex items-center gap-2">
-              {renderQR(FAKE_LOCKER.id)}
+
+            {/* Removed QR / barcode — show simple badge instead */}
+            <div className="ml-2">
+           
+              <div className="px-3 py-2 bg-white rounded-md font-mono text-sm border">{FAKE_LOCKER.id}</div>
             </div>
           </div>
         </div>
@@ -143,11 +120,6 @@ export default function Locker() {
             <div className="mt-4">
               <div className="text-sm text-gray-500">Notes</div>
               <div className="mt-1 text-gray-700">{FAKE_LOCKER.notes}</div>
-            </div>
-
-            <div className="mt-6">
-              <div className="text-sm text-gray-500">Barcode</div>
-              <div className="mt-2 border rounded p-2 bg-white">{renderBarcode(FAKE_LOCKER.id)}</div>
             </div>
 
             <div className="mt-6">
