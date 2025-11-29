@@ -33,7 +33,11 @@ import AdminRates from "../dashboard/admin-dashboard/AdminRates";
 import FAQPage from "../pages/FAQPage/FAQPage";
 import DashbordUser from "../dashboard/user-dashboard/DashbordUser";
 import Contact from "../pages/Contact/Contact";
+<<<<<<< HEAD
 import Nuestros from "../pages/Nuestros/Nuestros";
+=======
+import CasilleroEscritorio from "../pages/casillero escritorio/casilleroescritorio";
+>>>>>>> a9056e42d5741fa2ae782bfed19df7d36ccff62c
 
 
 
@@ -66,7 +70,7 @@ const Routes = createBrowserRouter([
         element: <FAQPage />,
       },
       {
-        path: "/recogida",
+        path: "/contacto",
         element: <Contact />,
       },
       {
@@ -81,9 +85,15 @@ const Routes = createBrowserRouter([
         path:"/recogida",
         element: <RecogidaPage/>
       },
+<<<<<<< HEAD
             {
         path:"/nuestros",
         element: <Nuestros/>
+=======
+       {
+        path:"/casilleroescritorio",
+        element: <CasilleroEscritorio/>
+>>>>>>> a9056e42d5741fa2ae782bfed19df7d36ccff62c
       },
     ],
   },
