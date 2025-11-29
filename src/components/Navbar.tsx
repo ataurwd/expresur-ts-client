@@ -46,6 +46,8 @@ const Navbar = () => {
     { path: "/faqpage", key: "faq" as const },
     { path: "/recogida", key: "recogida" as const },
     { path: "/contacto", key: "contacto" as const },
+    { path: "/nuestros", key: "nuestros" as const },
+    { path: "/casilleroescritorio", key: "CasilleroEscritorio" as const },
   ];
 
   return (
