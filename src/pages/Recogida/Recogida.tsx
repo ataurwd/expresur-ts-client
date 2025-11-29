@@ -1,6 +1,7 @@
 import React from 'react';
 import RecogidaHero from './RecogidaHero';
 import PickupServiceCard from './PickupServiceCard';
+import PickupForm from './PickupForm';
 
 
 const Recogida = () => {
@@ -9,6 +10,7 @@ const Recogida = () => {
    
    <RecogidaHero/>
    <PickupServiceCard/>
+   <PickupForm/>
 
    </>
   );
