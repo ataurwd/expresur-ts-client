@@ -65,7 +65,7 @@ const Routes = createBrowserRouter([
         element: <FAQPage />,
       },
       {
-        path: "/recogida",
+        path: "/contacto",
         element: <Contact />,
       },
       {

@@ -54,6 +54,7 @@ export const translations = {
     quienes_somos: "Quiénes Somos",
     faq: "FAQ",
     recogida: "Recogida",
+    contacto: "Contacto",
     rastrear: "RASTREAR PAQUETE",
     inicio: "Inicio",
     siguenos: "Síguenos",        // <-- normalized key
@@ -70,6 +71,7 @@ export const translations = {
     quienes_somos: "About Us",
     faq: "FAQ",
     recogida: "Pickup",
+    contacto: "Contact",
     rastrear: "TRACK PACKAGE",
     inicio: "Home",
     siguenos: "Follow us",      // <-- normalized key
