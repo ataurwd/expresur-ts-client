@@ -33,6 +33,7 @@ import AdminRates from "../dashboard/admin-dashboard/AdminRates";
 import FAQPage from "../pages/FAQPage/FAQPage";
 import DashbordUser from "../dashboard/user-dashboard/DashbordUser";
 import Contact from "../pages/Contact/Contact";
+import CasilleroEscritorio from "../pages/casillero escritorio/casilleroescritorio";
 
 
 
@@ -79,6 +80,10 @@ const Routes = createBrowserRouter([
       {
         path:"/recogida",
         element: <RecogidaPage/>
+      },
+       {
+        path:"/casilleroescritorio",
+        element: <CasilleroEscritorio/>
       },
     ],
   },
