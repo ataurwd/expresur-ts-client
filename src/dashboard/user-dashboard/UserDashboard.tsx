@@ -38,7 +38,7 @@ const drawerWidth = 260;
 const collapsedWidth = 65;
 
 const menuItems = [
-  { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+  { text: "Dashboard", icon: <DashboardIcon />, path: "/user-dashboard" },
   { text: "Locker", icon: <Lock />, path: "/dashboard/locker" },
   { text: "Packages", icon: <Package2 />, path: "/dashboard/packages" },
   { text: "Consolidate", icon: <Merge />, path: "/dashboard/consolidate" },
