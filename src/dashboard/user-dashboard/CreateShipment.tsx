@@ -176,10 +176,11 @@ export default function CreateShipmentCombinedCuba() {
         </header>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 ">
           <button onClick={() => setTab("local")} className={`px-4 py-2 rounded-md ${tab === "local" ? "bg-[#166534] text-white" : "border"}`}>A) Envío Local (Dentro de Cuba)</button>
           <button onClick={() => setTab("fromLocker")} className={`px-4 py-2 rounded-md ${tab === "fromLocker" ? "bg-[#166534] text-white" : "border"}`}>B) Desde Locker (Miami → Cuba)</button>
         </div>
+
 
         {tab === "local" ? (
           <section className="bg-white rounded-lg shadow p-6">
