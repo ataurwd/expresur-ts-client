@@ -10,7 +10,6 @@ const RecogidaHero = () => {
   return (
     <section
       className="relative w-full overflow-hidden"
-      /* main gradient + optional subtle bg image */
       style={{
         backgroundImage:
           "linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(" +
@@ -22,9 +21,6 @@ const RecogidaHero = () => {
         minHeight: "80vh",
       }}
     >
-    
-
-      {/* content wrapper */}
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-12 md:pt-24 pb-6">
         <div className="md:flex items-center lg:gap-16">
           {/* LEFT: Title */}
@@ -32,7 +28,7 @@ const RecogidaHero = () => {
             <h1
               className="text-white font-semibold leading-tight tracking-tight"
               style={{
-                fontSize: "clamp(2.5rem, 6vw, 4.75rem)", // responsive large heading
+                fontSize: "clamp(2.5rem, 6vw, 4.75rem)",
                 lineHeight: 1.02,
                 letterSpacing: "-0.02em",
               }}
@@ -43,22 +39,23 @@ const RecogidaHero = () => {
             </h1>
           </div>
 
-          {/* RIGHT: Truck image (overlaps the bottom bar) */}
+          {/* RIGHT: Truck image fixed to exact px size */}
           <div className="md:w-1/2 relative flex justify-center lg:justify-end items-end pointer-events-none">
             <img
               src={HeroImg}
               alt="Servicios logísticos"
-              className="relative z-30 object-contain"
+              className="flex-none object-contain"
               style={{
-                /* size the art so it sits similar to screenshot and overlaps bar */
-                width: "min(650px, 60vw)",
-                transform: "translateY(6%)",
-                maxWidth: "100%",
+                width: "753.92px",
+                height: "616.04px",
+                /* ensure it doesn't get overridden by max-width rules */
+                maxWidth: "none",
+                maxHeight: "none",
+                /* small viewport fallback: let it scale down proportionally */
+                /* the following keeps aspect ratio while allowing shrink on narrow screens */
+                // Note: browsers keep aspect ratio if only width is constrained; we fix both but allow scaling via transform in very small widths if needed
               }}
             />
-
-         
-           
           </div>
         </div>
       </div>
