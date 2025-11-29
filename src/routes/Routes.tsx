@@ -33,14 +33,8 @@ import AdminRates from "../dashboard/admin-dashboard/AdminRates";
 import FAQPage from "../pages/FAQPage/FAQPage";
 import DashbordUser from "../dashboard/user-dashboard/DashbordUser";
 import Contact from "../pages/Contact/Contact";
-<<<<<<< HEAD
 import Nuestros from "../pages/Nuestros/Nuestros";
-=======
 import CasilleroEscritorio from "../pages/casillero escritorio/casilleroescritorio";
->>>>>>> a9056e42d5741fa2ae782bfed19df7d36ccff62c
-
-
-
 
 const Routes = createBrowserRouter([
   {
@@ -60,11 +54,11 @@ const Routes = createBrowserRouter([
         path: "/rasterear",
         element: <RastrearPage />,
       },
-   //   {
-   //     path: "/tienda",
-   //     element: <OnlineStore />,
-   //   },
-      
+      //   {
+      //     path: "/tienda",
+      //     element: <OnlineStore />,
+      //   },
+
       {
         path: "/faqpage",
         element: <FAQPage />,
@@ -82,18 +76,16 @@ const Routes = createBrowserRouter([
         element: <Register />,
       },
       {
-        path:"/recogida",
-        element: <RecogidaPage/>
+        path: "/recogida",
+        element: <RecogidaPage />,
       },
-<<<<<<< HEAD
-            {
-        path:"/nuestros",
-        element: <Nuestros/>
-=======
-       {
-        path:"/casilleroescritorio",
-        element: <CasilleroEscritorio/>
->>>>>>> a9056e42d5741fa2ae782bfed19df7d36ccff62c
+      {
+        path: "/nuestros",
+        element: <Nuestros />,
+      },
+      {
+        path: "/casilleroescritorio",
+        element: <CasilleroEscritorio />,
       },
     ],
   },
@@ -111,97 +103,96 @@ const Routes = createBrowserRouter([
       // },
       {
         path: "locker",
-        element: <Locker/>
+        element: <Locker />,
       },
       {
         path: "packages",
-        element: <Packages/>
+        element: <Packages />,
       },
       {
-        path:"user-dashboard",
-        element: <DashbordUser/>
+        path: "user-dashboard",
+        element: <DashbordUser />,
       },
       {
         path: "consolidate",
-        element: <Consolidate/>
+        element: <Consolidate />,
       },
       {
         path: "shipments",
-        element: <Shipments/>
+        element: <Shipments />,
       },
       {
         path: "create-shipment",
-        element: <CreateShipment/>
+        element: <CreateShipment />,
       },
       {
         path: "cuba-shipping",
-        element: <CubaShipping/>
+        element: <CubaShipping />,
       },
       {
         path: "pickup",
-        element: <Pickup/>
+        element: <Pickup />,
       },
       {
         path: "payments",
-        element: <Payments/>
+        element: <Payments />,
       },
       {
         path: "profile",
-        element: <Profile/>
+        element: <Profile />,
       },
 
       // admin routes can be added here
       {
         path: "admin",
-        element: <AdminAdmins/>
+        element: <AdminAdmins />,
       },
       {
         path: "admin-users",
-        element: <Users/>
+        element: <Users />,
       },
       {
         path: "admin-rates",
-        element: <AdminRates/>
+        element: <AdminRates />,
       },
-       {
+      {
         path: "admin-settings",
-        element: <AdminSettings/>
+        element: <AdminSettings />,
       },
       {
         path: "admin-consolidations",
-        element: <AdminConsolidations/>
+        element: <AdminConsolidations />,
       },
       {
         path: "admin-cuba",
-        element: <AdminCuba/>
+        element: <AdminCuba />,
       },
       {
         path: "admin-packages",
-        element: <AdminPackages/>
+        element: <AdminPackages />,
       },
       {
         path: "admin-payments",
-        element: <AdminPayments/>
+        element: <AdminPayments />,
       },
       {
         path: "admin-pickup",
-        element: <AdminPickup/>
+        element: <AdminPickup />,
       },
       {
         path: "admin-reports",
-        element: <AdminReports/>
+        element: <AdminReports />,
       },
       {
         path: "admin-shipments",
-        element: <AdminShipments/>
+        element: <AdminShipments />,
       },
       {
         path: "admin-tracking",
-        element: <AdminTracking/>
+        element: <AdminTracking />,
       },
-      
-    ]
-  }
+    ],
+  },
 ]);
 
 export default Routes;
