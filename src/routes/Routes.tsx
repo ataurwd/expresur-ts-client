@@ -11,7 +11,7 @@ import Profile from "../dashboard/user-dashboard/Profile";
 import Shipments from "../dashboard/user-dashboard/Shipments";
 import Dashboard from "../layout/Dashboard";
 import Home from "../pages/home/Home";
-import OnlineStore from "../pages/onile-store/OnlineStore";
+// import OnlineStore from "../pages/onile-store/OnlineStore";
 import Quienessomos from "../pages/Quienessomos/Quienessomos";
 import RastrearPage from "../pages/rastrear-page/RastrearPage";
 import RecogidaPage from "../pages/Recogida/Recogida";
@@ -30,6 +30,7 @@ import AdminCuba from "../dashboard/admin-dashboard/AdminCuba";
 import AdminConsolidations from "../dashboard/admin-dashboard/AdminConsolidations";
 import AdminSettings from "../dashboard/admin-dashboard/AdminSettings";
 import AdminRates from "../dashboard/admin-dashboard/AdminRates";
+import FAQPage from "../pages/FAQPage/FAQPage";
 
 
 
@@ -52,9 +53,14 @@ const Routes = createBrowserRouter([
         path: "/rasterear",
         element: <RastrearPage />,
       },
+   //   {
+   //     path: "/tienda",
+   //     element: <OnlineStore />,
+   //   },
+      
       {
-        path: "/tienda",
-        element: <OnlineStore />,
+        path: "/faqpage",
+        element: <FAQPage />,
       },
       {
         path: "/login",
