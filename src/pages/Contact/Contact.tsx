@@ -21,8 +21,18 @@ const Contact = () => {
                                     className="w-20 h-20 sm:w-24 sm:h-24 lg:w-24 lg:h-24 rounded-full object-cover border-4 border-white shadow-lg"
                                 />
                                 <div className="flex flex-col">
-                                    <h3 className="text-xl sm:text-2xl font-bold lg:text-2xl">Karen</h3>
-                                    <p className="text-xs sm:text-sm opacity-90 mb-2 lg:text-sm">Lorem ipsum dolor</p>
+                                    <h3 className="text-xl sm:text-2xl font-bold lg:text-2xl">
+                                        {item === 1 ? "Karen Gómez" : item === 2 ? "Laura Martínez" : "Ana Sofía"}
+                                    </h3>
+
+                                    <p className="text-xs sm:text-sm opacity-90 mb-2 lg:text-sm">
+                                        {item === 1
+                                            ? "Atención al cliente"
+                                            : item === 2
+                                            ? "Asesora comercial"
+                                            : "Soporte y consultas"}
+                                    </p>
+
                                     <button className="px-5 py-1.5 text-xs font-bold bg-transparent border-2 border-orange-400 text-white rounded-full hover:bg-orange-400 transition w-fit">
                                         CONTACTAR
                                     </button>
@@ -45,11 +55,12 @@ const Contact = () => {
 
                 {/* Title + text */}
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6 mb-8">
-                    <h2 className="text-3xl sm:text-4xl font-bold lg:text-4xl">Contact me</h2>
+                    <h2 className="text-3xl sm:text-4xl font-bold lg:text-4xl">Contáctame</h2>
                     <p className="max-w-xl text-xs sm:text-sm leading-relaxed opacity-90">
-                        rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
-                        volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
+                        Si deseas información, solicitar un servicio o realizar una consulta, 
+                        llena el formulario y te responderé lo antes posible.  
+                        Trabajo con rapidez, profesionalidad y total seguridad para ofrecerte 
+                        la mejor experiencia posible.
                     </p>
                 </div>
 
@@ -58,20 +69,32 @@ const Contact = () => {
 
                     {/* Left inputs */}
                     <div className="flex flex-col gap-5">
-                        {[1, 2, 3, 4].map((i) => (
-                            <input
-                                key={i}
-                                type="text"
-                                placeholder="Lorem ipsum dolor sit amet,"
-                                className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
-                            />
-                        ))}
+                        <input
+                            type="text"
+                            placeholder="Tu nombre completo"
+                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
+                        />
+                        <input
+                            type="email"
+                            placeholder="Correo electrónico"
+                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
+                        />
+                        <input
+                            type="tel"
+                            placeholder="Número de teléfono"
+                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Asunto del mensaje"
+                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
+                        />
                     </div>
 
                     {/* Right textarea + button */}
                     <div className="flex flex-col gap-4">
                         <textarea
-                            placeholder="Lorem ipsum dolor sit amet,"
+                            placeholder="Escribe aquí tu mensaje…"
                             className="bg-transparent border-2 border-orange-400 rounded-3xl p-5 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition resize-none"
                             rows={8}
                         ></textarea>
