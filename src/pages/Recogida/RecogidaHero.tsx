@@ -3,7 +3,7 @@ import HeroImg from "../../assets/RecogidaHero.png";
 import HeroBg from "../../assets/HeroBg.png";
 import { useAuth } from "../../context/AuthContext";
 
-const RecogidaHero = () => {
+const RecogidaHero: React.FC = () => {
   const userData = useAuth();
   console.log(userData?.users);
 
@@ -21,39 +21,40 @@ const RecogidaHero = () => {
         minHeight: "80vh",
       }}
     >
+     
+
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-12 md:pt-24 pb-6">
         <div className="md:flex items-center lg:gap-16">
           {/* LEFT: Title */}
-          <div className="md:w-1/2 z-20 text-center lg:text-left">
-            <h1
-              className="text-white font-semibold leading-tight tracking-tight"
-              style={{
-                fontSize: "clamp(2.5rem, 6vw, 4.75rem)",
-                lineHeight: 1.02,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Servicio de
-              <br />
-              <span className="inline-block">Recogida</span>
-            </h1>
-          </div>
+    <h1
+  className="
+    text-white font-semibold tracking-tight leading-[1.05]
+    text-[32px] sm:text-[42px] md:text-[55px] lg:text-[75px] xl:text-[90px]
+    whitespace-pre
+    lg:mt-[10%]
+  "
+>
+  Servicio de{"\n"}
+  <span className="inline-block">Recogida</span>
+</h1>
 
-          {/* RIGHT: Truck image fixed to exact px size */}
-          <div className="md:w-1/2 relative flex justify-center lg:justify-end items-end pointer-events-none">
+
+
+          {/* RIGHT: Truck image - single className, responsive sizes, negative bottom margin only on lg, large z-index */}
+          <div className="z-[9999] md:mb-[-20%] lg:mb-[-25%]   relative flex justify-center lg:justify-end items-end pointer-events-none">
             <img
               src={HeroImg}
               alt="Servicios logísticos"
-              className="flex-none object-contain"
+              className={
+                "pointer-events-none object-contain z-[9999] " +
+                "w-[90%] h-auto " +                // base (mobile)
+                "sm:w-[420px] sm:h-[344px] " +     // small tablets
+                "md:w-[600px] md:h-[490px] " +     // medium screens
+                "lg:w-[753.92px] lg:h-[616.04px] md:mr-[-40%] lg:mr-[-50%]"
+              }
               style={{
-                width: "753.92px",
-                height: "616.04px",
-                /* ensure it doesn't get overridden by max-width rules */
                 maxWidth: "none",
                 maxHeight: "none",
-                /* small viewport fallback: let it scale down proportionally */
-                /* the following keeps aspect ratio while allowing shrink on narrow screens */
-                // Note: browsers keep aspect ratio if only width is constrained; we fix both but allow scaling via transform in very small widths if needed
               }}
             />
           </div>

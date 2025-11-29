@@ -7,7 +7,7 @@ const PickupServiceCard: React.FC = () => {
       
       {/* FIXED WIDTH CARD */}
       <div
-        className="z-10 mt-[-5%] bg-[#0f6b3f] text-white rounded-[30px] shadow-2xl px-16 py-14 overflow-hidden"
+        className="z-10 lg:mt-[-9%] md:mt-[-7%] bg-[#0f6b3f] text-white rounded-[30px] shadow-2xl px-16 py-14 overflow-hidden"
         style={{ width: "1673px" }}   //  <<<<<< FIXED WIDTH
       >
 
