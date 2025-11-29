@@ -2,6 +2,7 @@ import React from 'react';
 import RecogidaHero from './RecogidaHero';
 import PickupServiceCard from './PickupServiceCard';
 import PickupForm from './PickupForm';
+import RecoLogisticsTimeline from './RecoLogisticsTimeline';
 
 
 const Recogida = () => {
@@ -11,7 +12,7 @@ const Recogida = () => {
    <RecogidaHero/>
    <PickupServiceCard/>
    <PickupForm/>
-
+   <RecoLogisticsTimeline/>
    </>
   );
 };

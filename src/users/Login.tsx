@@ -239,7 +239,7 @@
 
 // export default Login;
 
-
+// src/pages/Login.tsx
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { FaBox, FaFacebookF, FaGoogle } from "react-icons/fa";
@@ -262,7 +262,7 @@ const Login: React.FC = () => {
     setError("");
 
     const user = users.find(
-      (u) => u.email === email && u.password === password
+      (u: any) => u.email === email && u.password === password
     );
 
     if (!user) {
@@ -270,6 +270,7 @@ const Login: React.FC = () => {
       return;
     }
 
+    // Save current user in cookie (1 day)
     Cookies.set("currentUser", JSON.stringify(user), { expires: 1 });
 
     toast.success(`Welcome back, ${user.name}!`, {
@@ -279,7 +280,11 @@ const Login: React.FC = () => {
     // Role based redirect
     if (user.role === "admin") {
       navigate("/dashboard/admin");
+    } else if (user.role === "user") {
+      // Send normal users to the required dashboard route
+      navigate("/dashboard/user-dashboard");
     } else {
+      // fallback
       navigate("/dashboard");
     }
   };

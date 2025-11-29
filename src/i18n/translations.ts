@@ -55,6 +55,8 @@ export const translations = {
     faq: "FAQ",
     recogida: "Recogida",
     contacto: "Contacto",
+    nuestros: "nuestros",
+    CasilleroEscritorio: "CasilleroEscritorio",
     rastrear: "RASTREAR PAQUETE",
     inicio: "Inicio",
     siguenos: "Síguenos",        // <-- normalized key
@@ -72,6 +74,8 @@ export const translations = {
     faq: "FAQ",
     recogida: "Pickup",
     contacto: "Contact",
+    nuestros: "Our Services",
+    CasilleroEscritorio: "Desk Locker",
     rastrear: "TRACK PACKAGE",
     inicio: "Home",
     siguenos: "Follow us",      // <-- normalized key
