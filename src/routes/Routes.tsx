@@ -125,47 +125,47 @@ const Routes = createBrowserRouter([
         element: <AdminAdmins/>
       },
       {
-        path: "admin_users",
+        path: "admin-users",
         element: <Users/>
       },
       {
-        path: "admin_rates",
+        path: "admin-rates",
         element: <AdminRates/>
       },
        {
-        path: "admin_settings",
+        path: "admin-settings",
         element: <AdminSettings/>
       },
       {
-        path: "admin_consolidations",
+        path: "admin-consolidations",
         element: <AdminConsolidations/>
       },
       {
-        path: "admin_cuba",
+        path: "admin-cuba",
         element: <AdminCuba/>
       },
       {
-        path: "admin_packages",
+        path: "admin-packages",
         element: <AdminPackages/>
       },
       {
-        path: "admin_payments",
+        path: "admin-payments",
         element: <AdminPayments/>
       },
       {
-        path: "admin_pickup",
+        path: "admin-pickup",
         element: <AdminPickup/>
       },
       {
-        path: "admin_reports",
+        path: "admin-reports",
         element: <AdminReports/>
       },
       {
-        path: "admin_shipments",
+        path: "admin-shipments",
         element: <AdminShipments/>
       },
       {
-        path: "admin_tracking",
+        path: "admin-tracking",
         element: <AdminTracking/>
       },
       
