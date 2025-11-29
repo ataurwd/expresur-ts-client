@@ -33,6 +33,7 @@ import AdminRates from "../dashboard/admin-dashboard/AdminRates";
 import FAQPage from "../pages/FAQPage/FAQPage";
 import DashbordUser from "../dashboard/user-dashboard/DashbordUser";
 import Contact from "../pages/Contact/Contact";
+import Nuestros from "../pages/Nuestros/Nuestros";
 
 
 
@@ -79,6 +80,10 @@ const Routes = createBrowserRouter([
       {
         path:"/recogida",
         element: <RecogidaPage/>
+      },
+            {
+        path:"/nuestros",
+        element: <Nuestros/>
       },
     ],
   },
