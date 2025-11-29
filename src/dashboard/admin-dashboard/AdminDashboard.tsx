@@ -45,6 +45,7 @@ type Props = {
 const drawerWidth = 260;
 const collapsedWidth = 65;
 
+/* menu items */
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
   { text: "Users", icon: <PeopleIcon />, path: "/dashboard/admin-users" },
@@ -93,6 +94,9 @@ export default function AdminSidebar({
   };
 
   const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
+
+  /* active color */
+  const ACTIVE_COLOR = "#fa921d";
 
   return (
     <Drawer
@@ -167,19 +171,35 @@ export default function AdminSidebar({
                   mb: 0.5,
                   borderRadius: 2,
                   transition: "all 0.2s",
+                  color: isSelected ? ACTIVE_COLOR : "#fff",
 
-                  // ACTIVE (Bottle Green)
+                  // ACTIVE background uses a low-opacity tone of the active color
                   backgroundColor: isSelected
-                    ? "rgba(6, 78, 59, 0.35)" // deep bottle green tint
+                    ? "rgba(250,146,29,0.10)"
                     : "transparent",
 
                   "&:hover": {
-                    backgroundColor: "rgba(6, 78, 59, 0.25)",
+                    // subtle hover with active color tint
+                    backgroundColor: isSelected
+                      ? "rgba(250,146,29,0.12)"
+                      : "rgba(250,146,29,0.06)",
                     transform: "translateX(4px)",
                   },
 
+                  // ensure NavLink active class styling also shows
                   "&.active": {
-                    backgroundColor: "rgba(6, 78, 59, 0.35)",
+                    backgroundColor: "rgba(250,146,29,0.10)",
+                    color: ACTIVE_COLOR,
+                  },
+
+                  // ensure child text inherits color
+                  "& .MuiListItemText-root": {
+                    color: isSelected ? ACTIVE_COLOR : "#fff",
+                  },
+
+                  // fallback for small collapsed state
+                  "& .MuiListItemIcon-root": {
+                    color: isSelected ? ACTIVE_COLOR : "#fff",
                   },
                 }}
               >
@@ -188,7 +208,7 @@ export default function AdminSidebar({
                     minWidth: 0,
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
-                    color: "#fff",
+                    color: isSelected ? ACTIVE_COLOR : "#fff",
                   }}
                 >
                   {item.icon}
@@ -199,6 +219,11 @@ export default function AdminSidebar({
                   sx={{
                     opacity: open ? 1 : 0,
                     transition: "opacity 0.2s 0.1s",
+                    // text color explicitly set to ensure contrast
+                    "& .MuiTypography-root": {
+                      color: isSelected ? ACTIVE_COLOR : "#fff",
+                      fontWeight: isSelected ? 600 : 500,
+                    },
                   }}
                 />
               </ListItemButton>
@@ -234,6 +259,8 @@ export default function AdminSidebar({
           sx={{
             borderRadius: 2,
             color: "#fca5a5",
+            display: "flex",
+            alignItems: "center",
             "&:hover": {
               backgroundColor: "rgba(239, 68, 68, 0.2)",
               transform: "translateX(4px)",
