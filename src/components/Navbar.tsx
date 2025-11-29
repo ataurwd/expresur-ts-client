@@ -41,7 +41,7 @@ const Navbar = () => {
   ];
 
   const topNav = [
-    { path: "/tienda", key: "tienda" as const },
+   // { path: "/tienda", key: "tienda" as const },
     { path: "/quiénes-somos", key: "quienes_somos" as const },
     { path: "/faqpage", key: "faq" as const },
     { path: "/recogida", key: "recogida" as const },

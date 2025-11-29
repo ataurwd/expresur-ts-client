@@ -31,6 +31,7 @@ import AdminConsolidations from "../dashboard/admin-dashboard/AdminConsolidation
 import AdminSettings from "../dashboard/admin-dashboard/AdminSettings";
 import AdminRates from "../dashboard/admin-dashboard/AdminRates";
 import FAQPage from "../pages/FAQPage/FAQPage";
+import Contact from "../pages/Contact/Contact";
 
 
 
@@ -61,6 +62,10 @@ const Routes = createBrowserRouter([
       {
         path: "/faqpage",
         element: <FAQPage />,
+      },
+      {
+        path: "/recogida",
+        element: <Contact />,
       },
       {
         path: "/login",
