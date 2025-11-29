@@ -64,6 +64,7 @@ function timeAgo(iso: string) {
   return 'Hace un momento';
 }
 
+/* ---------- fake seed ---------- */
 const mockRequestsSeed: PickupRequest[] = [
   {
     id: 'PK-001',
@@ -83,6 +84,8 @@ const mockRequestsSeed: PickupRequest[] = [
     createdAt: new Date(Date.now() - 5 * 3600 * 1000).toISOString(),
   },
 ];
+
+const BRAND_GREEN = '#166534'; // EXPRESUR green
 
 export default function RecogidaPage() {
   const [requests, setRequests] = useState<PickupRequest[]>(mockRequestsSeed);
@@ -142,36 +145,36 @@ export default function RecogidaPage() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f1f5f9', py: { xs: 3, md: 6 } }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f7faf7', py: { xs: 3, md: 6 } }}>
       <Container maxWidth="lg">
         {/* Hero Header */}
         <Paper
           elevation={0}
           sx={{
             p: { xs: 3, md: 5 },
-            borderRadius: 4,
-            bgcolor: 'rgba(16, 185, 129, 0.08)',
-            border: '1px solid rgba(16, 185, 129, 0.2)',
+            borderRadius: 3,
+            bgcolor: 'white',
+            borderLeft: `6px solid ${BRAND_GREEN}`,
             mb: 5,
           }}
         >
           <Stack direction="row" alignItems="center" gap={3}>
             <Avatar
               sx={{
-                bgcolor: '#10b981',
+                bgcolor: BRAND_GREEN,
                 width: 64,
                 height: 64,
-                boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
+                boxShadow: `0 6px 18px ${BRAND_GREEN}20`,
               }}
             >
               <AddLocationAlt sx={{ fontSize: 32 }} />
             </Avatar>
             <Box>
-              <Typography variant="h4" fontWeight={800} color="gray.900">
+              <Typography variant="h4" fontWeight={800} color="text.primary">
                 Solicitar Recogida en Miami
               </Typography>
               <Typography variant="body1" color="text.secondary" mt={1}>
-                Programa una recogida gratuita de paquetes en tu domicilio. Servicio exclusivo para Miami.
+                Programa una recogida de paquetes en tu domicilio. Servicio exclusivo para Miami.
               </Typography>
             </Box>
           </Stack>
@@ -183,19 +186,19 @@ export default function RecogidaPage() {
             <Card
               elevation={0}
               sx={{
-                borderRadius: 4,
-                border: '1px solid #e2e8f0',
+                borderRadius: 3,
+                border: '1px solid #e6eef0',
                 bgcolor: 'white',
                 overflow: 'hidden',
-                boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
+                boxShadow: '0 8px 28px rgba(10,10,10,0.04)',
               }}
             >
-              <Box sx={{ bgcolor: '#10b981', p: 3 }}>
+              <Box sx={{ bgcolor: BRAND_GREEN, p: 3 }}>
                 <Typography variant="h6" fontWeight={700} color="white">
                   Nueva Solicitud de Recogida
                 </Typography>
               </Box>
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: { xs: 3, md: 4 } }}>
                 {error && (
                   <Alert severity="error" sx={{ mb: 3 }}>
                     {error}
@@ -277,13 +280,13 @@ export default function RecogidaPage() {
                     sx={{
                       mt: 2,
                       py: 1.8,
-                      bgcolor: '#10b981',
-                      '&:hover': { bgcolor: '#059669' },
+                      bgcolor: BRAND_GREEN,
+                      '&:hover': { bgcolor: '#14572b' },
                       borderRadius: 3,
                       textTransform: 'none',
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      boxShadow: '0 8px 20px rgba(16,185,129,0.3)',
+                      fontSize: '1.02rem',
+                      fontWeight: 700,
+                      boxShadow: `0 10px 28px ${BRAND_GREEN}22`,
                     }}
                   >
                     {submitting ? 'Enviando...' : 'Solicitar Recogida Ahora'}
@@ -298,21 +301,21 @@ export default function RecogidaPage() {
             <Card
               elevation={0}
               sx={{
-                borderRadius: 4,
-                border: '1px solid #e2e8f0',
+                borderRadius: 3,
+                border: '1px solid #e6eef0',
                 bgcolor: 'white',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
                 height: '100%',
               }}
             >
-              <Box sx={{ bgcolor: '#0f172a', p: 3 }}>
+              <Box sx={{ bgcolor: BRAND_GREEN, p: 3 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography variant="h6" fontWeight={700} color="white">
                     Historial de Solicitudes
                   </Typography>
                   <Chip
                     label={`${requests.length} activa${requests.length !== 1 ? 's' : ''}`}
-                    sx={{ bgcolor: '#10b981', color: 'white', fontWeight: 600 }}
+                    sx={{ bgcolor: '#fef3c7', color: '#92400e', fontWeight: 700 }}
                   />
                 </Stack>
               </Box>
@@ -333,16 +336,16 @@ export default function RecogidaPage() {
                         p: 3,
                         mb: idx === requests.length - 1 ? 0 : 2,
                         borderRadius: 3,
-                        border: '1px solid #e2e8f0',
-                        bgcolor: '#fafafa',
-                        transition: 'all 0.2s',
-                        '&:hover': { borderColor: '#10b981', bgcolor: '#f0fdf4' },
+                        border: '1px solid #eef6ef',
+                        bgcolor: '#fafaf9',
+                        transition: 'all 0.18s',
+                        '&:hover': { borderColor: BRAND_GREEN, bgcolor: '#f7faf7' },
                       }}
                     >
                       <Stack direction="row" justifyContent="space-between">
-                        <Box>
+                        <Box sx={{ pr: 2, minWidth: 0, flex: 1 }}>
                           <Stack direction="row" alignItems="center" gap={1.5} mb={1}>
-                            <Typography variant="h6" fontWeight={800} color="#0f172a">
+                            <Typography variant="h6" fontWeight={800} color="text.primary" noWrap>
                               {r.id}
                             </Typography>
                             <Chip
@@ -352,12 +355,12 @@ export default function RecogidaPage() {
                                 fontWeight: 700,
                                 bgcolor:
                                   r.status === 'Pending'
-                                    ? '#fef3c7'
+                                    ? '#fff7ed'
                                     : r.status === 'Assigned'
-                                    ? '#dbeafe'
+                                    ? '#e6f1ff'
                                     : r.status === 'Completed'
-                                    ? '#d1fae5'
-                                    : '#fee2e2',
+                                    ? '#ecfdf5'
+                                    : '#fff1f2',
                                 color:
                                   r.status === 'Pending'
                                     ? '#92400e'
@@ -365,12 +368,12 @@ export default function RecogidaPage() {
                                     ? '#1e40af'
                                     : r.status === 'Completed'
                                     ? '#065f46'
-                                    : '#991b1b',
+                                    : '#861b1b',
                               }}
                             />
                           </Stack>
 
-                          <Typography variant="body1" fontWeight={600} mb={1}>
+                          <Typography variant="body1" fontWeight={600} mb={1} noWrap>
                             {r.address}
                           </Typography>
 
@@ -385,15 +388,19 @@ export default function RecogidaPage() {
                           )}
                         </Box>
 
-                        <Box textAlign="right">
+                        <Box textAlign="right" sx={{ ml: 2 }}>
                           {r.status !== 'Cancelled' && r.status !== 'Completed' ? (
-                            <Stack spacing={1}>
+                            <Stack spacing={1} alignItems="flex-end">
                               <Button
                                 size="small"
                                 variant="outlined"
                                 startIcon={<Cancel />}
                                 onClick={() => updateStatus(r.id, 'Cancelled')}
-                                sx={{ textTransform: 'none' }}
+                                sx={{
+                                  textTransform: 'none',
+                                  borderColor: '#f3d4d4',
+                                  color: '#991b1b',
+                                }}
                               >
                                 Cancelar
                               </Button>
@@ -403,8 +410,8 @@ export default function RecogidaPage() {
                                 startIcon={<CheckCircle />}
                                 onClick={() => updateStatus(r.id, 'Completed')}
                                 sx={{
-                                  bgcolor: '#10b981',
-                                  '&:hover': { bgcolor: '#059669' },
+                                  bgcolor: BRAND_GREEN,
+                                  '&:hover': { bgcolor: '#14572b' },
                                   textTransform: 'none',
                                 }}
                               >
