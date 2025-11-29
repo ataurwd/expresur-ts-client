@@ -73,6 +73,9 @@ export default function UserDashboard() {
 
   const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
 
+  /* Active color (matches admin sidebar) */
+  const ACTIVE_COLOR = "#fa921d";
+
   return (
     <Drawer
       variant="permanent"
@@ -151,18 +154,30 @@ export default function UserDashboard() {
                   borderRadius: 2,
                   transition: "all 0.2s",
 
-                  // ACTIVE (Bottle Green) — matches AdminSidebar
-                  backgroundColor: isSelected
-                    ? "rgba(6, 78, 59, 0.35)"
-                    : "transparent",
+                  // use ACTIVE_COLOR for selected state
+                  color: isSelected ? ACTIVE_COLOR : "#fff",
+
+                  // active background uses low-opacity tone of the active color
+                  backgroundColor: isSelected ? "rgba(250,146,29,0.10)" : "transparent",
 
                   "&:hover": {
-                    backgroundColor: "rgba(6, 78, 59, 0.25)",
+                    backgroundColor: isSelected
+                      ? "rgba(250,146,29,0.12)"
+                      : "rgba(250,146,29,0.06)",
                     transform: "translateX(4px)",
                   },
 
                   "&.active": {
-                    backgroundColor: "rgba(6, 78, 59, 0.35)",
+                    backgroundColor: "rgba(250,146,29,0.10)",
+                    color: ACTIVE_COLOR,
+                  },
+
+                  // ensure child text/icon inherit the active color when selected
+                  "& .MuiListItemText-root": {
+                    color: isSelected ? ACTIVE_COLOR : "#fff",
+                  },
+                  "& .MuiListItemIcon-root": {
+                    color: isSelected ? ACTIVE_COLOR : "#fff",
                   },
                 }}
               >
@@ -171,7 +186,7 @@ export default function UserDashboard() {
                     minWidth: 0,
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
-                    color: "#fff",
+                    color: isSelected ? ACTIVE_COLOR : "#fff",
                   }}
                 >
                   {item.icon}
@@ -181,6 +196,10 @@ export default function UserDashboard() {
                   sx={{
                     opacity: open ? 1 : 0,
                     transition: "opacity 0.2s 0.1s",
+                    "& .MuiTypography-root": {
+                      color: isSelected ? ACTIVE_COLOR : "#fff",
+                      fontWeight: isSelected ? 600 : 500,
+                    },
                   }}
                 />
               </ListItemButton>
