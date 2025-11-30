@@ -25,13 +25,17 @@ const Navbar: React.FC = () => {
   const loginUser = useCurrentUser();
 
   const topNav = [
+    { path: "/nuestros", key: "Nuestros", label: "Nuestros" },
     { path: "/quiénes-somos", key: "quienes_somos", label: "Quiénes Somos" },
     { path: "/faqpage", key: "faq", label: "FAQ" },
     { path: "/recogida", key: "recogida", label: "Recogida" },
     { path: "/contacto", key: "contacto", label: "Contacto" },
-    { path: "/nuestros", key: "nuestros", label: "Nuestros" },
-    { path: "/casilleroescritorio", key: "CasilleroEscritorio", label: "Casillero Escritorio" },
-    { path: "/CasilleroVirtual", key: "CasilleroVirtual", label: "Virtual Locker" }
+    {
+      path: "/casilleroescritorio",
+      key: "CasilleroEscritorio",
+      label: "Casillero Escritorio",
+    },
+    // { path: "/CasilleroVirtual", key: "CasilleroVirtual", label: "Virtual Locker" }
   ];
 
   return (
@@ -48,13 +52,11 @@ const Navbar: React.FC = () => {
             <Instagram fontSize="small" />
           </IconButton>
 
-
           <IconButton sx={{ color: "#fff", padding: "4px" }}>
             <Facebook fontSize="small" />
           </IconButton>
         </div>
 
-    
         {/* RIGHT DIV */}
         <div className="flex items-center gap-2">
           <Button
