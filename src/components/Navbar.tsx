@@ -1,10 +1,6 @@
 // src/components/Navbar.tsx
 import React, { useState } from "react";
-import {
-  Button,
-  IconButton,
-  Avatar,
-} from "@mui/material";
+import { Button, IconButton, Avatar } from "@mui/material";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import {
@@ -21,11 +17,13 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import Logo from "../assets/Grupo 1.png";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useCurrentUser } from "../context/useCurrentUser";
 
 const Navbar: React.FC = () => {
   const { t, toggleLang } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const loginUser = useCurrentUser();
 
   const topNav = [
     { path: "/quiénes-somos", key: "quienes_somos" as const },
@@ -38,91 +36,81 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-{/* 🔵 TOP GREEN BAR (LEFT & RIGHT — close together) */}
-<div className="bg-green-800 py-2 px-4 shadow-sm flex justify-between items-center">
+      {/* 🔵 TOP GREEN BAR (LEFT & RIGHT — close together) */}
+      <div className="bg-green-800 py-2 px-4 shadow-sm flex justify-between items-center">
+        {/* LEFT DIV */}
+        <div className="flex items-center gap-2">
+          <IconButton sx={{ color: "#fff", padding: "4px" }}>
+            <WhatsApp fontSize="small" />
+          </IconButton>
 
-  {/* LEFT DIV */}
-  <div className="flex items-center gap-2">
+          <IconButton sx={{ color: "#fff", padding: "4px" }}>
+            <Instagram fontSize="small" />
+          </IconButton>
 
-   
+          <IconButton sx={{ color: "#fff", padding: "4px" }}>
+            <Facebook fontSize="small" />
+          </IconButton>
+        </div>
 
-    <IconButton sx={{ color: "#fff", padding: "4px" }}>
-      <WhatsApp fontSize="small" />
-    </IconButton>
+        {/* RIGHT DIV */}
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={toggleLang}
+            startIcon={<Language />}
+            sx={{
+              color: "#fff",
+              textTransform: "none",
+              paddingX: 1,
+              fontSize: 13,
+              borderRadius: "9999px",
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+            }}
+          >
+            EN
+          </Button>
+          <Link to="/login">
+            <Button
+              startIcon={<LoginIcon fontSize="small" />}
+              sx={{
+                backgroundColor: "transparent",
+                color: "#fff",
+                borderRadius: "9999px",
+                paddingX: 1.4,
+                fontSize: 13,
+                border: "1px solid rgba(255,255,255,0.25)",
+                textTransform: "none",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+              }}
+            >
+              Login
+            </Button>
+          </Link>
 
-    <IconButton sx={{ color: "#fff", padding: "4px" }}>
-      <Instagram fontSize="small" />
-    </IconButton>
-
-    <IconButton sx={{ color: "#fff", padding: "4px" }}>
-      <Facebook fontSize="small" />
-    </IconButton>
-
-  </div>
-
-  {/* RIGHT DIV */}
-  <div className="flex items-center gap-2">
- <Button
-      onClick={toggleLang}
-      startIcon={<Language />}
-      sx={{
-        color: "#fff",
-        textTransform: "none",
-        paddingX: 1,
-        fontSize: 13,
-        borderRadius: "9999px",
-        "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
-      }}
-    >
-      EN
-    </Button>
-    <Link to="/login">
-      <Button
-        startIcon={<LoginIcon fontSize="small" />}
-        sx={{
-          backgroundColor: "transparent",
-          color: "#fff",
-          borderRadius: "9999px",
-          paddingX: 1.4,
-          fontSize: 13,
-          border: "1px solid rgba(255,255,255,0.25)",
-          textTransform: "none",
-          "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
-        }}
-      >
-        Login
-      </Button>
-    </Link>
-
-    <Link to="/register">
-      <Button
-        startIcon={<PersonAddIcon fontSize="small" />}
-        sx={{
-          backgroundColor: "transparent",
-          color: "#fff",
-          borderRadius: "9999px",
-          paddingX: 1.4,
-          fontSize: 13,
-          border: "1px solid rgba(255,255,255,0.25)",
-          textTransform: "none",
-          "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
-        }}
-      >
-        Register
-      </Button>
-    </Link>
-
-  </div>
-</div>
-
-
-
+          <Link to="/register">
+            <Button
+              startIcon={<PersonAddIcon fontSize="small" />}
+              sx={{
+                backgroundColor: "transparent",
+                color: "#fff",
+                borderRadius: "9999px",
+                paddingX: 1.4,
+                fontSize: 13,
+                border: "1px solid rgba(255,255,255,0.25)",
+                textTransform: "none",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+              }}
+            >
+              Register
+            </Button>
+          </Link>
+        </div>
+      </div>
 
       {/* HEADER */}
       <header className="bg-white sticky top-0 z-[200] shadow">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-
             {/* LOGO */}
             <NavLink to="/" className="flex items-center">
               <img
@@ -153,7 +141,6 @@ const Navbar: React.FC = () => {
 
             {/* RIGHT SECTION */}
             <div className="flex items-center gap-4">
-
               {/* TRACK BUTTON */}
               <NavLink to="/rasterear">
                 <button
@@ -168,19 +155,42 @@ const Navbar: React.FC = () => {
               </NavLink>
 
               {/* DASHBOARD ICON */}
-              <NavLink to="/dashboard">
-                <Avatar
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    bgcolor: "#046838",
-                    cursor: "pointer",
-                    boxShadow: "0 2px 6px rgba(4,104,56,0.2)",
-                  }}
+              {loginUser ? (
+                <NavLink
+                  to={
+                    loginUser.role === "admin"
+                      ? "/dashboard/admin"
+                      : "/dashboard/user-dashboard"
+                  }
+                  style={{ textDecoration: "none" }}
                 >
-                  <PersonIcon sx={{ color: "#fff", fontSize: 22 }} />
-                </Avatar>
-              </NavLink>
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      bgcolor: "#046838",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 6px rgba(4, 104, 56, 0.2)",
+                    }}
+                  >
+                    <PersonIcon sx={{ color: "#fff", fontSize: 22 }} />
+                  </Avatar>
+                </NavLink>
+              ) : (
+                <NavLink to="/login">
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      bgcolor: "#046838",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 6px rgba(4, 104, 56, 0.2)",
+                    }}
+                  >
+                    <PersonIcon sx={{ color: "#fff", fontSize: 22 }} />
+                  </Avatar>
+                </NavLink>
+              )}
 
               {/* MOBILE MENU BUTTON */}
               <div className="xl:hidden">
@@ -192,7 +202,6 @@ const Navbar: React.FC = () => {
                 </IconButton>
               </div>
             </div>
-
           </div>
         </div>
       </header>
@@ -215,7 +224,6 @@ const Navbar: React.FC = () => {
             </div>
 
             <nav className="p-6 space-y-6">
-
               <NavLink
                 to="/"
                 className="block text-xl font-bold text-[#046838]"
@@ -250,7 +258,6 @@ const Navbar: React.FC = () => {
                   </NavLink>
                 </div>
               </div>
-
             </nav>
           </div>
         </div>
