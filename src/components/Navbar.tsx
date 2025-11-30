@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 import React, { useState } from "react";
 import { Button, IconButton, Avatar } from "@mui/material";
 import { Link, NavLink, useLocation } from "react-router-dom";
@@ -26,16 +25,13 @@ const Navbar: React.FC = () => {
   const loginUser = useCurrentUser();
 
   const topNav = [
-    { path: "/quiénes-somos", key: "quienes_somos" as const },
-    { path: "/faqpage", key: "faq" as const },
-    { path: "/recogida", key: "recogida" as const },
-    { path: "/contacto", key: "contacto" as const },
-    { path: "/nuestros", key: "nuestros" as const },
-    { path: "/casilleroescritorio", key: "CasilleroEscritorio" as const },
-     { path: "/CasilleroVirtual", key: "CasilleroVirtual" as const },
-
-    // ✅ NEW PAGE
-    { path: "/virtual-locker", key: "virtual_locker" as const },
+    { path: "/quiénes-somos", key: "quienes_somos", label: "Quiénes Somos" },
+    { path: "/faqpage", key: "faq", label: "FAQ" },
+    { path: "/recogida", key: "recogida", label: "Recogida" },
+    { path: "/contacto", key: "contacto", label: "Contacto" },
+    { path: "/nuestros", key: "nuestros", label: "Nuestros" },
+    { path: "/casilleroescritorio", key: "CasilleroEscritorio", label: "Casillero Escritorio" },
+    { path: "/CasilleroVirtual", key: "CasilleroVirtual", label: "Virtual Locker" }
   ];
 
   return (
@@ -97,7 +93,6 @@ const Navbar: React.FC = () => {
           >
             EN
           </Button>
->>>>>>> 6436a1063861824deebf6650d82e12c1e49ab041
           <Link to="/login">
             <Button
               startIcon={<LoginIcon fontSize="small" />}
@@ -164,7 +159,7 @@ const Navbar: React.FC = () => {
                   }
                 >
                   {/* cast to any to satisfy TypeScript union mismatch */}
-                  {t ? t(n.key as any) : n.key}
+                  {(t && t(n.key as any)) || n.key}
                 </NavLink>
               ))}
             </nav>
@@ -270,7 +265,7 @@ const Navbar: React.FC = () => {
                   className="block text-lg font-semibold text-gray-800 hover:text-[#046838]"
                 >
                   {/* cast to any here too */}
-                  {t ? t(n.key as any) : n.key}
+                  {(t && t(n.key as any)) || n.key}
                 </NavLink>
               ))}
 
