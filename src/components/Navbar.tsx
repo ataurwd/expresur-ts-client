@@ -34,95 +34,90 @@ const Navbar: React.FC = () => {
     { path: "/contacto", key: "contacto" as const },
     { path: "/nuestros", key: "nuestros" as const },
     { path: "/casilleroescritorio", key: "CasilleroEscritorio" as const },
+     { path: "/CasilleroVirtual", key: "CasilleroVirtual" as const },
+
+    // ✅ NEW PAGE
+    { path: "/virtual-locker", key: "virtual_locker" as const },
   ];
 
   return (
     <>
-{/* 🔵 TOP GREEN BAR (LEFT & RIGHT — close together) */}
-<div className="bg-green-800 py-2 px-4 shadow-sm flex justify-between items-center">
+      {/* 🔵 TOP GREEN BAR (LEFT & RIGHT — close together) */}
+      <div className="bg-green-800 py-2 px-4 shadow-sm flex justify-between items-center">
+        {/* LEFT DIV */}
+        <div className="flex items-center gap-2">
+          <IconButton sx={{ color: "#fff", padding: "4px" }}>
+            <WhatsApp fontSize="small" />
+          </IconButton>
 
-  {/* LEFT DIV */}
-  <div className="flex items-center gap-2">
+          <IconButton sx={{ color: "#fff", padding: "4px" }}>
+            <Instagram fontSize="small" />
+          </IconButton>
 
-   
+          <IconButton sx={{ color: "#fff", padding: "4px" }}>
+            <Facebook fontSize="small" />
+          </IconButton>
+        </div>
 
-    <IconButton sx={{ color: "#fff", padding: "4px" }}>
-      <WhatsApp fontSize="small" />
-    </IconButton>
+        {/* RIGHT DIV */}
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={toggleLang}
+            startIcon={<Language />}
+            sx={{
+              color: "#fff",
+              textTransform: "none",
+              paddingX: 1,
+              fontSize: 13,
+              borderRadius: "9999px",
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+            }}
+          >
+            EN
+          </Button>
 
-    <IconButton sx={{ color: "#fff", padding: "4px" }}>
-      <Instagram fontSize="small" />
-    </IconButton>
+          <Link to="/login">
+            <Button
+              startIcon={<LoginIcon fontSize="small" />}
+              sx={{
+                backgroundColor: "transparent",
+                color: "#fff",
+                borderRadius: "9999px",
+                paddingX: 1.4,
+                fontSize: 13,
+                border: "1px solid rgba(255,255,255,0.25)",
+                textTransform: "none",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+              }}
+            >
+              Login
+            </Button>
+          </Link>
 
-    <IconButton sx={{ color: "#fff", padding: "4px" }}>
-      <Facebook fontSize="small" />
-    </IconButton>
-
-  </div>
-
-  {/* RIGHT DIV */}
-  <div className="flex items-center gap-2">
- <Button
-      onClick={toggleLang}
-      startIcon={<Language />}
-      sx={{
-        color: "#fff",
-        textTransform: "none",
-        paddingX: 1,
-        fontSize: 13,
-        borderRadius: "9999px",
-        "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
-      }}
-    >
-      EN
-    </Button>
-    <Link to="/login">
-      <Button
-        startIcon={<LoginIcon fontSize="small" />}
-        sx={{
-          backgroundColor: "transparent",
-          color: "#fff",
-          borderRadius: "9999px",
-          paddingX: 1.4,
-          fontSize: 13,
-          border: "1px solid rgba(255,255,255,0.25)",
-          textTransform: "none",
-          "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
-        }}
-      >
-        Login
-      </Button>
-    </Link>
-
-    <Link to="/register">
-      <Button
-        startIcon={<PersonAddIcon fontSize="small" />}
-        sx={{
-          backgroundColor: "transparent",
-          color: "#fff",
-          borderRadius: "9999px",
-          paddingX: 1.4,
-          fontSize: 13,
-          border: "1px solid rgba(255,255,255,0.25)",
-          textTransform: "none",
-          "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
-        }}
-      >
-        Register
-      </Button>
-    </Link>
-
-  </div>
-</div>
-
-
-
+          <Link to="/register">
+            <Button
+              startIcon={<PersonAddIcon fontSize="small" />}
+              sx={{
+                backgroundColor: "transparent",
+                color: "#fff",
+                borderRadius: "9999px",
+                paddingX: 1.4,
+                fontSize: 13,
+                border: "1px solid rgba(255,255,255,0.25)",
+                textTransform: "none",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+              }}
+            >
+              Register
+            </Button>
+          </Link>
+        </div>
+      </div>
 
       {/* HEADER */}
       <header className="bg-white sticky top-0 z-[200] shadow">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-
             {/* LOGO */}
             <NavLink to="/" className="flex items-center">
               <img
@@ -146,14 +141,14 @@ const Navbar: React.FC = () => {
                     }`
                   }
                 >
-                  {t ? t(n.key) : n.key}
+                  {/* cast to any to satisfy TypeScript union mismatch */}
+                  {t ? t(n.key as any) : n.key}
                 </NavLink>
               ))}
             </nav>
 
             {/* RIGHT SECTION */}
             <div className="flex items-center gap-4">
-
               {/* TRACK BUTTON */}
               <NavLink to="/rasterear">
                 <button
@@ -192,7 +187,6 @@ const Navbar: React.FC = () => {
                 </IconButton>
               </div>
             </div>
-
           </div>
         </div>
       </header>
@@ -215,7 +209,6 @@ const Navbar: React.FC = () => {
             </div>
 
             <nav className="p-6 space-y-6">
-
               <NavLink
                 to="/"
                 className="block text-xl font-bold text-[#046838]"
@@ -231,7 +224,8 @@ const Navbar: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-lg font-semibold text-gray-800 hover:text-[#046838]"
                 >
-                  {t ? t(n.key) : n.key}
+                  {/* cast to any here too */}
+                  {t ? t(n.key as any) : n.key}
                 </NavLink>
               ))}
 
@@ -250,7 +244,6 @@ const Navbar: React.FC = () => {
                   </NavLink>
                 </div>
               </div>
-
             </nav>
           </div>
         </div>

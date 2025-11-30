@@ -4,7 +4,6 @@ import card2img from "../../assets/card-2.png";
 import card3img from "../../assets/card-3.png";
 import card4img from "../../assets/card-4.png";
 import card5img from "../../assets/card-5.png";
-import { Button } from "@mui/material";
 
 const NueCard1 = () => {
   return (
@@ -24,18 +23,18 @@ const NueCard1 = () => {
             DHL (partners)
           </p>
           <button className="bg-orange-400 rounded-xl mt-5 text-white px-10 py-2">
-            Cotizar Envío Internacional{" "}
+            Cotizar Envío Internacional
           </button>
         </div>
         <div className="flex justify-end">
-          <img className="md:-mr-32" src={card1img} alt="" />
+          <img className="md:-mr-32" src={card1img} alt="card-1" />
         </div>
       </div>
 
       {/* card 2 */}
       <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
         <div className="flex justify-start">
-          <img className="md:-ml-32" src={card2img} alt="" />
+          <img className="md:-ml-32" src={card2img} alt="card-2" />
         </div>
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">
@@ -46,7 +45,7 @@ const NueCard1 = () => {
           </p>
 
           <button className="bg-orange-400 rounded-xl mt-5 text-white px-10 py-2">
-            Cotizar Envío a Cuba{" "}
+            Cotizar Envío a Cuba
           </button>
         </div>
       </div>
@@ -62,18 +61,18 @@ const NueCard1 = () => {
             Express: 3–5 días
           </p>
           <button className="bg-orange-400 rounded-xl mt-5 text-white px-10 py-2">
-            Obtener Casillero{" "}
+            Obtener Casillero
           </button>
         </div>
         <div className="flex justify-end">
-          <img className="md:-mr-32" src={card3img} alt="" />
+          <img className="md:-mr-32" src={card3img} alt="card-3" />
         </div>
       </div>
 
       {/* card 4 */}
       <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
         <div className="flex justify-start">
-          <img className="md:-ml-32" src={card4img} alt="" />
+          <img className="md:-ml-32" src={card4img} alt="card-4" />
         </div>
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">Casillero Virtual</h1>
@@ -87,18 +86,18 @@ const NueCard1 = () => {
         </div>
       </div>
 
-      {/* card 3 */}
+      {/* card 5 */}
       <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">Enviar Dinero (Remesas)</h1>
           <p className="text-3xl my-5">Enviar dinero rápido y seguro.</p>
 
           <button className="bg-orange-400 rounded-xl mt-5 text-white px-10 py-2">
-            Enviar Dinero{" "}
+            Enviar Dinero
           </button>
         </div>
         <div className="flex justify-end">
-          <img className="md:-mr-32" src={card5img} alt="" />
+          <img className="md:-mr-32" src={card5img} alt="card-5" />
         </div>
       </div>
     </div>
