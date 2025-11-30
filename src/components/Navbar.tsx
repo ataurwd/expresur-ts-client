@@ -14,9 +14,11 @@ import {
   Language,
   Menu as MenuIcon,
   Close,
+  Login as LoginIcon,
+  PersonAdd as PersonAddIcon,
 } from "@mui/icons-material";
 
-import PersonIcon from "@mui/icons-material/Person"; // 👈 ADDED
+import PersonIcon from "@mui/icons-material/Person";
 import Logo from "../assets/Grupo 1.png";
 import { useLanguage } from "../i18n/LanguageContext";
 
@@ -36,31 +38,81 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      {/* Top green bar */}
-      <div className="bg-green-800 pr-3 md:pr-8 flex justify-between md:justify-end gap-2">
-        <div className="flex justify-center items-center gap-4 text-white pl-3 md:pl-0">
-          <button className="text-[15px]">
-            <Link to={"/login"}>Login</Link>
-          </button>
-          <button className="text-[15px]">
-            <Link to={"/register"}>Register</Link>
-          </button>
-        </div>
-        <div className="flex justify-end items-end gap-2">
-          <IconButton sx={{ color: "#fff" }}>
-            <WhatsApp />
-          </IconButton>
-          <IconButton sx={{ color: "#fff" }}>
-            <Instagram />
-          </IconButton>
-          <IconButton sx={{ color: "#fff" }}>
-            <Facebook />
-          </IconButton>
-        </div>
+      {/* 🔵 TOP GREEN BAR (ALL RIGHT SIDE NOW) */}
+      <div className="bg-green-800 pr-4 pl-4 md:pr-10 md:pl-4 py-2 shadow-sm flex justify-end items-center gap-3">
+
+        {/* Login */}
+        <Link to="/login">
+          <Button
+            startIcon={<LoginIcon />}
+            sx={{
+              backgroundColor: "transparent",
+              color: "#fff",
+              borderRadius: "9999px",
+              paddingX: 1.6,
+              border: "1px solid rgba(255,255,255,0.25)",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "rgba(255,255,255,0.12)",
+              },
+            }}
+          >
+            Login
+          </Button>
+        </Link>
+
+        {/* Register */}
+        <Link to="/register">
+          <Button
+            startIcon={<PersonAddIcon />}
+            sx={{
+              backgroundColor: "transparent",
+              color: "#fff",
+              borderRadius: "9999px",
+              paddingX: 1.6,
+              border: "1px solid rgba(255,255,255,0.25)",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "rgba(255,255,255,0.12)",
+              },
+            }}
+          >
+            Register
+          </Button>
+        </Link>
+
+        {/* Language */}
+        <Button
+          onClick={toggleLang}
+          startIcon={<Language />}
+          sx={{
+            color: "#fff",
+            textTransform: "none",
+            paddingX: 1.2,
+            borderRadius: "9999px",
+            "&:hover": {
+              backgroundColor: "rgba(255,255,255,0.12)",
+            },
+          }}
+        >
+          {t ? t("languageShort") : "EN"}
+        </Button>
+
+        {/* SOCIAL ICONS */}
+        <IconButton sx={{ color: "#fff" }}>
+          <WhatsApp />
+        </IconButton>
+        <IconButton sx={{ color: "#fff" }}>
+          <Instagram />
+        </IconButton>
+        <IconButton sx={{ color: "#fff" }}>
+          <Facebook />
+        </IconButton>
+
       </div>
 
       {/* HEADER */}
-      <header className="bg-white sticky top-0 z-[200]">
+      <header className="bg-white sticky top-0 z-[200] shadow">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
 
@@ -69,7 +121,7 @@ const Navbar: React.FC = () => {
               <img
                 src={Logo}
                 alt="Expresur Logo"
-                className="h-12 w-1/2 object-contain"
+                className="h-5 w-auto md:h-7 md:w-auto object-contain"
               />
             </NavLink>
 
@@ -83,57 +135,47 @@ const Navbar: React.FC = () => {
                     `text-base font-semibold transition ${
                       isActive
                         ? "text-[#046838] underline decoration-[#046838] underline-offset-4"
-                        : "text-green-800 hover:text-[#046838]"
+                        : "text-gray-700 hover:text-[#046838]"
                     }`
                   }
                 >
-                  {t(n.key)}
+                  {t ? t(n.key) : n.key}
                 </NavLink>
               ))}
             </nav>
 
-            {/* Right Side */}
+            {/* RIGHT SECTION */}
             <div className="flex items-center gap-4">
 
-              {/* TRACKING BUTTON */}
-              <NavLink to={"/rasterear"}>
+              {/* TRACK BUTTON */}
+              <NavLink to="/rasterear">
                 <button
-                  className={` bg-green-800 hover:bg-[#035230] text-white w-32 md:w-52 text-[11px] md:text-[15px] md:font-bold md:px-6 py-2.5 rounded-full shadow-lg ${
+                  className={`bg-green-800 hover:bg-[#035230] text-white w-36 md:w-52 text-[12px] md:text-[15px] font-semibold px-4 py-2 rounded-full shadow transition ${
                     location.pathname === "/rasterear"
                       ? "ring-2 ring-[#046838]"
                       : ""
                   }`}
                 >
-                  {t("rastrear")}
+                  {t ? t("rastrear") : "Rastrear"}
                 </button>
               </NavLink>
 
-              {/* DASHBOARD MAN ICON 🔥 */}
-              <NavLink to="/dashboard" title="Dashboard">
+              {/* DASHBOARD ICON */}
+              <NavLink to="/dashboard">
                 <Avatar
                   sx={{
-                    width: 38,
-                    height: 38,
+                    width: 40,
+                    height: 40,
                     bgcolor: "#046838",
                     cursor: "pointer",
+                    boxShadow: "0 2px 6px rgba(4,104,56,0.2)",
                   }}
                 >
-                  <PersonIcon sx={{ fontSize: 22, color: "#fff" }} />
+                  <PersonIcon sx={{ color: "#fff", fontSize: 22 }} />
                 </Avatar>
               </NavLink>
 
-              {/* Language Button */}
-              <div className="hidden xl:block">
-                <Button
-                  onClick={toggleLang}
-                  endIcon={<Language />}
-                  className="text-gray-700 normal-case"
-                >
-                  {t("languageShort")}
-                </Button>
-              </div>
-
-              {/* Mobile Menu Button */}
+              {/* MOBILE MENU BUTTON */}
               <div className="xl:hidden">
                 <IconButton
                   onClick={() => setMobileMenuOpen(true)}
@@ -142,8 +184,8 @@ const Navbar: React.FC = () => {
                   <MenuIcon />
                 </IconButton>
               </div>
-
             </div>
+
           </div>
         </div>
       </header>
@@ -160,82 +202,45 @@ const Navbar: React.FC = () => {
           >
             <div className="p-6 flex justify-between items-center">
               <img src={Logo} alt="Expresur" className="h-6" />
-
-              <div className="flex items-center gap-2">
-                <Button
-                  onClick={toggleLang}
-                  startIcon={<Language />}
-                  className="normal-case"
-                >
-                  {t("languageShort")}
-                </Button>
-
-                <IconButton onClick={() => setMobileMenuOpen(false)}>
-                  <Close className="text-[#046838]" />
-                </IconButton>
-              </div>
+              <IconButton onClick={() => setMobileMenuOpen(false)}>
+                <Close className="text-[#046838]" />
+              </IconButton>
             </div>
 
             <nav className="p-6 space-y-6">
 
-              {/* HOME */}
               <NavLink
                 to="/"
+                className="block text-xl font-bold text-[#046838]"
                 onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `block text-xl font-bold ${
-                    isActive ? "text-[#046838] underline" : "text-[#046838]"
-                  }`
-                }
               >
-                {t("inicio")}
+                {t ? t("inicio") : "Inicio"}
               </NavLink>
 
-              {/* Top Nav Links */}
               {topNav.map((n) => (
                 <NavLink
                   key={n.path}
                   to={n.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `block text-lg font-semibold ${
-                      isActive
-                        ? "text-[#046838] underline"
-                        : "text-gray-800 hover:text-[#046838]"
-                    }`
-                  }
+                  className="block text-lg font-semibold text-gray-800 hover:text-[#046838]"
                 >
-                  {t(n.key)}
+                  {t ? t(n.key) : n.key}
                 </NavLink>
               ))}
 
-              {/* MOBILE MENU DASHBOARD ICON */}
+              {/* MOBILE DASHBOARD */}
               <div className="pt-4 border-t border-gray-200">
                 <div className="flex items-center gap-3">
                   <Avatar sx={{ bgcolor: "#046838" }}>
                     <PersonIcon sx={{ color: "#fff" }} />
                   </Avatar>
-                  <div>
-                    <p className="font-medium">Dashboard</p>
-                    <NavLink
-                      to="/dashboard"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-sm text-green-800 hover:underline"
-                    >
-                      Go to Dashboard
-                    </NavLink>
-                  </div>
-                </div>
-              </div>
-
-              {/* Social */}
-              <div className="pt-8 border-t border-gray-200">
-                <p className="text-sm text-gray-600 mb-4">{t("siguenos")}</p>
-
-                <div className="flex gap-6 text-3xl">
-                  <WhatsApp className="text-[#046838] cursor-pointer hover:scale-110 transition" />
-                  <Instagram className="text-[#046838] cursor-pointer hover:scale-110 transition" />
-                  <Facebook className="text-[#046838] cursor-pointer hover:scale-110 transition" />
+                  <NavLink
+                    to="/dashboard"
+                    className="text-sm text-green-800 underline"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Go to Dashboard
+                  </NavLink>
                 </div>
               </div>
 
