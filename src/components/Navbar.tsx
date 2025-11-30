@@ -1,10 +1,6 @@
 // src/components/Navbar.tsx
 import React, { useState } from "react";
-import {
-  Button,
-  IconButton,
-  Avatar,
-} from "@mui/material";
+import { Button, IconButton, Avatar } from "@mui/material";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import {
@@ -21,11 +17,13 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import Logo from "../assets/Grupo 1.png";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useCurrentUser } from "../context/useCurrentUser";
 
 const Navbar: React.FC = () => {
   const { t, toggleLang } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const loginUser = useCurrentUser();
 
   const topNav = [
     { path: "/quiénes-somos", key: "quienes_somos" as const },
@@ -54,6 +52,7 @@ const Navbar: React.FC = () => {
             <Instagram fontSize="small" />
           </IconButton>
 
+
           <IconButton sx={{ color: "#fff", padding: "4px" }}>
             <Facebook fontSize="small" />
           </IconButton>
@@ -76,6 +75,29 @@ const Navbar: React.FC = () => {
             EN
           </Button>
 
+
+          <IconButton sx={{ color: "#fff", padding: "4px" }}>
+            <Facebook fontSize="small" />
+          </IconButton>
+        </div>
+
+        {/* RIGHT DIV */}
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={toggleLang}
+            startIcon={<Language />}
+            sx={{
+              color: "#fff",
+              textTransform: "none",
+              paddingX: 1,
+              fontSize: 13,
+              borderRadius: "9999px",
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+            }}
+          >
+            EN
+          </Button>
+>>>>>>> 6436a1063861824deebf6650d82e12c1e49ab041
           <Link to="/login">
             <Button
               startIcon={<LoginIcon fontSize="small" />}
@@ -163,19 +185,42 @@ const Navbar: React.FC = () => {
               </NavLink>
 
               {/* DASHBOARD ICON */}
-              <NavLink to="/dashboard">
-                <Avatar
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    bgcolor: "#046838",
-                    cursor: "pointer",
-                    boxShadow: "0 2px 6px rgba(4,104,56,0.2)",
-                  }}
+              {loginUser ? (
+                <NavLink
+                  to={
+                    loginUser.role === "admin"
+                      ? "/dashboard/admin"
+                      : "/dashboard/user-dashboard"
+                  }
+                  style={{ textDecoration: "none" }}
                 >
-                  <PersonIcon sx={{ color: "#fff", fontSize: 22 }} />
-                </Avatar>
-              </NavLink>
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      bgcolor: "#046838",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 6px rgba(4, 104, 56, 0.2)",
+                    }}
+                  >
+                    <PersonIcon sx={{ color: "#fff", fontSize: 22 }} />
+                  </Avatar>
+                </NavLink>
+              ) : (
+                <NavLink to="/login">
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      bgcolor: "#046838",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 6px rgba(4, 104, 56, 0.2)",
+                    }}
+                  >
+                    <PersonIcon sx={{ color: "#fff", fontSize: 22 }} />
+                  </Avatar>
+                </NavLink>
+              )}
 
               {/* MOBILE MENU BUTTON */}
               <div className="xl:hidden">

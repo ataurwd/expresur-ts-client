@@ -8,7 +8,7 @@ import card5img from "../../assets/card-5.png";
 const NueCard1 = () => {
   return (
     <div>
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-6xl mx-auto my-10">
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">Envíos Nacionales (USA)</h1>
           <p className="text-3xl my-5">
@@ -28,6 +28,8 @@ const NueCard1 = () => {
         </div>
         <div className="flex justify-end">
           <img className="md:-mr-32" src={card1img} alt="card-1" />
+        <div className="flex justify-end w-2/3">
+          <img className="md:-mr-72" src={card1img} alt="" />
         </div>
       </div>
 
@@ -35,6 +37,10 @@ const NueCard1 = () => {
       <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
         <div className="flex justify-start">
           <img className="md:-ml-32" src={card2img} alt="card-2" />
+=======
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-6xl mx-auto my-10">
+        <div className="flex justify-start w-2/3">
+          <img className="md:-ml-32" src={card2img} alt="" />
         </div>
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">
@@ -51,7 +57,7 @@ const NueCard1 = () => {
       </div>
 
       {/* card 3 */}
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-6xl mx-auto my-10">
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">Envíos a Cuba</h1>
           <p className="text-3xl my-5">Tiempos:</p>
@@ -66,6 +72,9 @@ const NueCard1 = () => {
         </div>
         <div className="flex justify-end">
           <img className="md:-mr-32" src={card3img} alt="card-3" />
+=======
+        <div className="flex justify-end w-2/3">
+          <img className="md:-mr-72" src={card3img} alt="" />
         </div>
       </div>
 
@@ -73,6 +82,9 @@ const NueCard1 = () => {
       <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
         <div className="flex justify-start">
           <img className="md:-ml-32" src={card4img} alt="card-4" />
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-6xl mx-auto my-10">
+        <div className="flex justify-start w-2/3">
+          <img className="md:-ml-32" src={card4img} alt="" />
         </div>
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">Casillero Virtual</h1>
@@ -88,6 +100,8 @@ const NueCard1 = () => {
 
       {/* card 5 */}
       <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-7xl mx-auto my-10">
+      {/* card 3 */}
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 justify-center items-center border-2 border-orange-400 p-10 rounded-xl max-w-6xl mx-auto my-10">
         <div className="*:text-white">
           <h1 className="md:text-5xl text-3xl">Enviar Dinero (Remesas)</h1>
           <p className="text-3xl my-5">Enviar dinero rápido y seguro.</p>
@@ -96,8 +110,11 @@ const NueCard1 = () => {
             Enviar Dinero
           </button>
         </div>
+
         <div className="flex justify-end">
           <img className="md:-mr-32" src={card5img} alt="card-5" />
+        <div className="flex justify-end w-2/3">
+          <img className="md:-mr-72" src={card5img} alt="" />
         </div>
       </div>
     </div>
