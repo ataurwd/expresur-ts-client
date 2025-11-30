@@ -11,8 +11,8 @@ const Nuestros = () => {
         <NueSub />
         <div className="border-b-2 border-orange-400 mb-10 md:mb-20"></div>
         <NueCard1 />
-          </div>
-          <NueTimeline/>
+      </div>
+      <NueTimeline />
     </div>
   );
 };
