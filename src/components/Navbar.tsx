@@ -1,6 +1,12 @@
-import { Button, MenuItem, IconButton } from "@mui/material";
-import { useState } from "react";
+// src/components/Navbar.tsx
+import React, { useState } from "react";
+import {
+  Button,
+  IconButton,
+  Avatar,
+} from "@mui/material";
 import { Link, NavLink, useLocation } from "react-router-dom";
+
 import {
   WhatsApp,
   Instagram,
@@ -12,9 +18,11 @@ import {
 
 import Logo from "../assets/Grupo 1.png";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useAuth } from "../context/AuthContext"; // adjust path if needed
 
-const Navbar = () => {
-  const { lang, t, toggleLang } = useLanguage();
+const Navbar: React.FC = () => {
+  const { t, toggleLang } = useLanguage();
+  const { currentUser } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -30,6 +38,7 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Top green bar */}
       <div className="bg-green-800 pr-3 md:pr-8 flex justify-between md:justify-end gap-2">
         <div className="flex justify-center items-center gap-4 text-white pl-3 md:pl-0">
           <button className="text-[15px]">
@@ -96,6 +105,23 @@ const Navbar = () => {
                   {t("rastrear")}
                 </button>
               </NavLink>
+
+              {/* Avatar - only when currentUser exists */}
+              {currentUser && (
+                <NavLink to={`/dashboard/${currentUser.role}`} title="Go to Dashboard">
+                  <Avatar
+                    sx={{
+                      width: 38,
+                      height: 38,
+                      bgcolor: "#046838",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {currentUser.name.charAt(0).toUpperCase()}
+                  </Avatar>
+                </NavLink>
+              )}
 
               {/* Language Btn */}
               <div className="hidden xl:block">
@@ -180,6 +206,28 @@ const Navbar = () => {
                   {t(n.key)}
                 </NavLink>
               ))}
+
+              {/* If logged in, show small user section in mobile menu */}
+              {currentUser && (
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <Avatar sx={{ bgcolor: "#046838" }}>
+                      {currentUser.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <div>
+                      <p className="font-medium">{currentUser.name}</p>
+                      <NavLink
+                        to={`/dashboard/${currentUser.role}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-sm text-green-800 hover:underline"
+                      >
+                      {t("goToDashboard" as any) || "Dashboard"}
+
+                      </NavLink>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Social */}
               <div className="pt-8 border-t border-gray-200">
