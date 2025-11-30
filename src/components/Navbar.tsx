@@ -54,29 +54,7 @@ const Navbar: React.FC = () => {
           </IconButton>
         </div>
 
-        {/* RIGHT DIV */}
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={toggleLang}
-            startIcon={<Language />}
-            sx={{
-              color: "#fff",
-              textTransform: "none",
-              paddingX: 1,
-              fontSize: 13,
-              borderRadius: "9999px",
-              "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
-            }}
-          >
-            EN
-          </Button>
-
-
-          <IconButton sx={{ color: "#fff", padding: "4px" }}>
-            <Facebook fontSize="small" />
-          </IconButton>
-        </div>
-
+    
         {/* RIGHT DIV */}
         <div className="flex items-center gap-2">
           <Button

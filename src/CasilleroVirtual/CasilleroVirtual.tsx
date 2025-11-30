@@ -22,7 +22,7 @@ const FAKE_DATA: LockerAddress = {
 
 const CasilleroVirtual: React.FC<{ data?: LockerAddress }> = ({ data = FAKE_DATA }) => {
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="w-full mx-auto p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
