@@ -38,78 +38,85 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      {/* 🔵 TOP GREEN BAR (ALL RIGHT SIDE NOW) */}
-      <div className="bg-green-800 pr-4 pl-4 md:pr-10 md:pl-4 py-2 shadow-sm flex justify-end items-center gap-3">
+{/* 🔵 TOP GREEN BAR (LEFT & RIGHT — close together) */}
+<div className="bg-green-800 py-2 px-4 shadow-sm flex justify-between items-center">
 
-        {/* Login */}
-        <Link to="/login">
-          <Button
-            startIcon={<LoginIcon />}
-            sx={{
-              backgroundColor: "transparent",
-              color: "#fff",
-              borderRadius: "9999px",
-              paddingX: 1.6,
-              border: "1px solid rgba(255,255,255,0.25)",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.12)",
-              },
-            }}
-          >
-            Login
-          </Button>
-        </Link>
+  {/* LEFT DIV */}
+  <div className="flex items-center gap-2">
 
-        {/* Register */}
-        <Link to="/register">
-          <Button
-            startIcon={<PersonAddIcon />}
-            sx={{
-              backgroundColor: "transparent",
-              color: "#fff",
-              borderRadius: "9999px",
-              paddingX: 1.6,
-              border: "1px solid rgba(255,255,255,0.25)",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.12)",
-              },
-            }}
-          >
-            Register
-          </Button>
-        </Link>
+   
 
-        {/* Language */}
-        <Button
-          onClick={toggleLang}
-          startIcon={<Language />}
-          sx={{
-            color: "#fff",
-            textTransform: "none",
-            paddingX: 1.2,
-            borderRadius: "9999px",
-            "&:hover": {
-              backgroundColor: "rgba(255,255,255,0.12)",
-            },
-          }}
-        >
-          {t ? t("languageShort") : "EN"}
-        </Button>
+    <IconButton sx={{ color: "#fff", padding: "4px" }}>
+      <WhatsApp fontSize="small" />
+    </IconButton>
 
-        {/* SOCIAL ICONS */}
-        <IconButton sx={{ color: "#fff" }}>
-          <WhatsApp />
-        </IconButton>
-        <IconButton sx={{ color: "#fff" }}>
-          <Instagram />
-        </IconButton>
-        <IconButton sx={{ color: "#fff" }}>
-          <Facebook />
-        </IconButton>
+    <IconButton sx={{ color: "#fff", padding: "4px" }}>
+      <Instagram fontSize="small" />
+    </IconButton>
 
-      </div>
+    <IconButton sx={{ color: "#fff", padding: "4px" }}>
+      <Facebook fontSize="small" />
+    </IconButton>
+
+  </div>
+
+  {/* RIGHT DIV */}
+  <div className="flex items-center gap-2">
+ <Button
+      onClick={toggleLang}
+      startIcon={<Language />}
+      sx={{
+        color: "#fff",
+        textTransform: "none",
+        paddingX: 1,
+        fontSize: 13,
+        borderRadius: "9999px",
+        "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+      }}
+    >
+      EN
+    </Button>
+    <Link to="/login">
+      <Button
+        startIcon={<LoginIcon fontSize="small" />}
+        sx={{
+          backgroundColor: "transparent",
+          color: "#fff",
+          borderRadius: "9999px",
+          paddingX: 1.4,
+          fontSize: 13,
+          border: "1px solid rgba(255,255,255,0.25)",
+          textTransform: "none",
+          "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+        }}
+      >
+        Login
+      </Button>
+    </Link>
+
+    <Link to="/register">
+      <Button
+        startIcon={<PersonAddIcon fontSize="small" />}
+        sx={{
+          backgroundColor: "transparent",
+          color: "#fff",
+          borderRadius: "9999px",
+          paddingX: 1.4,
+          fontSize: 13,
+          border: "1px solid rgba(255,255,255,0.25)",
+          textTransform: "none",
+          "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+        }}
+      >
+        Register
+      </Button>
+    </Link>
+
+  </div>
+</div>
+
+
+
 
       {/* HEADER */}
       <header className="bg-white sticky top-0 z-[200] shadow">
