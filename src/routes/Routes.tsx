@@ -35,6 +35,7 @@ import DashbordUser from "../dashboard/user-dashboard/DashbordUser";
 import Contact from "../pages/Contact/Contact";
 import Nuestros from "../pages/Nuestros/Nuestros";
 import CasilleroEscritorio from "../pages/casillero escritorio/casilleroescritorio";
+import CasilleroVirtual from "../CasilleroVirtual/CasilleroVirtual";
 
 const Routes = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const Routes = createBrowserRouter([
       {
         path: "/quiénes-somos",
         element: <Quienessomos />,
+      },
+      {
+         path: "/CasilleroVirtual",
+        element: <CasilleroVirtual/>
       },
       {
         path: "/rasterear",
