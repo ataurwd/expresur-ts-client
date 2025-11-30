@@ -16,14 +16,12 @@ import {
   Close,
 } from "@mui/icons-material";
 
+import PersonIcon from "@mui/icons-material/Person"; // 👈 ADDED
 import Logo from "../assets/Grupo 1.png";
 import { useLanguage } from "../i18n/LanguageContext";
-import { useAuth } from "../context/AuthContext"; // adjust path if needed
 
 const Navbar: React.FC = () => {
   const { t, toggleLang } = useLanguage();
-  const { currentUser } = useAuth();
-
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -65,6 +63,8 @@ const Navbar: React.FC = () => {
       <header className="bg-white sticky top-0 z-[200]">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
+
+            {/* LOGO */}
             <NavLink to="/" className="flex items-center">
               <img
                 src={Logo}
@@ -94,6 +94,8 @@ const Navbar: React.FC = () => {
 
             {/* Right Side */}
             <div className="flex items-center gap-4">
+
+              {/* TRACKING BUTTON */}
               <NavLink to={"/rasterear"}>
                 <button
                   className={` bg-green-800 hover:bg-[#035230] text-white w-32 md:w-52 text-[11px] md:text-[15px] md:font-bold md:px-6 py-2.5 rounded-full shadow-lg ${
@@ -106,24 +108,21 @@ const Navbar: React.FC = () => {
                 </button>
               </NavLink>
 
-              {/* Avatar - only when currentUser exists */}
-              {currentUser && (
-                <NavLink to={`/dashboard/${currentUser.role}`} title="Go to Dashboard">
-                  <Avatar
-                    sx={{
-                      width: 38,
-                      height: 38,
-                      bgcolor: "#046838",
-                      cursor: "pointer",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {currentUser.name.charAt(0).toUpperCase()}
-                  </Avatar>
-                </NavLink>
-              )}
+              {/* DASHBOARD MAN ICON 🔥 */}
+              <NavLink to="/dashboard" title="Dashboard">
+                <Avatar
+                  sx={{
+                    width: 38,
+                    height: 38,
+                    bgcolor: "#046838",
+                    cursor: "pointer",
+                  }}
+                >
+                  <PersonIcon sx={{ fontSize: 22, color: "#fff" }} />
+                </Avatar>
+              </NavLink>
 
-              {/* Language Btn */}
+              {/* Language Button */}
               <div className="hidden xl:block">
                 <Button
                   onClick={toggleLang}
@@ -143,6 +142,7 @@ const Navbar: React.FC = () => {
                   <MenuIcon />
                 </IconButton>
               </div>
+
             </div>
           </div>
         </div>
@@ -177,6 +177,8 @@ const Navbar: React.FC = () => {
             </div>
 
             <nav className="p-6 space-y-6">
+
+              {/* HOME */}
               <NavLink
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
@@ -207,27 +209,24 @@ const Navbar: React.FC = () => {
                 </NavLink>
               ))}
 
-              {/* If logged in, show small user section in mobile menu */}
-              {currentUser && (
-                <div className="pt-4 border-t border-gray-200">
-                  <div className="flex items-center gap-3">
-                    <Avatar sx={{ bgcolor: "#046838" }}>
-                      {currentUser.name.charAt(0).toUpperCase()}
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{currentUser.name}</p>
-                      <NavLink
-                        to={`/dashboard/${currentUser.role}`}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-sm text-green-800 hover:underline"
-                      >
-                      {t("goToDashboard" as any) || "Dashboard"}
-
-                      </NavLink>
-                    </div>
+              {/* MOBILE MENU DASHBOARD ICON */}
+              <div className="pt-4 border-t border-gray-200">
+                <div className="flex items-center gap-3">
+                  <Avatar sx={{ bgcolor: "#046838" }}>
+                    <PersonIcon sx={{ color: "#fff" }} />
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">Dashboard</p>
+                    <NavLink
+                      to="/dashboard"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-sm text-green-800 hover:underline"
+                    >
+                      Go to Dashboard
+                    </NavLink>
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Social */}
               <div className="pt-8 border-t border-gray-200">
@@ -239,6 +238,7 @@ const Navbar: React.FC = () => {
                   <Facebook className="text-[#046838] cursor-pointer hover:scale-110 transition" />
                 </div>
               </div>
+
             </nav>
           </div>
         </div>
