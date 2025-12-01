@@ -95,7 +95,6 @@ export default function UserDashboard() {
         },
       }}
     >
-      <Helmet><title>User Dashboard | EXPRESUR</title></Helmet>
       {/* Header - Logo + Toggle */}
       <Box
         sx={{

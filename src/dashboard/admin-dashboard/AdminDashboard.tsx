@@ -34,7 +34,7 @@ import {
   Logout,
 } from "@mui/icons-material";
 import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
-import { Helmet } from "react-helmet";
+
 
 type Props = {
   adminName?: string;
@@ -117,8 +117,6 @@ export default function AdminSidebar({
         },
       }}
     >
-      <Helmet><title>Admin Panel | EXPRESUR</title>
-      </Helmet>
       {/* Header */}
       <Box
         sx={{
