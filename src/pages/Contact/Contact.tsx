@@ -6,7 +6,7 @@ const Contact = () => {
     return (
         <div className="w-full min-h-screen bg-gradient-to-r from-green-900 via-green-700 to-yellow-600 py-16">
             <Helmet>
-                <title>Contacto | Expresur Logistics</title>
+                <title>Contacto |  EXPRESUR</title>
             </Helmet>
             {/* TOP PROFILES */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6">

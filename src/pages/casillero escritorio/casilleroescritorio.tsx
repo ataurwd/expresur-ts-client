@@ -1,9 +1,13 @@
 import React from "react";
 import image from "../../assets/Grupo-1640.png";
+import { Helmet } from "react-helmet";
 
 const CasilleroEscritorio: React.FC = () => {
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r from-green-900 to-orange-300 p-4 md:p-6">
+      <Helmet>
+        <title>Casillero Escritorio | Expresur Logistics</title>
+      </Helmet>
       <div
         className="bg-gradient-to-br from-green-800 to-green-900 text-white rounded-2xl md:rounded-3xl shadow-2xl relative overflow-visible w-full max-w-[1400px]"
         style={{ minHeight: "492px" }}
