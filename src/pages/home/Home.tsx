@@ -8,10 +8,12 @@ import LogisticsTimeline from "../../components/home-page/LogisticsTimeline";
 import Nuestros from "../../components/home-page/Nuestros";
 import Rastrear from "../../components/home-page/Rastrear";
 import HeroOne from "../../components/home-page/HeroOne";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   return (
     <>
+    <Helmet><title> Home |  EXPRESUR</title></Helmet>
       <HeroOne />
       <Nuestros />
       <Rastrear />
