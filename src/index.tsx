@@ -33,7 +33,6 @@ import Routes from "./routes/Routes";
 import { AuthContextProvider } from "./context/AuthContext";
 import { Toaster } from "sonner";
 import { LanguageProvider } from "./i18n/LanguageContext"; // <-- নিশ্চিত করো path ঠিক
-import { HelmetProvider } from "react-helmet-async";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
@@ -42,9 +41,7 @@ root.render(
     <AuthContextProvider>
       <LanguageProvider>
         <Toaster position="bottom-right" richColors />
-        <HelmetProvider>
             <RouterProvider router={Routes} />
-      </HelmetProvider>
       </LanguageProvider>
     </AuthContextProvider>
   </React.StrictMode>
