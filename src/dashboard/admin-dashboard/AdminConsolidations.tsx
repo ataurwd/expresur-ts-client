@@ -332,6 +332,7 @@ const AdminConsolidations: React.FC = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen font-sans">
+      
       <style>{`
         /* Custom Tailwind Color Definition for primary background/border/hover */
         .bg-primary { background-color: ${PRIMARY_COLOR}; }

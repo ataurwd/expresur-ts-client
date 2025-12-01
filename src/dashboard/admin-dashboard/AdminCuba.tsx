@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Helmet } from "react-helmet";
 
 /** ---------------- Types ---------------- */
 type CubaShippingMethod =
@@ -1339,7 +1340,11 @@ const AdminCuba: React.FC = () => {
   const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
   return (
+    
     <div className="p-6 bg-gray-50 min-h-screen">
+      <Helmet>
+      <title>Admin - Cuba Shipments | EXPRESUR</title>
+    </Helmet>
       <h2 className="mb-6 text-3xl font-bold border-b pb-2" style={{ color: BOTTLE }}>
         Cuba Shipments Management
       </h2>
