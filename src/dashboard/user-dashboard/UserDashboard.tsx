@@ -33,6 +33,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
 import { Package2 } from "lucide-react";
+import { Helmet } from "react-helmet";
 
 const drawerWidth = 260;
 const collapsedWidth = 65;
@@ -94,6 +95,7 @@ export default function UserDashboard() {
         },
       }}
     >
+      <Helmet><title>User Dashboard | EXPRESUR</title></Helmet>
       {/* Header - Logo + Toggle */}
       <Box
         sx={{

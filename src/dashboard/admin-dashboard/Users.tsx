@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 type Package = {
   id: string;
@@ -89,6 +90,7 @@ export default function AdminPackages() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-[#f0fdf4] to-white">
+        <Helmet><title>Admin users | EXPRESUR</title></Helmet>
         <div className=" mx-auto p-6">
 
           {/* Header + Search */}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 
 /* ------------------ Fake Virtual Locker Data ------------------ */
 export const FAKE_LOCKER = {
@@ -56,6 +57,7 @@ export default function Locker() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
+      <Helmet><title>Locker | EXPRESUR</title></Helmet>
       <div className=" mx-auto px-4">
         {/* Full-width header */}
         <div className="bg-white rounded-lg shadow p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 /**
  * AdminReports.es.react.tsx
@@ -114,6 +115,7 @@ export default function AdminReports() {
 
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
+      <Helmet><title>AdminReports | EXPRESUR</title></Helmet>
       <div className=" mx-auto ">
 
         {/* Header */}

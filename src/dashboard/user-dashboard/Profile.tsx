@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 
 export default function Profile() {
   const [editOpen, setEditOpen] = useState(false);
@@ -26,6 +27,7 @@ export default function Profile() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <Helmet><title>Perfil | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
 
         {/* Title */}

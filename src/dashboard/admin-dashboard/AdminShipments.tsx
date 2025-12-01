@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 /** ---------------- Types ---------------- */
 type ShipmentStatus = "pending" | "processing" | "in_transit" | "delivered" | "cancelled";
@@ -137,6 +138,7 @@ export default function AdminShipmentsResponsive() {
 
   return (
     <div className="p-6 bg-[#f7faf7] min-h-screen">
+      <Helmet><title>AdminShipments | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
 
         {/* Header */}

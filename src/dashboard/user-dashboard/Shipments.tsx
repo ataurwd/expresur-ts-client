@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 
 type Shipment = {
   id: string;
@@ -78,6 +79,7 @@ export default function Shipments() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <Helmet><title>Shipments | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
         <h2 className="text-2xl font-semibold mb-4">Mis Envíos</h2>
 

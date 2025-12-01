@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 /* ================= Fake Data ================= */
 type Purchased = {
@@ -96,6 +97,7 @@ export default function PackagesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <Helmet><title>Packages | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, CreditCard, Calendar, User, DollarSign, X } from "lucide-react";
+import { Helmet } from 'react-helmet';
 
 interface Payment {
   id: string;
@@ -65,7 +66,8 @@ const AdminPayments = () => {
   return (
     <>
       <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 to-white min-h-screen">
-
+         
+         <Helmet><title>AdminPayments | EXPRESUR</title></Helmet>
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
             <DollarSign className="text-green-700" />

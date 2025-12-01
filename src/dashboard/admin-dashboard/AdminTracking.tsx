@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 /* --------------------- Types --------------------- */
 type ParcelStatus = "Pending" | "In Transit" | "Delivered" | "Cancelled" | "Returned";
@@ -86,6 +87,7 @@ export default function AdminTracking() {
 
   return (
     <div className="p-4 md:p-8 bg-[#f7faf7] min-h-screen">
+      <Helmet><title>AdminTracking | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
 
         {/* Header */}

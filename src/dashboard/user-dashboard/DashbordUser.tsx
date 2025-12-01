@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 // -----------------------------------------------------
 //  FAKE DATA (replace with API later)
@@ -81,6 +82,7 @@ const DashbordUser = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <Helmet><title>Dashboard Usuario | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
 
         {/* HEADER */}

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 /**
  * Pickup.tsx
@@ -168,6 +169,7 @@ export default function Pickup() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <Helmet><title>Pickup | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
         {/* header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">

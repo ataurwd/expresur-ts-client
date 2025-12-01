@@ -9,6 +9,7 @@ import {
   Package,
   X,
 } from "lucide-react";
+import { Helmet } from "react-helmet";
 
 interface Pickup {
   id: string;
@@ -103,6 +104,7 @@ const AdminPickup: React.FC = () => {
 
   return (
     <div className="p-4 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+      <Helmet><title>AdminPickup | EXPRESUR</title></Helmet>
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
         <div>
