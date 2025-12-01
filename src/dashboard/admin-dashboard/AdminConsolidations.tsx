@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { Helmet } from 'react-helmet';
 
 // ------------------ COLORS ------------------
 // Primary: Dark Green
@@ -332,6 +333,8 @@ const AdminConsolidations: React.FC = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen font-sans">
+      <Helmet> <title>AdminConsolidations | EXPRESUR</title>
+      </Helmet>
       
       <style>{`
         /* Custom Tailwind Color Definition for primary background/border/hover */
