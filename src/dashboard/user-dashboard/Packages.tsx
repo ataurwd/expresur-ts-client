@@ -108,7 +108,7 @@ export default function PackagesPage() {
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <div className="flex gap-1 bg-white rounded-md shadow-sm overflow-hidden">
               <button onClick={() => setTab("purchased")} className={`px-4 py-2 ${tab === "purchased" ? "bg-[#166534] text-white" : "text-gray-700"}`}>Purchased</button>
-              <button onClick={() => setTab("market")} className={`px-4 py-2 ${tab === "market" ? "bg-[#166534] text-white" : "text-gray-700"}`}>Marketplace</button>
+              {/* <button onClick={() => setTab("market")} className={`px-4 py-2 ${tab === "market" ? "bg-[#166534] text-white" : "text-gray-700"}`}>Marketplace</button> */}
             </div>
 
             <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by id, name..." className="px-3 py-2 border rounded-md w-72" />
@@ -233,7 +233,7 @@ export default function PackagesPage() {
                     </div>
 
                     <div className="mt-4 flex gap-2">
-                      <button onClick={() => alert('Download manifest (simulated)')} className="px-3 py-2 bg-[#166534] text-white rounded-md">Download Manifest</button>
+                      {/* <button onClick={() => alert('Download manifest (simulated)')} className="px-3 py-2 bg-[#166534] text-white rounded-md">Download Manifest</button> */}
                       <button onClick={() => setSelectedTrack(null)} className="px-3 py-2 border rounded-md">Close</button>
                     </div>
                   </div>
@@ -246,7 +246,7 @@ export default function PackagesPage() {
         ) : (
           /* MARKETPLACE */
           <section>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredServices.map(s => (
                 <div key={s.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
                   <div className="flex items-center justify-between">
@@ -270,10 +270,10 @@ export default function PackagesPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
 
             {/* quick CTA */}
-            <div className="mt-6 bg-white rounded-lg shadow p-4 flex items-center justify-between">
+            {/* <div className="mt-6 bg-white rounded-lg shadow p-4 flex items-center justify-between">
               <div>
                 <div className="text-sm text-gray-500">Need help choosing?</div>
                 <div className="font-medium">Contact our support or request a demo</div>
@@ -281,7 +281,7 @@ export default function PackagesPage() {
               <div>
                 <button onClick={() => alert('Contact support (simulated)')} className="px-4 py-2 bg-[#166534] text-white rounded-md">Contact</button>
               </div>
-            </div>
+            </div> */}
 
             {/* service modal */}
             {selectedService && (

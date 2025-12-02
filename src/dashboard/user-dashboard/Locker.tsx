@@ -70,9 +70,7 @@ export default function Locker() {
 
           <div className="flex items-center gap-3 ml-auto">
             <button onClick={handleCopy} className="px-3 py-2 bg-[#166534] text-white rounded-md shadow">{copied ? "Copied" : "Copy Locker ID"}</button>
-            <button onClick={handleDownloadJSON} className="px-3 py-2 border rounded-md">Download JSON</button>
-            <button onClick={() => window.print()} className="px-3 py-2 border rounded-md">Print</button>
-
+          
             {/* Removed QR / barcode — show simple badge instead */}
             <div className="ml-2">
            
@@ -155,8 +153,7 @@ export default function Locker() {
               <div className="text-sm text-gray-500">Share / Actions</div>
               <div className="mt-2 flex flex-col gap-2">
                 <button onClick={handleCopy} className="px-3 py-2 bg-[#166534] text-white rounded-md">Copy ID</button>
-                <button onClick={() => setShowJSON(s => !s)} className="px-3 py-2 border rounded-md">Toggle JSON</button>
-                <button onClick={handleDownloadJSON} className="px-3 py-2 border rounded-md">Download JSON</button>
+           
               </div>
             </div>
 
