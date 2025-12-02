@@ -168,10 +168,10 @@ const Routes = createBrowserRouter([
         path: "admin-consolidations",
         element: <AdminConsolidations />,
       },
-      {
-        path: "admin-cuba",
-        element: <AdminCuba />,
-      },
+     // {
+     //  path: "admin-cuba",
+     // element: <AdminCuba />,
+     //},
       {
         path: "admin-packages",
         element: <AdminPackages />,

@@ -1,57 +1,42 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 
-type Package = {
+type User = {
   id: string;
-  trackingNumber: string;
+  fullName: string;
+  language: string; // 2-letter code
   lockerId: string;
-  customerName: string;
-  customerLanguage: string;
-  fromAddress: string;
-  fromCountry: string;
-  toAddress: string;
-  toCountry: string;
-  name: string;
-  price: string;
-  type: "Small" | "Medium" | "Large" | "Fleet";
-  truckStatus: "moving" | "stopped" | "offline";
-  created: string;
-  location: { city: string; lat: number; lng: number; lastUpdate: string };
+  email: string;
+  phone: string;
+  address: string;
+  country: string;
+  city: string;
+  registrationDate: string;
+  role: string;
+  accountStatus: "active" | "inactive";
 };
 
-/* 30 REALISTIC FAKE PACKAGES — READY FOR DEMO */
-const FAKE_PACKAGES: Package[] = [
-  { id: "p1", trackingNumber: "BD-TRK-1001", lockerId: "LKR-1001", customerName: "Rahim Khan", customerLanguage: "bn", fromAddress: "Mirpur 10, Dhaka", fromCountry: "Bangladesh", toAddress: "Uttara Sector 13", toCountry: "Bangladesh", name: "Basic Cargo", price: "$29", type: "Small", truckStatus: "moving", created: "2025-01-10", location: { city: "Dhaka", lat: 23.8103, lng: 90.4125, lastUpdate: "2025-01-12 10:22 AM" } },
-  { id: "p2", trackingNumber: "BD-TRK-1002", lockerId: "LKR-1002", customerName: "Ayesha Begum", customerLanguage: "bn", fromAddress: "Banani DOHS", fromCountry: "Bangladesh", toAddress: "Gulshan 2", toCountry: "Bangladesh", name: "Express Mini", price: "$15", type: "Small", truckStatus: "moving", created: "2025-01-11", location: { city: "Dhaka", lat: 23.8103, lng: 90.4125, lastUpdate: "2025-01-12 08:00 AM" } },
-  { id: "p3", trackingNumber: "BD-TRK-1003", lockerId: "LKR-1003", customerName: "Mohammed Al-Saud", customerLanguage: "ar", fromAddress: "Riyadh Olaya Street", fromCountry: "Saudi Arabia", toAddress: "Jeddah Corniche", toCountry: "Saudi Arabia", name: "Premium Cargo", price: "$199", type: "Large", truckStatus: "stopped", created: "2025-01-08", location: { city: "Riyadh", lat: 24.7136, lng: 46.6753, lastUpdate: "2025-01-11 04:10 PM" } },
-  { id: "p4", trackingNumber: "IN-TRK-2001", lockerId: "LKR-2001", customerName: "Priya Sharma", customerLanguage: "hi", fromAddress: "Andheri East, Mumbai", fromCountry: "India", toAddress: "Connaught Place, Delhi", toCountry: "India", name: "Business Cargo", price: "$99", type: "Medium", truckStatus: "moving", created: "2025-01-09", location: { city: "Mumbai", lat: 19.0760, lng: 72.8777, lastUpdate: "2025-01-12 09:40 AM" } },
-  { id: "p5", trackingNumber: "UK-TRK-3001", lockerId: "LKR-3001", customerName: "John Smith", customerLanguage: "en", fromAddress: "Heathrow Airport", fromCountry: "United Kingdom", toAddress: "Manchester City Centre", toCountry: "United Kingdom", name: "Enterprise Fleet", price: "Custom", type: "Fleet", truckStatus: "offline", created: "2025-01-05", location: { city: "London", lat: 51.5074, lng: -0.1278, lastUpdate: "2025-01-10 02:15 PM" } },
-  { id: "p6", trackingNumber: "BD-TRK-1004", lockerId: "LKR-1004", customerName: "Fatema Akter", customerLanguage: "bn", fromAddress: "Sylhet Ambarkhana", fromCountry: "Bangladesh", toAddress: "Chattogram GEC", toCountry: "Bangladesh", name: "Medicine Cooled", price: "$199", type: "Medium", truckStatus: "moving", created: "2025-01-07", location: { city: "Sylhet", lat: 24.8949, lng: 91.8687, lastUpdate: "2025-01-12 07:50 AM" } },
-  { id: "p7", trackingNumber: "FR-TRK-4001", lockerId: "LKR-4001", customerName: "Marie Dubois", customerLanguage: "fr", fromAddress: "Paris CDG Airport", fromCountry: "France", toAddress: "Lyon Part-Dieu", toCountry: "France", name: "Luxury Goods", price: "$599", type: "Large", truckStatus: "stopped", created: "2025-01-06", location: { city: "Paris", lat: 48.8566, lng: 2.3522, lastUpdate: "2025-01-10 05:00 PM" } },
-  { id: "p8", trackingNumber: "CN-TRK-5001", lockerId: "LKR-5001", customerName: "Li Wei", customerLanguage: "zh", fromAddress: "Shanghai Pudong", fromCountry: "China", toAddress: "Beijing CBD", toCountry: "China", name: "Mega Freight", price: "Custom", type: "Fleet", truckStatus: "moving", created: "2025-01-04", location: { city: "Shanghai", lat: 31.2304, lng: 121.4737, lastUpdate: "2025-01-12 01:00 PM" } },
-  { id: "p9", trackingNumber: "RU-TRK-6001", lockerId: "LKR-6001", customerName: "Ivan Petrov", customerLanguage: "ru", fromAddress: "Moscow Red Square", fromCountry: "Russia", toAddress: "St. Petersburg Nevsky", toCountry: "Russia", name: "Industrial Parts", price: "$899", type: "Large", truckStatus: "offline", created: "2025-01-03", location: { city: "Moscow", lat: 55.7558, lng: 37.6173, lastUpdate: "2025-01-09 11:20 AM" } },
-  { id: "p10", trackingNumber: "ES-TRK-7001", lockerId: "LKR-7001", customerName: "Maria Garcia", customerLanguage: "es", fromAddress: "Barcelona Port", fromCountry: "Spain", toAddress: "Madrid Atocha", toCountry: "Spain", name: "Fashion Cargo", price: "$399", type: "Medium", truckStatus: "moving", created: "2025-01-02", location: { city: "Barcelona", lat: 41.3851, lng: 2.1734, lastUpdate: "2025-01-12 03:30 PM" } },
-  { id: "p11", trackingNumber: "BD-TRK-1005", lockerId: "LKR-1005", customerName: "Karim Hossain", customerLanguage: "bn", fromAddress: "Khulna Shipyard", fromCountry: "Bangladesh", toAddress: "Rajshahi Godagari", toCountry: "Bangladesh", name: "Rice Bulk", price: "$149", type: "Large", truckStatus: "moving", created: "2025-01-01", location: { city: "Khulna", lat: 22.8456, lng: 89.5403, lastUpdate: "2025-01-12 11:10 AM" } },
-  { id: "p12", trackingNumber: "BD-TRK-1006", lockerId: "LKR-1006", customerName: "Salma Akter", customerLanguage: "bn", fromAddress: "Gazipur Factory", fromCountry: "Bangladesh", toAddress: "Narayanganj Port", toCountry: "Bangladesh", name: "Garments Export", price: "$299", type: "Large", truckStatus: "stopped", created: "2024-12-30", location: { city: "Gazipur", lat: 23.9999, lng: 90.4203, lastUpdate: "2025-01-11 06:45 PM" } },
-  { id: "p13", trackingNumber: "US-TRK-8001", lockerId: "LKR-8001", customerName: "James Wilson", customerLanguage: "en", fromAddress: "Los Angeles Port", fromCountry: "USA", toAddress: "New York JFK", toCountry: "USA", name: "Electronics", price: "$799", type: "Large", truckStatus: "moving", created: "2024-12-28", location: { city: "Los Angeles", lat: 34.0522, lng: -118.2437, lastUpdate: "2025-01-12 02:00 AM" } },
-  { id: "p14", trackingNumber: "BD-TRK-1007", lockerId: "LKR-1007", customerName: "Rashed Ahmed", customerLanguage: "bn", fromAddress: "Comilla Cantonment", fromCountry: "Bangladesh", toAddress: "Cox's Bazar Beach", toCountry: "Bangladesh", name: "Tourist Luggage", price: "$89", type: "Medium", truckStatus: "moving", created: "2024-12-27", location: { city: "Comilla", lat: 23.4607, lng: 91.1809, lastUpdate: "2025-01-12 10:30 AM" } },
-  { id: "p15", trackingNumber: "AE-TRK-9001", lockerId: "LKR-9001", customerName: "Fatima Al-Mansoori", customerLanguage: "ar", fromAddress: "Dubai Marina", fromCountry: "UAE", toAddress: "Abu Dhabi Corniche", toCountry: "UAE", name: "Luxury Furniture", price: "$999", type: "Large", truckStatus: "offline", created: "2024-12-25", location: { city: "Dubai", lat: 25.2048, lng: 55.2708, lastUpdate: "2025-01-10 08:00 PM" } },
-  // 15 more for full 30
-  { id: "p16", trackingNumber: "BD-TRK-1008", lockerId: "LKR-1008", customerName: "Nurul Islam", customerLanguage: "bn", fromAddress: "Bogura City", fromCountry: "Bangladesh", toAddress: "Rangpur Medical", toCountry: "Bangladesh", name: "Hospital Supplies", price: "$249", type: "Medium", truckStatus: "moving", created: "2025-01-12", location: { city: "Bogura", lat: 24.8481, lng: 89.3720, lastUpdate: "2025-01-12 12:00 PM" } },
-  { id: "p17", trackingNumber: "BD-TRK-1009", lockerId: "LKR-1009", customerName: "Shirin Akter", customerLanguage: "bn", fromAddress: "Savar EPZ", fromCountry: "Bangladesh", toAddress: "Mongla Port", toCountry: "Bangladesh", name: "Export Garments", price: "$399", type: "Large", truckStatus: "stopped", created: "2025-01-11", location: { city: "Savar", lat: 23.8285, lng: 90.2667, lastUpdate: "2025-01-11 11:05 AM" } },
-  { id: "p18", trackingNumber: "BD-TRK-1010", lockerId: "LKR-1010", customerName: "Abdul Kader", customerLanguage: "bn", fromAddress: "Jessore Road", fromCountry: "Bangladesh", toAddress: "Barishal Launch Ghat", toCountry: "Bangladesh", name: "Fish Cargo", price: "$159", type: "Medium", truckStatus: "moving", created: "2025-01-10", location: { city: "Jessore", lat: 23.1778, lng: 89.1804, lastUpdate: "2025-01-12 09:00 AM" } },
-  { id: "p19", trackingNumber: "IN-TRK-2002", lockerId: "LKR-2002", customerName: "Rajesh Kumar", customerLanguage: "hi", fromAddress: "Chennai Port", fromCountry: "India", toAddress: "Kolkata Howrah", toCountry: "India", name: "Spices Bulk", price: "$299", type: "Large", truckStatus: "moving", created: "2025-01-09", location: { city: "Chennai", lat: 13.0827, lng: 80.2707, lastUpdate: "2025-01-12 04:00 PM" } },
-  { id: "p20", trackingNumber: "BD-TRK-1011", lockerId: "LKR-1011", customerName: "Mahmuda Begum", customerLanguage: "bn", fromAddress: "Mymensingh Medical", fromCountry: "Bangladesh", toAddress: "Dhaka Airport", toCountry: "Bangladesh", name: "Medical Equipment", price: "$499", type: "Large", truckStatus: "offline", created: "2025-01-08", location: { city: "Mymensingh", lat: 24.7471, lng: 90.4203, lastUpdate: "2025-01-11 07:50 AM" } },
-  { id: "p21", trackingNumber: "BD-TRK-1012", lockerId: "LKR-1012", customerName: "Sohel Rana", customerLanguage: "bn", fromAddress: "Cumilla Victoria College", fromCountry: "Bangladesh", toAddress: "Dhaka University", toCountry: "Bangladesh", name: "Books & Stationery", price: "$79", type: "Medium", truckStatus: "moving", created: "2025-01-07", location: { city: "Comilla", lat: 23.4607, lng: 91.1809, lastUpdate: "2025-01-12 10:30 AM" } },
-  { id: "p22", trackingNumber: "BD-TRK-1013", lockerId: "LKR-1013", customerName: "Nasrin Akter", customerLanguage: "bn", fromAddress: "Rajshahi University", fromCountry: "Bangladesh", toAddress: "Khulna University", toCountry: "Bangladesh", name: "Lab Equipment", price: "$599", type: "Large", truckStatus: "stopped", created: "2025-01-06", location: { city: "Rajshahi", lat: 24.3745, lng: 88.6042, lastUpdate: "2025-01-11 06:45 PM" } },
-  { id: "p23", trackingNumber: "BD-TRK-1014", lockerId: "LKR-1014", customerName: "Firoz Ahmed", customerLanguage: "bn", fromAddress: "Chattogram Port", fromCountry: "Bangladesh", toAddress: "Sylhet Tea Garden", toCountry: "Bangladesh", name: "Machinery Parts", price: "$899", type: "Large", truckStatus: "moving", created: "2025-01-05", location: { city: "Chattogram", lat: 22.3569, lng: 91.7832, lastUpdate: "2025-01-12 09:40 AM" } },
-  { id: "p24", trackingNumber: "BD-TRK-1015", lockerId: "LKR-1015", customerName: "Rumi Akter", customerLanguage: "bn", fromAddress: "Barishal River Port", fromCountry: "Bangladesh", toAddress: "Dhaka Sadarghat", toCountry: "Bangladesh", name: "Fresh Fruits", price: "$119", type: "Medium", truckStatus: "moving", created: "2025-01-04", location: { city: "Barishal", lat: 22.7010, lng: 90.3535, lastUpdate: "2025-01-12 08:15 AM" } },
-  { id: "p25", trackingNumber: "BD-TRK-1016", lockerId: "LKR-1016", customerName: "Shahidul Islam", customerLanguage: "bn", fromAddress: "Rangpur City", fromCountry: "Bangladesh", toAddress: "Dinajpur Border", toCountry: "Bangladesh", name: "Potato Bulk", price: "$89", type: "Large", truckStatus: "moving", created: "2025-01-03", location: { city: "Rangpur", lat: 25.7439, lng: 89.2752, lastUpdate: "2025-01-12 12:30 PM" } },
-  { id: "p26", trackingNumber: "BD-TRK-1017", lockerId: "LKR-1017", customerName: "Jamal Uddin", customerLanguage: "bn", fromAddress: "Noakhali Maijdee", fromCountry: "Bangladesh", toAddress: "Feni Trunk Road", toCountry: "Bangladesh", name: "Cement Bags", price: "$189", type: "Large", truckStatus: "stopped", created: "2025-01-02", location: { city: "Noakhali", lat: 22.8728, lng: 91.0973, lastUpdate: "2025-01-11 03:20 PM" } },
-  { id: "p27", trackingNumber: "BD-TRK-1018", lockerId: "LKR-1018", customerName: "Farhana Yasmin", customerLanguage: "bn", fromAddress: "Tangail Sari House", fromCountry: "Bangladesh", toAddress: "Dhaka New Market", toCountry: "Bangladesh", name: "Tangail Sarees", price: "$299", type: "Medium", truckStatus: "moving", created: "2025-01-01", location: { city: "Tangail", lat: 24.2513, lng: 89.9167, lastUpdate: "2025-01-12 11:00 AM" } },
-  { id: "p28", trackingNumber: "BD-TRK-1019", lockerId: "LKR-1019", customerName: "Monir Hossain", customerLanguage: "bn", fromAddress: "Kushtia Lalon Shah", fromCountry: "Bangladesh", toAddress: "Rajshahi Padma", toCountry: "Bangladesh", name: "Musical Instruments", price: "$399", type: "Medium", truckStatus: "offline", created: "2024-12-31", location: { city: "Kushtia", lat: 23.9103, lng: 89.1225, lastUpdate: "2025-01-10 10:00 AM" } },
-  { id: "p29", trackingNumber: "BD-TRK-1020", lockerId: "LKR-1020", customerName: "Tanjila Akter", customerLanguage: "bn", fromAddress: "Pabna Mental Hospital", fromCountry: "Bangladesh", toAddress: "Dhaka PG Hospital", toCountry: "Bangladesh", name: "Medical Transfer", price: "$499", type: "Large", truckStatus: "moving", created: "2024-12-30", location: { city: "Pabna", lat: 24.0115, lng: 89.2575, lastUpdate: "2025-01-12 07:00 AM" } },
-  { id: "p30", trackingNumber: "BD-TRK-1021", lockerId: "LKR-1021", customerName: "Global Traders Ltd", customerLanguage: "en", fromAddress: "Mongla International Port", fromCountry: "Bangladesh", toAddress: "Chattogram Export Zone", toCountry: "Bangladesh", name: "Full Container Fleet", price: "Custom", type: "Fleet", truckStatus: "moving", created: "2024-12-29", location: { city: "Mongla", lat: 22.4836, lng: 89.6008, lastUpdate: "2025-01-12 01:00 PM" } },
+const FAKE_USERS: User[] = [
+  { id: "1", fullName: "Rahim Khan", language: "bn", lockerId: "LKR-1001", email: "rahim.khan@example.com", phone: "+8801711000001", address: "Mirpur 10, Dhaka", country: "Bangladesh", city: "Dhaka", registrationDate: "2025-01-10", role: "client", accountStatus: "active" },
+  { id: "2", fullName: "Ayesha Begum", language: "bn", lockerId: "LKR-1002", email: "ayesha.begum@example.com", phone: "+8801711000002", address: "Banani DOHS, Dhaka", country: "Bangladesh", city: "Dhaka", registrationDate: "2025-01-11", role: "client", accountStatus: "active" },
+  { id: "3", fullName: "Mohammed Al-Saud", language: "ar", lockerId: "LKR-1003", email: "mohammed.alsaud@example.com", phone: "+966500000003", address: "Riyadh Olaya Street", country: "Saudi Arabia", city: "Riyadh", registrationDate: "2025-01-08", role: "client", accountStatus: "active" },
+  { id: "4", fullName: "Priya Sharma", language: "hi", lockerId: "LKR-2001", email: "priya.sharma@example.com", phone: "+919900000004", address: "Andheri East, Mumbai", country: "India", city: "Mumbai", registrationDate: "2025-01-09", role: "client", accountStatus: "inactive" },
+  { id: "5", fullName: "John Smith", language: "en", lockerId: "LKR-3001", email: "john.smith@example.co.uk", phone: "+447700000005", address: "Heathrow Airport, London", country: "United Kingdom", city: "London", registrationDate: "2025-01-05", role: "client", accountStatus: "active" },
+  { id: "6", fullName: "Fatema Akter", language: "bn", lockerId: "LKR-1004", email: "—", phone: "—", address: "Sylhet Ambarkhana", country: "Bangladesh", city: "Sylhet", registrationDate: "2025-01-07", role: "client", accountStatus: "active" },
+  { id: "7", fullName: "Marie Dubois", language: "fr", lockerId: "LKR-4001", email: "—", phone: "—", address: "Paris CDG Airport", country: "France", city: "Paris", registrationDate: "2025-01-06", role: "client", accountStatus: "active" },
+  { id: "8", fullName: "Li Wei", language: "zh", lockerId: "LKR-5001", email: "—", phone: "—", address: "Shanghai Pudong", country: "China", city: "Shanghai", registrationDate: "2025-01-04", role: "client", accountStatus: "active" },
+  { id: "9", fullName: "Carlos Mendoza", language: "es", lockerId: "LKR-6001", email: "carlos.m@example.com", phone: "+34600000009", address: "Madrid Barajas Airport", country: "Spain", city: "Madrid", registrationDate: "2025-01-03", role: "client", accountStatus: "active" },
+  { id: "10", fullName: "Anna Müller", language: "de", lockerId: "LKR-7001", email: "anna.mueller@example.de", phone: "+491700000010", address: "Frankfurt Airport", country: "Germany", city: "Frankfurt", registrationDate: "2025-01-02", role: "client", accountStatus: "active" },
+  { id: "11", fullName: "Sofia Ahmed", language: "bn", lockerId: "LKR-1005", email: "sofia.ahmed@example.com", phone: "+8801911000011", address: "Uttara Sector 14, Dhaka", country: "Bangladesh", city: "Dhaka", registrationDate: "2025-01-12", role: "client", accountStatus: "active" },
+  { id: "12", fullName: "Abdul Karim", language: "bn", lockerId: "LKR-1006", email: "—", phone: "—", address: "Chattogram Port Area", country: "Bangladesh", city: "Chattogram", registrationDate: "2025-01-01", role: "client", accountStatus: "inactive" },
+  { id: "13", fullName: "Hassan Ali", language: "ar", lockerId: "LKR-8001", email: "hassan.ali@example.ae", phone: "+971500000013", address: "Dubai Marina", country: "UAE", city: "Dubai", registrationDate: "2024-12-30", role: "client", accountStatus: "active" },
+  { id: "14", fullName: "Elena Petrova", language: "ru", lockerId: "LKR-9001", email: "elena.p@example.ru", phone: "+79000000014", address: "Moscow Sheremetyevo", country: "Russia", city: "Moscow", registrationDate: "2024-12-28", role: "client", accountStatus: "active" },
+  { id: "15", fullName: "Kim Ji-hoon", language: "ko", lockerId: "LKR-1101", email: "—", phone: "—", address: "Incheon Airport", country: "South Korea", city: "Seoul", registrationDate: "2025-01-10", role: "client", accountStatus: "active" },
+  { id: "16", fullName: "Lucas Silva", language: "pt", lockerId: "LKR-1201", email: "lucas.silva@example.br", phone: "+5511900000016", address: "São Paulo Guarulhos", country: "Brazil", city: "São Paulo", registrationDate: "2025-01-09", role: "client", accountStatus: "inactive" },
+  { id: "17", fullName: "Fatima Zahra", language: "ar", lockerId: "LKR-1301", email: "fatima.z@example.ma", phone: "+212600000017", address: "Casablanca Mohammed V", country: "Morocco", city: "Casablanca", registrationDate: "2025-01-07", role: "client", accountStatus: "active" },
+  { id: "18", fullName: "Tanvir Rahman", language: "bn", lockerId: "LKR-1007", email: "tanvir.rahman@example.com", phone: "+8801811000018", address: "Khulna University Road", country: "Bangladesh", city: "Khulna", registrationDate: "2025-01-11", role: "client", accountStatus: "active" },
+  { id: "19", fullName: "Mei Chen", language: "zh", lockerId: "LKR-1401", email: "mei.chen@example.cn", phone: "+8613800000019", address: "Beijing Capital Airport", country: "China", city: "Beijing", registrationDate: "2025-01-04", role: "client", accountStatus: "active" },
+  { id: "20", fullName: "Omar Farooq", language: "ur", lockerId: "LKR-1501", email: "omar.farooq@example.pk", phone: "+923000000020", address: "Karachi Jinnah Airport", country: "Pakistan", city: "Karachi", registrationDate: "2025-01-06", role: "client", accountStatus: "active" }
 ];
 
 function useDebounce<T>(value: T, delay = 300): T {
@@ -63,73 +48,85 @@ function useDebounce<T>(value: T, delay = 300): T {
   return debounced;
 }
 
-export default function AdminPackages() {
+export default function AdminUsers() {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query);
   const [page, setPage] = useState(1);
-  const perPage = 8;
-  const [selected, setSelected] = useState<Package | null>(null);
+  const perPage = 10;
+  const [selected, setSelected] = useState<User | null>(null);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.toLowerCase();
-    return FAKE_PACKAGES.filter(p =>
-      Object.values(p).join(" ").toLowerCase().includes(q)
+    return FAKE_USERS.filter(u =>
+      `${u.fullName} ${u.lockerId} ${u.email} ${u.phone} ${u.address} ${u.country}`.toLowerCase().includes(q)
     );
   }, [debouncedQuery]);
 
-  const total = filtered.length;
+  const totalPages = Math.ceil(filtered.length / perPage);
   const paged = filtered.slice((page - 1) * perPage, page * perPage);
-
-  // copyToClipboard removed (tracking display removed)
 
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-[#f0fdf4] to-white">
-        <Helmet><title>Admin users | EXPRESUR</title></Helmet>
-        <div className=" mx-auto p-6">
-
-          {/* Header + Search */}
+        <Helmet><title>Admin Users | EXPRESUR</title></Helmet>
+        <div className="max-w-screen-2xl mx-auto p-6">
+          {/* Header */}
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-[#0f172a] mb-4">Cargo Packages (30 Active)</h2>
+            <h2 className="text-3xl font-bold text-[#0f172a] mb-4">All Users</h2>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search anything: name, country, locker..."
-              className="w-full md:w-96 px-5 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-[#166534]"
+              placeholder="Search by name, locker ID, email, phone..."
+              className="w-full max-w-lg px-5 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-[#166534] text-base"
             />
           </div>
 
           {/* Desktop Table */}
-          <div className="hidden md:block bg-white rounded-xl shadow border overflow-hidden mb-8">
-            {/* Use a fixed table layout + explicit widths so header columns line up with rows */}
-            <table className="w-full table-fixed">
-              <thead className="bg-[#166534] text-white">
+          <div className="hidden lg:block bg-white rounded-xl shadow border overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-[#166534] text-white text-left text-sm">
                 <tr>
-                  <th className="px-6 py-4 text-left w-2/5">Customer</th>
-                  <th className="px-6 py-4 text-left w-16">Lang</th>
-                  <th className="px-6 py-4 text-left w-40">Locker ID</th>
-                  <th className="px-6 py-4 text-left w-2/5">Package</th>
-                  {/* Price column removed by request */}
-                  <th className="px-6 py-4 text-right w-48">Action</th>
+                  <th className="px-4 py-3">Full Name</th>
+                  <th className="px-4 py-3 w-16 text-center">Lang</th>
+                  <th className="px-4 py-3">Locker ID</th>
+                  <th className="px-4 py-3">Email Address</th>
+                  <th className="px-4 py-3">Phone</th>
+                  <th className="px-4 py-3">Address / Country / City</th>
+                  <th className="px-4 py-3">Registration Date</th>
+                  <th className="px-4 py-3">User Role</th>
+                  <th className="px-4 py-3">Account Status</th>
+                  <th className="px-4 py-3 text-right pr-8">Action</th>
                 </tr>
               </thead>
-              <tbody>
-                {paged.map((p) => (
-                  <tr key={p.id} className="border-b hover:bg-[#f0fdf4] transition">
-                    <td className="px-6 py-4 font-medium truncate max-w-xs">{p.customerName}</td>
-                    <td className="px-6 py-4 text-center">
-                      <span className="px-3 py-1 bg-gray-200 rounded-full text-xs font-bold">{p.customerLanguage.toUpperCase()}</span>
+              <tbody className="text-sm">
+                {paged.map((user) => (
+                  <tr key={user.id} className="border-b hover:bg-[#f0fdf4] transition">
+                    <td className="px-4 py-4 font-medium">{user.fullName}</td>
+                    <td className="px-4 py-4 text-center">
+                      <span className="inline-block w-8 h-8 rounded-full overflow-hidden border">
+                        <img src={`https://flagcdn.com/48x36/${user.language === "bn" ? "bd" : user.language === "ar" ? "sa" : user.language === "hi" ? "in" : user.language === "en" ? "gb" : user.language === "fr" ? "fr" : user.language === "zh" ? "cn" : "bd"}.png`} alt={user.language} className="w-full h-full object-cover" />
+                      </span>
                     </td>
-                    {/* From/To and Tracking removed per request */}
-                    <td className="px-6 py-4 font-mono font-bold text-[#166534] text-xl">{p.lockerId}</td>
-                    <td className="px-6 py-4 truncate max-w-xs">{p.name}</td>
-                    {/* Price and Status removed from table */}
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end">
-                        <button onClick={() => setSelected(p)} className="px-4 py-3 bg-[#166534] text-white rounded-xl hover:bg-[#114e2a] font-medium whitespace-nowrap min-w-[110px] text-center shadow-sm">
-                          View Details
-                        </button>
-                      </div>
+                    <td className="px-4 py-4 font-mono font-bold text-[#166534] text-base">{user.lockerId}</td>
+                    <td className="px-4 py-4 text-gray-700">{user.email}</td>
+                    <td className="px-4 py-4 text-gray-700">{user.phone}</td>
+                    <td className="px-4 py-4 text-gray-700 max-w-md">
+                      <span className="truncate block">{user.address}, {user.country} • {user.city}</span>
+                    </td>
+                    <td className="px-4 py-4">{user.registrationDate}</td>
+                    <td className="px-4 py-4 capitalize">{user.role}</td>
+                    <td className="px-4 py-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${user.accountStatus === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                        {user.accountStatus}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-right">
+                      <button
+                        onClick={() => setSelected(user)}
+                        className="px-5 py-2 bg-[#166534] text-white rounded-lg hover:bg-[#114e2a] text-sm font-medium transition"
+                      >
+                        View Details
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -138,62 +135,87 @@ export default function AdminPackages() {
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden space-y-4">
-            {paged.map((p) => (
-              <div key={p.id} className="bg-white rounded-xl shadow border p-5">
+          <div className="lg:hidden space-y-4">
+            {paged.map((user) => (
+              <div key={user.id} className="bg-white rounded-xl shadow border p-5">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="font-bold text-lg">{p.customerName}</h3>
-                    <p className="text-sm text-gray-600">Lang: {p.customerLanguage.toUpperCase()}</p>
+                    <h3 className="font-bold text-lg">{user.fullName}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <img src={`https://flagcdn.com/32x24/${user.language === "bn" ? "bd" : user.language === "ar" ? "sa" : user.language === "hi" ? "in" : user.language === "en" ? "gb" : user.language === "fr" ? "fr" : user.language === "zh" ? "cn" : "bd"}.png`} alt="" className="w-8 h-6 rounded" />
+                      <span className="font-mono font-bold text-[#166534] text-xl">{user.lockerId}</span>
+                    </div>
                   </div>
-                  {/* tracking removed on mobile card */}
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${user.accountStatus === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                    {user.accountStatus}
+                  </span>
                 </div>
-                <div className="text-sm space-y-1 mb-4">
-                  {/* From/To removed from mobile card - keeping locker */}
-                  <div className="font-bold text-[#166534]">Locker ID: {p.lockerId}</div>
+
+                <div className="text-sm space-y-1 text-gray-600">
+                  <p><strong>Email:</strong> {user.email}</p>
+                  <p><strong>Phone:</strong> {user.phone}</p>
+                  <p><strong>Address:</strong> {user.address}, {user.city}, {user.country}</p>
+                  <p><strong>Registered:</strong> {user.registrationDate}</p>
                 </div>
-                <button onClick={() => setSelected(p)} className="w-full py-3 bg-[#166534] text-white rounded-lg hover:bg-[#114e2a] font-medium">
-                  View Full Details
+
+                <button
+                  onClick={() => setSelected(user)}
+                  className="mt-4 w-full py-3 bg-[#166534] text-white rounded-lg hover:bg-[#114e2a] font-medium"
+                >
+                  View Details
                 </button>
               </div>
             ))}
           </div>
 
           {/* Pagination */}
-          <div className="mt-8 flex justify-center gap-4">
-            <button onClick={() => setPage(p => Math.max(1, p-1))} disabled={page === 1} className="px-8 py-3 border-2 border-[#166534] rounded-xl disabled:opacity-50">Previous</button>
-            <span className="py-3 px-6">Page {page} of {Math.ceil(total / perPage)}</span>
-            <button onClick={() => setPage(p => Math.min(Math.ceil(total / perPage), p+1))} disabled={page === Math.ceil(total / perPage)} className="px-8 py-3 border-2 border-[#166534] rounded-xl disabled:opacity-50">Next</button>
+          <div className="mt-10 flex justify-center items-center gap-4">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-8 py-3 border-2 border-[#166534] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span className="text-lg">Page {page} of {totalPages}</span>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="px-8 py-3 border-2 border-[#166534] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* Detail Modal */}
       {selected && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setSelected(null)}>
-          <div className="bg-white rounded-2xl p-8 max-w-4xl w-full max-h-screen overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-3xl font-bold text-[#166534] mb-6">{selected.customerName}'s Package</h3>
-                <div className="grid md:grid-cols-2 gap-8 text-lg">
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-screen overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <h3 className="text-2xl font-bold text-[#166534] mb-6">{selected.fullName}'s Profile</h3>
+            <div className="grid md:grid-cols-2 gap-6 text-lg">
               <div>
-                <p><strong>Customer:</strong> {selected.customerName}</p>
-                <p><strong>Language:</strong> {selected.customerLanguage.toUpperCase()}</p>
-                <p><strong>Locker ID:</strong> <code className="text-3xl font-bold text-[#166534]">{selected.lockerId}</code></p>
+                <p><strong>Full Name:</strong> {selected.fullName}</p>
+                <p><strong>Email:</strong> {selected.email}</p>
+                <p><strong>Phone:</strong> {selected.phone}</p>
+                <p><strong>Locker ID:</strong> <span className="font-mono font-bold text-[#166534]">{selected.lockerId}</span></p>
               </div>
               <div>
-                <p><strong>Package:</strong> {selected.name} ({selected.type})</p>
-                {/* Removed Tracking, From/To, Price and Truck Status per request */}
+                <p><strong>Address:</strong> {selected.address}, {selected.city}, {selected.country}</p>
+                <p><strong>Registration Date:</strong> {selected.registrationDate}</p>
+                <p><strong>Role:</strong> {selected.role}</p>
+                <p><strong>Status:</strong> <span className={`capitalize ${selected.accountStatus === "active" ? "text-green-600" : "text-red-600"}`}>{selected.accountStatus}</span></p>
               </div>
             </div>
             <div className="mt-10 text-right">
-              <button onClick={() => setSelected(null)} className="px-12 py-4 bg-[#166534] text-white text-xl rounded-xl hover:bg-[#114e2a]">
+              <button onClick={() => setSelected(null)} className="px-12 py-4 bg-[#166534] text-white rounded-xl hover:bg-[#114e2a] text-lg">
                 Close
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* clipboard/copy toast removed */}
     </>
   );
 }
