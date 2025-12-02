@@ -69,7 +69,6 @@ export default function AdminPackages() {
   const [page, setPage] = useState(1);
   const perPage = 8;
   const [selected, setSelected] = useState<Package | null>(null);
-  const [copiedMsg, setCopiedMsg] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.toLowerCase();
@@ -81,11 +80,7 @@ export default function AdminPackages() {
   const total = filtered.length;
   const paged = filtered.slice((page - 1) * perPage, page * perPage);
 
-  const copyToClipboard = async (text: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedMsg(`Copied: ${text}`);
-    setTimeout(() => setCopiedMsg(null), 2000);
-  };
+  // copyToClipboard removed (tracking display removed)
 
   return (
     <>
@@ -95,11 +90,11 @@ export default function AdminPackages() {
 
           {/* Header + Search */}
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-[#0f172a] mb-4">Cargo Packages + Truck Tracking (30 Active)</h2>
+            <h2 className="text-3xl font-bold text-[#0f172a] mb-4">Cargo Packages (30 Active)</h2>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search anything: name, country, tracking, locker..."
+              placeholder="Search anything: name, country, locker..."
               className="w-full md:w-96 px-5 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-[#166534]"
             />
           </div>
@@ -111,12 +106,9 @@ export default function AdminPackages() {
                 <tr>
                   <th className="px-6 py-4 text-left">Customer</th>
                   <th className="px-6 py-4 text-left">Lang</th>
-                  <th className="px-6 py-4 text-left">From → To</th>
-                  <th className="px-6 py-4 text-left">Tracking</th>
                   <th className="px-6 py-4 text-left">Locker ID</th>
                   <th className="px-6 py-4 text-left">Package</th>
-                  <th className="px-6 py-4 text-left">Price</th>
-                  <th className="px-6 py-4 text-left">Status</th>
+                  {/* Price column removed by request */}
                   <th className="px-6 py-4 text-right">Action</th>
                 </tr>
               </thead>
@@ -127,24 +119,10 @@ export default function AdminPackages() {
                     <td className="px-6 py-4 text-center">
                       <span className="px-3 py-1 bg-gray-200 rounded-full text-xs font-bold">{p.customerLanguage.toUpperCase()}</span>
                     </td>
-                    <td className="px-6 py-4 text-sm">
-                      <div>{p.fromAddress} ({p.fromCountry})</div>
-                      <div>{p.toAddress} ({p.toCountry})</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <code className="font-mono font-bold text-[#166534]">{p.trackingNumber}</code>
-                        <button onClick={() => copyToClipboard(p.trackingNumber)} className="text-xs px-2 py-1 border border-[#166534] rounded hover:bg-[#166534] hover:text-white">Copy</button>
-                      </div>
-                    </td>
+                    {/* From/To and Tracking removed per request */}
                     <td className="px-6 py-4 font-mono font-bold text-[#166534] text-xl">{p.lockerId}</td>
                     <td className="px-6 py-4">{p.name}</td>
-                    <td className="px-6 py-4 font-medium">{p.price}</td>
-                    <td className="px-6 py-4">
-                      {p.truckStatus === "moving" && <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs">Moving</span>}
-                      {p.truckStatus === "stopped" && <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Stopped</span>}
-                      {p.truckStatus === "offline" && <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs">Offline</span>}
-                    </td>
+                    {/* Price and Status removed from table */}
                     <td className="px-6 py-4 text-right">
                       <button onClick={() => setSelected(p)} className="px-6 py-2 bg-[#166534] text-white rounded-lg hover:bg-[#114e2a] font-medium">
                         View Details
@@ -163,12 +141,12 @@ export default function AdminPackages() {
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h3 className="font-bold text-lg">{p.customerName}</h3>
-                    <p className="text-sm text-gray-600">Lang: {p.customerLanguage.toUpperCase()} • {p.fromCountry} → {p.toCountry}</p>
+                    <p className="text-sm text-gray-600">Lang: {p.customerLanguage.toUpperCase()}</p>
                   </div>
-                  <code className="px-3 py-1 bg-[#166534] text-white rounded font-mono">{p.trackingNumber}</code>
+                  {/* tracking removed on mobile card */}
                 </div>
                 <div className="text-sm space-y-1 mb-4">
-                  <div className="font-medium">{p.fromAddress} → {p.toAddress}</div>
+                  {/* From/To removed from mobile card - keeping locker */}
                   <div className="font-bold text-[#166534]">Locker ID: {p.lockerId}</div>
                 </div>
                 <button onClick={() => setSelected(p)} className="w-full py-3 bg-[#166534] text-white rounded-lg hover:bg-[#114e2a] font-medium">
@@ -192,23 +170,15 @@ export default function AdminPackages() {
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setSelected(null)}>
           <div className="bg-white rounded-2xl p-8 max-w-4xl w-full max-h-screen overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-3xl font-bold text-[#166534] mb-6">{selected.customerName}'s Package</h3>
-            <div className="grid md:grid-cols-2 gap-8 text-lg">
+                <div className="grid md:grid-cols-2 gap-8 text-lg">
               <div>
                 <p><strong>Customer:</strong> {selected.customerName}</p>
                 <p><strong>Language:</strong> {selected.customerLanguage.toUpperCase()}</p>
-                <p><strong>Tracking:</strong> <code className="text-2xl font-bold text-[#166534]">{selected.trackingNumber}</code></p>
                 <p><strong>Locker ID:</strong> <code className="text-3xl font-bold text-[#166534]">{selected.lockerId}</code></p>
               </div>
               <div>
-                <p><strong>From:</strong> {selected.fromAddress}, {selected.fromCountry}</p>
-                <p><strong>To:</strong> {selected.toAddress}, {selected.toCountry}</p>
                 <p><strong>Package:</strong> {selected.name} ({selected.type})</p>
-                <p><strong>Price:</strong> {selected.price}</p>
-                <p><strong>Truck Status:</strong> 
-                  {selected.truckStatus === "moving" && "Moving"}
-                  {selected.truckStatus === "stopped" && "Stopped"}
-                  {selected.truckStatus === "offline" && "Offline"}
-                </p>
+                {/* Removed Tracking, From/To, Price and Truck Status per request */}
               </div>
             </div>
             <div className="mt-10 text-right">
@@ -220,11 +190,7 @@ export default function AdminPackages() {
         </div>
       )}
 
-      {copiedMsg && (
-        <div className="fixed bottom-6 right-6 bg-[#166534] text-white px-8 py-4 rounded-xl shadow-2xl z-50 text-lg font-medium">
-          {copiedMsg}
-        </div>
-      )}
+      {/* clipboard/copy toast removed */}
     </>
   );
 }
