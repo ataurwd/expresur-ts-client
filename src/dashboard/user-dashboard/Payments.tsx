@@ -248,7 +248,6 @@ export default function Payments() {
                         <button onClick={() => openPayModal(p)} className="px-3 py-1 bg-[#166534] text-white rounded-md">Pay Online</button>
                       )}
 
-                      <button onClick={() => downloadReceipt(p)} className="px-3 py-1 border rounded-md">Descargar</button>
                     </div>
                   </td>
                 </tr>

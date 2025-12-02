@@ -227,11 +227,11 @@ export default function Pickup() {
                       <button onClick={() => setSelected(p)} className="px-3 py-1 border rounded-md text-sm">Ver</button>
                       {p.status === "scheduled" && (
                         <>
-                          <button onClick={() => changeStatus(p.id, "collected")} className="px-3 py-1 bg-green-600 text-white rounded-md text-sm">Marcar Recolectado</button>
-                          <button onClick={() => changeStatus(p.id, "cancelled")} className="px-3 py-1 bg-red-600 text-white rounded-md text-sm">Cancelar</button>
+                        
+                         
                         </>
                       )}
-                      <button onClick={() => downloadManifest(p)} className="px-3 py-1 border rounded-md text-sm">Manifiesto</button>
+                  
                     </div>
                   </td>
                 </tr>

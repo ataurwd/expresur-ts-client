@@ -225,9 +225,7 @@ export default function Shipments() {
               >
                 Cerrar
               </button>
-              <button className="px-4 py-2 bg-green-700 text-white rounded-md">
-                Descargar
-              </button>
+             
             </div>
           </div>
         </div>
