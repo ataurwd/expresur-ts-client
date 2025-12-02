@@ -49,7 +49,7 @@ const menuItems = [
     icon: <AddBox />,
     path: "/dashboard/create-shipment",
   },
-  { text: "Cuba Shipping", icon: <Flight />, path: "/dashboard/cuba-shipping" },
+  //{ text: "Cuba Shipping", icon: <Flight />, path: "/dashboard/cuba-shipping" },
   { text: "Pickup", icon: <LocalTaxi />, path: "/dashboard/pickup" },
   { text: "Payments", icon: <Payment />, path: "/dashboard/payments" },
   { text: "Profile", icon: <Person />, path: "/dashboard/profile" },
