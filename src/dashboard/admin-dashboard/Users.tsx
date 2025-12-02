@@ -101,32 +101,35 @@ export default function AdminPackages() {
 
           {/* Desktop Table */}
           <div className="hidden md:block bg-white rounded-xl shadow border overflow-hidden mb-8">
-            <table className="w-full">
+            {/* Use a fixed table layout + explicit widths so header columns line up with rows */}
+            <table className="w-full table-fixed">
               <thead className="bg-[#166534] text-white">
                 <tr>
-                  <th className="px-6 py-4 text-left">Customer</th>
-                  <th className="px-6 py-4 text-left">Lang</th>
-                  <th className="px-6 py-4 text-left">Locker ID</th>
-                  <th className="px-6 py-4 text-left">Package</th>
+                  <th className="px-6 py-4 text-left w-2/5">Customer</th>
+                  <th className="px-6 py-4 text-left w-16">Lang</th>
+                  <th className="px-6 py-4 text-left w-40">Locker ID</th>
+                  <th className="px-6 py-4 text-left w-2/5">Package</th>
                   {/* Price column removed by request */}
-                  <th className="px-6 py-4 text-right">Action</th>
+                  <th className="px-6 py-4 text-right w-48">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {paged.map((p) => (
                   <tr key={p.id} className="border-b hover:bg-[#f0fdf4] transition">
-                    <td className="px-6 py-4 font-medium">{p.customerName}</td>
+                    <td className="px-6 py-4 font-medium truncate max-w-xs">{p.customerName}</td>
                     <td className="px-6 py-4 text-center">
                       <span className="px-3 py-1 bg-gray-200 rounded-full text-xs font-bold">{p.customerLanguage.toUpperCase()}</span>
                     </td>
                     {/* From/To and Tracking removed per request */}
                     <td className="px-6 py-4 font-mono font-bold text-[#166534] text-xl">{p.lockerId}</td>
-                    <td className="px-6 py-4">{p.name}</td>
+                    <td className="px-6 py-4 truncate max-w-xs">{p.name}</td>
                     {/* Price and Status removed from table */}
                     <td className="px-6 py-4 text-right">
-                      <button onClick={() => setSelected(p)} className="px-6 py-2 bg-[#166534] text-white rounded-lg hover:bg-[#114e2a] font-medium">
-                        View Details
-                      </button>
+                      <div className="flex justify-end">
+                        <button onClick={() => setSelected(p)} className="px-4 py-3 bg-[#166534] text-white rounded-xl hover:bg-[#114e2a] font-medium whitespace-nowrap min-w-[110px] text-center shadow-sm">
+                          View Details
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
