@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Helmet } from "react-helmet";
 
 /* -------- Fake Payments Data -------- */
 type Payment = {
@@ -175,6 +176,7 @@ export default function Payments() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <Helmet><title>Payments | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
 
         {/* Header */}

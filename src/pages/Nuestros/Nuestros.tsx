@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import NueCard1 from "../../components/Nuestros-component/NueCard1";
 import NueHero from "../../components/Nuestros-component/NueHero";
 import NueSub from "../../components/Nuestros-component/NueSub";
@@ -6,6 +7,7 @@ import NueTimeline from "../../components/Nuestros-component/NueTimeline";
 const Nuestros = () => {
   return (
     <div>
+      <Helmet><title> Nuestros |  EXPRESUR</title></Helmet>
       <NueHero />
       <div className="bg-green-700 md:p-20 px-5 md:mx-20 mx-5 rounded-xl">
         <NueSub />

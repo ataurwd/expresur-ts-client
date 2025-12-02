@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 /**
  * CreateShipment.combined.cuba.tsx
@@ -169,6 +170,7 @@ export default function CreateShipmentCombinedCuba() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <Helmet><title> CreateShipment| EXPRESUR</title></Helmet>
       <div className=" mx-auto">
         <header className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-[#166534]">Crear Envío — Cuba</h1>

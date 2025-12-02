@@ -1,10 +1,13 @@
 import React from 'react';
 import image from '../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png'
+import { Helmet } from 'react-helmet';
 
 const Contact = () => {
     return (
         <div className="w-full min-h-screen bg-gradient-to-r from-green-900 via-green-700 to-yellow-600 py-16">
-
+            <Helmet>
+                <title>Contacto |  EXPRESUR</title>
+            </Helmet>
             {/* TOP PROFILES */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
@@ -29,8 +32,8 @@ const Contact = () => {
                                         {item === 1
                                             ? "Atención al cliente"
                                             : item === 2
-                                            ? "Asesora comercial"
-                                            : "Soporte y consultas"}
+                                                ? "Asesora comercial"
+                                                : "Soporte y consultas"}
                                     </p>
 
                                     <button className="px-5 py-1.5 text-xs font-bold bg-transparent border-2 border-orange-400 text-white rounded-full hover:bg-orange-400 transition w-fit">
@@ -57,9 +60,9 @@ const Contact = () => {
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-6 mb-8">
                     <h2 className="text-3xl sm:text-4xl font-bold lg:text-4xl">Contáctame</h2>
                     <p className="max-w-xl text-xs sm:text-sm leading-relaxed opacity-90">
-                        Si deseas información, solicitar un servicio o realizar una consulta, 
-                        llena el formulario y te responderé lo antes posible.  
-                        Trabajo con rapidez, profesionalidad y total seguridad para ofrecerte 
+                        Si deseas información, solicitar un servicio o realizar una consulta,
+                        llena el formulario y te responderé lo antes posible.
+                        Trabajo con rapidez, profesionalidad y total seguridad para ofrecerte
                         la mejor experiencia posible.
                     </p>
                 </div>

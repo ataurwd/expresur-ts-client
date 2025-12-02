@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronDown } from "lucide-react";
 import { WhatsApp } from "@mui/icons-material";
+import { Helmet } from 'react-helmet';
 
 const FAQPage = () => {
     return (
@@ -17,6 +18,7 @@ const FAQPage = () => {
                 overflow-hidden
             "
         >
+            <Helmet><title> FAQ |  EXPRESUR</title></Helmet>
             <div className="mt-10 md:mt-[135px]">
 
                 {/* TITLE */}
@@ -207,8 +209,8 @@ const FAQPage = () => {
                             py-3
                         "
                     >
-                        <WhatsApp 
-                            className="group-hover:text-[#085c3b]" 
+                        <WhatsApp
+                            className="group-hover:text-[#085c3b]"
                             style={{ fontSize: 28 }}
                         />
                         SI TIENES PREGUNTAS, CONTÁCTANOS

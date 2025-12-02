@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, Package, Globe, Clock, DollarSign, Search, X, Save } from "lucide-react";
+import { Helmet } from 'react-helmet';
 
 interface ShippingRate {
   id: string;
@@ -81,6 +82,7 @@ const AdminRates = () => {
 
   return (
     <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+      <Helmet><title>AdminRates | EXPRESUR</title></Helmet>
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
         <div>

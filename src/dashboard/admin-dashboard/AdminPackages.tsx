@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 
 /** ---------------- Types ---------------- */
 type Package = {
@@ -93,6 +94,7 @@ export default function AdminPackagesResponsive() {
 
   return (
     <div className="p-6 bg-[#f7faf7] min-h-screen">
+      <Helmet><title>AdminPackages | EXPRESUR</title></Helmet>
       <div className=" mx-auto">
 
         {/* Header */}

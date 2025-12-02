@@ -41,7 +41,7 @@ root.render(
     <AuthContextProvider>
       <LanguageProvider>
         <Toaster position="bottom-right" richColors />
-        <RouterProvider router={Routes} />
+            <RouterProvider router={Routes} />
       </LanguageProvider>
     </AuthContextProvider>
   </React.StrictMode>
