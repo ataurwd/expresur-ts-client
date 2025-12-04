@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
+import { X } from "lucide-react";
 
 /* --------------------- Types --------------------- */
 type ParcelStatus = "Pending" | "In Transit" | "Delivered" | "Cancelled" | "Returned";
@@ -88,46 +89,47 @@ export default function AdminTracking() {
   }, [parcels]);
 
   return (
-    <div className="p-4 md:p-8 bg-[#f7fafc] min-h-screen">
+    <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 to-white min-h-screen">
       <Helmet><title>Admin Tracking | EXPRESUR</title></Helmet>
 
-      {/* Header + Search */}
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">Tracking — Parcels</h1>
-            <p className="text-gray-600">Gestión y seguimiento de todos los envíos</p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar por Order, Cliente, Email..."
-              className="px-4 py-2 border rounded-lg w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-green-600"
-            />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border rounded-lg bg-white"
-            >
-              <option value="all">Todos los estados</option>
-              <option value="Pending">Pending</option>
-              <option value="In Transit">In Transit</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Returned">Returned</option>
-            </select>
-            <button
-              onClick={() => { setSearch(""); setStatusFilter("all"); }}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-            >
-              Reset
-            </button>
-          </div>
-        </div>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Tracking — Parcels</h1>
+        <p className="text-gray-600 mt-2">Gestión y seguimiento de todos los envíos</p>
+      </div>
 
-        {/* KPI Cards */}
+      {/* Filter + Search Section */}
+      <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-lg p-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por Order, Cliente, Email..."
+            className="px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl w-full focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="Pending">Pending</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Returned">Returned</option>
+          </select>
+          <button
+            onClick={() => { setSearch(""); setStatusFilter("all"); }}
+            className="px-4 py-3.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+          {/* KPI Cards */}
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
           {[
             { label: "Total", value: totals.total, color: "gray" },
@@ -145,7 +147,7 @@ export default function AdminTracking() {
         </div>
 
         {/* Table - Desktop */}
-        <div className="bg-white rounded-xl shadow overflow-hidden">
+        <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl overflow-hidden mb-8">
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-[#166534] text-white">
@@ -230,7 +232,7 @@ export default function AdminTracking() {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="text-gray-600">Mostrando {filtered.length} resultados</div>
           <div className="flex gap-3">
             <button className="px-4 py-2 border rounded-lg">Export CSV</button>
@@ -239,24 +241,23 @@ export default function AdminTracking() {
             </button>
           </div>
         </div>
-      </div>
 
       {/* Modal */}
       {selected && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-screen overflow-y-auto p-6">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 p-8">
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h2 className="text-2xl font-bold">{selected.orderId}</h2>
-                <p className="text-lg text-gray-600">{selected.customer}</p>
-                <p className="text-sm text-gray-500">{selected.origin} → {selected.destination}</p>
+                <h2 className="text-2xl font-bold text-gray-900">Parcel Details</h2>
+                <p className="text-green-700 font-semibold text-lg mt-1">{selected.orderId}</p>
               </div>
-              <button onClick={() => setSelected(null)} className="text-2xl text-gray-500 hover:text-gray-800">
-                ×
+
+              <button onClick={() => setSelected(null)} className="text-gray-500 hover:text-gray-700">
+                <X size={28} />
               </button>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3 text-sm">
                 <div><strong>Cliente:</strong> {selected.customer}</div>
                 {selected.phone && <div><strong>Teléfono:</strong> {selected.phone}</div>}
