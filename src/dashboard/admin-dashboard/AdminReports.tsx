@@ -1,24 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
-
-/**
- * AdminReports.es.react.tsx
- * Responsive reports page adapted to Spanish (Cuba) and mobile-first layout.
- * Theme color: #166534
- */
+import { X } from "lucide-react";
 
 type ReportRow = {
   id: string;
-  date: string; // ISO yyyy-mm-dd
+  date: string;
   type: "Revenue" | "Delivery" | "Pickup";
-  amount: number; // for Revenue rows; for others treat as count
-  reference?: string; // order id / invoice
+  amount: number;
+  reference?: string;
   customer?: string;
   note?: string;
-};
-
-const THEME = {
-  green: "#166534",
 };
 
 const FAKE_REPORTS: ReportRow[] = [
@@ -76,10 +67,10 @@ export default function AdminReports() {
   const [to, setTo] = useState<string>("2025-01-31");
   const [typeFilter, setTypeFilter] = useState<"All" | ReportRow["type"]>("All");
   const [search, setSearch] = useState<string>("");
+  const [selectedReport, setSelectedReport] = useState<ReportRow | null>(null);
 
-  // pagination
   const [page, setPage] = useState<number>(1);
-  const perPage = 6;
+  const perPage = 10;
 
   const filtered = useMemo(() => {
     const f = new Date(from + "T00:00:00");
@@ -97,7 +88,7 @@ export default function AdminReports() {
         (r.customer ?? "").toLowerCase().includes(q) ||
         r.type.toLowerCase().includes(q)
       );
-    }).sort((a,b) => (new Date(b.date).getTime() - new Date(a.date).getTime()));
+    }).sort((a, b) => (new Date(b.date).getTime() - new Date(a.date).getTime()));
   }, [from, to, typeFilter, search]);
 
   const total = filtered.length;
@@ -105,7 +96,6 @@ export default function AdminReports() {
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
 
-  // KPIs for filtered set
   const kpi = useMemo(() => {
     const revenue = filtered.filter(r => r.type === "Revenue").reduce((s, r) => s + r.amount, 0);
     const deliveries = filtered.filter(r => r.type === "Delivery").reduce((s, r) => s + r.amount, 0);
@@ -113,176 +103,335 @@ export default function AdminReports() {
     return { revenue, deliveries, pickups };
   }, [filtered]);
 
+  const getTypeColor = (type: ReportRow["type"]) => {
+    switch (type) {
+      case "Revenue": return "bg-green-100 text-green-800 border border-green-300";
+      case "Delivery": return "bg-blue-100 text-blue-800 border border-blue-300";
+      case "Pickup": return "bg-purple-100 text-purple-800 border border-purple-300";
+    }
+  };
+
   return (
-    <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
-      <Helmet><title>AdminReports | EXPRESUR</title></Helmet>
-      <div className=" mx-auto ">
+    <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 to-white min-h-screen">
+      <Helmet><title>Admin Reports | EXPRESUR</title></Helmet>
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Informes</h1>
-            <p className="text-sm text-gray-600 mt-1">Resumen y detalles — filtra por fecha, tipo o busca registros.</p>
-          </div>
-
-          <div className="flex gap-3 items-center">
-            <div className="text-sm text-gray-500 text-right">
-              <div>Administrador: <span className="font-medium">Arif Hossain</span></div>
-              <div className="text-xs text-gray-400">Último acceso: {new Date("2025-01-10").toLocaleDateString("es-CU")}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
-            <div className="flex flex-col">
-              <label className="text-xs text-gray-500">Desde</label>
-              <input aria-label="Desde" type="date" value={from} onChange={(e)=>{ setFrom(e.target.value); setPage(1); }} className="px-3 py-2 border rounded-md" />
-            </div>
-
-            <div className="flex flex-col">
-              <label className="text-xs text-gray-500">Hasta</label>
-              <input aria-label="Hasta" type="date" value={to} onChange={(e)=>{ setTo(e.target.value); setPage(1); }} className="px-3 py-2 border rounded-md" />
-            </div>
-
-            <div className="flex flex-col">
-              <label className="text-xs text-gray-500">Tipo</label>
-              <select aria-label="Tipo" value={typeFilter} onChange={(e)=>{ setTypeFilter(e.target.value as any); setPage(1); }} className="px-3 py-2 border rounded-md bg-white">
-                <option value="All">Todos</option>
-                <option value="Revenue">Ingresos</option>
-                <option value="Delivery">Entrega</option>
-                <option value="Pickup">Recogida</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col sm:col-span-2 md:col-span-2">
-              <label className="text-xs text-gray-500">Buscar</label>
-              <input aria-label="Buscar" placeholder="buscar por id, referencia, cliente..." value={search} onChange={(e)=>{ setSearch(e.target.value); setPage(1); }} className="w-full px-3 py-2 border rounded-md" />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between mt-3 gap-3">
-            <div className="text-sm text-gray-600">Mostrando <span className="font-medium">{total}</span> resultados</div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => { setFrom("2024-11-01"); setTo("2025-01-31"); setTypeFilter("All"); setSearch(""); setPage(1); }} className="px-3 py-2 border rounded-md text-sm">Restablecer</button>
-              <button onClick={() => downloadCSV(filtered)} style={{ background: THEME.green }} className="px-3 py-2 rounded-md text-white text-sm">Exportar CSV</button>
-            </div>
-          </div>
-        </div>
-
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-4 shadow flex flex-col">
-            <div className="text-xs text-gray-500">Ingresos totales</div>
-            <div className="text-2xl font-bold" style={{ color: THEME.green }}>${kpi.revenue.toLocaleString()}</div>
-            <div className="text-xs text-gray-400 mt-2">Suma de ingresos en el rango filtrado</div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 shadow flex flex-col">
-            <div className="text-xs text-gray-500">Total entregas</div>
-            <div className="text-2xl font-bold text-gray-800">{kpi.deliveries}</div>
-            <div className="text-xs text-gray-400 mt-2">Cantidad de entregas</div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 shadow flex flex-col">
-            <div className="text-xs text-gray-500">Solicitudes de recogida</div>
-            <div className="text-2xl font-bold text-gray-800">{kpi.pickups}</div>
-            <div className="text-xs text-gray-400 mt-2">Cantidad de recogidas</div>
-          </div>
-        </div>
-
-        {/* Table for md+ and Cards for small screens */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          {/* Desktop / tablet table */}
-          <div className="hidden md:block">
-            <table className="min-w-full">
-              <thead className="bg-[#166534] text-white">
-                <tr>
-                  <th className="p-3 text-left text-sm">Fecha</th>
-                  <th className="p-3 text-left text-sm">ID</th>
-                  <th className="p-3 text-left text-sm">Tipo</th>
-                  <th className="p-3 text-left text-sm">Referencia</th>
-                  <th className="p-3 text-left text-sm">Cliente</th>
-                  <th className="p-3 text-right text-sm">Monto</th>
-                  <th className="p-3 text-center text-sm">Acción</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {paged.map(r => (
-                  <tr key={r.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3 text-sm">{formatDate(r.date)}</td>
-                    <td className="p-3 font-medium">{r.id}</td>
-                    <td className="p-3 text-sm">{r.type === 'Revenue' ? 'Ingresos' : r.type === 'Delivery' ? 'Entrega' : 'Recogida'}</td>
-                    <td className="p-3 text-sm">{r.reference ?? "-"}</td>
-                    <td className="p-3 text-sm">{r.customer ?? "-"}</td>
-                    <td className={`p-3 text-right text-sm ${r.type === "Revenue" ? "text-green-700" : "text-gray-800"}`}>
-                      {r.type === "Revenue" ? `$${r.amount.toLocaleString()}` : r.amount}
-                    </td>
-                    <td className="p-3 text-center">
-                      <button onClick={() => alert(JSON.stringify(r, null, 2))} style={{ background: THEME.green }} className="text-white px-3 py-1 rounded-md text-sm">
-                        Ver
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-
-                {paged.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="p-6 text-center text-gray-500">No hay registros que coincidan con los filtros.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile cards */}
-          <div className="block md:hidden p-3">
-            {paged.map(r => (
-              <article key={r.id} className="border rounded-lg p-3 mb-3 shadow-sm bg-white">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="text-xs text-gray-500">{formatDate(r.date)}</div>
-                    <div className="font-medium">{r.id} · <span className="text-sm text-gray-600">{r.customer ?? '-'}</span></div>
-                    <div className="text-sm text-gray-600 mt-1">{r.reference ?? '-'}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className={`text-lg font-semibold ${r.type === 'Revenue' ? 'text-green-700' : 'text-gray-800'}`}>
-                      {r.type === 'Revenue' ? `$${r.amount.toLocaleString()}` : r.amount}
-                    </div>
-                    <div className="text-xs text-gray-500">{r.type === 'Revenue' ? 'Ingresos' : r.type === 'Delivery' ? 'Entrega' : 'Recogida'}</div>
-                  </div>
-                </div>
-
-                <div className="mt-3 flex gap-2">
-                  <button onClick={() => alert(JSON.stringify(r, null, 2))} style={{ background: THEME.green }} className="text-white px-3 py-1 rounded-md text-sm">Ver</button>
-                  <button onClick={() => navigator.clipboard?.writeText(r.reference ?? r.id)} className="px-3 py-1 border rounded-md text-sm">Copiar ref</button>
-                </div>
-              </article>
-            ))}
-
-            {paged.length === 0 && (
-              <div className="p-6 text-center text-gray-500">No hay registros que coincidan con los filtros.</div>
-            )}
-          </div>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
-          <div className="text-sm text-gray-600">Mostrando {start + 1}-{Math.min(start + perPage, total)} de {total}</div>
-          <div className="flex items-center gap-2">
-            <button disabled={page === 1} onClick={() => setPage(p => Math.max(1, p - 1))} className="px-3 py-1 border rounded-md disabled:opacity-50">Anterior</button>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: pageCount }).map((_, i) => (
-                <button key={i} onClick={() => setPage(i+1)} className={`px-3 py-1 rounded-md ${page===i+1 ? "bg-[#166534] text-white" : "border"}`}>{i+1}</button>
-              ))}
-            </div>
-            <button disabled={page === pageCount} onClick={() => setPage(p => Math.min(pageCount, p + 1))} className="px-3 py-1 border rounded-md disabled:opacity-50">Siguiente</button>
-          </div>
-        </div>
-
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Informes</h1>
+        <p className="text-gray-600 mt-2">Análisis y seguimiento — resumen de ingresos, entregas y recogidas</p>
       </div>
+
+      {/* Filter Section */}
+      <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-lg p-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div>
+            <label className="text-xs text-gray-500 font-medium">Desde</label>
+            <input
+              type="date"
+              value={from}
+              onChange={(e) => { setFrom(e.target.value); setPage(1); }}
+              className="w-full px-4 py-3.5 mt-1 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-500 font-medium">Hasta</label>
+            <input
+              type="date"
+              value={to}
+              onChange={(e) => { setTo(e.target.value); setPage(1); }}
+              className="w-full px-4 py-3.5 mt-1 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-500 font-medium">Tipo</label>
+            <select
+              value={typeFilter}
+              onChange={(e) => { setTypeFilter(e.target.value as any); setPage(1); }}
+              className="w-full px-4 py-3.5 mt-1 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100"
+            >
+              <option value="All">Todos</option>
+              <option value="Revenue">Ingresos</option>
+              <option value="Delivery">Entrega</option>
+              <option value="Pickup">Recogida</option>
+            </select>
+          </div>
+
+          <div className="lg:col-span-2">
+            <label className="text-xs text-gray-500 font-medium">Buscar</label>
+            <input
+              type="text"
+              placeholder="Buscar por ID, referencia, cliente..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              className="w-full px-4 py-3.5 mt-1 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div className="text-sm text-gray-600">
+            Mostrando <span className="font-semibold">{total}</span> resultados
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { setFrom("2024-11-01"); setTo("2025-01-31"); setTypeFilter("All"); setSearch(""); setPage(1); }}
+              className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 transition"
+            >
+              Restablecer
+            </button>
+            <button
+              onClick={() => downloadCSV(filtered)}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition"
+            >
+              Exportar CSV
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-lg p-6">
+          <div className="text-sm text-gray-500 font-medium">Ingresos Totales</div>
+          <div className="text-3xl font-bold text-green-700 mt-2">${kpi.revenue.toLocaleString()}</div>
+          <p className="text-xs text-gray-500 mt-2">Suma de ingresos en el rango filtrado</p>
+        </div>
+
+        <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-lg p-6">
+          <div className="text-sm text-gray-500 font-medium">Total Entregas</div>
+          <div className="text-3xl font-bold text-blue-700 mt-2">{kpi.deliveries}</div>
+          <p className="text-xs text-gray-500 mt-2">Cantidad de entregas registradas</p>
+        </div>
+
+        <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-lg p-6">
+          <div className="text-sm text-gray-500 font-medium">Total Recogidas</div>
+          <div className="text-3xl font-bold text-purple-700 mt-2">{kpi.pickups}</div>
+          <p className="text-xs text-gray-500 mt-2">Cantidad de recogidas registradas</p>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-6 border-b border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-800">Registros de Informes</h2>
+          <p className="text-sm text-gray-500 mt-1">
+            {total} registros • {pageCount} página(s)
+          </p>
+        </div>
+
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 text-gray-700 uppercase text-xs tracking-wider">
+              <tr>
+                <th className="px-6 py-4 text-left font-semibold">Fecha</th>
+                <th className="px-6 py-4 text-left font-semibold">ID</th>
+                <th className="px-6 py-4 text-left font-semibold">Tipo</th>
+                <th className="px-6 py-4 text-left font-semibold">Referencia</th>
+                <th className="px-6 py-4 text-left font-semibold">Cliente</th>
+                <th className="px-6 py-4 text-right font-semibold">Monto</th>
+                <th className="px-6 py-4 text-center font-semibold">Acción</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {paged.map((r) => (
+                <tr key={r.id} className="hover:bg-gray-50 transition">
+                  <td className="px-6 py-4 text-gray-600">{formatDate(r.date)}</td>
+                  <td className="px-6 py-4 font-semibold text-green-700">{r.id}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${getTypeColor(r.type)}`}>
+                      {r.type === "Revenue" ? "Ingresos" : r.type === "Delivery" ? "Entrega" : "Recogida"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-gray-600">{r.reference ?? "—"}</td>
+                  <td className="px-6 py-4 text-gray-600">{r.customer ?? "—"}</td>
+                  <td className="px-6 py-4 text-right font-semibold">
+                    {r.type === "Revenue" ? (
+                      <span className="text-green-700">${r.amount.toLocaleString()}</span>
+                    ) : (
+                      <span className="text-gray-700">{r.amount}</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <button
+                      onClick={() => setSelectedReport(r)}
+                      className="text-green-700 font-medium px-4 py-2 rounded-lg hover:bg-green-50 transition"
+                    >
+                      Ver Detalles →
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {paged.length === 0 && (
+            <div className="text-center py-12 text-gray-500">No hay registros que coincidan con los filtros.</div>
+          )}
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {paged.map((r) => (
+            <div key={r.id} className="p-4">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <div className="text-sm font-semibold text-green-700">{r.id}</div>
+                  <div className="text-xs text-gray-500 mt-1">{formatDate(r.date)}</div>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold ${getTypeColor(r.type)}`}>
+                  {r.type === "Revenue" ? "Ingresos" : r.type === "Delivery" ? "Entrega" : "Recogida"}
+                </span>
+              </div>
+
+              <div className="text-sm text-gray-600 mb-2">
+                <div><span className="text-gray-500">Cliente:</span> {r.customer ?? "—"}</div>
+                <div><span className="text-gray-500">Referencia:</span> {r.reference ?? "—"}</div>
+              </div>
+
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  {r.type === "Revenue" ? (
+                    <div className="text-lg font-bold text-green-700">${r.amount.toLocaleString()}</div>
+                  ) : (
+                    <div className="text-lg font-bold text-gray-700">{r.amount} registros</div>
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setSelectedReport(r)}
+                className="w-full py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition text-sm"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          ))}
+          {paged.length === 0 && (
+            <div className="p-6 text-center text-gray-500">No hay registros que coincidan con los filtros.</div>
+          )}
+        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="text-sm text-gray-600">
+          Mostrando {start + 1}–{Math.min(start + perPage, total)} de {total}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            Anterior
+          </button>
+          <div className="flex gap-1">
+            {Array.from({ length: pageCount }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
+                  page === i + 1
+                    ? "bg-green-600 text-white"
+                    : "border border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          <button
+            disabled={page === pageCount}
+            onClick={() => setPage(p => Math.min(pageCount, p + 1))}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+      {/* Modal */}
+      {selectedReport && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 p-8">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Detalles del Informe</h2>
+                <p className="text-green-700 font-semibold text-lg mt-1">{selectedReport.id}</p>
+              </div>
+              <button
+                onClick={() => setSelectedReport(null)}
+                className="text-gray-500 hover:text-gray-700 transition"
+              >
+                <X size={28} />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-500">Tipo</p>
+                  <span className={`inline-block px-4 py-2 rounded-full text-sm font-bold mt-1 ${getTypeColor(selectedReport.type)}`}>
+                    {selectedReport.type === "Revenue" ? "Ingresos" : selectedReport.type === "Delivery" ? "Entrega" : "Recogida"}
+                  </span>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Fecha</p>
+                  <p className="font-semibold text-gray-900 mt-1">{formatDate(selectedReport.date)}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Cliente</p>
+                  <p className="font-semibold text-gray-900 mt-1">{selectedReport.customer ?? "—"}</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-500">Monto</p>
+                  {selectedReport.type === "Revenue" ? (
+                    <p className="text-3xl font-bold text-green-700 mt-1">${selectedReport.amount.toLocaleString()}</p>
+                  ) : (
+                    <p className="text-3xl font-bold text-gray-700 mt-1">{selectedReport.amount}</p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Referencia</p>
+                  <p className="font-mono text-sm bg-gray-100 px-3 py-2 rounded-lg mt-1">
+                    {selectedReport.reference ?? "—"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {selectedReport.note && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-500">Notas</p>
+                <p className="text-gray-700 bg-gray-50 p-4 rounded-lg mt-2">{selectedReport.note}</p>
+              </div>
+            )}
+
+            <div className="mt-8 flex justify-end gap-3">
+              <button
+                onClick={() => setSelectedReport(null)}
+                className="px-5 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 transition"
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={() => downloadCSV([selectedReport])}
+                className="px-5 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition"
+              >
+                Descargar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
