@@ -80,23 +80,21 @@ const Rastrear = () => {
         </div>
 
         {/* RIGHT IMAGE */}
-        <div className="order-1 md:order-2 flex justify-center md:justify-end">
+        {/* <div className="order-1 md:order-2 flex justify-center items-center h-full">
           <img
             src={rastrearImg}
             alt="Rastrear paquete"
             loading="lazy"
-            className="
-              w-full
-              max-w-[320px]
-              sm:max-w-[420px]
-              md:max-w-[600px]
-              xl:max-w-[1200px] xl:w-[1200px]
-              h-auto
-              object-contain drop-shadow-2xl
-              ml-0 md:ml-0 xl:ml-10
-              xl:-mr-[15%]
-              xl:-mt-[10%]
-            "
+            className="w-full md:w-[1050px] object-contain"
+          />
+        </div> */}
+
+        <div className="order-1 md:order-2 flex items-center justify-center h-full">
+          <img
+            src={rastrearImg}
+            alt="Rastrear paquete"
+            loading="lazy"
+            className="w-auto md:w-[1550px] max-w-full object-contain"
           />
         </div>
       </section>

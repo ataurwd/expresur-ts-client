@@ -149,7 +149,7 @@ const Navbar: React.FC = () => {
               {/* TRACK BUTTON */}
               <NavLink to="/rasterear">
                 <button
-                  className={`bg-green-800 hover:bg-[#035230] text-white w-36 md:w-52 text-[12px] md:text-[15px] font-semibold px-4 py-2 rounded-full shadow transition ${
+                  className={`bg-green-800 hover:bg-[#035230] text-white w-36 md:w-52 text-[10px] md:text-[15px] font-semibold px-4 py-2 rounded-full shadow transition ${
                     location.pathname === "/rasterear"
                       ? "ring-2 ring-[#046838]"
                       : ""
