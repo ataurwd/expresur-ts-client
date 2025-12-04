@@ -68,7 +68,7 @@ const adminMenuItems = [
     path: "/dashboard/admin-pickup",
   },
   { text: "Payments", icon: <PaymentIcon />, path: "/dashboard/admin-payments" },
-  { text: "Rates", icon: <RatesIcon />, path: "/dashboard/admin-rates" },
+  //{ text: "Rates", icon: <RatesIcon />, path: "/dashboard/admin-rates" },
   { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/admin-tracking" },
   { text: "Reports", icon: <ReportsIcon />, path: "/dashboard/admin-reports" },
   { text: "Settings", icon: <SettingsIcon />, path: "/dashboard/admin-settings" },
