@@ -61,7 +61,7 @@ const adminMenuItems = [
     icon: <LocalShippingIcon />,
     path: "/dashboard/admin-shipments",
   },
-  { text: "Cuba Shipments", icon: <FlightIcon />, path: "/dashboard/admin-cuba" },
+  //{ text: "Cuba Shipments", icon: <FlightIcon />, path: "/dashboard/admin-cuba" },
   {
     text: "Pickup Requests",
     icon: <LocalTaxiIcon />,
