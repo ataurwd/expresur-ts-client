@@ -50,7 +50,7 @@ const collapsedWidth = 65;
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
   { text: "Users", icon: <PeopleIcon />, path: "/dashboard/admin-users" },
-  { text: "Packages", icon: <InventoryIcon />, path: "/dashboard/admin-packages" },
+  //{ text: "Packages", icon: <InventoryIcon />, path: "/dashboard/admin-packages" },
   {
     text: "Consolidations",
     icon: <ConsolidateIcon />,
