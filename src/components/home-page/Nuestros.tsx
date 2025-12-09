@@ -1,356 +1,263 @@
 // src/pages/home/Nuestros.tsx
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
 import iconPackage from "../../assets/icon-pickup.png";
 import iconRemesas from "../../assets/icon-remesas.png";
 import iconPickup from "../../assets/icon-package.png";
 import iconConfirm from "../../assets/icon-confirm1.png";
 
-type IconType = string | { src?: string } | any;
-
 interface Card {
   title: string;
   desc: string;
-  icon: IconType;
+  icon: string;
 }
 
-const cards: Card[] = [
-  {
-    title: "ENVÍOS\nDE PAQUETES",
-    desc:
-      "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud",
-    icon: iconPackage,
-  },
-  {
-    title: "ENVÍO\nDE REMESAS",
-    desc:
-      "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wsi enim ad minim veniam, quis nostrud",
-    icon: iconRemesas,
-  },
-  {
-    title: "RECOGIDA\nDE PAQUETES",
-    desc:
-      "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wsi enim ad minim veniam, quis nostrud",
-    icon: iconPickup,
-  },
-  {
-    title: "CONFORMAR\nENVÍOS",
-    desc:
-      "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wsi enim ad minim veniam, quis nostrud",
-    icon: iconConfirm,
-  },
+const baseCards: Card[] = [
+  { title: "ENVÍOS\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPackage },
+  { title: "ENVÍO\nDE REMESAS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconRemesas },
+  { title: "RECOGIDA\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPickup },
+  { title: "CONFORMAR\nENVÍOS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconConfirm },
 ];
 
 const Nuestros: React.FC = () => {
-  // ---------- Responsive visible count ----------
-  const getVisibleCount = () => {
-    if (typeof window === "undefined") return 1;
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const isUserInteracting = useRef(false);
+  const [visibleCount, setVisibleCount] = useState(4);
+  const [currentDot, setCurrentDot] = useState(0);
+  const [ready, setReady] = useState(false);
+
+  const updateVisibleCount = useCallback(() => {
+    if (typeof window === "undefined") return;
     const w = window.innerWidth;
-    if (w < 480) return 1; // small phones
-    if (w < 768) return 1; // phones
-    if (w < 1024) return 2; // tablets
-    if (w < 1280) return 3; // small desktop / large tablet
-    return 4; // large desktop
-  };
-
-  // visibleCount still used for slide width when in carousel mode
-  const [visibleCount, setVisibleCount] = useState<number>(getVisibleCount());
-
-  // Add explicit grid mode boolean: treat >=1024px as "desktop grid" (per request)
-  const getIsGrid = () => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth >= 1024;
-  };
-  const [isGrid, setIsGrid] = useState<boolean>(getIsGrid());
-  const isGridRef = useRef(isGrid);
-  useEffect(() => {
-    isGridRef.current = isGrid;
-  }, [isGrid]);
-
-  useEffect(() => {
-    const onResize = () => {
-      setVisibleCount(getVisibleCount());
-      setIsGrid(getIsGrid());
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    if (w < 640) setVisibleCount(1);
+    else if (w < 768) setVisibleCount(1);
+    else if (w < 1024) setVisibleCount(2);
+    else if (w < 1280) setVisibleCount(3);
+    else setVisibleCount(4);
   }, []);
 
-  // ---------- State & refs ----------
-  const total = cards.length;
-  const [index, setIndex] = useState<number>(0); // logical index 0..total-1
-
-  const viewportRef = useRef<HTMLDivElement | null>(null);
-  const slideRefs = useRef<Array<HTMLDivElement | null>>([]);
-  slideRefs.current = [];
-
-  const pushSlideRef = (el: HTMLDivElement | null) => {
-    if (el) slideRefs.current.push(el);
-  };
-
-  // autoplay
-  const autoplayRef = useRef<number | null>(null);
-  const isPausedRef = useRef(false);
-
-  // ---------- helpers to scroll/center slide ----------
-  const scrollToIndex = (i: number, smooth = true) => {
-    const vp = viewportRef.current;
-    const slide = slideRefs.current[i];
-    if (!vp || !slide) return;
-    const vpWidth = vp.clientWidth;
-    const slideWidth = slide.clientWidth;
-    const left = slide.offsetLeft - (vpWidth - slideWidth) / 2;
-    vp.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
-  };
-
-  // on index change, scroll to center (mobile) OR align left for multi-visible
   useEffect(() => {
-    // clamp index
-    const idx = Math.max(0, Math.min(total - 1, index));
-    setIndex(idx);
-    if (!viewportRef.current) return;
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
+    return () => window.removeEventListener("resize", updateVisibleCount);
+  }, [updateVisibleCount]);
 
-    // if in grid mode, no scrolling needed
-    if (isGrid) return;
+  const cards = [...baseCards, ...baseCards, ...baseCards]; // left | middle | right
+  const total = baseCards.length;
+  const slidePercent = 100 / visibleCount;
 
-    if (visibleCount === 1) {
-      scrollToIndex(idx, true);
-    } else {
-      // calculate left such that the first visible item is at left
-      const vp = viewportRef.current;
-      const slide = slideRefs.current[idx];
-      if (!slide) return;
-      const left = slide.offsetLeft;
-      vp.scrollTo({ left, behavior: "smooth" });
+  // helper to compute step (width of one card viewport-slot)
+  const getStep = (el: HTMLDivElement) => {
+    return el.clientWidth / visibleCount;
+  };
+
+  // place initial scroll at middle batch start
+  useLayoutEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    // ensure layout settled
+    requestAnimationFrame(() => {
+      const step = getStep(el);
+      el.scrollLeft = total * step;
+      setReady(true);
+      // update dot immediately
+      const posInBatch = 0;
+      setCurrentDot(Math.round(posInBatch / step) % total);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleCount, total]);
+
+  // normalize a value into [0, total*step)
+  const modPosInBatch = (value: number, batchWidth: number) => {
+    return ((value % batchWidth) + batchWidth) % batchWidth;
+  };
+
+  // compute and set current dot in a rAF-safe way
+  const scheduleDotUpdate = useCallback(() => {
+    if (rafRef.current != null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const el = viewportRef.current;
+      if (!el) return;
+      const step = getStep(el);
+      const batchWidth = total * step;
+      // relative to middle batch start
+      const relative = el.scrollLeft - total * step;
+      const posInBatch = modPosInBatch(relative, batchWidth);
+      const idx = Math.round(posInBatch / step) % total;
+      setCurrentDot(idx);
+    });
+  }, [total, visibleCount]);
+
+  // infinite jump when reaching edges — keep threshold small to avoid mid-scroll jumps
+  const handleInfinite = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const step = getStep(el);
+    const max = el.scrollWidth - el.clientWidth;
+    const threshold = Math.max(6, step * 0.35); // allow small tolerance but not too big
+
+    // if near right end
+    if (el.scrollLeft >= max - threshold) {
+      // instant jump left by total steps
+      el.scrollLeft = el.scrollLeft - total * step;
+    } else if (el.scrollLeft <= threshold) {
+      // near left end -> instant jump right by total steps
+      el.scrollLeft = el.scrollLeft + total * step;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, visibleCount, isGrid]);
+  }, [total, visibleCount]);
 
-  // ---------- autoplay ----------
+  // core scroll listener
   useEffect(() => {
-    const start = () => {
-      stop();
-      // ALWAYS allow autoplay regardless of grid/visible count
-      autoplayRef.current = window.setInterval(() => {
-        if (!isPausedRef.current) setIndex((i) => (i + 1) % total);
-      }, 4000);
-    };
-    const stop = () => {
-      if (autoplayRef.current !== null) {
-        clearInterval(autoplayRef.current);
-        autoplayRef.current = null;
-      }
-    };
-    start();
-    return () => stop();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [total, isGrid]);
+    const el = viewportRef.current;
+    if (!el) return;
 
-  // ---------- keyboard navigation ----------
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % total);
-      if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + total) % total);
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [total]);
-
-  // ---------- click handlers ----------
-  const next = () => setIndex((i) => (i + 1) % total);
-  const prev = () => setIndex((i) => (i - 1 + total) % total);
-  const goTo = (i: number) => setIndex(() => Math.max(0, Math.min(total - 1, i)));
-
-  // ---------- update index on manual scroll (so dots / state stay in sync) ----------
-  useEffect(() => {
-    const vp = viewportRef.current;
-    if (!vp || isGrid) return;
-
-    let raf = 0;
     const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const vpCenter = vp.scrollLeft + vp.clientWidth / 2;
-        let nearest = 0;
-        let nearestDist = Infinity;
-        slideRefs.current.forEach((slide, idx) => {
-          if (!slide) return;
-          const slideCenter = slide.offsetLeft + slide.clientWidth / 2;
-          const dist = Math.abs(slideCenter - vpCenter);
-          if (dist < nearestDist) {
-            nearestDist = dist;
-            nearest = idx;
-          }
-        });
-        if (nearest !== index) {
-          setIndex(nearest);
-        }
+      // mark user interacting to avoid programmatic conflicts
+      isUserInteracting.current = true;
+      scheduleDotUpdate();
+      // schedule infinite check a bit later (allow momentum). Use rAF to run handleInfinite after layout update.
+      requestAnimationFrame(() => {
+        handleInfinite();
       });
+      // clear interacting mark after a short delay
+      window.clearTimeout((onScroll as any)._t);
+      (onScroll as any)._t = window.setTimeout(() => {
+        isUserInteracting.current = false;
+      }, 120);
     };
 
-    vp.addEventListener("scroll", onScroll, { passive: true });
+    el.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      vp.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
+      el.removeEventListener("scroll", onScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleCount, isGrid]);
+  }, [scheduleDotUpdate, handleInfinite]);
 
-  // ---------- pointer / focus handlers to pause autoplay ----------
-  const handlePointerEnter = () => (isPausedRef.current = true);
-  const handlePointerLeave = () => (isPausedRef.current = false);
-  const handleFocusIn = () => (isPausedRef.current = true);
-  const handleFocusOut = () => (isPausedRef.current = false);
+  // utility: ensure we are positioned in middle batch before doing smooth moves
+  const ensureMiddleBatch = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const step = getStep(el);
+    const batchWidth = total * step;
+    const relative = el.scrollLeft - total * step;
+    const posInBatch = modPosInBatch(relative, batchWidth);
+    // if we're already roughly inside middle batch (pos within [0,batchWidth)), do nothing.
+    // But due to clones, scrollLeft might be outside — we normalize to middle
+    el.scrollLeft = (total * step) + posInBatch;
+  }, [total, visibleCount]);
 
-  // ---------- button class ----------
-  const btnClass = (disabled: boolean) =>
-    `inline-flex items-center justify-center rounded-full shadow-lg transition ${
-      disabled
-        ? "opacity-40 pointer-events-none bg-white/10 text-white"
-        : "bg-gradient-to-tr from-amber-400 to-amber-500 text-green-900 hover:scale-105"
-    } w-12 h-12`;
+  // smooth scroll helpers
+  const scrollBySteps = useCallback((steps: number) => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const step = getStep(el);
+    ensureMiddleBatch(); // instant fix if needed
+    // smooth scroll by step * steps
+    el.scrollBy({ left: step * steps, behavior: "smooth" });
+  }, [ensureMiddleBatch, visibleCount]);
 
-  // ---------- compute slide width percent (each slide width relative to viewport) ----------
-  const slideWidthPercent = 100 / visibleCount;
+  const scrollToIndex = useCallback((index: number) => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const step = getStep(el);
+    // target = middle batch start + index*step
+    const target = (total * step) + index * step;
+    // ensure we are close to middle first to avoid weird jumps during smooth
+    ensureMiddleBatch();
+    el.scrollTo({ left: target, behavior: "smooth" });
+  }, [ensureMiddleBatch, total, visibleCount]);
+
+  const scrollNext = () => scrollBySteps(1);
+  const scrollPrev = () => scrollBySteps(-1);
+
+  // cleanup RAF on unmount
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   return (
     <section className="bg-white py-8 mx-auto max-w-[1773px] px-4 sm:px-6 lg:px-8 mt-5">
-      <div className="relative mx-auto w-full max-w-[1200px] md:max-w-[1400px] rounded-[28px] sm:rounded-[36px] lg:rounded-[43px] shadow-[3px_3px_6px_0_rgba(0,0,0,0.16)] bg-[rgba(4,104,56,1)] text-white p-6 sm:p-10 md:p-12 lg:p-16 overflow-visible -mt-[10%] z-10">
-        <h2 className="z-50 text-center text-4xl sm:text-5xl font-semibold mb-6 sm:mb-8 tracking-wide ">
+      <div className="relative mx-auto w-full max-w-[1400px] rounded-[28px] sm:rounded-[36px] lg:rounded-[43px] shadow-[3px_3px_6px_0_rgba(0,0,0,0.16)] bg-[rgba(4,104,56,1)] text-white p-6 sm:p-10 md:p-12 lg:p-16 overflow-visible -mt-[10%] z-10">
+        <h2 className="text-center text-4xl sm:text-5xl font-semibold mb-6 sm:mb-8 tracking-wide">
           Nuestros servicios
         </h2>
 
-        <div
-          className="relative"
-          onMouseEnter={handlePointerEnter}
-          onMouseLeave={handlePointerLeave}
-          onFocus={handleFocusIn}
-          onBlur={handleFocusOut}
-        >
-          {/* Prev — now shown on desktop (grid) too; still hidden on small screens due to `hidden md:flex` */}
-          <button
-            aria-label="Previous"
-            onClick={prev}
-            className={`${btnClass(false)} hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20`}
-            type="button"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-            </svg>
+        <div className="relative">
+          {/* Prev */}
+          <button onClick={scrollPrev} aria-label="Anterior"
+            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-amber-500 text-green-900 shadow-lg items-center justify-center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
           </button>
 
-          {/* VIEWPORT — carousel only when not grid */}
+          {/* Carousel – SCROLLBAR ১০০% লুকানো */}
           <div
             ref={viewportRef}
-            className={`w-full ${isGrid ? "" : "overflow-x-auto no-scrollbar"}`}
-            tabIndex={0}
-            role="region"
-            aria-roledescription="carousel"
-            aria-label="Nuestros servicios carousel"
-            style={{
-              WebkitOverflowScrolling: "touch",
-              scrollSnapType: isGrid ? undefined : "x mandatory",
-            }}
+            className="overflow-x-auto scroll-smooth
+                       [-ms-overflow-style:'none']      /* IE & Edge */
+                       [scrollbar-width:'none']         /* Firefox */
+                       [&::-webkit-scrollbar]:hidden"   /* Chrome, Safari, Opera */
+            style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
           >
-            <div
-              className={`
-                ${isGrid ? "grid grid-cols-4 gap-6 items-stretch" : "flex items-start gap-4"}
-              `}
-              style={{
-                // In grid mode children control width via grid; in carousel we use flex & slideWidthPercent
-              }}
-            >
-              {cards.map((card, i) => {
-                const imgSrc =
-                  typeof card.icon === "string" ? card.icon : (card.icon && (card.icon.src || card.icon.default)) || "";
+            <div className="flex gap-4 py-6">
+              {cards.map((card, i) => (
+                <div
+                  key={i}
+                  className="relative flex-shrink-0 flex flex-col justify-between rounded-xl border-2 border-amber-500 p-3 sm:p-4 bg-white/8 backdrop-blur-md shadow-md min-h-[200px] sm:min-h-[220px]"
+                  style={{ width: `${slidePercent}%`, scrollSnapAlign: visibleCount === 1 ? "center" : "start" }}
+                >
+                  <button aria-label="Favorito" className="absolute top-2 right-2 text-amber-400 text-sm hidden sm:block">♡</button>
 
-                return (
-                  <div
-                    key={i}
-                    ref={pushSlideRef}
-                    className="relative flex flex-col justify-between rounded-xl border-2 border-amber-500 p-4 sm:p-6 bg-white/8 backdrop-blur-md shadow-md min-h-[240px] sm:min-h-[260px] flex-shrink-0"
-                    style={
-                      isGrid
-                        ? {
-                            // grid: take full card space
-                            width: "100%",
-                            maxWidth: "100%",
-                            scrollSnapAlign: "start",
-                            transition: "transform 280ms ease, box-shadow 280ms ease",
-                          }
-                        : {
-                            flex: `0 0 ${slideWidthPercent}%`,
-                            maxWidth: `${slideWidthPercent}%`,
-                            scrollSnapAlign: visibleCount === 1 ? "center" : "start",
-                            transition: "transform 280ms ease, box-shadow 280ms ease",
-                          }
-                    }
-                    role="group"
-                    aria-roledescription="slide"
-                    aria-label={`Slide ${i + 1} of ${total}`}
-                  >
-                    {/* Favorite icon — hidden on mobile */}
-                    <button aria-label="Favorito" className="absolute top-3 right-3 text-amber-400 text-lg hidden sm:block">
-                      ♡
-                    </button>
-
-                    <div className="flex justify-center mb-3">
-                      <div className="w-[70%] sm:w-40 md:w-44 lg:w-48 aspect-[4/3] flex items-center justify-center">
-                        <img
-                          src={imgSrc}
-                          alt={card.title.replace(/\n/g, " ")}
-                          className="object-contain w-full h-full drop-shadow-md"
-                        />
-                      </div>
-                    </div>
-
-                    <h3 className="text-center whitespace-pre-line font-bold mb-2 tracking-wider text-amber-100 text-[clamp(0.9rem,1.6vw,1.15rem)]">
-                      {card.title}
-                    </h3>
-
-                    <p className="text-center text-green-50/90 px-2 text-[clamp(0.78rem,1.1vw,0.98rem)] mb-3 leading-relaxed">
-                      {card.desc}
-                    </p>
-
-                    {/* VER MÁS — hidden on mobile */}
-                    <div className="flex justify-center mt-auto hidden sm:flex">
-                      <button className="px-5 py-2 rounded-full bg-amber-500 text-green-900 font-bold text-xs shadow-md">
-                        VER MÁS
-                      </button>
+                  <div className="flex justify-center mb-3">
+                    <div className="w-[60%] sm:w-36 md:w-40 lg:w-44 aspect-[4/3] flex items-center justify-center">
+                      <img src={card.icon} alt={card.title.replace(/\n/g, " ")} className="object-contain drop-shadow-md" />
                     </div>
                   </div>
-                );
-              })}
+
+                  <h3 className="text-center whitespace-pre-line font-bold text-amber-100 text-[clamp(0.85rem,1.4vw,1.05rem)] tracking-wider">
+                    {card.title}
+                  </h3>
+
+                  <p className="text-center text-green-50/90 text-[clamp(0.72rem,1.0vw,0.9rem)] px-2 leading-relaxed mt-2">
+                    {card.desc}
+                  </p>
+
+                  <div className="flex justify-center mt-auto pt-3 hidden sm:flex">
+                    <button className="px-4 py-2 rounded-full bg-amber-500 text-green-900 font-bold text-xs shadow-md hover:bg-amber-400 transition">
+                      VER MÁS
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Next — now shown on desktop (grid) too; still hidden on small screens due to `hidden md:flex` */}
-          <button
-            aria-label="Next"
-            onClick={next}
-            className={`${btnClass(false)} hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20`}
-            type="button"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-            </svg>
+          {/* Next */}
+          <button onClick={scrollNext} aria-label="Siguiente"
+            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-amber-500 text-green-900 shadow-lg items-center justify-center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
           </button>
         </div>
 
-        {/* Dots (mobile only) — hide in grid mode */}
-        {!isGrid && (
-          <div className="mt-6 flex justify-center gap-2 md:hidden" role="tablist" aria-label="Seleccionar slide">
-            {cards.map((_, i) => (
+        {/* Dots – Mobile */}
+        <div className="mt-8 flex justify-center gap-3 md:hidden">
+          {baseCards.map((_, i) => {
+            const isActive = ready && i === currentDot;
+            return (
               <button
-                key={`dot-${i}`}
-                onClick={() => goTo(i)}
-                className={`w-3 h-3 rounded-full transition-transform duration-200 ${i === index ? "bg-amber-400 scale-125" : "bg-white/30"}`}
-                aria-label={`Ir al slide ${i + 1}`}
-                aria-current={i === index}
+                key={i}
+                onClick={() => scrollToIndex(i)}
+                className={`
+                  w-3 h-3 rounded-full transition-all duration-250
+                  ${isActive ? "bg-amber-400 scale-125" : "bg-green-300/60"}
+                `}
+                aria-label={`ir a ${i + 1}`}
               />
-            ))}
-          </div>
-        )}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
