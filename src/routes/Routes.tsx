@@ -30,12 +30,12 @@ import AdminCuba from "../dashboard/admin-dashboard/AdminCuba";
 import AdminConsolidations from "../dashboard/admin-dashboard/AdminConsolidations";
 import AdminSettings from "../dashboard/admin-dashboard/AdminSettings";
 import AdminRates from "../dashboard/admin-dashboard/AdminRates";
-import FAQPage from "../pages/FAQPage/FAQPage";
 import DashbordUser from "../dashboard/user-dashboard/DashbordUser";
 import Contact from "../pages/Contact/Contact";
 import Nuestros from "../pages/Nuestros/Nuestros";
 import CasilleroEscritorio from "../pages/casillero escritorio/casilleroescritorio";
 import CasilleroVirtual from "../CasilleroVirtual/CasilleroVirtual";
+import FaqMAin from "../pages/FAQPage/FaqMAin";
 
 const Routes = createBrowserRouter([
   {
@@ -66,7 +66,7 @@ const Routes = createBrowserRouter([
 
       {
         path: "/faqpage",
-        element: <FAQPage />,
+        element: <FaqMAin/>
       },
       {
         path: "/contacto",

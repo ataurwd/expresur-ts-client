@@ -41,7 +41,7 @@ const RecogidaHero: React.FC = () => {
 
 
           {/* RIGHT: Truck image - single className, responsive sizes, negative bottom margin only on lg, large z-index */}
-          <div className="z-[9999] md:mb-[-20%] lg:mb-[-25%]   relative flex justify-center lg:justify-end items-end pointer-events-none">
+          <div className="z-[99] md:mb-[-20%] lg:mb-[-25%]   relative flex justify-center lg:justify-end items-end pointer-events-none">
             <img
               src={HeroImg}
               alt="Servicios logísticos"
