@@ -41,7 +41,7 @@ const Rastrear = () => {
             </p>
           </div>
 
-          <form className="mt-6 flex flex-col sm:flex-row gap-4 xl:gap-6 items-stretch sm:items-center">
+          <form className="hidden md:block mt-6 flex flex-col sm:flex-row gap-4 xl:gap-6 items-stretch sm:items-center">
             <label htmlFor="tracking" className="sr-only">
               Número de rastreo
             </label>
@@ -96,7 +96,46 @@ const Rastrear = () => {
             "
           />
         </div>
+        
       </section>
+      
+          <form className="p-5 md:hidden mt-[-10%] flex flex-col sm:flex-row gap-4 xl:gap-6 items-stretch sm:items-center">
+            <label htmlFor="tracking" className="sr-only">
+              Número de rastreo
+            </label>
+
+            <input
+              id="tracking"
+              type="text"
+              placeholder="Número de rastreo"
+              className="
+                w-full
+                px-5 py-3
+                border border-gray-300
+                rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-orange-400
+                transition-all duration-200
+                text-sm sm:text-base
+                xl:w-[420px]
+              "
+            />
+
+            <button
+              type="submit"
+              className="
+                w-full sm:w-auto
+                px-8 py-3
+                bg-green-600 text-white
+                font-bold rounded-lg
+                hover:bg-green-700
+                active:scale-95
+                transition-all shadow-lg
+                text-sm sm:text-base
+              "
+            >
+              RASTREAR
+            </button>
+          </form>
     </div>
   );
 };
