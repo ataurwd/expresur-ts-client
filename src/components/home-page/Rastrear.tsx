@@ -15,8 +15,8 @@ const Rastrear = () => {
           items-start
         "
       >
-        {/* LEFT CONTENT */}
-        <div className="order-2 md:order-1 flex flex-col justify-start -mt-2 xl:-mt-10">
+        {/* LEFT CONTENT (TEXT) */}
+        <div className="order-1 md:order-1 flex flex-col justify-start -mt-2 xl:-mt-10">
           <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-semibold text-orange-500 leading-tight">
             Rastrear paquete
           </h1>
@@ -45,6 +45,7 @@ const Rastrear = () => {
             <label htmlFor="tracking" className="sr-only">
               Número de rastreo
             </label>
+
             <input
               id="tracking"
               type="text"
@@ -79,22 +80,20 @@ const Rastrear = () => {
           </form>
         </div>
 
-        {/* RIGHT IMAGE */}
-        {/* <div className="order-1 md:order-2 flex justify-center items-center h-full">
+        {/* RIGHT IMAGE (BIGGER IMAGE) */}
+        <div className="order-2 md:order-2 flex items-center justify-center h-full">
           <img
             src={rastrearImg}
             alt="Rastrear paquete"
             loading="lazy"
-            className="w-full md:w-[1050px] object-contain"
-          />
-        </div> */}
-
-        <div className="order-1 md:order-2 flex items-center justify-center h-full">
-          <img
-            src={rastrearImg}
-            alt="Rastrear paquete"
-            loading="lazy"
-            className="w-auto md:w-[1550px] max-w-full object-contain"
+            className="
+             w-[130%]
+              lg:mt-[-20%]
+              sm:w-full
+              md:w-[700px]
+              max-w-none
+              object-contain
+            "
           />
         </div>
       </section>
