@@ -88,6 +88,7 @@ const Rastrear = () => {
             loading="lazy"
             className="
              w-[130%]
+             lg:w-[170%]
               lg:mt-[-20%]
               sm:w-full
               md:w-[700px]
