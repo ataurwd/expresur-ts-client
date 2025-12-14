@@ -16,7 +16,7 @@ const Seccion: React.FC = () => {
       {/* ---------------- RIGHT TEXT CONTENT ---------------- */}
       <div className="w-full sm:w-auto sm:max-w-xl text-white sm:ml-auto z-10">
         {/* TITLE */}
-        <h1 className="font-[Avenir Next LT Pro] text-4xl sm:text-5xl md:text-6xl lg:text-[82px] leading-tight mb-4 md:mb-6">
+        <h1 className="text-center text-5xl font-[Avenir Next LT Pro] text-4xl sm:text-5xl md:text-6xl lg:text-[82px] leading-tight mb-4 md:mb-6">
           Sección <br /> de Recogida
         </h1>
 
@@ -39,7 +39,7 @@ const Seccion: React.FC = () => {
 
         {/* MOBILE IMAGE */}
         <div className="block sm:hidden mt-8 flex justify-center">
-          <img src={car} alt="Illustration" className="w-[260px] h-auto object-contain" />
+          <img src={car} alt="Illustration" className="w-[100%] h-auto object-contain" />
         </div>
       </div>
     </div>
