@@ -9,7 +9,7 @@ const Seccion: React.FC = () => {
         <img
           src={car}
           alt="Illustration"
-          className="w-[300px] h-[258px] sm:w-[500px] sm:h-[344px] md:w-[600px] md:h-[516px] lg:w-[936.9px] lg:h-[805.79px] object-contain"
+          className="w-[300px] h-[258px] sm:w-[500px] sm:h-[344px] md:w-[600px] md:h-[516px] lg:w-[800px] lg:h-[805.79px] object-contain"
         />
       </div>
 
