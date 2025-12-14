@@ -28,7 +28,7 @@ const RecogidaHero: React.FC = () => {
           {/* LEFT: Title */}
     <h1
   className="
-    text-white font-semibold tracking-tight leading-[1.05]
+   text-center text-[50px] text-white font-semibold tracking-tight leading-[1.05]
     text-[32px] sm:text-[42px] md:text-[55px] lg:text-[75px] xl:text-[90px]
     whitespace-pre
     lg:mt-[10%]
@@ -41,7 +41,7 @@ const RecogidaHero: React.FC = () => {
 
 
           {/* RIGHT: Truck image - single className, responsive sizes, negative bottom margin only on lg, large z-index */}
-          <div className="z-[99] md:mb-[-20%] lg:mb-[-25%]   relative flex justify-center lg:justify-end items-end pointer-events-none">
+          <div className="z-[99] md:mb-[-20%] lg:mb-[-25%] mt-3  relative flex justify-center lg:justify-end items-end pointer-events-none">
             <img
               src={HeroImg}
               alt="Servicios logísticos"
