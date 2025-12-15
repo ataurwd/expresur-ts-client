@@ -8,7 +8,7 @@ const Contact = () => {
       <section
         className="md:hidden w-full pt-12 pb-24 px-6"
         style={{
-          backgroundImage: `url(${HeroBg})`,
+          backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -81,7 +81,7 @@ const Contact = () => {
       <div
         className="hidden md:block w-full h-[496px] px-4 flex items-center justify-center relative"
         style={{
-          backgroundImage: `url(${HeroBg})`,
+          backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

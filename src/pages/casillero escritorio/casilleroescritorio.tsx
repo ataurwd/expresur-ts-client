@@ -9,7 +9,7 @@ const casilleroescritorio = () => {
       <div
         className="md:hidden w-full min-h-screen flex flex-col items-center justify-start pt-8 px-4"
         style={{
-          backgroundImage: `url(${HeroBg})`,
+          backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -82,7 +82,7 @@ const casilleroescritorio = () => {
         <div
           className="w-full h-[420px] md:h-[496px] px-4 flex items-center justify-center relative"
           style={{
-            backgroundImage: `url(${HeroBg})`,
+            backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',

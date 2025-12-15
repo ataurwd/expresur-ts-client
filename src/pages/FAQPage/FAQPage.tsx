@@ -124,7 +124,7 @@ const FAQPage: React.FC = () => {
       <div
         className="absolute inset-x-0 top-0 h-[60%]"
         style={{
-          backgroundImage: `url(${HeroBg})`,
+          backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
