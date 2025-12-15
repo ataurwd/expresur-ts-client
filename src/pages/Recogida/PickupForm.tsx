@@ -39,7 +39,7 @@ const PickupForm: React.FC = () => {
       {/* Bigger title for large screens */}
       <h2
         className="
-         mb-16 text-center text-orange-400 font-semibold tracking-tight mb-10
+         mb-16 text-center text-orange-400 font-semibold tracking-tight
           text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl
         "
       >
@@ -51,9 +51,7 @@ const PickupForm: React.FC = () => {
           onSubmit={handleSubmit}
           className="
             w-full 
-            max-w-screen-xl           /* MUCH wider */
-            bg-green-800 border-[3px] border-orange-400 rounded-3xl 
-            shadow-[0_10px_0_rgba(243,152,30,0.25)]
+            bg-green-800 rounded-3xl 
             p-8 sm:p-12 lg:p-16 xl:p-20 
             grid grid-cols-1 md:grid-cols-2 
             gap-6 md:gap-10
@@ -67,9 +65,9 @@ const PickupForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Nombre"
               className="
-                w-full rounded-full py-4 px-7 
+                w-full rounded-xl py-4 px-7 
                 bg-transparent placeholder:text-orange-200 text-white
-                border border-orange-400
+                border-2 border-orange-400
                 focus:outline-none focus:ring-2 focus:ring-orange-300
                 text-base sm:text-lg lg:text-xl        /* Bigger on lg */
               "
@@ -81,9 +79,9 @@ const PickupForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Teléfono"
               className="
-                w-full rounded-full py-4 px-7 
+                w-full rounded-xl py-4 px-7 
                 bg-transparent placeholder:text-orange-200 text-white
-                border border-orange-400
+                border-2 border-orange-400
                 focus:outline-none focus:ring-2 focus:ring-orange-300
                 text-base sm:text-lg lg:text-xl
               "
@@ -95,9 +93,9 @@ const PickupForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Dirección"
               className="
-                w-full rounded-full py-4 px-7 
+                w-full rounded-xl py-4 px-7 
                 bg-transparent placeholder:text-orange-200 text-white
-                border border-orange-400
+                border-2 border-orange-400
                 focus:outline-none focus:ring-2 focus:ring-orange-300
                 text-base sm:text-lg lg:text-xl
               "
@@ -109,9 +107,9 @@ const PickupForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Ciudad/Zona"
               className="
-                w-full rounded-full py-4 px-7 
+                w-full rounded-xl py-4 px-7 
                 bg-transparent placeholder:text-orange-200 text-white
-                border border-orange-400
+                border-2 border-orange-400
                 focus:outline-none focus:ring-2 focus:ring-orange-300
                 text-base sm:text-lg lg:text-xl
               "
@@ -126,9 +124,9 @@ const PickupForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Fecha"
               className="
-                w-full rounded-full py-4 px-7 
+                w-full rounded-xl py-4 px-7 
                 bg-transparent placeholder:text-orange-200 text-white
-                border border-orange-400
+                border-2 border-orange-400
                 focus:outline-none focus:ring-2 focus:ring-orange-300
                 text-base sm:text-lg lg:text-xl
               "
@@ -142,9 +140,9 @@ const PickupForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Franja horaria"
               className="
-                w-full rounded-full py-4 px-7 
+                w-full rounded-xl py-4 px-7 
                 bg-transparent placeholder:text-orange-200 text-white
-                border border-orange-400
+                border-2 border-orange-400
                 focus:outline-none focus:ring-2 focus:ring-orange-300
                 text-base sm:text-lg lg:text-xl
               "
@@ -156,9 +154,9 @@ const PickupForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Tipo de paquete"
               className="
-                w-full rounded-full py-4 px-7 
+                w-full rounded-xl py-4 px-7 
                 bg-transparent placeholder:text-orange-200 text-white
-                border border-orange-400
+                border-2 border-orange-400
                 focus:outline-none focus:ring-2 focus:ring-orange-300
                 text-base sm:text-lg lg:text-xl
               "
@@ -168,8 +166,8 @@ const PickupForm: React.FC = () => {
               <button
                 type="submit"
                 className="
-                  w-full md:w-auto 
-                  rounded-full py-4 px-10 
+                  w-full 
+                  rounded-xl py-4 px-10 
                   bg-orange-400 text-white font-semibold tracking-wide
                   shadow-md hover:shadow-lg transition
                   text-lg lg:text-2xl          /* Bigger on large screens */
