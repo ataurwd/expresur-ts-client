@@ -1,11 +1,20 @@
 import React from 'react';
-import boxImage from '../../assets/Grupo-1640.png'; 
+import boxImage from '../../assets/Grupo-1640.png';
+import HeroBg from '../../assets/HeroBg.png';
 
 const casilleroescritorio = () => {
   return (
        <>
       {/* ====================== MOBILE VERSION (< md) ====================== */}
-      <div className="md:hidden w-full min-h-screen bg-gradient-to-r from-green-900 via-green-800 to-orange-500 flex flex-col items-center justify-start pt-8 px-4">
+      <div
+        className="md:hidden w-full min-h-screen flex flex-col items-center justify-start pt-8 px-4"
+        style={{
+          backgroundImage: `url(${HeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
         
         {/* Green Card Container */}
         <div className="w-full max-w-md bg-[#005c35] rounded-[30px] shadow-2xl overflow-hidden p-8 text-white">
@@ -70,8 +79,15 @@ const casilleroescritorio = () => {
 
       {/* ====================== DESKTOP / TABLET VERSION (≥ md) ====================== */}
       <div className="hidden md:block">
-        <div className="w-full h-[420px] md:h-[496px] bg-gradient-to-r from-green-900 via-green-800 to-orange-500 px-4 flex items-center justify-center relative">
-        </div>
+        <div
+          className="w-full h-[420px] md:h-[496px] px-4 flex items-center justify-center relative"
+          style={{
+            backgroundImage: `url(${HeroBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
 
         <div className="relative w-full max-w-6xl mx-auto z-10">
           <div className="bg-[#005c35] rounded-[30px] shadow-2xl overflow-hidden relative p-6 sm:p-8 md:p-12 lg:p-16 text-white -mt-40 sm:-mt-56 md:-mt-72 lg:-mt-96">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react"; 
 import { Helmet } from "react-helmet";
+import HeroBg from "../../assets/HeroBg.png";
 
 /* ---------------- TYPES ---------------- */
 type FAQ = {
@@ -120,7 +121,15 @@ const FAQPage: React.FC = () => {
         <title>FAQ | EXPRESUR</title>
       </Helmet>
 
-      <div className="absolute inset-x-0 top-0 h-[60%] bg-gradient-to-r from-green-800 to-orange-500" />
+      <div
+        className="absolute inset-x-0 top-0 h-[60%]"
+        style={{
+          backgroundImage: `url(${HeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
       <div className="max-w-[1200px] mx-auto relative z-10">
         <div className="bg-[#026432] rounded-3xl px-6 md:px-16 py-14 shadow-2xl">

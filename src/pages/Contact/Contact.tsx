@@ -1,10 +1,19 @@
 import React from "react";
+import HeroBg from "../../assets/HeroBg.png";
 
 const Contact = () => {
   return (
     <>
       {/* ================= MOBILE VERSION ================= */}
-      <section className="md:hidden w-full bg-green-900 pt-12 pb-24 px-6">
+      <section
+        className="md:hidden w-full pt-12 pb-24 px-6"
+        style={{
+          backgroundImage: `url(${HeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
         <div className="max-w-md mx-auto">
 
           {/* Title */}
@@ -69,7 +78,15 @@ const Contact = () => {
       </section>
 
       {/* ================= DESKTOP VERSION (UNCHANGED) ================= */}
-      <div className="hidden md:block w-full h-[496px] bg-gradient-to-r from-green-900 via-green-800 to-orange-500 px-4 flex items-center justify-center relative" />
+      <div
+        className="hidden md:block w-full h-[496px] px-4 flex items-center justify-center relative"
+        style={{
+          backgroundImage: `url(${HeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
       <div className="hidden md:block w-full px-4 -mt-72 lg:-mt-96">
         <div className="max-w-3xl lg:max-w-5xl mx-auto bg-green-800/95 backdrop-blur-sm rounded-3xl shadow-2xl p-10 lg:p-12">
@@ -96,7 +113,7 @@ const Contact = () => {
             </div>
 
             <div className="md:col-span-2 flex justify-center mt-6">
-              <button className="px-12 py-4 bg-orange-500 text-white font-semibold text-lg  w-64">
+              <button className="px-12 py-4 bg-orange-500 text-white rounded-2xl font-semibold text-lg  w-64">
                 ENVIAR MENSAJE
               </button>
             </div>
