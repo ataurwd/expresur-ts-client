@@ -9,9 +9,9 @@ const Nuestros = () => {
     <div>
       <Helmet><title> Nuestros |  EXPRESUR</title></Helmet>
       <NueHero />
-      <div className="bg-green-700 md:p-20 px-5 md:mx-20 mx-5 rounded-xl">
-        <NueSub />
-        <div className="border-b-2 border-orange-400 mb-10 md:mb-20"></div>
+      <div >
+        
+        <div className=" mb-10 md:mb-20"></div>
         <NueCard1 />
       </div>
       <NueTimeline />
