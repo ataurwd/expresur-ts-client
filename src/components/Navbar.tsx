@@ -26,15 +26,19 @@ const Navbar: React.FC = () => {
 
   const topNav = [
     { path: "/nuestros", key: "Nuestros", label: "Nuestros" },
-    { path: "/quiénes-somos", key: "quienes_somos", label: "Quiénes Somos" },
-    { path: "/faqpage", key: "faq", label: "FAQ" },
-    { path: "/recogida", key: "recogida", label: "Recogida" },
-    { path: "/contacto", key: "contacto", label: "Contacto" },
     {
       path: "/casilleroescritorio",
       key: "CasilleroEscritorio",
       label: "Casillero Escritorio",
     },
+    { path: "/recogida", key: "recogida", label: "Recogida" },
+    { path: "/contacto", key: "contacto", label: "Contacto" },
+    { path: "/faqpage", key: "faq", label: "FAQ" },
+    { path: "/quiénes-somos", key: "quienes_somos", label: "Quiénes Somos" },
+
+
+
+
     // { path: "/CasilleroVirtual", key: "CasilleroVirtual", label: "Virtual Locker" }
   ];
 
@@ -131,10 +135,9 @@ const Navbar: React.FC = () => {
                   key={n.path}
                   to={n.path}
                   className={({ isActive }) =>
-                    `text-base font-semibold transition ${
-                      isActive
-                        ? "text-[#046838] underline decoration-[#046838] underline-offset-4"
-                        : "text-gray-700 hover:text-[#046838]"
+                    `text-base font-semibold transition ${isActive
+                      ? "text-[#046838] underline decoration-[#046838] underline-offset-4"
+                      : "text-gray-700 hover:text-[#046838]"
                     }`
                   }
                 >
@@ -149,11 +152,10 @@ const Navbar: React.FC = () => {
               {/* TRACK BUTTON */}
               <NavLink to="/rasterear">
                 <button
-                  className={`bg-green-800 hover:bg-[#035230] text-white w-36 md:w-52 text-[10px] md:text-[15px] font-semibold px-4 py-2 rounded-full shadow transition ${
-                    location.pathname === "/rasterear"
+                  className={`bg-green-800 hover:bg-[#035230] text-white w-36 md:w-52 text-[10px] md:text-[15px] font-semibold px-4 py-2 rounded-full shadow transition ${location.pathname === "/rasterear"
                       ? "ring-2 ring-[#046838]"
                       : ""
-                  }`}
+                    }`}
                 >
                   {t ? t("rastrear") : "Rastrear"}
                 </button>
