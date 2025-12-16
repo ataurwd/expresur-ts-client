@@ -35,6 +35,9 @@ import RecogidaPage from "../pages/Recogida/Recogida";
 import Login from "../users/Login";
 import Register from "../users/Register";
 import Users from "./../dashboard/admin-dashboard/Users";
+import AdminLocker from "../dashboard/admin-dashboard/AdminLocker";
+import AdminLogistic from "../dashboard/admin-dashboard/AdminLogistic";
+import AdminQrCode from "../dashboard/admin-dashboard/AdminQrCode";
 
 const Routes = createBrowserRouter([
   {
@@ -195,6 +198,21 @@ const Routes = createBrowserRouter([
         path: "admin-tracking",
         element: <AdminTracking />,
       },
+      {
+        path: "admin-locker",
+        element: <AdminLocker/>,
+      },
+      {
+        path: "logistic-group",
+        element: <AdminLogistic/>,
+      },
+      {
+        path: "qr-scanning",
+        element: <AdminQrCode/>,
+      },
+      {
+        
+      }
     ],
   },
 ]);
