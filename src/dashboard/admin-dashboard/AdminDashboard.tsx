@@ -32,6 +32,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Logout,
+  Lock,
+  QrCode,
 } from "@mui/icons-material";
 import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
 
@@ -49,8 +51,8 @@ const collapsedWidth = 65;
 /* menu items */
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
-  { text: "Users", icon: <PeopleIcon />, path: "/dashboard/admin-users" },
   { text: "Packages", icon: <InventoryIcon />, path: "/dashboard/admin-packages" },
+  {text:"Locker", icon: <Lock/>, path: "/dashboard/admin-locker"},
   {
     text: "Consolidations",
     icon: <ConsolidateIcon />,
@@ -61,7 +63,9 @@ const adminMenuItems = [
     icon: <LocalShippingIcon />,
     path: "/dashboard/admin-shipments",
   },
-  //{ text: "Cuba Shipments", icon: <FlightIcon />, path: "/dashboard/admin-cuba" },
+  { text: "Logistic Group", icon: <FlightIcon />, path: "/dashboard/logistic-group" },
+  {text: "QR Scanning", icon: <QrCode/>, path: "/dashboard/qr-scanning"},
+  { text: "Users", icon: <PeopleIcon />, path: "/dashboard/admin-users" },
   // {
   //   text: "Pickup Requests",
   //   icon: <LocalTaxiIcon />,
@@ -69,7 +73,7 @@ const adminMenuItems = [
   // },
   { text: "Payments", icon: <PaymentIcon />, path: "/dashboard/admin-payments" },
   //{ text: "Rates", icon: <RatesIcon />, path: "/dashboard/admin-rates" },
-  { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/admin-tracking" },
+  // { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/admin-tracking" },
   { text: "Reports", icon: <ReportsIcon />, path: "/dashboard/admin-reports" },
   { text: "Settings", icon: <SettingsIcon />, path: "/dashboard/admin-settings" },
 ];
