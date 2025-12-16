@@ -1,358 +1,254 @@
 import React, { useMemo, useState } from "react";
-import { Helmet } from "react-helmet";
+import { 
+  Search, Plus, Calendar, ChevronDown, Check, 
+  Info, X, Package as PackageIcon, DollarSign, 
+  Box, ChevronLeft, ChevronRight, MoreHorizontal 
+} from "lucide-react";
 
 /** ---------------- Types ---------------- */
-type Package = {
-  id: string;
-  name: string;
-  price: string;
+type PackageData = {
+  id: string; // Internal ID
+  trackingId: string; // ORD-1001
+  itemName: string;
+  itemDesc: string;
+  customerName: string;
+  customerPhone: string;
   category: string;
-  storage: string;
-  users: string;
-  speed: string;
-  security: string;
-  support: string;
-  description: string;
+  price: number;
   created: string;
-  status: "active" | "inactive";
+  status: "Delivered" | "In Transit" | "Cancelled";
 };
 
-/** --------------- Fake data (same as provided) --------------- */
-const PACKAGES: Package[] = [
-  { id: "PKG-1001", name: "Plan Básico", price: "39 USD/mes", category: "Pequeñas Empresas", storage: "20 GB", users: "3 Usuarios", speed: "Normal", security: "Protección estándar", support: "Soporte por Email", description: "Ideal para pequeños negocios y emprendedores en Cuba.", created: "2024-01-12", status: "active" },
-  { id: "PKG-1002", name: "Plan Inicial", price: "49 USD/mes", category: "Pequeñas Empresas", storage: "50 GB", users: "5 Usuarios", speed: "Alta", security: "Firewall Básico", support: "Email + Chat", description: "Paquete con herramientas esenciales para la gestión diaria.", created: "2024-02-10", status: "active" },
-  { id: "PKG-1003", name: "Plan Empresarial", price: "129 USD/mes", category: "Empresas Medianas", storage: "200 GB", users: "25 Usuarios", speed: "Premium", security: "Firewall Avanzado", support: "Soporte Prioritario", description: "Diseñado para empresas en crecimiento.", created: "2024-03-05", status: "active" },
-  { id: "PKG-1004", name: "Plan Premium", price: "249 USD/mes", category: "Empresas Medianas", storage: "500 GB", users: "Ilimitados", speed: "Ultra", security: "Auditorías + Seguridad Avanzada", support: "Soporte 24/7", description: "Escalabilidad y automatización avanzada.", created: "2024-04-12", status: "active" },
-  { id: "PKG-1005", name: "Suite Corporativa", price: "Precio Personalizado", category: "Grandes Organizaciones", storage: "Ilimitado", users: "Ilimitados", speed: "Ultra Max", security: "Cumplimiento GDPR + SOC2", support: "Equipo Dedicado 24/7", description: "Infraestructura dedicada para grandes compañías.", created: "2023-11-18", status: "active" },
-  { id: "PKG-1006", name: "Plan Avanzado Internacional", price: "299 USD/mes", category: "Empresas Internacionales", storage: "1 TB", users: "50 Usuarios", speed: "Ultra Global", security: "Cifrado Multi-Región", support: "Soporte Multilingüe", description: "Conectividad global para operaciones fuera de Cuba.", created: "2024-06-01", status: "active" },
-  { id: "PKG-1007", name: "Starter Light", price: "19 USD/mes", category: "Micro", storage: "5 GB", users: "1 Usuario", speed: "Básica", security: "SSL", support: "Email", description: "Muy económico para pruebas.", created: "2024-07-05", status: "inactive" },
-  { id: "PKG-1008", name: "SMB Growth", price: "79 USD/mes", category: "Pequeñas Empresas", storage: "120 GB", users: "15 Usuarios", speed: "Mejorada", security: "Firewall", support: "Email + Chat", description: "Ideal para pymes que crecen rápido.", created: "2024-08-13", status: "active" },
-  { id: "PKG-1009", name: "Cross-Border", price: "159 USD/mes", category: "Empresas Internacionales", storage: "300 GB", users: "40 Usuarios", speed: "Premium", security: "Cifrado", support: "Soporte Multilingüe", description: "Optimizado para envíos y operaciones internacionales.", created: "2024-09-20", status: "active" },
-  { id: "PKG-1010", name: "Enterprise Plus", price: "499 USD/mes", category: "Grandes Organizaciones", storage: "2 TB", users: "Ilimitados", speed: "Ultra Max", security: "Enterprise Security", support: "Cuenta Dedicada", description: "Solución empresarial completa.", created: "2024-10-30", status: "active" },
-  { id: "PKG-1011", name: "NonProfit Plan", price: "29 USD/mes", category: "ONG", storage: "100 GB", users: "10 Usuarios", speed: "Normal", security: "Protección estándar", support: "Soporte Email", description: "Descuentos para ONGs y organizaciones sociales.", created: "2024-11-21", status: "active" },
-  { id: "PKG-1012", name: "Local SMB", price: "59 USD/mes", category: "Pequeñas Empresas", storage: "80 GB", users: "10 Usuarios", speed: "Alta", security: "Firewall", support: "Soporte Prioritario", description: "Fuerte en control y analíticas locales.", created: "2024-12-02", status: "active" },
+/** ---------------- Fake Data (Matches Image) ---------------- */
+const PACKAGES: PackageData[] = [
+  { id: "1", trackingId: "ORD-1001", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: 19, created: "2024-07-05", status: "Delivered" },
+  { id: "2", trackingId: "ORD-1003", itemName: "Local SMB", itemDesc: "Strong in local control and analytics.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Small Businesses", price: 29, created: "2024-11-21", status: "In Transit" },
+  { id: "3", trackingId: "ORD-1005", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: 19, created: "2024-07-05", status: "Cancelled" },
+  { id: "4", trackingId: "ORD-1006", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: 19, created: "2024-07-05", status: "In Transit" },
+  { id: "5", trackingId: "ORD-1007", itemName: "Enterprise Pack", itemDesc: "Full scale solution.", customerName: "John Doe", customerPhone: "+1 555 019 283", category: "Enterprise", price: 99, created: "2024-08-10", status: "Delivered" },
+  { id: "6", trackingId: "ORD-1008", itemName: "Micro Test", itemDesc: "Single item shipment.", customerName: "Jane Smith", customerPhone: "+44 7700 900077", category: "Micro", price: 12, created: "2024-09-15", status: "Delivered" },
+  { id: "7", trackingId: "ORD-1009", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: 19, created: "2024-07-05", status: "Delivered" },
 ];
 
 /** ---------------- Helpers ---------------- */
 function fmtDate(d: string) {
-  return new Date(d).toLocaleDateString();
+  return new Date(d).toLocaleDateString("en-US", { month: 'numeric', day: 'numeric', year: 'numeric' });
 }
 
-function parseNumericPrice(price: string) {
-  const m = price.match(/[\d,.]+/);
-  if (!m) return Number.POSITIVE_INFINITY;
-  return Number(String(m[0]).replace(/,/g, ""));
-}
+export default function PackageManagement() {
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Status");
 
-/** -------------- Responsive Component -------------- */
-export default function AdminPackagesResponsive() {
-  const [query, setQuery] = useState<string>("");
-  const [page, setPage] = useState<number>(1);
-  const [perPage] = useState<number>(6);
-  const [sortBy, setSortBy] = useState<keyof Package | "price">("name");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [selected, setSelected] = useState<Package | null>(null);
-
-  const categories = useMemo(() => ["all", ...Array.from(new Set(PACKAGES.map(p => p.category)))], []);
-  const statuses = useMemo(() => ["all", "active", "inactive"], []);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let list = PACKAGES.filter(p => {
-      const matchesQ = p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
-      const matchesCategory = categoryFilter === "all" || p.category === categoryFilter;
-      const matchesStatus = statusFilter === "all" || p.status === statusFilter;
-      return matchesQ && matchesCategory && matchesStatus;
+  // Filtering Logic
+  const filteredData = useMemo(() => {
+    return PACKAGES.filter(p => {
+      const matchesQuery = 
+        p.itemName.toLowerCase().includes(query.toLowerCase()) || 
+        p.trackingId.toLowerCase().includes(query.toLowerCase()) ||
+        p.customerName.toLowerCase().includes(query.toLowerCase());
+      
+      const matchesStatus = statusFilter === "All Status" || p.status === statusFilter;
+      
+      return matchesQuery && matchesStatus;
     });
-
-    // sort
-    list = list.sort((a, b) => {
-      if (sortBy === "price") {
-        const pa = parseNumericPrice(a.price);
-        const pb = parseNumericPrice(b.price);
-        return sortDir === "asc" ? pa - pb : pb - pa;
-      }
-      const aVal = String((a as any)[sortBy]);
-      const bVal = String((b as any)[sortBy]);
-      return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-    });
-
-    return list;
-  }, [query, categoryFilter, statusFilter, sortBy, sortDir]);
-
-  const total = filtered.length;
-  const pageCount = Math.max(1, Math.ceil(total / perPage));
-  const start = (page - 1) * perPage;
-  const paged = filtered.slice(start, start + perPage);
-
-  function toggleSort(col: keyof Package | "price") {
-    if (sortBy === col) setSortDir(prev => prev === "asc" ? "desc" : "asc");
-    else { setSortBy(col as any); setSortDir("asc"); }
-  }
+  }, [query, statusFilter]);
 
   return (
-    <div className="p-6 bg-[#f7faf7] min-h-screen">
-      <Helmet><title>AdminPackages | EXPRESUR</title></Helmet>
-      <div className=" mx-auto">
-
-        {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800">Packages</h2>
-            <p className="text-sm text-gray-500">Shining Company — Paquetes (verde dashboard)</p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
-            <input
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); setPage(1); }}
-              placeholder="Buscar por nombre, categoría..."
-              className="px-3 py-2 border rounded-md shadow-sm w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-[#166534]"
+    <div className="min-h-screen bg-[#f8f9fa] p-8 font-sans text-gray-800">
+      
+      {/* --- HEADER --- */}
+      <div className="flex justify-between items-start mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Package Management</h1>
+          <p className="text-gray-400 mt-1">View and manage all packages with detailed analytics</p>
+        </div>
+        
+        {/* User Profile */}
+        <div className="flex items-center gap-3 bg-white px-3 py-2 rounded-full shadow-sm">
+           <img 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
+              alt="User" 
+              className="w-10 h-10 rounded-full bg-green-100"
             />
-            <div className="flex gap-2">
-              <button
-                onClick={() => { setQuery(""); setCategoryFilter("all"); setStatusFilter("all"); setPage(1); }}
-                className="px-3 py-2 border rounded-md"
-              >
-                Reset
-              </button>
-
-              <button
-                onClick={() => alert("Nueva acción: Create package (simulado)")}
-                className="px-4 py-2 bg-[#166534] text-white rounded-md shadow hover:bg-[#14572b] transition"
-              >
-                New Package
-              </button>
+            <div className="hidden md:block pr-2">
+              <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
+              <p className="text-xs text-gray-400">tyrion@example.com</p>
             </div>
+        </div>
+      </div>
+
+      {/* --- KPI CARDS --- */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <StatCard title="Total Packages" value="12" icon={<PackageIcon size={20} />} />
+        <StatCard title="Active Packages" value="11" icon={<Box size={20} />} />
+        <StatCard title="Total Profit" value="$1,440" icon={<DollarSign size={20} />} />
+      </div>
+
+      {/* --- ACTIONS BAR --- */}
+      <div className="flex flex-col xl:flex-row justify-between items-center gap-4 mb-6">
+        
+        {/* Left Side Filters */}
+        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+          {/* Active Tab */}
+          <button className="bg-[#054d35] text-white px-4 py-2 rounded-lg text-sm font-medium">All</button>
+          
+          {/* Status Dropdown */}
+          <div className="relative group">
+            <button className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition">
+              {statusFilter} <ChevronDown size={16} />
+            </button>
+            {/* Simple Dropdown Mockup */}
+            <div className="absolute top-full left-0 mt-2 w-40 bg-white shadow-lg rounded-lg hidden group-hover:block border z-10">
+              {["All Status", "Delivered", "In Transit", "Cancelled"].map(s => (
+                <div key={s} onClick={() => setStatusFilter(s)} className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm">{s}</div>
+              ))}
+            </div>
+          </div>
+
+          {/* Date Picker Mockup */}
+          <div className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm">
+            01/11/24 <Calendar size={16} className="text-gray-400" />
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative flex-1 xl:flex-none">
+            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Tracking number, customer..." 
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-600 w-full xl:w-80"
+            />
           </div>
         </div>
 
-        {/* KPI cards (small) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Total Paquetes</div>
-            <div className="text-2xl font-bold text-[#166534]">{PACKAGES.length}</div>
-            <div className="text-xs text-gray-400 mt-1">Paquetes en catálogo</div>
-          </div>
+        {/* Right Side Action */}
+        <button className="bg-[#054d35] hover:bg-[#043b29] text-white px-6 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition w-full xl:w-auto justify-center">
+          <Plus size={18} /> Add Package
+        </button>
+      </div>
 
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Activos</div>
-            <div className="text-2xl font-bold text-green-600">{PACKAGES.filter(p=>p.status==="active").length}</div>
-            <div className="text-xs text-gray-400 mt-1">Paquetes disponibles</div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Categorías</div>
-            <div className="text-2xl font-bold text-[#166534]">{categories.length - 1}</div>
-            <div className="text-xs text-gray-400 mt-1">Tipos de paquetes</div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Ingresos (ej.)</div>
-            <div className="text-2xl font-bold text-indigo-700">$ { (PACKAGES.length * 120).toLocaleString() }</div>
-            <div className="text-xs text-gray-400 mt-1">Estimado (fake)</div>
-          </div>
-        </div>
-
-        {/* Filters row */}
-        <div className="bg-white rounded-lg p-4 shadow mb-4">
-          <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-            <div className="flex gap-3 flex-wrap items-center">
-              <div>
-                <label className="text-xs text-gray-500">Categoría</label>
-                <select value={categoryFilter} onChange={(e)=>{ setCategoryFilter(e.target.value); setPage(1); }} className="ml-2 px-3 py-2 border rounded-md">
-                  {categories.map(c => <option key={c} value={c}>{c === "all" ? "Todas" : c}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs text-gray-500">Estado</label>
-                <select value={statusFilter} onChange={(e)=>{ setStatusFilter(e.target.value); setPage(1); }} className="ml-2 px-3 py-2 border rounded-md">
-                  {statuses.map(s => <option key={s} value={s}>{s === "all" ? "Todos" : s}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs text-gray-500">Ordenar por</label>
-                <select value={String(sortBy)} onChange={(e)=>{ const v = e.target.value as any; setSortBy(v); setSortDir("asc"); }} className="ml-2 px-3 py-2 border rounded-md">
-                  <option value="name">Nombre</option>
-                  <option value="created">Fecha</option>
-                  <option value="price">Precio</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex gap-3 items-center">
-              <div className="text-sm text-gray-500">Vista rápida</div>
-              <button onClick={()=>{ setSortDir('asc'); setSortBy('name'); }} className="px-3 py-2 border rounded-md">A→Z</button>
-              <button onClick={()=>{ setSortDir('desc'); setSortBy('name'); }} className="px-3 py-2 border rounded-md">Z→A</button>
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop table (md and up) */}
-        <div className="hidden md:block bg-white rounded-xl shadow-sm overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-[#166534] text-white">
+      {/* --- TABLE --- */}
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-gray-50 text-gray-500 text-xs uppercase font-semibold tracking-wider">
               <tr>
-                <th className="text-left p-4">Paquete</th>
-                <th className="text-left p-4">Categoría</th>
-                <th className="text-left p-4 cursor-pointer" onClick={()=>toggleSort("price")}>Precio {sortBy==="price" ? (sortDir==="asc" ? "▲" : "▼") : ""}</th>
-                <th className="text-left p-4">Usuarios</th>
-                <th className="text-left p-4">Almacenamiento</th>
-                <th className="text-left p-4">Creado</th>
-                <th className="text-left p-4">Estado</th>
-                <th className="text-right p-4">Acciones</th>
+                <th className="p-4 rounded-tl-xl">Item</th>
+                <th className="p-4">Customer</th>
+                <th className="p-4">Tracking Number</th>
+                <th className="p-4">Category</th>
+                <th className="p-4">Price</th>
+                <th className="p-4">Created</th>
+                <th className="p-4">Status</th>
+                <th className="p-4 text-center rounded-tr-xl">Actions</th>
               </tr>
             </thead>
-
-            <tbody>
-              {paged.map(p => (
-                <tr key={p.id} className="border-b hover:bg-gray-50">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#166534] text-white flex items-center justify-center font-semibold">{p.name.split(" ").map(s=>s[0]).slice(0,2).join("")}</div>
-                      <div>
-                        <div className="font-medium text-gray-800">{p.name}</div>
-                        <div className="text-xs text-gray-500">{p.description}</div>
-                      </div>
-                    </div>
+            <tbody className="text-sm divide-y divide-gray-50">
+              {filteredData.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
+                  
+                  {/* Item Column */}
+                  <td className="p-4 max-w-[200px]">
+                    <div className="font-bold text-gray-800">{item.itemName}</div>
+                    <div className="text-xs text-gray-500 truncate">{item.itemDesc}</div>
                   </td>
 
-                  <td className="p-4 text-gray-700">{p.category}</td>
-                  <td className="p-4 font-semibold">{p.price}</td>
-                  <td className="p-4">{p.users}</td>
-                  <td className="p-4">{p.storage}</td>
-                  <td className="p-4">{fmtDate(p.created)}</td>
-
+                  {/* Customer Column */}
                   <td className="p-4">
-                    {p.status === "active" ? (
-                      <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Activo</span>
-                    ) : (
-                      <span className="inline-block px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Inactivo</span>
-                    )}
+                    <div className="font-bold text-gray-800">{item.customerName}</div>
+                    <div className="text-xs text-gray-500">{item.customerPhone}</div>
                   </td>
 
-                  <td className="p-4 text-right">
-                    <div className="inline-flex gap-2">
-                      <button onClick={()=>setSelected(p)} className="px-3 py-1 border rounded-md text-sm">Detalles</button>
-                      <button onClick={()=>alert(`Edit ${p.name} (simulado)`)} className="px-3 py-1 bg-[#166534] text-white rounded-md text-sm hover:bg-[#14572b]">Editar</button>
+                  {/* Tracking */}
+                  <td className="p-4 text-gray-600">{item.trackingId}</td>
+
+                  {/* Category */}
+                  <td className="p-4 text-gray-600">{item.category}</td>
+
+                  {/* Price */}
+                  <td className="p-4 text-gray-600">{item.price} USD/mes</td>
+
+                  {/* Created */}
+                  <td className="p-4 text-gray-600">{fmtDate(item.created)}</td>
+
+                  {/* Status Badge */}
+                  <td className="p-4">
+                    <StatusBadge status={item.status} />
+                  </td>
+
+                  {/* Actions */}
+                  <td className="p-4">
+                    <div className="flex items-center justify-center gap-2 text-gray-400">
+                      <button className="hover:text-gray-600 text-xs font-medium px-2 py-1 rounded">Edit</button>
+                      <button className="hover:text-gray-600 text-xs font-medium px-2 py-1 rounded">View</button>
                     </div>
                   </td>
                 </tr>
               ))}
-
-              {paged.length === 0 && (
-                <tr>
-                  <td colSpan={8} className="p-6 text-center text-gray-500">No se encontraron paquetes.</td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
 
-        {/* Mobile cards (smaller screens) */}
-        <div className="md:hidden space-y-3">
-          {paged.map(p => (
-            <article key={p.id} className="bg-white rounded-lg shadow p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-[#166534] text-white flex items-center justify-center font-semibold">{p.name.split(" ").map(s=>s[0]).slice(0,2).join("")}</div>
-                  <div>
-                    <div className="font-medium text-gray-800">{p.name}</div>
-                    <div className="text-xs text-gray-500">{p.category} • {fmtDate(p.created)}</div>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <div className="font-semibold">{p.price}</div>
-                  <div className="text-xs mt-1">
-                    <span className={`inline-block mt-2 px-2 py-1 rounded-full ${p.status==='active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{p.status === 'active' ? 'Activo' : 'Inactivo'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mt-3">{p.description}</p>
-
-              <div className="mt-3 flex flex-wrap gap-2 text-sm text-gray-700">
-                <div className="px-2 py-1 border rounded">Usuarios: {p.users}</div>
-                <div className="px-2 py-1 border rounded">Almac.: {p.storage}</div>
-                <div className="px-2 py-1 border rounded">Vel.: {p.speed}</div>
-              </div>
-
-              <div className="mt-4 flex gap-2 justify-end">
-                <button onClick={()=>setSelected(p)} className="px-3 py-1 border rounded-md text-sm">Detalles</button>
-                <button onClick={()=>alert(`Edit ${p.name} (simulado)`)} className="px-3 py-1 bg-[#166534] text-white rounded-md text-sm hover:bg-[#14572b]">Editar</button>
-              </div>
-            </article>
-          ))}
-
-          {paged.length === 0 && (
-            <div className="text-center text-gray-500">No se encontraron paquetes.</div>
-          )}
-        </div>
-
-        {/* Pagination */}
-        <div className="flex flex-col md:flex-row items-center justify-between mt-4 gap-3">
-          <div className="text-sm text-gray-600">Showing {total === 0 ? 0 : start + 1} - {Math.min(start + perPage, total)} of {total}</div>
-          <div className="flex items-center gap-2">
-            <button disabled={page===1} onClick={()=>setPage(p=>Math.max(1,p-1))} className="px-3 py-1 border rounded-md disabled:opacity-50">Prev</button>
-            <div className="flex gap-1">
-              {Array.from({length: pageCount}).map((_, i) => (
-                <button key={i} onClick={()=>setPage(i+1)} className={`px-3 py-1 rounded-md ${page===i+1 ? 'bg-[#166534] text-white' : 'border'}`}>{i+1}</button>
-              ))}
-            </div>
-            <button disabled={page===pageCount} onClick={()=>setPage(p=>Math.min(pageCount,p+1))} className="px-3 py-1 border rounded-md disabled:opacity-50">Next</button>
+        {/* Empty State */}
+        {filteredData.length === 0 && (
+          <div className="p-8 text-center text-gray-500">
+            No packages found matching your criteria.
           </div>
-        </div>
-
+        )}
       </div>
 
-      {/* Details modal */}
-      {selected && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg w-full max-w-2xl p-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="text-2xl font-bold">{selected.name}</h3>
-                <p className="text-sm text-gray-500">{selected.category} • {selected.price}</p>
-              </div>
-              <div>
-                <button onClick={()=>setSelected(null)} className="text-gray-600">✕</button>
-              </div>
-            </div>
+      {/* --- PAGINATION --- */}
+      <div className="flex justify-end items-center gap-4 mt-6 text-sm text-gray-500">
+        <span className="mr-2">Previous</span>
+        <button className="text-green-700 font-medium flex items-center gap-1 hover:underline">
+          Next <ChevronRight size={16} />
+        </button>
+      </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div>
-                <h4 className="text-sm font-semibold text-gray-700">Detalles</h4>
-                <ul className="text-sm text-gray-700 mt-2 space-y-1">
-                  <li><b>Usuarios:</b> {selected.users}</li>
-                  <li><b>Almacenamiento:</b> {selected.storage}</li>
-                  <li><b>Velocidad:</b> {selected.speed}</li>
-                  <li><b>Seguridad:</b> {selected.security}</li>
-                  <li><b>Soporte:</b> {selected.support}</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-semibold text-gray-700">Descripción</h4>
-                <p className="text-sm text-gray-700 mt-2">{selected.description}</p>
-                <div className="mt-4 text-sm text-gray-500"><b>Creado:</b> {fmtDate(selected.created)}</div>
-                <div className="mt-1 text-sm">
-                  <span className={`inline-block mt-2 px-2 py-1 rounded-full ${selected.status==='active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{selected.status === 'active' ? 'Activo' : 'Inactivo'}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button onClick={()=>setSelected(null)} className="px-4 py-2 border rounded-md">Cerrar</button>
-              <button onClick={()=>alert(`Comprar ${selected.name} (simulado)`)} className="px-4 py-2 bg-[#166534] text-white rounded-md hover:bg-[#14572b]">Contratar</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+
+/* --- SUB COMPONENTS --- */
+
+const StatCard = ({ title, value, icon }: { title: string, value: string, icon: React.ReactNode }) => (
+  <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between h-32 relative overflow-hidden">
+    <div className="flex justify-between items-start z-10">
+      <h3 className="text-gray-500 font-medium text-sm">{title}</h3>
+      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+        {icon}
+      </div>
+    </div>
+    <div className="text-4xl font-bold text-gray-900 z-10">{value}</div>
+  </div>
+);
+
+const StatusBadge = ({ status }: { status: string }) => {
+  if (status === "Delivered") {
+    return (
+      <div className="flex items-center gap-1.5 text-green-600 font-medium text-xs">
+        <Check size={14} strokeWidth={3} /> Delivered
+      </div>
+    );
+  }
+  if (status === "In Transit") {
+    return (
+      <div className="flex items-center gap-1.5 text-blue-500 font-medium text-xs">
+        <div className="w-4 h-4 border border-blue-500 rounded-full flex items-center justify-center">
+             <Info size={10} strokeWidth={2} />
+        </div>
+        In Transit
+      </div>
+    );
+  }
+  if (status === "Cancelled") {
+    return (
+      <div className="flex items-center gap-1.5 text-red-500 font-medium text-xs">
+        <X size={14} strokeWidth={3} /> Cancelled
+      </div>
+    );
+  }
+  return <span className="text-gray-500">{status}</span>;
+};
