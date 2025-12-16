@@ -1,414 +1,262 @@
-import React, { useMemo, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
-import { useCurrentUser } from "../../context/useCurrentUser";
-import { Helmet } from "react-helmet";
+import React from 'react';
+import { 
+  Package, Users, CreditCard, BarChart3, 
+  Bell, ArrowUpRight
+} from 'lucide-react';
 
-/** PRIMARY THEME COLOR */
-const PRIMARY = "#166534"; // as you requested (#166534)
+/* --- INTERFACES --- */
 
-/** ---------- SINGLE ADMIN ---------- */
-const ADMIN = {
-  id: "a1",
-  name: "Arif Hossain",
-  email: "arif@shining.co",
-  role: "Super",
-  status: "active",
-  joined: "2021-06-02",
-  lastLogin: "2025-01-10 09:12",
-  revenueHandled: 12500,
-};
+interface StatCardProps {
+  title: string;
+  value: string;
+  sub: string;
+  icon: React.ReactNode;
+}
 
-/** Quick metrics (fake) */
-const QUICK = {
-  usersCount: 1284,
-  parcelsDelivered: 7523,
-  pickupRequests: 42,
-};
-
-/** Monthly revenue for chart (fake) */
-const REVENUE_MONTHS = [
-  { month: "Aug", revenue: 4800 },
-  { month: "Sep", revenue: 5200 },
-  { month: "Oct", revenue: 6100 },
-  { month: "Nov", revenue: 7300 },
-  { month: "Dec", revenue: 9000 },
-  { month: "Jan", revenue: 11000 },
-];
-
-/** Income table rows (fake) */
-type IncomeRow = {
+interface TableRowProps {
   id: string;
-  date: string; // ISO date or '2025-01-10'
-  amount: number;
-  type: "Delivery Fee" | "Subscription" | "Refund";
-  orderId?: string;
-  customer?: string;
-  note?: string;
-};
-
-const INCOME_DATA: IncomeRow[] = [
-  {
-    id: "i1",
-    date: "2025-01-12",
-    amount: 1200,
-    type: "Delivery Fee",
-    orderId: "ORD-1001",
-    customer: "Customer A",
-  },
-  {
-    id: "i2",
-    date: "2025-01-11",
-    amount: 2500,
-    type: "Subscription",
-    orderId: "SUB-901",
-    customer: "Company B",
-  },
-  {
-    id: "i3",
-    date: "2024-12-29",
-    amount: -50,
-    type: "Refund",
-    orderId: "REF-77",
-    customer: "Customer C",
-  },
-  {
-    id: "i4",
-    date: "2024-12-21",
-    amount: 900,
-    type: "Delivery Fee",
-    orderId: "ORD-098",
-    customer: "Customer D",
-  },
-  {
-    id: "i5",
-    date: "2024-11-30",
-    amount: 4500,
-    type: "Subscription",
-    orderId: "SUB-812",
-    customer: "Company E",
-  },
-  {
-    id: "i6",
-    date: "2024-10-15",
-    amount: 700,
-    type: "Delivery Fee",
-    orderId: "ORD-777",
-    customer: "Customer F",
-  },
-  {
-    id: "i7",
-    date: "2025-01-09",
-    amount: 350,
-    type: "Delivery Fee",
-    orderId: "ORD-1102",
-    customer: "Customer G",
-  },
-  {
-    id: "i8",
-    date: "2024-12-05",
-    amount: 1200,
-    type: "Delivery Fee",
-    orderId: "ORD-1008",
-    customer: "Customer H",
-  },
-];
-
-/** Helper: format date */
-function fmtDate(d: string) {
-  const dt = new Date(d);
-  return dt.toLocaleDateString();
+  name: string;
+  status: string;
+  date: string;
 }
 
-/** Convert date to month key e.g., "Jan-2025" */
-function monthKey(d: string) {
-  const dt = new Date(d);
-  return `${dt.toLocaleString(undefined, {
-    month: "short",
-  })}-${dt.getFullYear()}`;
+interface TransactionItemProps {
+  type: string;
+  time: string;
+  amount: string;
+  color: string;
 }
 
-/** Main component */
-export default function AdminAdmins() {
-  const LoginUser = useCurrentUser();
-  console.log(LoginUser);
-  // Income filters
-  const [filterMonth, setFilterMonth] = useState<string>("all"); // monthKey or 'all'
-  const [filterType, setFilterType] = useState<string>("all"); // Delivery Fee / Subscription / Refund
-  const [search, setSearch] = useState<string>("");
+interface ProgressBarProps {
+  label: string;
+  pct: string;
+  color: string;
+}
 
-  // derive month options from INCOME_DATA
-  const months = useMemo(() => {
-    const set = new Set<string>();
-    INCOME_DATA.forEach((r) => set.add(monthKey(r.date)));
-    return Array.from(set).sort((a, b) => {
-      // sort by year-month descending
-      const pa = a.split("-");
-      const pb = b.split("-");
-      const da = new Date(pa[1] + " " + pa[0] + " 1");
-      const db = new Date(pb[1] + " " + pb[0] + " 1");
-      return db.getTime() - da.getTime();
-    });
-  }, []);
-
-  // filter rows
-  const filteredRows = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return INCOME_DATA.filter((r) => {
-      if (filterMonth !== "all" && monthKey(r.date) !== filterMonth)
-        return false;
-      if (filterType !== "all" && r.type !== filterType) return false;
-      if (!q) return true;
-      return (
-        r.orderId?.toLowerCase().includes(q) ||
-        r.customer?.toLowerCase().includes(q) ||
-        r.type.toLowerCase().includes(q)
-      );
-    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [filterMonth, filterType, search]);
-
-  const totalFiltered = useMemo(
-    () => filteredRows.reduce((s, r) => s + r.amount, 0),
-    [filteredRows]
-  );
-
+const AdminAdmins = () => {
   return (
-    <div className="p-6 bg-[#f7faf7] min-h-screen">
-      <Helmet><title>Admin Panel | EXPRESUR</title></Helmet>
-      <div className=" mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen bg-gray-50 font-sans">
+      
+      {/* MAIN CONTENT */}
+      <main className="w-full p-8">
+        
+        {/* HEADER */}
+        <header className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">
-              Admin Panel
-            </h1>
-            <p className="text-sm text-gray-600">
-              Single-admin dashboard — quick overview & income table
-            </p>
+            <h1 className="text-orange-500 font-bold text-lg mb-1 tracking-wider">EXPRESUR</h1>
+            <h2 className="text-3xl font-bold text-gray-800">Admin Panel</h2>
+            <p className="text-gray-400 mt-1">Welcome to EXPRESUR Admin Dashboard</p>
           </div>
 
-          <div className="text-right">
-            <div className="text-xs text-gray-500">Logged in as</div>
-            <div className="font-medium">
-              {LoginUser?.name} — {LoginUser?.email}
+          <div className="flex items-center gap-4 bg-white p-2 pr-6 pl-2 rounded-full shadow-sm">
+            <img 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
+              alt="User" 
+              className="w-10 h-10 rounded-full bg-green-100"
+            />
+            <div className="hidden md:block">
+              <h4 className="text-sm font-bold text-gray-800">Tyrion Lannister</h4>
+              <p className="text-xs text-gray-500">tyrion@example.com</p>
             </div>
           </div>
+        </header>
+
+        {/* STATS CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatCard 
+            title="Packages Today" 
+            value="7523" 
+            sub="+12% from last period" 
+            icon={<Package className="text-gray-400" />} 
+          />
+          <StatCard 
+            title="Delayed Packages" 
+            value="1284" 
+            sub="-3% from last period" 
+            icon={<Users className="text-gray-400" />} 
+          />
+          <StatCard 
+            title="Total pickup requests" 
+            value="42" 
+            sub="Pending pickups" 
+            icon={<Bell className="text-gray-400" />} 
+          />
+          <StatCard 
+            title="Income" 
+            value="$11,300" 
+            sub="+15% from last period" 
+            icon={<CreditCard className="text-gray-400" />} 
+          />
         </div>
 
-        {/* Quick cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="text-xs text-gray-500">Total Users</div>
-            <div className="text-2xl font-bold text-gray-900">
-              {QUICK.usersCount}
+        {/* MIDDLE SECTION: Table & Transactions */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          
+          {/* Recent Packages Table */}
+          <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold text-gray-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                   <Package size={16} />
+                </span>
+                Recent Packages
+              </h3>
             </div>
-            <div className="text-xs text-gray-400 mt-1">Registered users</div>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="text-gray-400 text-sm border-b border-gray-100">
+                    <th className="pb-4 font-normal">Tracking Number</th>
+                    <th className="pb-4 font-normal">Customer</th>
+                    <th className="pb-4 font-normal">Status</th>
+                    <th className="pb-4 font-normal text-right">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  <TableRow id="ORD-1001" name="Customer A" status="In Transit" date="1/12/2025" />
+                  <TableRow id="ORD-1001" name="Customer A" status="Delivered" date="1/12/2025" />
+                  <TableRow id="ORD-1001" name="Customer A" status="Cancelled" date="1/12/2025" />
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="text-xs text-gray-500">Parcels Delivered</div>
-            <div className="text-2xl font-bold text-gray-900">
-              {QUICK.parcelsDelivered}
+          {/* Recent Transaction */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold text-gray-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                   <ArrowUpRight size={16} />
+                </span>
+                Recent Transaction
+              </h3>
+              <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">Show All</button>
             </div>
-            <div className="text-xs text-gray-400 mt-1">Total deliveries</div>
+            
+            <div className="space-y-6">
+              <TransactionItem type="Received" time="Today, 11:55 AM" amount="+21.17" color="text-green-500" />
+              <TransactionItem type="Pending" time="Yesterday, 3:15 PM" amount="+10.05" color="text-orange-400" />
+              <TransactionItem type="Received" time="Yesterday, 3:55 PM" amount="+15.48" color="text-green-500" />
+              <TransactionItem type="Pending" time="02/05/2025, 4:24 PM" amount="+20.55" color="text-orange-400" />
+            </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="text-xs text-gray-500">Pickup Requests</div>
-            <div className="text-2xl font-bold text-gray-900">
-              {QUICK.pickupRequests}
-            </div>
-            <div className="text-xs text-gray-400 mt-1">Pending pickups</div>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="text-xs text-gray-500">Income (filtered)</div>
-            <div className="text-2xl font-bold" style={{ color: PRIMARY }}>
-              ${totalFiltered.toLocaleString()}
-            </div>
-            <div className="text-xs text-gray-400 mt-1">
-              Sum of visible rows
-            </div>
-          </div>
         </div>
 
-        {/* Charts + filters */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* chart */}
-          <div className="lg:col-span-2 bg-white rounded-lg p-4 shadow">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-md font-medium text-gray-900">
+        {/* BOTTOM SECTION: Charts Mockup */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Monthly Revenue Chart */}
+          <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm">
+             <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold text-gray-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                   <BarChart3 size={16} />
+                </span>
                 Monthly Revenue
               </h3>
-              <div className="text-sm text-gray-500">Last 6 months</div>
+              <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">Show All</button>
             </div>
-
-            <div style={{ width: "100%", height: 220 }}>
-              <ResponsiveContainer>
-                <LineChart data={REVENUE_MONTHS}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke={PRIMARY}
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            {/* Simple SVG Chart Mockup */}
+            <div className="h-32 flex items-end justify-between px-2 relative">
+               <svg className="absolute bottom-0 left-0 w-full h-full" preserveAspectRatio="none">
+                 <path d="M0,100 C100,50 200,80 300,20 C400,60 500,10 800,0" fill="none" stroke="#10b981" strokeWidth="2" />
+                 <path d="M0,100 C100,50 200,80 300,20 C400,60 500,10 800,0 V128 H0 Z" fill="url(#gradient)" opacity="0.1" />
+                 <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#10b981" />
+                      <stop offset="100%" stopColor="#ffffff" />
+                    </linearGradient>
+                 </defs>
+               </svg>
+               <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-300">
+                 <span>12000</span>
+                 <span>9000</span>
+               </div>
             </div>
           </div>
 
-          {/* filters */}
-          <div className="bg-white rounded-lg p-4 shadow">
-            <h4 className="font-medium mb-3 text-gray-900">Filters</h4>
-
-            <div className="space-y-3 text-sm">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">
-                  Month
-                </label>
-                <select
-                  value={filterMonth}
-                  onChange={(e) => setFilterMonth(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md"
-                >
-                  <option value="all">All months</option>
-                  {months.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Type</label>
-                <select
-                  value={filterType}
-                  onChange={(e) => setFilterType(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md"
-                >
-                  <option value="all">All types</option>
-                  <option value="Delivery Fee">Delivery Fee</option>
-                  <option value="Subscription">Subscription</option>
-                  <option value="Refund">Refund</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">
-                  Search
-                </label>
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Order ID, customer, or type..."
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-
-              <div className="pt-2">
-                <button
-                  onClick={() => {
-                    setFilterMonth("all");
-                    setFilterType("all");
-                    setSearch("");
-                  }}
-                  className="px-3 py-2 border rounded-md text-sm"
-                >
-                  Reset filters
-                </button>
-              </div>
+          {/* Shipment Distribution */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm">
+            <h3 className="text-lg font-bold text-gray-700 mb-6">Shipment Status Distribution</h3>
+            <div className="space-y-6">
+              <ProgressBar label="In Transit" pct="47%" color="bg-blue-500" />
+              <ProgressBar label="Delivered" pct="30%" color="bg-green-500" />
             </div>
           </div>
         </div>
 
-        {/* Income table */}
-        <div className="bg-white rounded-lg p-4 shadow mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-md font-medium text-gray-900">Income table</h3>
-            <div className="text-sm text-gray-500">
-              Showing {filteredRows.length} rows — Total:{" "}
-              <span style={{ color: PRIMARY }}>
-                ${totalFiltered.toLocaleString()}
-              </span>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="text-left text-gray-600">
-                  <th className="p-2">Date</th>
-                  <th className="p-2">Order</th>
-                  <th className="p-2">Customer</th>
-                  <th className="p-2">Type</th>
-                  <th className="p-2 text-right">Amount</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredRows.map((row) => (
-                  <tr key={row.id} className="border-t hover:bg-gray-50">
-                    <td className="p-2">{fmtDate(row.date)}</td>
-                    <td className="p-2">{row.orderId ?? "—"}</td>
-                    <td className="p-2">{row.customer ?? "—"}</td>
-                    <td className="p-2">{row.type}</td>
-                    <td
-                      className={`p-2 text-right ${
-                        row.amount < 0 ? "text-red-600" : ""
-                      }`}
-                    >
-                      <span
-                        style={{ color: row.amount < 0 ? undefined : PRIMARY }}
-                      >
-                        ${row.amount.toLocaleString()}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-
-                {filteredRows.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="p-4 text-center text-gray-500">
-                      No records found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Footer quick actions */}
-        <div className="flex gap-3">
-          <button
-            onClick={() => alert("Export CSV (simulated)")}
-            className="px-4 py-2 border rounded-md"
-            style={{ borderColor: PRIMARY, color: PRIMARY }}
-          >
-            Export CSV
-          </button>
-          <button
-            onClick={() => alert("Download report (simulated)")}
-            className="px-4 py-2 text-white rounded-md"
-            style={{ backgroundColor: PRIMARY }}
-          >
-            Download report
-          </button>
-        </div>
-      </div>
+      </main>
     </div>
   );
-}
+};
+
+/* --- SUB COMPONENTS --- */
+
+const StatCard: React.FC<StatCardProps> = ({ title, value, sub, icon }) => (
+  <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+    <div className="flex justify-between items-start mb-4">
+      <h3 className="text-gray-500 text-sm font-medium">{title}</h3>
+      <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
+        {icon}
+      </div>
+    </div>
+    <div className="text-3xl font-bold text-gray-800 mb-1">{value}</div>
+    <div className={`text-xs ${sub.includes('-') ? 'text-red-400' : sub.includes('Pending') ? 'text-gray-400' : 'text-green-500'}`}>
+      {sub}
+    </div>
+  </div>
+);
+
+const TableRow: React.FC<TableRowProps> = ({ id, name, status, date }) => {
+  let statusStyles = "";
+  let icon: React.ReactNode = null;
+  
+  if (status === 'In Transit') {
+    statusStyles = "text-blue-500";
+    icon = <div className="w-4 h-4 rounded-full border-2 border-blue-500 flex items-center justify-center"><span className="text-[8px]">i</span></div>;
+  } else if (status === 'Delivered') {
+    statusStyles = "text-green-500";
+    icon = <div className="w-4 h-4 rounded-full border-2 border-green-500 flex items-center justify-center">✓</div>;
+  } else {
+    statusStyles = "text-red-500";
+    icon = <div className="w-4 h-4 rounded-full border-2 border-red-500 flex items-center justify-center">✕</div>;
+  }
+
+  return (
+    <tr className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+      <td className="py-4 text-gray-600 font-medium">{id}</td>
+      <td className="py-4 text-gray-600">{name}</td>
+      <td className="py-4">
+        <div className={`flex items-center gap-2 ${statusStyles} text-xs font-semibold`}>
+          {icon} {status}
+        </div>
+      </td>
+      <td className="py-4 text-right text-gray-500">{date}</td>
+    </tr>
+  );
+};
+
+const TransactionItem: React.FC<TransactionItemProps> = ({ type, time, amount, color }) => (
+  <div className="flex justify-between items-center">
+    <div>
+      <h4 className="text-sm font-semibold text-gray-700">{type}</h4>
+      <p className="text-xs text-gray-400">{time}</p>
+    </div>
+    <span className={`text-sm font-bold ${color}`}>{amount}</span>
+  </div>
+);
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ label, pct, color }) => (
+  <div>
+    <div className="flex justify-between text-xs text-gray-500 mb-2">
+      <span>{label}</span>
+      <span>{pct}</span>
+    </div>
+    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className={`h-full ${color} rounded-full`} style={{ width: pct }}></div>
+    </div>
+  </div>
+);
+
+export default AdminAdmins;
