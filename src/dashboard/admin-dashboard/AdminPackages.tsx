@@ -1,358 +1,425 @@
 import React, { useMemo, useState } from "react";
-import { Helmet } from "react-helmet";
+import { 
+  Search, Plus, Calendar, ChevronDown, Check, 
+  Info, X, Package as PackageIcon, DollarSign, 
+  Box, ChevronRight, Save, Trash2, ArrowUpDown
+} from "lucide-react";
 
 /** ---------------- Types ---------------- */
-type Package = {
+type PackageData = {
   id: string;
-  name: string;
-  price: string;
+  trackingId: string;
+  itemName: string;
+  itemDesc: string;
+  customerName: string;
+  customerPhone: string;
   category: string;
-  storage: string;
-  users: string;
-  speed: string;
-  security: string;
-  support: string;
-  description: string;
+  price: string;
   created: string;
-  status: "active" | "inactive";
+  status: "Delivered" | "In Transit" | "Cancelled";
 };
 
-/** --------------- Fake data (same as provided) --------------- */
-const PACKAGES: Package[] = [
-  { id: "PKG-1001", name: "Plan Básico", price: "39 USD/mes", category: "Pequeñas Empresas", storage: "20 GB", users: "3 Usuarios", speed: "Normal", security: "Protección estándar", support: "Soporte por Email", description: "Ideal para pequeños negocios y emprendedores en Cuba.", created: "2024-01-12", status: "active" },
-  { id: "PKG-1002", name: "Plan Inicial", price: "49 USD/mes", category: "Pequeñas Empresas", storage: "50 GB", users: "5 Usuarios", speed: "Alta", security: "Firewall Básico", support: "Email + Chat", description: "Paquete con herramientas esenciales para la gestión diaria.", created: "2024-02-10", status: "active" },
-  { id: "PKG-1003", name: "Plan Empresarial", price: "129 USD/mes", category: "Empresas Medianas", storage: "200 GB", users: "25 Usuarios", speed: "Premium", security: "Firewall Avanzado", support: "Soporte Prioritario", description: "Diseñado para empresas en crecimiento.", created: "2024-03-05", status: "active" },
-  { id: "PKG-1004", name: "Plan Premium", price: "249 USD/mes", category: "Empresas Medianas", storage: "500 GB", users: "Ilimitados", speed: "Ultra", security: "Auditorías + Seguridad Avanzada", support: "Soporte 24/7", description: "Escalabilidad y automatización avanzada.", created: "2024-04-12", status: "active" },
-  { id: "PKG-1005", name: "Suite Corporativa", price: "Precio Personalizado", category: "Grandes Organizaciones", storage: "Ilimitado", users: "Ilimitados", speed: "Ultra Max", security: "Cumplimiento GDPR + SOC2", support: "Equipo Dedicado 24/7", description: "Infraestructura dedicada para grandes compañías.", created: "2023-11-18", status: "active" },
-  { id: "PKG-1006", name: "Plan Avanzado Internacional", price: "299 USD/mes", category: "Empresas Internacionales", storage: "1 TB", users: "50 Usuarios", speed: "Ultra Global", security: "Cifrado Multi-Región", support: "Soporte Multilingüe", description: "Conectividad global para operaciones fuera de Cuba.", created: "2024-06-01", status: "active" },
-  { id: "PKG-1007", name: "Starter Light", price: "19 USD/mes", category: "Micro", storage: "5 GB", users: "1 Usuario", speed: "Básica", security: "SSL", support: "Email", description: "Muy económico para pruebas.", created: "2024-07-05", status: "inactive" },
-  { id: "PKG-1008", name: "SMB Growth", price: "79 USD/mes", category: "Pequeñas Empresas", storage: "120 GB", users: "15 Usuarios", speed: "Mejorada", security: "Firewall", support: "Email + Chat", description: "Ideal para pymes que crecen rápido.", created: "2024-08-13", status: "active" },
-  { id: "PKG-1009", name: "Cross-Border", price: "159 USD/mes", category: "Empresas Internacionales", storage: "300 GB", users: "40 Usuarios", speed: "Premium", security: "Cifrado", support: "Soporte Multilingüe", description: "Optimizado para envíos y operaciones internacionales.", created: "2024-09-20", status: "active" },
-  { id: "PKG-1010", name: "Enterprise Plus", price: "499 USD/mes", category: "Grandes Organizaciones", storage: "2 TB", users: "Ilimitados", speed: "Ultra Max", security: "Enterprise Security", support: "Cuenta Dedicada", description: "Solución empresarial completa.", created: "2024-10-30", status: "active" },
-  { id: "PKG-1011", name: "NonProfit Plan", price: "29 USD/mes", category: "ONG", storage: "100 GB", users: "10 Usuarios", speed: "Normal", security: "Protección estándar", support: "Soporte Email", description: "Descuentos para ONGs y organizaciones sociales.", created: "2024-11-21", status: "active" },
-  { id: "PKG-1012", name: "Local SMB", price: "59 USD/mes", category: "Pequeñas Empresas", storage: "80 GB", users: "10 Usuarios", speed: "Alta", security: "Firewall", support: "Soporte Prioritario", description: "Fuerte en control y analíticas locales.", created: "2024-12-02", status: "active" },
+type SortConfig = {
+  key: keyof PackageData | null;
+  direction: 'asc' | 'desc';
+};
+
+/** ---------------- Initial Data ---------------- */
+const INITIAL_PACKAGES: PackageData[] = [
+  { id: "1", trackingId: "ORD-1001", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Delivered" },
+  { id: "2", trackingId: "ORD-1003", itemName: "Local SMB", itemDesc: "Strong in local control and analytics.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Small Businesses", price: "29", created: "2024-11-21", status: "In Transit" },
+  { id: "3", trackingId: "ORD-1005", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Cancelled" },
+  { id: "4", trackingId: "ORD-1006", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "In Transit" },
+  { id: "5", trackingId: "ORD-1007", itemName: "Pro Enterprise", itemDesc: "Full scale solution.", customerName: "John Doe", customerPhone: "+1 555 019 283", category: "Enterprise", price: "99", created: "2024-08-10", status: "Delivered" },
+  { id: "6", trackingId: "ORD-1008", itemName: "Micro Test", itemDesc: "Single item shipment.", customerName: "Jane Smith", customerPhone: "+44 7700 900077", category: "Micro", price: "12", created: "2024-09-15", status: "Delivered" },
 ];
 
-/** ---------------- Helpers ---------------- */
-function fmtDate(d: string) {
-  return new Date(d).toLocaleDateString();
-}
+export default function PackageManagement() {
+  // --- State ---
+  const [packages, setPackages] = useState<PackageData[]>(INITIAL_PACKAGES);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Status");
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-function parseNumericPrice(price: string) {
-  const m = price.match(/[\d,.]+/);
-  if (!m) return Number.POSITIVE_INFINITY;
-  return Number(String(m[0]).replace(/,/g, ""));
-}
+  // Sorting
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
 
-/** -------------- Responsive Component -------------- */
-export default function AdminPackagesResponsive() {
-  const [query, setQuery] = useState<string>("");
-  const [page, setPage] = useState<number>(1);
-  const [perPage] = useState<number>(6);
-  const [sortBy, setSortBy] = useState<keyof Package | "price">("name");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [selected, setSelected] = useState<Package | null>(null);
+  // Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'add'>('view');
+  const [currentPackage, setCurrentPackage] = useState<PackageData | null>(null);
 
-  const categories = useMemo(() => ["all", ...Array.from(new Set(PACKAGES.map(p => p.category)))], []);
-  const statuses = useMemo(() => ["all", "active", "inactive"], []);
+  // --- Logic ---
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let list = PACKAGES.filter(p => {
-      const matchesQ = p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
-      const matchesCategory = categoryFilter === "all" || p.category === categoryFilter;
-      const matchesStatus = statusFilter === "all" || p.status === statusFilter;
-      return matchesQ && matchesCategory && matchesStatus;
+  // 1. Filtering
+  const filteredData = useMemo(() => {
+    let data = packages.filter(p => {
+      const matchesQuery = 
+        p.itemName.toLowerCase().includes(query.toLowerCase()) || 
+        p.trackingId.toLowerCase().includes(query.toLowerCase()) ||
+        p.customerName.toLowerCase().includes(query.toLowerCase());
+      const matchesStatus = statusFilter === "All Status" || p.status === statusFilter;
+      return matchesQuery && matchesStatus;
     });
 
-    // sort
-    list = list.sort((a, b) => {
-      if (sortBy === "price") {
-        const pa = parseNumericPrice(a.price);
-        const pb = parseNumericPrice(b.price);
-        return sortDir === "asc" ? pa - pb : pb - pa;
-      }
-      const aVal = String((a as any)[sortBy]);
-      const bVal = String((b as any)[sortBy]);
-      return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-    });
+    // 2. Sorting
+    if (sortConfig.key) {
+      data.sort((a, b) => {
+        // @ts-ignore
+        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+        // @ts-ignore
+        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
 
-    return list;
-  }, [query, categoryFilter, statusFilter, sortBy, sortDir]);
+    return data;
+  }, [packages, query, statusFilter, sortConfig]);
 
-  const total = filtered.length;
-  const pageCount = Math.max(1, Math.ceil(total / perPage));
-  const start = (page - 1) * perPage;
-  const paged = filtered.slice(start, start + perPage);
+  // 3. Pagination
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  function toggleSort(col: keyof Package | "price") {
-    if (sortBy === col) setSortDir(prev => prev === "asc" ? "desc" : "asc");
-    else { setSortBy(col as any); setSortDir("asc"); }
-  }
+  // --- Handlers ---
+
+  const handleSort = (key: keyof PackageData) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const handleOpenModal = (pkg: PackageData | null, mode: 'view' | 'edit' | 'add') => {
+    if (mode === 'add') {
+      // Empty template for new package
+      setCurrentPackage({
+        id: Math.random().toString(36).substr(2, 9),
+        trackingId: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+        itemName: "",
+        itemDesc: "",
+        customerName: "",
+        customerPhone: "",
+        category: "",
+        price: "",
+        created: new Date().toLocaleDateString(),
+        status: "In Transit"
+      });
+    } else {
+      setCurrentPackage(pkg);
+    }
+    setModalMode(mode);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = (data: PackageData) => {
+    if (modalMode === 'add') {
+      setPackages([data, ...packages]);
+    } else {
+      setPackages(packages.map(p => p.id === data.id ? data : p));
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this package?")) {
+      setPackages(packages.filter(p => p.id !== id));
+      setIsModalOpen(false);
+    }
+  };
+
+  // KPI Calculations
+  const totalProfit = packages.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
+  const activeCount = packages.filter(p => p.status !== 'Cancelled').length;
 
   return (
-    <div className="p-6 bg-[#f7faf7] min-h-screen">
-      <Helmet><title>AdminPackages | EXPRESUR</title></Helmet>
-      <div className=" mx-auto">
+    <div className="min-h-screen bg-white p-6 md:p-10 font-sans text-gray-800 relative">
+      
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <div>
+          <h1 className="text-[28px] font-bold text-[#111827] tracking-tight">Package Management</h1>
+          <p className="text-gray-400 mt-1 text-[15px]">View and manage all packages with detailed analytics</p>
+        </div>
+        <div className="flex items-center gap-3 bg-[#F9FAFB] pl-1 pr-4 py-1.5 rounded-full shadow-sm border border-gray-100">
+           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
+            <div className="hidden md:block">
+              <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
+              <p className="text-xs text-gray-400">tyrion@example.com</p>
+            </div>
+        </div>
+      </div>
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800">Packages</h2>
-            <p className="text-sm text-gray-500">Shining Company — Paquetes (verde dashboard)</p>
+      {/* KPI CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <StatCard title="Total Packages" value={String(packages.length)} icon={<PackageIcon size={20} className="text-gray-400" />} />
+        <StatCard title="Active Packages" value={String(activeCount)} icon={<Box size={20} className="text-gray-400" />} />
+        <StatCard title="Total Profit" value={`$${totalProfit.toLocaleString()}`} icon={<DollarSign size={20} className="text-gray-400" />} />
+      </div>
+
+      {/* ACTIONS BAR */}
+      <div className="flex flex-col xl:flex-row justify-between items-center gap-4 mb-6">
+        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+          {/* All Button */}
+          <button 
+            onClick={() => setStatusFilter("All Status")} 
+            className={`px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors ${statusFilter === 'All Status' ? 'bg-[#166534] text-white' : 'bg-[#F9FAFB] text-gray-500 hover:bg-gray-100'}`}
+          >
+            All
+          </button>
+          
+          {/* Status Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)} 
+              className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-40 justify-between"
+            >
+              {statusFilter} <ChevronDown size={16} className="text-gray-400" />
+            </button>
+            
+            {/* Dropdown Menu */}
+            {isStatusDropdownOpen && (
+              <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 overflow-hidden">
+                {["All Status", "Delivered", "In Transit", "Cancelled"].map(status => (
+                  <div 
+                    key={status} 
+                    onClick={() => { setStatusFilter(status); setIsStatusDropdownOpen(false); }} 
+                    className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700 hover:text-green-700 transition-colors"
+                  >
+                    {status}
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Backdrop to close dropdown on click outside */}
+            {isStatusDropdownOpen && (
+              <div className="fixed inset-0 z-10" onClick={() => setIsStatusDropdownOpen(false)}></div>
+            )}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
-            <input
+          <div className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium">
+            01/11/24 <Calendar size={16} className="text-gray-400 ml-2" />
+          </div>
+
+          <div className="relative flex-1 xl:flex-none">
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search..." 
               value={query}
-              onChange={(e) => { setQuery(e.target.value); setPage(1); }}
-              placeholder="Buscar por nombre, categoría..."
-              className="px-3 py-2 border rounded-md shadow-sm w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-[#166534]"
+              onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
+              className="pl-10 pr-4 py-2.5 bg-[#F9FAFB] rounded-lg text-sm font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 w-full xl:w-80"
             />
-            <div className="flex gap-2">
-              <button
-                onClick={() => { setQuery(""); setCategoryFilter("all"); setStatusFilter("all"); setPage(1); }}
-                className="px-3 py-2 border rounded-md"
-              >
-                Reset
-              </button>
-
-              <button
-                onClick={() => alert("Nueva acción: Create package (simulado)")}
-                className="px-4 py-2 bg-[#166534] text-white rounded-md shadow hover:bg-[#14572b] transition"
-              >
-                New Package
-              </button>
-            </div>
           </div>
         </div>
 
-        {/* KPI cards (small) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Total Paquetes</div>
-            <div className="text-2xl font-bold text-[#166534]">{PACKAGES.length}</div>
-            <div className="text-xs text-gray-400 mt-1">Paquetes en catálogo</div>
-          </div>
+        <button onClick={() => handleOpenModal(null, 'add')} className="bg-[#166534] hover:bg-[#14532d] text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition w-full xl:w-auto justify-center shadow-sm">
+          <Plus size={18} /> Add Package
+        </button>
+      </div>
 
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Activos</div>
-            <div className="text-2xl font-bold text-green-600">{PACKAGES.filter(p=>p.status==="active").length}</div>
-            <div className="text-xs text-gray-400 mt-1">Paquetes disponibles</div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Categorías</div>
-            <div className="text-2xl font-bold text-[#166534]">{categories.length - 1}</div>
-            <div className="text-xs text-gray-400 mt-1">Tipos de paquetes</div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 shadow">
-            <div className="text-xs text-gray-500">Ingresos (ej.)</div>
-            <div className="text-2xl font-bold text-indigo-700">$ { (PACKAGES.length * 120).toLocaleString() }</div>
-            <div className="text-xs text-gray-400 mt-1">Estimado (fake)</div>
-          </div>
-        </div>
-
-        {/* Filters row */}
-        <div className="bg-white rounded-lg p-4 shadow mb-4">
-          <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-            <div className="flex gap-3 flex-wrap items-center">
-              <div>
-                <label className="text-xs text-gray-500">Categoría</label>
-                <select value={categoryFilter} onChange={(e)=>{ setCategoryFilter(e.target.value); setPage(1); }} className="ml-2 px-3 py-2 border rounded-md">
-                  {categories.map(c => <option key={c} value={c}>{c === "all" ? "Todas" : c}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs text-gray-500">Estado</label>
-                <select value={statusFilter} onChange={(e)=>{ setStatusFilter(e.target.value); setPage(1); }} className="ml-2 px-3 py-2 border rounded-md">
-                  {statuses.map(s => <option key={s} value={s}>{s === "all" ? "Todos" : s}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs text-gray-500">Ordenar por</label>
-                <select value={String(sortBy)} onChange={(e)=>{ const v = e.target.value as any; setSortBy(v); setSortDir("asc"); }} className="ml-2 px-3 py-2 border rounded-md">
-                  <option value="name">Nombre</option>
-                  <option value="created">Fecha</option>
-                  <option value="price">Precio</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex gap-3 items-center">
-              <div className="text-sm text-gray-500">Vista rápida</div>
-              <button onClick={()=>{ setSortDir('asc'); setSortBy('name'); }} className="px-3 py-2 border rounded-md">A→Z</button>
-              <button onClick={()=>{ setSortDir('desc'); setSortBy('name'); }} className="px-3 py-2 border rounded-md">Z→A</button>
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop table (md and up) */}
-        <div className="hidden md:block bg-white rounded-xl shadow-sm overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-[#166534] text-white">
+      {/* TABLE */}
+      <div className="bg-white rounded-xl overflow-hidden mb-4 min-h-[400px]">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium">
               <tr>
-                <th className="text-left p-4">Paquete</th>
-                <th className="text-left p-4">Categoría</th>
-                <th className="text-left p-4 cursor-pointer" onClick={()=>toggleSort("price")}>Precio {sortBy==="price" ? (sortDir==="asc" ? "▲" : "▼") : ""}</th>
-                <th className="text-left p-4">Usuarios</th>
-                <th className="text-left p-4">Almacenamiento</th>
-                <th className="text-left p-4">Creado</th>
-                <th className="text-left p-4">Estado</th>
-                <th className="text-right p-4">Acciones</th>
+                <SortableHeader label="Item" sortKey="itemName" currentSort={sortConfig} onSort={handleSort} />
+                <SortableHeader label="Customer" sortKey="customerName" currentSort={sortConfig} onSort={handleSort} />
+                <th className="p-5 font-normal">Tracking Number</th>
+                <th className="p-5 font-normal">Category</th>
+                <SortableHeader label="Price" sortKey="price" currentSort={sortConfig} onSort={handleSort} />
+                <SortableHeader label="Created" sortKey="created" currentSort={sortConfig} onSort={handleSort} />
+                <SortableHeader label="Status" sortKey="status" currentSort={sortConfig} onSort={handleSort} />
+                <th className="p-5 font-normal text-right">Actions</th>
               </tr>
             </thead>
-
-            <tbody>
-              {paged.map(p => (
-                <tr key={p.id} className="border-b hover:bg-gray-50">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#166534] text-white flex items-center justify-center font-semibold">{p.name.split(" ").map(s=>s[0]).slice(0,2).join("")}</div>
-                      <div>
-                        <div className="font-medium text-gray-800">{p.name}</div>
-                        <div className="text-xs text-gray-500">{p.description}</div>
-                      </div>
-                    </div>
+            <tbody className="text-[14px] divide-y divide-gray-50">
+              {paginatedData.length > 0 ? paginatedData.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
+                  <td className="p-5">
+                    <div className="font-bold text-gray-900 mb-0.5">{item.itemName}</div>
+                    <div className="text-[13px] text-gray-500 leading-tight">{item.itemDesc}</div>
                   </td>
-
-                  <td className="p-4 text-gray-700">{p.category}</td>
-                  <td className="p-4 font-semibold">{p.price}</td>
-                  <td className="p-4">{p.users}</td>
-                  <td className="p-4">{p.storage}</td>
-                  <td className="p-4">{fmtDate(p.created)}</td>
-
-                  <td className="p-4">
-                    {p.status === "active" ? (
-                      <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Activo</span>
-                    ) : (
-                      <span className="inline-block px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Inactivo</span>
-                    )}
+                  <td className="p-5">
+                    <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
+                    <div className="text-[13px] text-gray-500">{item.customerPhone}</div>
                   </td>
-
-                  <td className="p-4 text-right">
-                    <div className="inline-flex gap-2">
-                      <button onClick={()=>setSelected(p)} className="px-3 py-1 border rounded-md text-sm">Detalles</button>
-                      <button onClick={()=>alert(`Edit ${p.name} (simulado)`)} className="px-3 py-1 bg-[#166534] text-white rounded-md text-sm hover:bg-[#14572b]">Editar</button>
+                  <td className="p-5 text-gray-600">{item.trackingId}</td>
+                  <td className="p-5 text-gray-600">{item.category}</td>
+                  <td className="p-5 text-gray-600">${item.price} USD</td>
+                  <td className="p-5 text-gray-600">{item.created}</td>
+                  <td className="p-5"><StatusBadge status={item.status} /></td>
+                  <td className="p-5 text-right">
+                    <div className="flex items-center justify-end gap-2 text-gray-500">
+                      <button onClick={() => handleOpenModal(item, 'edit')} className="hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">Edit</button>
+                      <button onClick={() => handleOpenModal(item, 'view')} className="hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">View</button>
                     </div>
                   </td>
                 </tr>
-              ))}
-
-              {paged.length === 0 && (
+              )) : (
                 <tr>
-                  <td colSpan={8} className="p-6 text-center text-gray-500">No se encontraron paquetes.</td>
+                  <td colSpan={8} className="p-10 text-center text-gray-400">No packages found.</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-
-        {/* Mobile cards (smaller screens) */}
-        <div className="md:hidden space-y-3">
-          {paged.map(p => (
-            <article key={p.id} className="bg-white rounded-lg shadow p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-[#166534] text-white flex items-center justify-center font-semibold">{p.name.split(" ").map(s=>s[0]).slice(0,2).join("")}</div>
-                  <div>
-                    <div className="font-medium text-gray-800">{p.name}</div>
-                    <div className="text-xs text-gray-500">{p.category} • {fmtDate(p.created)}</div>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <div className="font-semibold">{p.price}</div>
-                  <div className="text-xs mt-1">
-                    <span className={`inline-block mt-2 px-2 py-1 rounded-full ${p.status==='active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{p.status === 'active' ? 'Activo' : 'Inactivo'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mt-3">{p.description}</p>
-
-              <div className="mt-3 flex flex-wrap gap-2 text-sm text-gray-700">
-                <div className="px-2 py-1 border rounded">Usuarios: {p.users}</div>
-                <div className="px-2 py-1 border rounded">Almac.: {p.storage}</div>
-                <div className="px-2 py-1 border rounded">Vel.: {p.speed}</div>
-              </div>
-
-              <div className="mt-4 flex gap-2 justify-end">
-                <button onClick={()=>setSelected(p)} className="px-3 py-1 border rounded-md text-sm">Detalles</button>
-                <button onClick={()=>alert(`Edit ${p.name} (simulado)`)} className="px-3 py-1 bg-[#166534] text-white rounded-md text-sm hover:bg-[#14572b]">Editar</button>
-              </div>
-            </article>
-          ))}
-
-          {paged.length === 0 && (
-            <div className="text-center text-gray-500">No se encontraron paquetes.</div>
-          )}
-        </div>
-
-        {/* Pagination */}
-        <div className="flex flex-col md:flex-row items-center justify-between mt-4 gap-3">
-          <div className="text-sm text-gray-600">Showing {total === 0 ? 0 : start + 1} - {Math.min(start + perPage, total)} of {total}</div>
-          <div className="flex items-center gap-2">
-            <button disabled={page===1} onClick={()=>setPage(p=>Math.max(1,p-1))} className="px-3 py-1 border rounded-md disabled:opacity-50">Prev</button>
-            <div className="flex gap-1">
-              {Array.from({length: pageCount}).map((_, i) => (
-                <button key={i} onClick={()=>setPage(i+1)} className={`px-3 py-1 rounded-md ${page===i+1 ? 'bg-[#166534] text-white' : 'border'}`}>{i+1}</button>
-              ))}
-            </div>
-            <button disabled={page===pageCount} onClick={()=>setPage(p=>Math.min(pageCount,p+1))} className="px-3 py-1 border rounded-md disabled:opacity-50">Next</button>
-          </div>
-        </div>
-
       </div>
 
-      {/* Details modal */}
-      {selected && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg w-full max-w-2xl p-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="text-2xl font-bold">{selected.name}</h3>
-                <p className="text-sm text-gray-500">{selected.category} • {selected.price}</p>
-              </div>
-              <div>
-                <button onClick={()=>setSelected(null)} className="text-gray-600">✕</button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div>
-                <h4 className="text-sm font-semibold text-gray-700">Detalles</h4>
-                <ul className="text-sm text-gray-700 mt-2 space-y-1">
-                  <li><b>Usuarios:</b> {selected.users}</li>
-                  <li><b>Almacenamiento:</b> {selected.storage}</li>
-                  <li><b>Velocidad:</b> {selected.speed}</li>
-                  <li><b>Seguridad:</b> {selected.security}</li>
-                  <li><b>Soporte:</b> {selected.support}</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-semibold text-gray-700">Descripción</h4>
-                <p className="text-sm text-gray-700 mt-2">{selected.description}</p>
-                <div className="mt-4 text-sm text-gray-500"><b>Creado:</b> {fmtDate(selected.created)}</div>
-                <div className="mt-1 text-sm">
-                  <span className={`inline-block mt-2 px-2 py-1 rounded-full ${selected.status==='active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{selected.status === 'active' ? 'Activo' : 'Inactivo'}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button onClick={()=>setSelected(null)} className="px-4 py-2 border rounded-md">Cerrar</button>
-              <button onClick={()=>alert(`Comprar ${selected.name} (simulado)`)} className="px-4 py-2 bg-[#166534] text-white rounded-md hover:bg-[#14572b]">Contratar</button>
-            </div>
-          </div>
+      {/* PAGINATION */}
+      <div className="flex justify-between items-center mt-6 text-[14px] border-t border-gray-100 pt-4">
+        <span className="text-gray-400">Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</span>
+        <div className="flex items-center gap-2">
+          <button 
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            className="text-gray-400 hover:text-gray-600 disabled:opacity-50 px-3 py-1"
+          >
+            Previous
+          </button>
+          {Array.from({ length: totalPages }).map((_, idx) => (
+             <button 
+               key={idx}
+               onClick={() => setCurrentPage(idx + 1)}
+               className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors ${currentPage === idx + 1 ? 'bg-[#166534] text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
+             >
+               {idx + 1}
+             </button>
+          ))}
+          <button 
+            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            className="text-[#16a34a] font-semibold flex items-center gap-1 hover:text-[#15803d] disabled:opacity-50 px-3 py-1"
+          >
+            Next <ChevronRight size={16} />
+          </button>
         </div>
+      </div>
+
+      {/* MODAL */}
+      {isModalOpen && currentPackage && (
+        <Modal 
+          isOpen={isModalOpen} 
+          mode={modalMode} 
+          data={currentPackage} 
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+          onDelete={handleDelete}
+        />
       )}
     </div>
   );
 }
+
+/* --- SUB COMPONENTS --- */
+
+const StatCard = ({ title, value, icon }: { title: string, value: string, icon: React.ReactNode }) => (
+  <div className="bg-[#F9FAFB] p-6 rounded-[20px] flex flex-col justify-between h-[140px] relative">
+    <div className="flex justify-between items-start">
+      <h3 className="text-gray-500 font-medium text-[15px]">{title}</h3>
+      <div className="w-9 h-9 rounded-full bg-[#E5E7EB] flex items-center justify-center">{icon}</div>
+    </div>
+    <div className="text-[32px] font-medium text-gray-900 tracking-tight">{value}</div>
+  </div>
+);
+
+const StatusBadge = ({ status }: { status: string }) => {
+  const styles = {
+    Delivered: { color: "text-[#4ade80]", icon: <Check size={14} strokeWidth={3} /> },
+    "In Transit": { color: "text-[#3b82f6]", icon: <div className="w-3.5 h-3.5 border-[1.5px] border-[#3b82f6] rounded-full flex items-center justify-center"><span className="text-[8px] font-bold">i</span></div> },
+    Cancelled: { color: "text-[#ef4444]", icon: <X size={14} strokeWidth={3} /> },
+  };
+  const style = styles[status as keyof typeof styles] || { color: "text-gray-500", icon: null };
+
+  return (
+    <div className={`flex items-center gap-2 ${style.color} font-medium text-[13px]`}>
+      {style.icon} {status}
+    </div>
+  );
+};
+
+const SortableHeader = ({ label, sortKey, currentSort, onSort }: any) => (
+  <th className="p-5 font-normal cursor-pointer hover:bg-gray-100 transition-colors select-none" onClick={() => onSort(sortKey)}>
+    <div className="flex items-center gap-1">
+      {label}
+      <ArrowUpDown size={12} className={`transition-opacity ${currentSort.key === sortKey ? 'opacity-100' : 'opacity-30'}`} />
+    </div>
+  </th>
+);
+
+/* --- MODAL --- */
+interface ModalProps {
+  isOpen: boolean;
+  mode: 'view' | 'edit' | 'add';
+  data: PackageData;
+  onClose: () => void;
+  onSave: (data: PackageData) => void;
+  onDelete: (id: string) => void;
+}
+
+const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete }: ModalProps) => {
+  const [formData, setFormData] = useState<PackageData>(data);
+
+  if (!isOpen) return null;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#F9FAFB]">
+          <h3 className="text-lg font-bold text-gray-900">
+            {mode === 'add' ? 'Add New Package' : mode === 'edit' ? 'Edit Package' : 'Package Details'}
+          </h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+        </div>
+
+        <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Tracking ID</label>
+              <input name="trackingId" disabled={mode !== 'add'} value={formData.trackingId} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 disabled:cursor-not-allowed outline-none focus:ring-2 focus:ring-green-500" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Status</label>
+              <select name="status" disabled={mode === 'view'} value={formData.status} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white border-gray-300">
+                <option value="Delivered">Delivered</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div><label className="block text-xs font-medium text-gray-500 uppercase mb-1">Item Name</label><input name="itemName" disabled={mode === 'view'} value={formData.itemName} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" /></div>
+          <div><label className="block text-xs font-medium text-gray-500 uppercase mb-1">Description</label><input name="itemDesc" disabled={mode === 'view'} value={formData.itemDesc} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" /></div>
+          <div><label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Name</label><input name="customerName" disabled={mode === 'view'} value={formData.customerName} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" /></div>
+          <div><label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Phone</label><input name="customerPhone" disabled={mode === 'view'} value={formData.customerPhone} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" /></div>
+          <div className="grid grid-cols-2 gap-4">
+             <div><label className="block text-xs font-medium text-gray-500 uppercase mb-1">Category</label><input name="category" disabled={mode === 'view'} value={formData.category} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" /></div>
+             <div><label className="block text-xs font-medium text-gray-500 uppercase mb-1">Price ($)</label><input type="number" name="price" disabled={mode === 'view'} value={formData.price} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" /></div>
+          </div>
+
+          <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+            {mode === 'edit' ? (
+              <button type="button" onClick={() => onDelete(data.id)} className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 flex items-center gap-2"><Trash2 size={16} /> Delete</button>
+            ) : <div></div>}
+            
+            <div className="flex gap-3">
+              <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{mode === 'view' ? 'Close' : 'Cancel'}</button>
+              {mode !== 'view' && (
+                <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-[#166534] rounded-lg hover:bg-[#14532d] flex items-center gap-2"><Save size={16} /> Save Changes</button>
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};

@@ -1,119 +1,129 @@
-import React from 'react';
-import image from '../../assets/medium-shot-smiley-woman-with-crossed-arms (1).png'
-import { Helmet } from 'react-helmet';
+import React from "react";
+import HeroBg from "../../assets/HeroBg.png";
 
 const Contact = () => {
-    return (
-        <div className="w-full min-h-screen bg-gradient-to-r from-green-900 via-green-700 to-yellow-600 py-16">
-            <Helmet>
-                <title>Contacto |  EXPRESUR</title>
-            </Helmet>
-            {/* TOP PROFILES */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+  return (
+    <>
+      {/* ================= MOBILE VERSION ================= */}
+      <section
+        className="md:hidden w-full pt-12 pb-24 px-6"
+        style={{
+          backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="max-w-md mx-auto">
 
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-0">
+          {/* Title */}
+          <div className="text-center mb-10">
+            <h2 className="text-4xl font-extrabold text-white mb-4">
+              Contáctenos
+            </h2>
+            <p className="text-white text-base leading-relaxed">
+              Si deseas información, solicitar un servicio o realizar una consulta,
+              llena el formulario y te responderé lo antes posible. Trabajo con
+              rapidez, profesionalidad y total seguridad para ofrecerte la mejor
+              experiencia posible.
+            </p>
+          </div>
 
-                    {[1, 2, 3].map((item, index) => (
-                        <React.Fragment key={item}>
+          {/* Form */}
+          <form className="space-y-6">
+            <input
+              type="text"
+              placeholder="Nombre Completo"
+              className="w-full px-6 py-4 bg-green-800 border-2 border-orange-500  rounded-3xl text-white placeholder-gray-300 focus:outline-none focus:ring-4 focus:ring-orange-400"
+              required
+            />
 
-                            {/* Profile */}
-                            <div className="flex items-center gap-4 text-white px-4 sm:px-6 md:px-8 lg:px-8">
-                                <img
-                                    src={image}
-                                    alt="profile"
-                                    className="w-20 h-20 sm:w-24 sm:h-24 lg:w-24 lg:h-24 rounded-full object-cover border-4 border-white shadow-lg"
-                                />
-                                <div className="flex flex-col">
-                                    <h3 className="text-xl sm:text-2xl font-bold lg:text-2xl">
-                                        {item === 1 ? "Karen Gómez" : item === 2 ? "Laura Martínez" : "Ana Sofía"}
-                                    </h3>
+            <input
+              type="email"
+              placeholder="Correo electrónico"
+              className="w-full px-6 py-4 bg-green-800 border-2 border-orange-500 rounded-3xl  text-white placeholder-gray-300 focus:outline-none focus:ring-4 focus:ring-orange-400"
+              required
+            />
 
-                                    <p className="text-xs sm:text-sm opacity-90 mb-2 lg:text-sm">
-                                        {item === 1
-                                            ? "Atención al cliente"
-                                            : item === 2
-                                                ? "Asesora comercial"
-                                                : "Soporte y consultas"}
-                                    </p>
+            <input
+              type="tel"
+              placeholder="Número de teléfono"
+              className="w-full px-6 py-4 bg-green-800 border-2 border-orange-500 rounded-3xl text-white placeholder-gray-300 focus:outline-none focus:ring-4 focus:ring-orange-400"
+            />
 
-                                    <button className="px-5 py-1.5 text-xs font-bold bg-transparent border-2 border-orange-400 text-white rounded-full hover:bg-orange-400 transition w-fit">
-                                        CONTACTAR
-                                    </button>
-                                </div>
-                            </div>
+            <input
+              type="text"
+              placeholder="Asunto del mensaje"
+              className="w-full px-6 py-4 bg-green-800 border-2 border-orange-500 rounded-3xl  text-white placeholder-gray-300 focus:outline-none focus:ring-4 focus:ring-orange-400"
+              required
+            />
 
-                            {/* Vertical line (desktop only) */}
-                            {index < 2 && (
-                                <div className="hidden lg:block w-0.5 h-32 bg-orange-500 mx-6"></div>
-                            )}
+            <textarea
+              placeholder="Escribe aquí tu mensaje..."
+              rows={5}
+              className="w-full px-6 py-4 bg-green-800 border-2 border-orange-500 rounded-3xl text-white placeholder-gray-300 focus:outline-none focus:ring-4 focus:ring-orange-400 resize-none"
+              required
+            />
 
-                        </React.Fragment>
-                    ))}
-
-                </div>
-            </div>
-
-            {/* CONTACT FORM BOX */}
-            <div className="max-w-7xl mx-auto mt-10 bg-green-800 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl text-white">
-
-                {/* Title + text */}
-                <div className="flex flex-col lg:flex-row justify-between items-start gap-6 mb-8">
-                    <h2 className="text-3xl sm:text-4xl font-bold lg:text-4xl">Contáctame</h2>
-                    <p className="max-w-xl text-xs sm:text-sm leading-relaxed opacity-90">
-                        Si deseas información, solicitar un servicio o realizar una consulta,
-                        llena el formulario y te responderé lo antes posible.
-                        Trabajo con rapidez, profesionalidad y total seguridad para ofrecerte
-                        la mejor experiencia posible.
-                    </p>
-                </div>
-
-                {/* Form grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-                    {/* Left inputs */}
-                    <div className="flex flex-col gap-5">
-                        <input
-                            type="text"
-                            placeholder="Tu nombre completo"
-                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
-                        />
-                        <input
-                            type="email"
-                            placeholder="Correo electrónico"
-                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
-                        />
-                        <input
-                            type="tel"
-                            placeholder="Número de teléfono"
-                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Asunto del mensaje"
-                            className="bg-transparent border-2 border-orange-400 rounded-full px-6 py-3 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition"
-                        />
-                    </div>
-
-                    {/* Right textarea + button */}
-                    <div className="flex flex-col gap-4">
-                        <textarea
-                            placeholder="Escribe aquí tu mensaje…"
-                            className="bg-transparent border-2 border-orange-400 rounded-3xl p-5 text-sm outline-none placeholder-white placeholder-opacity-70 focus:border-orange-300 transition resize-none"
-                            rows={8}
-                        ></textarea>
-
-                        <div className="flex justify-center lg:justify-end">
-                            <button className="bg-orange-500 text-white font-bold px-10 py-3 text-sm rounded-full hover:bg-orange-600 transition shadow-lg">
-                                ENVIAR MENSAJE
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            {/* Button */}
+            <button
+              type="submit"
+              className="w-full py-4 bg-orange-500 text-white font-extrabold text-lg rounded-3xl  hover:bg-orange-600 transition shadow-xl uppercase tracking-wider"
+            >
+              ENVIAR MENSAJE
+            </button>
+          </form>
 
         </div>
-    );
+      </section>
+
+      {/* ================= DESKTOP VERSION (UNCHANGED) ================= */}
+      <div
+        className="hidden md:block w-full h-[496px] px-4 flex items-center justify-center relative"
+        style={{
+          backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+
+      <div className="hidden md:block w-full px-4 -mt-72 lg:-mt-96">
+        <div className="max-w-3xl lg:max-w-5xl mx-auto bg-green-800/95 backdrop-blur-sm rounded-3xl shadow-2xl p-10 lg:p-12">
+          
+          <div className="text-center mb-8">
+            <h2 className="text-7xl font-bold text-white mb-3">
+              Contáctenos
+            </h2>
+            <p className="text-white text-base max-w-3xl mx-auto leading-relaxed">
+              Si deseas información, solicitar un servicio o realizar una consulta,
+              llena el formulario y te responderé lo antes posible.
+            </p>
+          </div>
+
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <input className="w-full px-6 py-4 bg-green-900 border-2 border-orange-400 rounded-xl text-white" placeholder="Nombre Completo" />
+              <input className="w-full px-6 py-4 bg-green-900 border-2 border-orange-400 rounded-xl text-white" placeholder="Correo electrónico" />
+              <input className="w-full px-6 py-4 bg-green-900 border-2 border-orange-400 rounded-xl text-white" placeholder="Número de teléfono" />
+            </div>
+            <div className="space-y-4">
+              <input className="w-full px-6 py-4 bg-green-900 border-2 border-orange-400 rounded-xl text-white" placeholder="Asunto del mensaje" />
+              <textarea className="w-full px-6 py-4 bg-green-900 border-2 border-orange-400 rounded-2xl text-white resize-none h-48" placeholder="Escribe aquí tu mensaje..." />
+            </div>
+
+            <div className="md:col-span-2 flex justify-center mt-6">
+              <button className="px-12 py-4 bg-orange-500 text-white rounded-2xl font-semibold text-lg  w-64">
+                ENVIAR MENSAJE
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className="hidden md:block h-32"></div>
+    </>
+  );
 };
 
 export default Contact;

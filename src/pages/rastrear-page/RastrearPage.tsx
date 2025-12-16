@@ -27,7 +27,7 @@ const RastrearPage: React.FC = () => {
       {/* Hero Section with Background */}
       <div 
         className="relative min-h-[78vh] bg-cover bg-center bg-no-repeat" 
-        style={{ backgroundImage: `url(${HeroBg})` }}
+        style={{ backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})` }}
       >
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/40" />
