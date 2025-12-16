@@ -87,7 +87,7 @@ const FAQPage: React.FC = () => {
           max-w-[1200px]
           mx-auto
           -mt-[40%]
-          md:-mt-[20%]
+          md:-mt-[25%]
           relative
           z-50
           bg-[#026432]
