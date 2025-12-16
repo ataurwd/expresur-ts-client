@@ -1,5 +1,5 @@
 import React from "react";
-import HeroImg from "../../assets/RecogidaHero.png";
+import HeroImg from "../../assets/rastrear-page-banner-image.png";
 import HeroBg from "../../assets/HeroBg.png";
 import { useAuth } from "../../context/AuthContext";
 
@@ -28,8 +28,8 @@ const RecogidaHero: React.FC = () => {
           {/* LEFT: Title */}
     <h1
   className="
-   text-center text-[50px] text-white font-semibold tracking-tight leading-[1.05]
-    text-[32px] sm:text-[42px] md:text-[55px] lg:text-[75px] xl:text-[90px]
+   text-[50px] text-white text-left font-semibold tracking-tight leading-[1.05]
+     sm:text-[42px] md:text-[55px] lg:text-[75px] xl:text-[110px]
     whitespace-pre
     lg:mt-[10%]
   "

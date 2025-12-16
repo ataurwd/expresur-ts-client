@@ -1,106 +1,80 @@
 import React from "react";
-import mapIllustration from "../../assets/pickup-map.png"; // update path
+import mapIllustration from "../../assets/pickup-map.png";
 
 const PickupServiceCard: React.FC = () => {
   return (
-    <section className="w-full flex justify-center py-12 px-4 bg-transparent">
-      {/* CARD: fluid but keep original max size */}
-      <div
-        className="
-          z-10 lg:mt-[-9%] md:mt-[-7%]
-          bg-[#0f6b3f] text-white rounded-[30px] shadow-2xl
-          px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 py-10 sm:py-12 md:py-14 overflow-hidden
-          w-full max-w-[1673px]
-        "
-      >
-        {/* Title (responsive with clamp so it never gets too small or too large) */}
-        <h1
-          className="text-center font-semibold leading-tight"
-          style={{ fontSize: "clamp(28px, 4vw, 56px)" }}
-        >
-          <span className="text-orange-400">Vamos a tu casa u oficina</span>
-        </h1>
-
-        {/* Divider */}
-        <div className="w-full flex justify-center mt-8 mb-8">
-          <div className="h-[3px] w-full max-w-[800px] bg-orange-400 rounded-full" />
-        </div>
-
-        {/* Subtitle */}
-        <h2
-          className="text-center tracking-widest mb-10"
-          style={{ fontSize: "clamp(18px, 2.2vw, 30px)" }}
-        >
-          CÓMO FUNCIONA:
+    <section className="w-full  text-white py-16 px-4">
+      <div className="max-w-[1673px] bg-[#0B6B3A] mx-auto p-10 rounded-[30px]">
+        {/* Title */}
+        <h2 className="text-center text-3xl md:text-8xl font-bold leading-tight mb-16">
+          Vamos a tu casa <br className="hidden md:block" /> u oficina
         </h2>
 
         {/* Timeline */}
-        <div className="relative mb-12 px-4 sm:px-10">
-          {/* Horizontal line (positioned responsively using left/right offsets) */}
-          <div className="absolute left-6 right-6 sm:left-16 sm:right-16 top-[110px] h-[4px] bg-orange-400 rounded-full"></div>
+        <div className="relative mb-20">
+          {/* Line */}
+          {/* Desktop horizontal line */}
+          <div className="hidden md:block absolute top-[9px] left-0 right-0 w-[75%] mx-auto h-[2px] bg-[#F4A300]" />
 
-          {/* Steps: responsive grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-center gap-8 sm:gap-10">
+          {/* Mobile vertical line */}
+          <div className="block md:hidden absolute top-0 left-[9px] h-full w-[2px] bg-[#F4A300]" />
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-0 relative">
             {[
-              { num: "01", text: "Solicitas la recogida" },
-              { num: "02", text: "Confirmamos horario" },
-              { num: "03", text: "Vamos a tu dirección" },
-              { num: "04", text: "Procesamos y enviamos" }
-            ].map((step) => (
-              <div key={step.num} className="flex flex-col items-center text-center px-2">
-                {/* Number - responsive using clamp */}
+              "Solicitas la recogida",
+              "Confirmamos horario",
+              "Vamos a tu dirección",
+              "Procesamos y enviamos",
+            ].map((step, index) => {
+              const isActive = index === 2;
+              return (
                 <div
-                  className="font-light mb-4"
-                  style={{ fontSize: "clamp(36px, 6.2vw, 90px)" }}
+                  key={index}
+                  className="flex md:flex-col items-center md:text-center gap-4 md:gap-3"
                 >
-                  {step.num}
+                  {/* Dot */}
+                  <div
+                    className={`w-5 h-5 rounded-full z-10 ${
+                      isActive ? "bg-white" : "bg-[#F4A300]"
+                    }`}
+                  />
+
+                  {/* Text */}
+                  <p className="text-base md:text-3xl font-semibold max-w-[160px]">
+                    {step}
+                  </p>
                 </div>
-
-                {/* Dot */}
-                <div className="w-6 h-6 bg-orange-400 rounded-full mb-4 z-10" />
-
-                {/* Label */}
-                <p style={{ fontSize: "clamp(16px, 1.6vw, 22px)" }} className="leading-tight max-w-[260px]">
-                  {step.text}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Areas + Image */}
-        <div className="bg-[#0c5c36] border-[3px] border-orange-400 rounded-[22px] p-6 sm:p-8 md:p-10 flex flex-col lg:flex-row items-center gap-8 mt-8">
-          {/* Areas */}
-          <div className="flex-1 w-full">
-            <h3 className="font-semibold mb-4" style={{ fontSize: "clamp(20px, 2.4vw, 32px)" }}>
-              ÁREAS:
-            </h3>
+        {/* Content Box */}
+        <div className="relative md:w-[65%] mx-auto border-2 border-[#F4A300] rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-10">
+          {/* Left */}
+          <div className="w-full md:w-1/2">
+            <h3 className="text-4xl md:text-6xl font-bold mb-6">Áreas</h3>
 
-            <ul className="grid grid-cols-2 gap-3 text-[clamp(14px,1.6vw,22px)]">
-              <li className="flex items-center gap-2"><span className="text-orange-400">•</span> Miami</li>
-              <li className="flex items-center gap-2"><span className="text-orange-400">•</span> Hialeah</li>
-              <li className="flex items-center gap-2"><span className="text-orange-400">•</span> Homestead</li>
-              <li className="flex items-center gap-2"><span className="text-orange-400">•</span> Doral</li>
-              <li className="flex items-center gap-2"><span className="text-orange-400">•</span> Kendall</li>
-            </ul>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4 text-lg">
+              {["Miami", "Doral", "Kendall", "Hialeah", "Homestead"].map(
+                (area) => (
+                  <div key={area} className="flex items-center gap-3">
+                    <span className="w-3 h-3 rounded-full bg-[#F4A300]" />
+                    <span className=" md:text-3xl">{area}</span>
+                  </div>
+                )
+              )}
+            </div>
           </div>
 
-          {/* Illustration */}
-          <div className="w-full lg:w-[420px] flex-shrink-0">
+          {/* Right Image */}
+          <div className="xl:relative w-full md:w-1/2 py-10 flex justify-center md:justify-end">
             <img
               src={mapIllustration}
-              alt="map"
-              className="w-full h-auto object-contain drop-shadow-lg"
-              draggable={false}
+              alt="Map Illustration"
+              className="xl:absolute max-w-[420px] w-full h-auto -right-36 -top-24"
             />
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-10 sm:mt-12 text-[clamp(18px,2.2vw,30px)] font-medium flex flex-col sm:flex-row justify-around items-center gap-4 sm:gap-0">
-          <p>+ Comodidad</p>
-          <p>+ Ahorro de tiempo</p>
-          <p>+ Seguridad</p>
         </div>
       </div>
     </section>
