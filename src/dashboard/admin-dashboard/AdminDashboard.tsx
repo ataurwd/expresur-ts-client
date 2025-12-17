@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Logo from "../../assets/Grupo 1.png";
+import Logo from "../../assets/Grupo 1.png"; // Ensure this path is correct for your project
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
@@ -8,35 +8,34 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   IconButton,
-  Divider,
   Box,
-  Avatar,
   Typography,
 } from "@mui/material";
-import {
-  Dashboard as DashboardIcon,
-  People as PeopleIcon,
-  Inventory2 as InventoryIcon,
-  Shuffle as ConsolidateIcon,
-  LocalShipping as LocalShippingIcon,
-  Flight as FlightIcon,
-  LocalTaxi as LocalTaxiIcon,
-  Payment as PaymentIcon,
-  CurrencyExchange as RatesIcon,
-  TrackChanges as TrackingIcon,
-  BarChart as ReportsIcon,
-  Settings as SettingsIcon,
-  ChevronLeft,
-  ChevronRight,
-  Logout,
-  Lock,
-  QrCode,
-} from "@mui/icons-material";
-import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
 
+// Importing specific icons to match the design
+import {
+  GridView as DashboardIcon,
+  Inventory2Outlined as PackagesIcon,
+  LockOutlined as LockerIcon,
+  Shuffle as ConsolidateIcon,
+  LocalShippingOutlined as ShipmentsIcon,
+  LayersOutlined as LogisticGroupIcon,
+  QrCodeScanner as QrIcon,
+  PersonOutline as UsersIcon,
+  AccountBalanceWalletOutlined as WalletIcon,
+  BarChart as ReportIcon,
+  ManageAccountsOutlined as InternalUsersIcon,
+  AssignmentOutlined as AuditIcon,
+  BuildOutlined as ApiIcon,
+  SettingsOutlined as SettingsIcon,
+  KeyboardDoubleArrowLeft, 
+  KeyboardDoubleArrowRight,
+  Logout,
+} from "@mui/icons-material";
+
+import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
 
 type Props = {
   adminName?: string;
@@ -46,35 +45,23 @@ type Props = {
 };
 
 const drawerWidth = 260;
-const collapsedWidth = 65;
+const collapsedWidth = 70;
 
-/* menu items */
+/* Updated Menu Items to match the screenshot exactly */
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
-  { text: "Packages", icon: <InventoryIcon />, path: "/dashboard/admin-packages" },
-  {text:"Locker", icon: <Lock/>, path: "/dashboard/admin-locker"},
-  {
-    text: "Consolidations",
-    icon: <ConsolidateIcon />,
-    path: "/dashboard/admin-consolidations",
-  },
-  {
-    text: "Shipments",
-    icon: <LocalShippingIcon />,
-    path: "/dashboard/admin-shipments",
-  },
-  { text: "Logistic Group", icon: <FlightIcon />, path: "/dashboard/logistic-group" },
-  {text: "QR Scanning", icon: <QrCode/>, path: "/dashboard/qr-scanning"},
-  { text: "Users", icon: <PeopleIcon />, path: "/dashboard/admin-users" },
-  // {
-  //   text: "Pickup Requests",
-  //   icon: <LocalTaxiIcon />,
-  //   path: "/dashboard/admin-pickup",
-  // },
-  { text: "Payments", icon: <PaymentIcon />, path: "/dashboard/admin-payments" },
-  //{ text: "Rates", icon: <RatesIcon />, path: "/dashboard/admin-rates" },
-  // { text: "Tracking", icon: <TrackingIcon />, path: "/dashboard/admin-tracking" },
-  { text: "Reports", icon: <ReportsIcon />, path: "/dashboard/admin-reports" },
+  { text: "Packages", icon: <PackagesIcon />, path: "/dashboard/admin-packages" },
+  { text: "Locker", icon: <LockerIcon />, path: "/dashboard/admin-locker" },
+  { text: "Consolidations", icon: <ConsolidateIcon />, path: "/dashboard/admin-consolidations" },
+  { text: "Shipments", icon: <ShipmentsIcon />, path: "/dashboard/admin-shipments" },
+  { text: "Logistic Group", icon: <LogisticGroupIcon />, path: "/dashboard/logistic-group" },
+  { text: "QR Scanning", icon: <QrIcon />, path: "/dashboard/qr-scanning" },
+  { text: "Users", icon: <UsersIcon />, path: "/dashboard/admin-users" },
+  { text: "Wallet", icon: <WalletIcon />, path: "/dashboard/admin-wallet" },
+  { text: "Report", icon: <ReportIcon />, path: "/dashboard/admin-reports" },
+  { text: "Internal Users", icon: <InternalUsersIcon />, path: "/dashboard/internal-users" },
+  { text: "Audit Logs", icon: <AuditIcon />, path: "/dashboard/audit-logs" },
+  { text: "API Integrations", icon: <ApiIcon />, path: "/dashboard/api-integrations" },
   { text: "Settings", icon: <SettingsIcon />, path: "/dashboard/admin-settings" },
 ];
 
@@ -100,8 +87,11 @@ export default function AdminSidebar({
 
   const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
 
-  /* active color */
-  const ACTIVE_COLOR = "#fa921d";
+  // Colors extracted from the image
+  const BG_COLOR = "#025939"; // Deep Green
+  const ACTIVE_ORANGE = "#FB923C"; // Orange
+  const TEXT_COLOR = "#D1D5DB"; // Light Grey for inactive text
+  const TEXT_ACTIVE = "#FFFFFF"; // White for active text
 
   return (
     <Drawer
@@ -113,7 +103,7 @@ export default function AdminSidebar({
         "& .MuiDrawer-paper": {
           width: open ? drawerWidth : collapsedWidth,
           boxSizing: "border-box",
-          background: "linear-gradient(180deg, #166534 0%, #166534 100%)",
+          backgroundColor: BG_COLOR,
           color: "#fff",
           transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           overflowX: "hidden",
@@ -126,34 +116,35 @@ export default function AdminSidebar({
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          p: 2,
+          justifyContent: open ? "space-between" : "center",
+          p: 3,
+          mb: 1,
         }}
       >
-        <Typography
-          variant="h6"
-          noWrap
-          sx={{
-            fontWeight: 700,
-            opacity: open ? 1 : 0,
-            transition: "opacity 0.2s",
-            fontFamily: '"Poppins", sans-serif',
-          }}
-        >
-          <NavLink to={"/"} style={{ display: "inline-block" }}>
-            <img className="w-2/3" src={Logo} alt="" />
-          </NavLink>
-        </Typography>
-        <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
-          {open ? <ChevronLeft /> : <ChevronRight />}
+        {open && (
+          <Typography
+            variant="h5"
+            noWrap
+            sx={{
+              fontWeight: 800,
+              color: ACTIVE_ORANGE,
+              fontFamily: '"Poppins", sans-serif',
+              letterSpacing: "0.5px",
+            }}
+          >
+            EXPRESUR
+          </Typography>
+        )}
+        
+        <IconButton onClick={handleToggle} sx={{ color: "#fff", p: 0.5 }}>
+          {open ? <KeyboardDoubleArrowLeft /> : <KeyboardDoubleArrowRight />}
         </IconButton>
       </Box>
 
-      <Divider sx={{ backgroundColor: "#475569" }} />
-
       {/* Menu Items */}
-      <List sx={{ flexGrow: 1, pt: 2 }}>
+      <List sx={{ flexGrow: 1, px: 2 }}>
         {adminMenuItems.map((item) => {
+          // Logic to determine active state
           const endMatch = item.path === "/dashboard/admin" ? false : true;
           const match = matchPath(
             { path: normalize(item.path), end: endMatch },
@@ -162,7 +153,7 @@ export default function AdminSidebar({
           const isSelected = !!match;
 
           return (
-            <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
+            <ListItem key={item.text} disablePadding sx={{ display: "block", mb: 0.5 }}>
               <ListItemButton
                 component={(props: any) => (
                   <NavLink {...props} to={item.path} end={endMatch} />
@@ -171,63 +162,53 @@ export default function AdminSidebar({
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  mx: 1,
-                  mb: 0.5,
-                  borderRadius: 2,
-                  transition: "all 0.2s",
-                  color: isSelected ? ACTIVE_COLOR : "#fff",
-
-                  // ACTIVE background uses a low-opacity tone of the active color
-                  backgroundColor: isSelected
-                    ? "rgba(250,146,29,0.10)"
-                    : "transparent",
-
+                  px: 0, // Reset padding to handle centering manually
+                  borderRadius: "50px", // Rounded styling
+                  
+                  // Removing default MUI selected background
+                  "&.Mui-selected": {
+                    backgroundColor: "transparent", 
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: "transparent",
+                  },
                   "&:hover": {
-                    // subtle hover with active color tint
-                    backgroundColor: isSelected
-                      ? "rgba(250,146,29,0.12)"
-                      : "rgba(250,146,29,0.06)",
-                    transform: "translateX(4px)",
-                  },
-
-                  // ensure NavLink active class styling also shows
-                  "&.active": {
-                    backgroundColor: "rgba(250,146,29,0.10)",
-                    color: ACTIVE_COLOR,
-                  },
-
-                  // ensure child text inherits color
-                  "& .MuiListItemText-root": {
-                    color: isSelected ? ACTIVE_COLOR : "#fff",
-                  },
-
-                  // fallback for small collapsed state
-                  "& .MuiListItemIcon-root": {
-                    color: isSelected ? ACTIVE_COLOR : "#fff",
+                    backgroundColor: "transparent",
                   },
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                    color: isSelected ? ACTIVE_COLOR : "#fff",
-                  }}
+                {/* ICON WRAPPER (This handles the orange circle) */}
+                <Box
+                    sx={{
+                        minWidth: 40,
+                        minHeight: 40,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: '50%',
+                        backgroundColor: isSelected ? ACTIVE_ORANGE : 'transparent',
+                        color: isSelected ? '#FFF' : '#8faebb', // Text color for inactive icons
+                        mr: open ? 2 : 'auto',
+                        ml: open ? 0 : 'auto',
+                        transition: 'all 0.2s ease-in-out',
+                    }}
                 >
-                  {item.icon}
-                </ListItemIcon>
+                    {/* FIXED: Added <any> to cast the icon */}
+                    {React.cloneElement(item.icon as React.ReactElement<any>, { sx: { fontSize: 22 } })}
+                </Box>
 
+                {/* TEXT LABEL */}
                 <ListItemText
                   primary={item.text}
                   sx={{
                     opacity: open ? 1 : 0,
-                    transition: "opacity 0.2s 0.1s",
-                    // text color explicitly set to ensure contrast
+                    transition: "opacity 0.2s",
+                    m: 0,
                     "& .MuiTypography-root": {
-                      color: isSelected ? ACTIVE_COLOR : "#fff",
-                      fontWeight: isSelected ? 600 : 500,
+                      color: isSelected ? TEXT_ACTIVE : TEXT_COLOR,
+                      fontWeight: isSelected ? 600 : 400,
+                      fontSize: '0.95rem',
+                      fontFamily: '"Poppins", sans-serif',
                     },
                   }}
                 />
@@ -237,53 +218,38 @@ export default function AdminSidebar({
         })}
       </List>
 
-      {/* Bottom Profile + Logout */}
-      <Box sx={{ p: 2, borderTop: "1px solid #475569", mt: "auto" }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-          <Avatar
-            src={avatarUrl}
-            sx={{ bgcolor: "#4f46e5", width: 40, height: 40 }}
-          >
-            {!avatarUrl && adminName ? adminName.charAt(0).toUpperCase() : null}
-          </Avatar>
-
-          {open && (
-            <Box>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                {adminName}
-              </Typography>
-              <Typography variant="caption" sx={{ color: "#94a3b8" }}>
-                {adminEmail}
-              </Typography>
-            </Box>
-          )}
-        </Box>
-
+      {/* Bottom Logout Section */}
+      <Box sx={{ p: 2, mb: 1 }}>
         <ListItemButton
           onClick={handleLogout}
           sx={{
+            justifyContent: open ? "flex-start" : "center",
             borderRadius: 2,
-            color: "#fca5a5",
-            display: "flex",
-            alignItems: "center",
-            "&:hover": {
-              backgroundColor: "rgba(239, 68, 68, 0.2)",
-              transform: "translateX(4px)",
-            },
+            px: open ? 2 : 0,
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.05)" }
           }}
         >
-          <ListItemIcon
-            sx={{
-              color: "#fca5a5",
-              minWidth: 0,
-              mr: open ? 3 : "auto",
-              justifyContent: "center",
-            }}
+          <Box
+             sx={{
+                minWidth: 40,
+                minHeight: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#ef4444', // Red color for logout
+                mr: open ? 2 : 'auto',
+             }}
           >
-            <Logout />
-          </ListItemIcon>
-
-          <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
+              <Logout sx={{ fontSize: 22 }}/>
+          </Box>
+          
+          <ListItemText 
+            primary="Logout" 
+            sx={{ 
+                opacity: open ? 1 : 0, 
+                color: '#ef4444' 
+            }} 
+          />
         </ListItemButton>
       </Box>
     </Drawer>
