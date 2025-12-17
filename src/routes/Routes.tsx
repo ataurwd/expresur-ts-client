@@ -38,6 +38,7 @@ import Users from "./../dashboard/admin-dashboard/Users";
 import AdminLocker from "../dashboard/admin-dashboard/AdminLocker";
 import AdminLogistic from "../dashboard/admin-dashboard/AdminLogistic";
 import AdminQrCode from "../dashboard/admin-dashboard/AdminQrCode";
+import AdminWallet from "../dashboard/admin-dashboard/AdminWallet";
 
 const Routes = createBrowserRouter([
   {
@@ -157,6 +158,10 @@ const Routes = createBrowserRouter([
       {
         path: "admin-users",
         element: <Users />,
+      },
+      {
+        path:"admin-wallet",
+        element: <AdminWallet/>,
       },
       {
         path: "admin-rates",
