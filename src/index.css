@@ -58,3 +58,8 @@
   --chart-5: 340 75% 55%;
 }
 
+/* Prevent horizontal overflow from large hero images/components */
+html, body, #root {
+  overflow-x: hidden;
+}
+

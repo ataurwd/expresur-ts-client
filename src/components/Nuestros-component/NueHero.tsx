@@ -46,9 +46,9 @@ const NueHero: React.FC = () => {
                  z-10
                 max-w-full
                 w-[500px]
-                sm:w-full
-                md:w-[600px]
-                lg:w-[600px]
+                sm:w-[700px]
+                md:w-[900px]
+                lg:w-[1300px]
                 object-contain
                 md:my-0 my-10
               "
