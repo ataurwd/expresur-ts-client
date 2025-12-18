@@ -43,7 +43,6 @@ const AdminAdmins = () => {
         {/* HEADER */}
         <header className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-orange-500 font-bold text-lg mb-1 tracking-wider">EXPRESUR</h1>
             <h2 className="text-3xl font-bold text-gray-800">Admin Panel</h2>
             <p className="text-gray-400 mt-1">Welcome to EXPRESUR Admin Dashboard</p>
           </div>
