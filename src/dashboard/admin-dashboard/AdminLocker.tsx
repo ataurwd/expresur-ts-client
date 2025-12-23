@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { 
   Search, Plus, ChevronDown, ChevronRight, 
   Info, AlertTriangle, Check, X, Save, 
-  QrCode, Trash2
+  QrCode, User, Barcode 
 } from 'lucide-react';
 
 /* --- TYPES --- */
@@ -39,9 +39,20 @@ const AdminLocker = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Modal State
-  const [modal, setModal] = useState<{ open: boolean; mode: 'view' | 'edit' | 'add'; data: LockerItem | null }>({
+  // Main Modal State (View / Add)
+  const [modal, setModal] = useState<{ open: boolean; mode: 'view' | 'add'; data: LockerItem | null }>({
     open: false, mode: 'view', data: null
+  });
+
+  // Scan Modal State
+  const [scanModal, setScanModal] = useState<{
+    open: boolean;
+    trackingNumber: string | null;
+    foundItem: LockerItem | null;
+  }>({
+    open: false,
+    trackingNumber: null,
+    foundItem: null
   });
 
   /* --- LOGIC --- */
@@ -75,11 +86,11 @@ const AdminLocker = () => {
   };
 
   /* --- HANDLERS --- */
-  const handleOpenModal = (item: LockerItem | null, mode: 'view' | 'edit' | 'add') => {
+  const handleOpenModal = (item: LockerItem | null, mode: 'view' | 'add') => {
     if (mode === 'add') {
       const newItem: LockerItem = {
         id: Math.random().toString(36).substr(2, 9),
-        trackingNumber: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+        trackingNumber: scanModal.trackingNumber || `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
         customerName: '',
         customerPhone: '',
         lockerId: '',
@@ -97,8 +108,6 @@ const AdminLocker = () => {
   const handleSave = (item: LockerItem) => {
     if (modal.mode === 'add') {
       setData([item, ...data]);
-    } else {
-      setData(prev => prev.map(d => d.id === item.id ? item : d));
     }
     setModal({ ...modal, open: false });
   };
@@ -112,15 +121,31 @@ const AdminLocker = () => {
 
   const handleScan = () => {
     const code = window.prompt("Simulate Scanner: Enter Tracking Number (e.g., ORD-1001)");
-    if (code) {
-      setSearch(code);
-      const found = data.find(d => d.trackingNumber.toLowerCase() === code.toLowerCase());
-      if (found) {
-        handleOpenModal(found, 'view');
-      } else {
-        alert("Package not found in system. Try adding it.");
-      }
+    if (!code) return;
+
+    const trimmedCode = code.trim();
+    const found = data.find(
+      d => d.trackingNumber.toLowerCase() === trimmedCode.toLowerCase()
+    );
+
+    setScanModal({
+      open: true,
+      trackingNumber: trimmedCode,
+      foundItem: found || null
+    });
+  };
+
+  const handleConfirmScan = () => {
+    if (scanModal.foundItem) {
+      handleOpenModal(scanModal.foundItem, 'view');
+    } else {
+      handleOpenModal(null, 'add');
     }
+    setScanModal({ open: false, trackingNumber: null, foundItem: null });
+  };
+
+  const handleCloseScan = () => {
+    setScanModal({ open: false, trackingNumber: null, foundItem: null });
   };
 
   return (
@@ -148,7 +173,6 @@ const AdminLocker = () => {
 
       {/* --- ALERT CARDS --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-        {/* Yellow Card */}
         <div className="bg-[#FEFCE8] p-6 rounded-2xl flex flex-col justify-between h-[120px]">
            <div className="flex items-center gap-2 text-[#D97706] mb-2">
              <div className="w-5 h-5 rounded-full border border-[#D97706] flex items-center justify-center">
@@ -159,7 +183,6 @@ const AdminLocker = () => {
            <p className="text-[#D97706] text-sm font-medium">{stats.pending} package(s) need review</p>
         </div>
 
-        {/* Red Card */}
         <div className="bg-[#FEF2F2] p-6 rounded-2xl flex flex-col justify-between h-[120px]">
            <div className="flex items-center gap-2 text-[#991B1B] mb-2">
              <div className="w-5 h-5 rounded-full border border-[#991B1B] flex items-center justify-center">
@@ -174,7 +197,6 @@ const AdminLocker = () => {
       {/* --- CONTROLS --- */}
       <div className="flex flex-col lg:flex-row justify-between items-center mb-6 gap-4">
         
-        {/* Left Controls */}
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <button 
             onClick={() => {setSearch(''); setLockerFilter('All Lockers')}} 
@@ -183,7 +205,6 @@ const AdminLocker = () => {
             All
           </button>
           
-          {/* Locker Dropdown */}
           <div className="relative">
             <button 
               onClick={() => setIsLockerDropdownOpen(!isLockerDropdownOpen)}
@@ -192,7 +213,6 @@ const AdminLocker = () => {
               {lockerFilter} <ChevronDown size={16} className="text-gray-400" />
             </button>
             
-            {/* Dropdown Menu */}
             {isLockerDropdownOpen && (
               <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 overflow-hidden">
                 {uniqueLockers.map(locker => (
@@ -206,7 +226,6 @@ const AdminLocker = () => {
                 ))}
               </div>
             )}
-             {/* Backdrop */}
             {isLockerDropdownOpen && (
               <div className="fixed inset-0 z-10" onClick={() => setIsLockerDropdownOpen(false)}></div>
             )}
@@ -224,7 +243,6 @@ const AdminLocker = () => {
           </div>
         </div>
 
-        {/* Right Controls */}
         <div className="flex gap-3 w-full lg:w-auto">
           <button onClick={handleScan} className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition justify-center shadow-sm">
             <QrCode size={18} /> Scan Package
@@ -233,10 +251,9 @@ const AdminLocker = () => {
             <Plus size={18} /> Add Package
           </button>
         </div>
-
       </div>
 
-      {/* --- TABLE (BOX STYLE) --- */}
+      {/* --- TABLE --- */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-50 overflow-hidden mb-4">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -268,15 +285,17 @@ const AdminLocker = () => {
                     <StatusBadge status={item.status} />
                   </td>
                   <td className="p-5 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                       <button onClick={() => handleOpenModal(item, 'edit')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded text-xs font-medium transition-colors">Edit</button>
-                       <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded text-xs font-medium transition-colors">View</button>
-                    </div>
+                    <button 
+                      onClick={() => handleOpenModal(item, 'view')} 
+                      className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded text-xs font-medium transition-colors"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               )) : (
                  <tr>
-                  <td colSpan={8} className="p-10 text-center text-gray-400">No lockers found.</td>
+                  <td colSpan={8} className="p-10 text-center text-gray-400">No packages found.</td>
                 </tr>
               )}
             </tbody>
@@ -302,7 +321,114 @@ const AdminLocker = () => {
         </button>
       </div>
 
-      {/* --- MODAL --- */}
+      {/* --- SCAN MODAL --- */}
+      {scanModal.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
+            
+            <div className="px-6 py-5 bg-gradient-to-r from-green-600 to-green-700 text-white">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  <QrCode size={24} /> Scan Barcode/QR
+                </h2>
+                <button 
+                  onClick={handleCloseScan}
+                  className="text-white/80 hover:text-white"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              
+              <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-6 text-center">
+                <Barcode size={48} className="mx-auto text-gray-400 mb-3" />
+                <div className="text-sm text-gray-500 mb-1">Scanned Code</div>
+                <div className="text-2xl font-mono font-bold text-gray-800 tracking-wider">
+                  {scanModal.trackingNumber || '—'}
+                </div>
+              </div>
+
+              {scanModal.foundItem ? (
+                <>
+                  <div className="space-y-5">
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-5">
+                      <div className="flex items-center gap-2 text-green-700 font-semibold mb-3">
+                        <Check size={20} /> Package Identified
+                      </div>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Tracking Number</span>
+                          <span className="font-medium">{scanModal.foundItem.trackingNumber}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Carrier</span>
+                          <span className="font-medium">{scanModal.foundItem.carrier}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                      <div className="flex items-center gap-2 text-blue-700 font-semibold mb-3">
+                        <User size={20} /> Client Identified
+                      </div>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Client Name</span>
+                          <span className="font-medium">{scanModal.foundItem.customerName}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Phone</span>
+                          <span className="font-medium">{scanModal.foundItem.customerPhone}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Locker ID</span>
+                          <span className="font-medium">{scanModal.foundItem.lockerId}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+                  <AlertTriangle size={48} className="mx-auto text-amber-600 mb-3" />
+                  <div className="text-amber-800 font-semibold mb-2">Package Not Found</div>
+                  <p className="text-amber-700 text-sm">
+                    No package with this tracking number exists in the system.<br/>
+                    You can add it as a new package.
+                  </p>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleCloseScan}
+                  className="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmScan}
+                  className={`flex-1 py-3 px-4 font-medium rounded-xl transition-colors flex items-center justify-center gap-2 ${
+                    scanModal.foundItem
+                      ? 'bg-green-600 hover:bg-green-700 text-white'
+                      : 'bg-amber-600 hover:bg-amber-700 text-white'
+                  }`}
+                >
+                  {scanModal.foundItem ? (
+                    <>View Package</>
+                  ) : (
+                    <>Confirm & Add Package</>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- MAIN MODAL (VIEW / ADD) --- */}
       {modal.open && modal.data && (
         <LockerModal 
           mode={modal.mode} 
@@ -318,7 +444,6 @@ const AdminLocker = () => {
 };
 
 /* --- SUB COMPONENTS --- */
-
 const StatusBadge = ({ status }: { status: LockerItem['status'] }) => {
   if (status === 'Arrived') {
     return (
@@ -342,7 +467,7 @@ const StatusBadge = ({ status }: { status: LockerItem['status'] }) => {
 
 /* --- MODAL COMPONENT --- */
 interface LockerModalProps {
-  mode: 'view' | 'edit' | 'add';
+  mode: 'view' | 'add';
   data: LockerItem;
   onClose: () => void;
   onSave: (d: LockerItem) => void;
@@ -358,80 +483,111 @@ const LockerModal = ({ mode, data, onClose, onSave, onDelete }: LockerModalProps
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#F9FAFB]">
           <h3 className="text-lg font-bold text-gray-900">
-            {mode === 'add' ? 'Add New Package' : mode === 'edit' ? 'Edit Locker Assignment' : 'Assignment Details'}
+            {mode === 'add' ? 'Add New Package' : 'Package Details'}
           </h3>
           <button onClick={onClose}><X size={20} className="text-gray-400 hover:text-gray-600" /></button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-           {/* Row 1 */}
            <div className="grid grid-cols-2 gap-4">
              <div>
                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Tracking Number</label>
-               <input disabled={mode === 'view'} value={formData.trackingNumber} onChange={e => setFormData({...formData, trackingNumber: e.target.value})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" />
+               <input 
+                 disabled={mode === 'view'} 
+                 value={formData.trackingNumber} 
+                 onChange={e => setFormData({...formData, trackingNumber: e.target.value})} 
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" 
+               />
              </div>
              <div>
                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Locker ID</label>
-               <input disabled={mode === 'view'} value={formData.lockerId} onChange={e => setFormData({...formData, lockerId: e.target.value})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" />
+               <input 
+                 disabled={mode === 'view'} 
+                 value={formData.lockerId} 
+                 onChange={e => setFormData({...formData, lockerId: e.target.value})} 
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" 
+               />
              </div>
            </div>
            
-           {/* Row 2 */}
            <div className="grid grid-cols-2 gap-4">
              <div>
                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer</label>
-               <input disabled={mode === 'view'} value={formData.customerName} onChange={e => setFormData({...formData, customerName: e.target.value})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" />
+               <input 
+                 disabled={mode === 'view'} 
+                 value={formData.customerName} 
+                 onChange={e => setFormData({...formData, customerName: e.target.value})} 
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" 
+               />
              </div>
              <div>
                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Phone</label>
-               <input disabled={mode === 'view'} value={formData.customerPhone} onChange={e => setFormData({...formData, customerPhone: e.target.value})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" />
+               <input 
+                 disabled={mode === 'view'} 
+                 value={formData.customerPhone} 
+                 onChange={e => setFormData({...formData, customerPhone: e.target.value})} 
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" 
+               />
              </div>
            </div>
 
-           {/* Row 3 */}
            <div className="grid grid-cols-3 gap-4">
               <div>
                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Carrier</label>
-                 <select disabled={mode === 'view'} value={formData.carrier} onChange={e => setFormData({...formData, carrier: e.target.value})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500 bg-white">
+                 <select 
+                   disabled={mode === 'view'} 
+                   value={formData.carrier} 
+                   onChange={e => setFormData({...formData, carrier: e.target.value})} 
+                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500 bg-white"
+                 >
                    <option>UPS</option><option>FedEx</option><option>USPS</option><option>DHL</option>
                  </select>
               </div>
               <div>
                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Weight</label>
-                 <input disabled={mode === 'view'} value={formData.weight} onChange={e => setFormData({...formData, weight: e.target.value})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" />
+                 <input 
+                   disabled={mode === 'view'} 
+                   value={formData.weight} 
+                   onChange={e => setFormData({...formData, weight: e.target.value})} 
+                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" 
+                 />
               </div>
                <div>
                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Days Stored</label>
-                 <input type="number" disabled={mode === 'view'} value={formData.days} onChange={e => setFormData({...formData, days: Number(e.target.value)})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" />
+                 <input 
+                   type="number" 
+                   disabled={mode === 'view'} 
+                   value={formData.days} 
+                   onChange={e => setFormData({...formData, days: Number(e.target.value)})} 
+                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500" 
+                 />
               </div>
            </div>
 
-           {/* Status */}
            <div>
                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Status</label>
-               <select disabled={mode === 'view'} value={formData.status} onChange={e => setFormData({...formData, status: e.target.value as any})} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500 bg-white">
+               <select 
+                 disabled={mode === 'view'} 
+                 value={formData.status} 
+                 onChange={e => setFormData({...formData, status: e.target.value as any})} 
+                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none disabled:bg-gray-50 disabled:text-gray-500 bg-white"
+               >
                    <option value="Arrived">Arrived</option>
                    <option value="Pending">Pending</option>
                </select>
            </div>
 
-           <div className="flex justify-between pt-4 mt-2 border-t border-gray-100">
-              {mode === 'edit' ? (
-                <button type="button" onClick={() => onDelete(data.id)} className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 flex items-center gap-2">
-                  <Trash2 size={16} /> Delete
+           <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-gray-100">
+              <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Close</button>
+              {mode !== 'view' && (
+                <button type="submit" className="bg-[#166534] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#14532d] flex items-center gap-2">
+                  <Save size={16} /> Save Changes
                 </button>
-              ) : <div></div>}
-
-              <div className="flex gap-3">
-                <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Close</button>
-                {mode !== 'view' && (
-                  <button type="submit" className="bg-[#166534] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#14532d] flex items-center gap-2"><Save size={16} /> Save Changes</button>
-                )}
-              </div>
+              )}
            </div>
         </form>
       </div>
