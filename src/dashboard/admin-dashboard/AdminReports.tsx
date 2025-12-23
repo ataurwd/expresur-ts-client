@@ -242,7 +242,7 @@ export default function PackageTrackingDashboard() {
             <div className="flex gap-3">
               <button
                 onClick={() => downloadCSV(filtered)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition"
+                className="flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition"
               >
                 <Download className="w-4 h-4" />
                 Download Report
