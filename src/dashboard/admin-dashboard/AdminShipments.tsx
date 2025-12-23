@@ -34,7 +34,7 @@ const AdminShipments = memo(() => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const [modal, setModal] = useState<{ open: boolean; mode: 'view' | 'edit'; data: Shipment | null }>({
+  const [modal, setModal] = useState<{ open: boolean; mode: 'view'; data: Shipment | null }>({
     open: false, mode: 'view', data: null
   });
 
@@ -55,7 +55,7 @@ const AdminShipments = memo(() => {
 
   const stats = { total: 857, delivered: 100, inTransit: 11, pending: 15 };
 
-  const handleOpenModal = (item: Shipment, mode: 'view' | 'edit') => {
+  const handleOpenModal = (item: Shipment, mode: 'view') => {
     setModal({ open: true, mode, data: item });
   };
 
@@ -164,7 +164,6 @@ const AdminShipments = memo(() => {
                   <td className="p-5"><StatusBadge status={item.status} /></td>
                   <td className="p-5 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => handleOpenModal(item, 'edit')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded text-xs font-medium transition-colors">Edit</button>
                       <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded text-xs font-medium transition-colors">View</button>
                     </div>
                   </td>
