@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { Box, Truck, Plus, X, Calendar, User, Package, CheckCircle } from 'lucide-react';
+import { Box, Truck, Plus, X, Calendar, User, Package, CheckCircle, Search } from 'lucide-react';
 
 /* --- INTERFACE --- */
 interface ConsolidationData {
@@ -24,6 +24,7 @@ const AdminConsolidations = () => {
   // State
   const [consolidations, setConsolidations] = useState<ConsolidationData[]>(INITIAL_DATA);
   const [activeTab, setActiveTab] = useState<'Pending' | 'History'>('Pending');
+  const [search, setSearch] = useState('');
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,10 +34,16 @@ const AdminConsolidations = () => {
   // Filter Logic
   const filteredData = useMemo(() => {
     return consolidations.filter(item => {
-      if (activeTab === 'Pending') return item.status === 'Pending';
-      return item.status === 'Shipped' || item.status === 'Delivered';
+      const matchesTab = activeTab === 'Pending' ? item.status === 'Pending' : (item.status === 'Shipped' || item.status === 'Delivered');
+      const q = search.trim().toLowerCase();
+      const matchesSearch = q === '' ||
+        item.id.toLowerCase().includes(q) ||
+        item.customer.toLowerCase().includes(q) ||
+        item.date.toLowerCase().includes(q);
+
+      return matchesTab && matchesSearch;
     });
-  }, [consolidations, activeTab]);
+  }, [consolidations, activeTab, search]);
 
   // Handlers
   const handleCreate = (newData: Partial<ConsolidationData>) => {
@@ -125,12 +132,25 @@ const AdminConsolidations = () => {
         </div>
 
         {/* Create Button */}
-        <button 
-          onClick={openCreateModal}
-          className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition shadow-sm w-full sm:w-auto justify-center"
-        >
-          <Plus size={18} /> Create Consolidation
-        </button>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative w-full sm:w-72">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by ID, customer, date..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 pr-4 py-2 bg-white border border-gray-100 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-green-500 w-full shadow-sm text-gray-600"
+            />
+          </div>
+
+          <button 
+            onClick={openCreateModal}
+            className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition shadow-sm w-full sm:w-auto justify-center"
+          >
+            <Plus size={18} /> Create Consolidation
+          </button>
+        </div>
       </div>
 
       {/* --- GRID CONTENT --- */}
