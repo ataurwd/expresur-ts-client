@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { Box, Truck, Plus, X, Calendar, User, Package, CheckCircle, Search } from 'lucide-react';
+import { Box, Plus, X, Calendar, User, Package, Search, Truck } from 'lucide-react';
 
 /* --- INTERFACE --- */
 interface ConsolidationData {
@@ -8,29 +8,48 @@ interface ConsolidationData {
   customer: string;
   date: string;
   packages: number;
-  weight: number; // Added weight in kg
+  weight: number; // in kg
   status: "Pending" | "Shipped" | "Delivered";
+  contents?: string;
+  trackingNumber?: string;
 }
 
 /* --- DUMMY DATA --- */
 const INITIAL_DATA: ConsolidationData[] = [
   { id: "CONS-2024-001", customer: "Sarah Johnson", date: "12/13/2025", packages: 2, weight: 8.5, status: "Pending" },
   { id: "CONS-2024-002", customer: "Mike Ross", date: "12/12/2025", packages: 5, weight: 22.3, status: "Pending" },
-  { id: "CONS-2024-003", customer: "Jessica Pearson", date: "12/10/2025", packages: 1, weight: 3.2, status: "Shipped" },
-  { id: "CONS-2024-004", customer: "Harvey Specter", date: "12/09/2025", packages: 3, weight: 15.7, status: "Pending" },
-  { id: "CONS-2024-005", customer: "Louis Litt", date: "12/08/2025", packages: 4, weight: 18.9, status: "Delivered" },
+  { 
+    id: "ORD-1001", 
+    customer: "Michael Chen", 
+    date: "12/10/2025", 
+    packages: 2, 
+    weight: 7.3, 
+    status: "Shipped", 
+    contents: "Electronics and accessories", 
+    trackingNumber: "SHIP245235017" 
+  },
+  { id: "CONS-2024-003", customer: "Jessica Pearson", date: "12/09/2025", packages: 1, weight: 3.2, status: "Shipped", contents: "Books and documents", trackingNumber: "SHIP123456789" },
+  { id: "CONS-2024-004", customer: "Harvey Specter", date: "12/08/2025", packages: 3, weight: 15.7, status: "Pending" },
+  { 
+    id: "CONS-2024-005", 
+    customer: "Louis Litt", 
+    date: "12/07/2025", 
+    packages: 4, 
+    weight: 18.9, 
+    status: "Delivered", 
+    contents: "Clothing and personal items", 
+    trackingNumber: "SHIP987654321" 
+  },
 ];
 
 const AdminConsolidations = () => {
   const [consolidations, setConsolidations] = useState<ConsolidationData[]>(INITIAL_DATA);
   const [activeTab, setActiveTab] = useState<'Pending' | 'History'>('Pending');
   const [search, setSearch] = useState('');
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'view'>('create');
   const [selectedItem, setSelectedItem] = useState<ConsolidationData | null>(null);
 
-  // Filter Logic
   const filteredData = useMemo(() => {
     return consolidations.filter(item => {
       const matchesTab = activeTab === 'Pending' ? item.status === 'Pending' : (item.status === 'Shipped' || item.status === 'Delivered');
@@ -39,38 +58,21 @@ const AdminConsolidations = () => {
         item.id.toLowerCase().includes(q) ||
         item.customer.toLowerCase().includes(q) ||
         item.date.toLowerCase().includes(q);
-
       return matchesTab && matchesSearch;
     });
   }, [consolidations, activeTab, search]);
 
-  // Calculate totals for Pending tab
-  const pendingTotals = useMemo(() => {
-    const pending = consolidations.filter(item => item.status === 'Pending');
-    const totalPackages = pending.reduce((sum, item) => sum + item.packages, 0);
-    const totalWeight = pending.reduce((sum, item) => sum + item.weight, 0);
-    return { totalPackages, totalWeight };
-  }, [consolidations]);
-
   const handleCreate = (newData: Partial<ConsolidationData>) => {
     const newConsolidation: ConsolidationData = {
-      id: `CONS-2024-${Math.floor(100 + Math.random() * 900)}`,
+      id: `CONS-2024-${String(Math.floor(100 + Math.random() * 900)).padStart(3, '0')}`,
       date: new Date().toLocaleDateString('en-US'),
       status: 'Pending',
       customer: newData.customer || 'Unknown',
       packages: newData.packages || 1,
-      weight: newData.weight || 5.0 // default weight
+      weight: newData.weight ?? 5.0
     };
     setConsolidations([newConsolidation, ...consolidations]);
     setIsModalOpen(false);
-  };
-
-  const handleApprove = (id: string) => {
-    if (window.confirm("Approve and ship this consolidation?")) {
-      setConsolidations(prev => prev.map(item => 
-        item.id === id ? { ...item, status: 'Shipped' } : item
-      ));
-    }
   };
 
   const openCreateModal = () => {
@@ -91,48 +93,28 @@ const AdminConsolidations = () => {
         <title>AdminConsolidations | EXPRESUR</title>
       </Helmet>
 
-      {/* --- HEADER --- */}
+      {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
           <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
           <p className="text-gray-400 mt-1 text-[15px]">Handle consolidation requests and prepare for shipping</p>
         </div>
-        
         <div className="flex items-center gap-3 bg-white pl-1 pr-4 py-1.5 rounded-full shadow-sm border border-gray-100">
-           <img 
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
-              alt="User" 
-              className="w-10 h-10 rounded-full bg-green-100"
-            />
-            <div className="hidden md:block">
-              <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
-              <p className="text-xs text-gray-400">tyrion@example.com</p>
-            </div>
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
+          <div className="hidden md:block">
+            <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
+            <p className="text-xs text-gray-400">tyrion@example.com</p>
+          </div>
         </div>
       </div>
 
-      {/* --- ACTIONS BAR --- */}
+      {/* ACTIONS BAR */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        
         <div className="flex items-center gap-4 bg-white p-1 rounded-full border border-gray-100 shadow-sm">
-          <button 
-            onClick={() => setActiveTab('Pending')}
-            className={`text-sm font-semibold px-6 py-2 rounded-full transition-all ${
-              activeTab === 'Pending' 
-              ? 'bg-[#166534] text-white shadow-sm' 
-              : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
-            }`}
-          >
+          <button onClick={() => setActiveTab('Pending')} className={`text-sm font-semibold px-6 py-2 rounded-full transition-all ${activeTab === 'Pending' ? 'bg-[#166534] text-white shadow-sm' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'}`}>
             Pending
           </button>
-          <button 
-            onClick={() => setActiveTab('History')}
-            className={`text-sm font-semibold px-6 py-2 rounded-full transition-all ${
-              activeTab === 'History' 
-              ? 'bg-[#166534] text-white shadow-sm' 
-              : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
-            }`}
-          >
+          <button onClick={() => setActiveTab('History')} className={`text-sm font-semibold px-6 py-2 rounded-full transition-all ${activeTab === 'History' ? 'bg-[#166534] text-white shadow-sm' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'}`}>
             History
           </button>
         </div>
@@ -148,26 +130,20 @@ const AdminConsolidations = () => {
               className="pl-10 pr-4 py-2 bg-white border border-gray-100 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-green-500 w-full shadow-sm text-gray-600"
             />
           </div>
-
-          <button 
-            onClick={openCreateModal}
-            className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition shadow-sm w-full sm:w-auto justify-center"
-          >
+          <button onClick={openCreateModal} className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition shadow-sm w-full sm:w-auto justify-center">
             <Plus size={18} /> Create Consolidation
           </button>
         </div>
       </div>
 
-
-
-      {/* --- GRID CONTENT --- */}
+      {/* GRID CONTENT */}
       {filteredData.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredData.map((item) => (
-            <ConsolidationCard 
-              key={item.id} 
-              data={item} 
-              onApprove={() => handleApprove(item.id)}
+            <ConsolidationCard
+              key={item.id}
+              data={item}
+              isHistory={activeTab === 'History'}
               onView={() => openViewModal(item)}
             />
           ))}
@@ -179,9 +155,9 @@ const AdminConsolidations = () => {
         </div>
       )}
 
-      {/* --- MODAL --- */}
+      {/* MODAL */}
       {isModalOpen && (
-        <Modal 
+        <Modal
           mode={modalMode}
           data={selectedItem}
           onClose={() => setIsModalOpen(false)}
@@ -192,78 +168,103 @@ const AdminConsolidations = () => {
   );
 };
 
-/* --- CARD COMPONENT --- */
+/* CARD COMPONENT */
 interface CardProps {
   data: ConsolidationData;
-  onApprove: () => void;
+  isHistory: boolean;
   onView: () => void;
 }
 
-const ConsolidationCard: React.FC<CardProps> = ({ data, onApprove, onView }) => {
-  const isShipped = data.status !== 'Pending';
+const ConsolidationCard: React.FC<CardProps> = ({ data, isHistory, onView }) => {
+  if (isHistory) {
+    return (
+      <div className="bg-white p-7 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col">
+        <div className="flex justify-between items-start mb-6">
+          <h3 className="text-xl font-bold text-gray-800">{data.id}</h3>
+          <span className="text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide bg-green-100 text-green-800">
+            {data.status}
+          </span>
+        </div>
 
+        <div className="space-y-4">
+          <p className="text-gray-600">Customer: <span className="font-medium text-gray-800">{data.customer}</span></p>
+          <p className="text-gray-600">Requested: <span className="font-medium text-gray-800">{data.date}</span></p>
+
+          <div className="pt-3">
+            <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Weight</p>
+            <p className="text-2xl font-bold text-gray-800 mt-1">{data.weight.toFixed(1)} kg</p>
+          </div>
+
+          {data.contents && (
+            <div>
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Contents</p>
+              <p className="text-gray-800 font-medium mt-1">{data.contents}</p>
+            </div>
+          )}
+
+          {data.trackingNumber && (
+            <div>
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider flex items-center gap-2">
+                <Truck size={16} className="text-gray-500" />
+                Shipment Tracking
+              </p>
+              <p className="text-lg font-bold text-gray-800 mt-1">{data.trackingNumber}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-auto pt-6 border-t border-gray-100">
+          <div className="flex items-center gap-3 bg-[#f9fafb] p-3 rounded-xl border border-gray-100">
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+              <Box size={16} />
+            </div>
+            <span className="text-sm text-gray-600 font-medium">
+              {data.packages} package(s) in this consolidation
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Pending Card
   return (
     <div className="bg-white p-7 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
-      
       <div className="flex justify-between items-start mb-5">
         <h3 className="text-xl font-bold text-gray-700 tracking-tight">{data.id}</h3>
-        <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide ${
-          data.status === 'Pending' ? 'bg-[#ffedd5] text-[#c2410c]' : 'bg-green-100 text-green-800'
-        }`}>
-          {data.status}
+        <span className="text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide bg-[#ffedd5] text-[#c2410c]">
+          Pending
         </span>
       </div>
 
       <div className="space-y-1.5 mb-5 flex-grow">
-        <p className="text-[14px] text-gray-400">
-          Customer: <span className="text-gray-600 font-medium">{data.customer}</span>
-        </p>
-          {/* Show weight only if Pending */}
-          {data.status === 'Pending' && (
-          <p className="text-[14px] text-gray-400">
-            Total Weight: <span className="text-gray-600 font-bold">{data.weight.toFixed(1)} kg</span>
-          </p>
-        )}
-        <p className="text-[14px] text-gray-400">
-          Requested: <span className="text-gray-600 font-medium">{data.date}</span>
-        </p>
-        
-        
+        <p className="text-[14px] text-gray-400">Customer: <span className="text-gray-600 font-medium">{data.customer}</span></p>
+        <p className="text-[14px] text-gray-400">Total Weight: <span className="text-gray-600 font-bold">{data.weight.toFixed(1)} kg</span></p>
+        <p className="text-[14px] text-gray-400">Requested: <span className="text-gray-600 font-medium">{data.date}</span></p>
       </div>
 
       <div className="flex items-center gap-3 bg-[#f9fafb] p-3 rounded-xl mb-6 border border-gray-100">
         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-           <Box size={16} />
+          <Box size={16} />
         </div>
-        <span className="text-sm text-gray-500 font-medium">{data.packages} package(s) • {data.weight.toFixed(1)} kg</span>
+        <span className="text-sm text-gray-500 font-medium">
+          {data.packages} package(s) • {data.weight.toFixed(1)} kg
+        </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-auto">
-        <button 
+      <div className="mt-auto">
+        <button
           onClick={onView}
-          className="border border-gray-100 bg-white text-gray-500 py-2.5 rounded-lg text-[13px] font-semibold hover:bg-gray-50 transition-colors shadow-sm"
+          className="w-full border border-gray-100 bg-white text-gray-500 py-2.5 rounded-lg text-[13px] font-semibold hover:bg-gray-50 transition-colors shadow-sm"
         >
           View Details
         </button>
-        
-        {isShipped ? (
-          <button disabled className="bg-gray-100 text-gray-400 py-2.5 rounded-lg text-[13px] font-semibold flex items-center justify-center gap-2 cursor-not-allowed">
-            <CheckCircle size={16} /> Shipped
-          </button>
-        ) : (
-          <button 
-            onClick={onApprove}
-            className="bg-[#166534] text-white py-2.5 rounded-lg text-[13px] font-semibold flex items-center justify-center gap-2 hover:bg-[#14532d] transition-colors shadow-sm"
-          >
-            <Truck size={16} /> Approve & Ship
-          </button>
-        )}
       </div>
     </div>
   );
 };
 
-/* --- MODAL COMPONENT (Updated to include weight input when creating) --- */
+/* MODAL COMPONENT */
 interface ModalProps {
   mode: 'create' | 'view';
   data: ConsolidationData | null;
@@ -274,7 +275,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
   const [customer, setCustomer] = useState("");
   const [packages, setPackages] = useState(1);
-  const [weight, setWeight] = useState(5.0); // new state for weight
+  const [weight, setWeight] = useState(5.0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -282,9 +283,8 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden zoom-in-95 duration-200">
-        
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#f8f9fa]">
           <h3 className="text-lg font-bold text-gray-800">
             {mode === 'create' ? 'New Consolidation' : 'Consolidation Details'}
@@ -298,9 +298,11 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
           <div className="p-6 space-y-4">
             <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
               <div className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">Status</div>
-              <div className={`text-lg font-bold ${data.status === 'Pending' ? 'text-orange-600' : 'text-green-600'}`}>{data.status}</div>
+              <div className={`text-lg font-bold ${data.status === 'Pending' ? 'text-orange-600' : 'text-green-600'}`}>
+                {data.status}
+              </div>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <User className="text-gray-400" size={18} />
@@ -319,12 +321,26 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
               <div className="flex items-center gap-3">
                 <Package className="text-gray-400" size={18} />
                 <div>
-                  <div className="text-xs text-gray-400">Packages</div>
+                  <div className="text-xs text-gray-400">Packages & Weight</div>
                   <div className="font-medium text-gray-800">{data.packages} packages • {data.weight.toFixed(1)} kg</div>
                 </div>
               </div>
+              {data.contents && (
+                <div>
+                  <div className="text-xs text-gray-400">Contents</div>
+                  <div className="font-medium text-gray-800">{data.contents}</div>
+                </div>
+              )}
+              {data.trackingNumber && (
+                <div className="flex items-center gap-3">
+                  <Truck className="text-gray-400" size={18} />
+                  <div>
+                    <div className="text-xs text-gray-400">Tracking Number</div>
+                    <div className="font-medium text-gray-800">{data.trackingNumber}</div>
+                  </div>
+                </div>
+              )}
             </div>
-
             <button onClick={onClose} className="w-full mt-4 bg-gray-100 text-gray-600 py-2.5 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
               Close
             </button>
@@ -333,9 +349,9 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
-              <input 
+              <input
                 required
-                type="text" 
+                type="text"
                 value={customer}
                 onChange={(e) => setCustomer(e.target.value)}
                 placeholder="e.g. John Doe"
@@ -344,9 +360,9 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Number of Packages</label>
-              <input 
+              <input
                 required
-                type="number" 
+                type="number"
                 min="1"
                 value={packages}
                 onChange={(e) => setPackages(Number(e.target.value))}
@@ -355,7 +371,7 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Total Weight (kg)</label>
-              <input 
+              <input
                 required
                 type="number"
                 min="0.1"
@@ -365,7 +381,6 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
               />
             </div>
-
             <div className="pt-2">
               <button type="submit" className="w-full bg-[#166534] text-white py-2.5 rounded-lg font-semibold hover:bg-[#14532d] transition-colors shadow-md">
                 Create Consolidation
