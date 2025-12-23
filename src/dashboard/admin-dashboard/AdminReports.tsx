@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Download, Search, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Download, Search, ChevronLeft, ChevronRight, X, Bell } from "lucide-react";
 
 type PackageRow = {
   paymentId: string;
@@ -156,9 +156,28 @@ export default function PackageTrackingDashboard() {
       </Helmet>
 
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Package Tracking</h1>
-        <p className="text-gray-600 mt-1 text-sm md:text-base">Real-time shipment management and monitoring</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Package Tracking</h1>
+          <p className="text-gray-600 mt-1 text-sm md:text-base">Real-time shipment management and monitoring</p>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <button className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+            <Bell className="w-5 h-5" />
+          </button>
+          <div className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+            <img 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
+              alt="Profile" 
+              className="w-10 h-10 rounded-full bg-green-100 border border-white"
+            />
+            <div className="text-sm">
+              <p className="font-bold text-gray-900 leading-tight">Tyrion Lannister</p>
+              <p className="text-gray-400 text-xs">tyrion@example.com</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Summary Cards */}
