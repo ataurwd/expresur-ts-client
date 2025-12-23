@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import { Download, Search, ChevronLeft, ChevronRight, X, Bell } from "lucide-react";
 
@@ -149,6 +150,8 @@ export default function PackageTrackingDashboard() {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6">
       <Helmet>
@@ -163,10 +166,10 @@ export default function PackageTrackingDashboard() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
             <Bell className="w-5 h-5" />
           </button>
-          <div className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
             <img 
               src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
               alt="Profile" 
