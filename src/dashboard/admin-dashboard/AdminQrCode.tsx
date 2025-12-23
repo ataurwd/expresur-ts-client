@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ShoppingBag,
   Database,
@@ -54,6 +55,7 @@ const NAMES = ['John Martinez', 'Sarah Connor', 'Kyle Reese', 'Rick Deckard', 'E
 const CITIES = ['Cuba - Havana', 'USA - New York', 'Japan - Tokyo', 'UK - London', 'Germany - Berlin'];
 
 const AdminQrCode = () => {
+  const navigate = useNavigate();
   const [activeMode, setActiveMode] = useState<string>('package');
   const [inputCode, setInputCode] = useState('');
 
@@ -135,10 +137,10 @@ const AdminQrCode = () => {
           <p className="text-gray-400 mt-1">Scan packages, bags, containers, and deliveries</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400">
             <Bell size={20} />
           </button>
-          <div className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
             <img
               src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion"
               alt="Profile"

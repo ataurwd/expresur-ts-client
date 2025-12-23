@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   RefreshCw, 
@@ -132,6 +133,7 @@ const UserModal = ({
 
 // --- MAIN PAGE COMPONENT ---
 const Users = () => {
+  const navigate = useNavigate();
   // --- STATE ---
   const [users, setUsers] = useState<UserType[]>(INITIAL_USERS);
   const [searchTerm, setSearchTerm] = useState('');
@@ -194,10 +196,10 @@ const Users = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
             <Bell size={20} />
           </button>
-          <div className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
             <img 
               src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
               alt="Profile" 
