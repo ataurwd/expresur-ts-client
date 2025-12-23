@@ -8,25 +8,24 @@ interface ConsolidationData {
   customer: string;
   date: string;
   packages: number;
+  weight: number; // Added weight in kg
   status: "Pending" | "Shipped" | "Delivered";
 }
 
 /* --- DUMMY DATA --- */
 const INITIAL_DATA: ConsolidationData[] = [
-  { id: "CONS-2024-001", customer: "Sarah Johnson", date: "12/13/2025", packages: 2, status: "Pending" },
-  { id: "CONS-2024-002", customer: "Mike Ross", date: "12/12/2025", packages: 5, status: "Pending" },
-  { id: "CONS-2024-003", customer: "Jessica Pearson", date: "12/10/2025", packages: 1, status: "Shipped" },
-  { id: "CONS-2024-004", customer: "Harvey Specter", date: "12/09/2025", packages: 3, status: "Pending" },
-  { id: "CONS-2024-005", customer: "Louis Litt", date: "12/08/2025", packages: 4, status: "Delivered" },
+  { id: "CONS-2024-001", customer: "Sarah Johnson", date: "12/13/2025", packages: 2, weight: 8.5, status: "Pending" },
+  { id: "CONS-2024-002", customer: "Mike Ross", date: "12/12/2025", packages: 5, weight: 22.3, status: "Pending" },
+  { id: "CONS-2024-003", customer: "Jessica Pearson", date: "12/10/2025", packages: 1, weight: 3.2, status: "Shipped" },
+  { id: "CONS-2024-004", customer: "Harvey Specter", date: "12/09/2025", packages: 3, weight: 15.7, status: "Pending" },
+  { id: "CONS-2024-005", customer: "Louis Litt", date: "12/08/2025", packages: 4, weight: 18.9, status: "Delivered" },
 ];
 
 const AdminConsolidations = () => {
-  // State
   const [consolidations, setConsolidations] = useState<ConsolidationData[]>(INITIAL_DATA);
   const [activeTab, setActiveTab] = useState<'Pending' | 'History'>('Pending');
   const [search, setSearch] = useState('');
   
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'view'>('create');
   const [selectedItem, setSelectedItem] = useState<ConsolidationData | null>(null);
@@ -45,14 +44,22 @@ const AdminConsolidations = () => {
     });
   }, [consolidations, activeTab, search]);
 
-  // Handlers
+  // Calculate totals for Pending tab
+  const pendingTotals = useMemo(() => {
+    const pending = consolidations.filter(item => item.status === 'Pending');
+    const totalPackages = pending.reduce((sum, item) => sum + item.packages, 0);
+    const totalWeight = pending.reduce((sum, item) => sum + item.weight, 0);
+    return { totalPackages, totalWeight };
+  }, [consolidations]);
+
   const handleCreate = (newData: Partial<ConsolidationData>) => {
     const newConsolidation: ConsolidationData = {
       id: `CONS-2024-${Math.floor(100 + Math.random() * 900)}`,
       date: new Date().toLocaleDateString('en-US'),
       status: 'Pending',
       customer: newData.customer || 'Unknown',
-      packages: newData.packages || 1
+      packages: newData.packages || 1,
+      weight: newData.weight || 5.0 // default weight
     };
     setConsolidations([newConsolidation, ...consolidations]);
     setIsModalOpen(false);
@@ -107,7 +114,6 @@ const AdminConsolidations = () => {
       {/* --- ACTIONS BAR --- */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         
-        {/* Tabs */}
         <div className="flex items-center gap-4 bg-white p-1 rounded-full border border-gray-100 shadow-sm">
           <button 
             onClick={() => setActiveTab('Pending')}
@@ -131,7 +137,6 @@ const AdminConsolidations = () => {
           </button>
         </div>
 
-        {/* Create Button */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-72">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -152,6 +157,8 @@ const AdminConsolidations = () => {
           </button>
         </div>
       </div>
+
+
 
       {/* --- GRID CONTENT --- */}
       {filteredData.length > 0 ? (
@@ -181,7 +188,6 @@ const AdminConsolidations = () => {
           onSubmit={handleCreate}
         />
       )}
-     
     </div>
   );
 };
@@ -199,7 +205,6 @@ const ConsolidationCard: React.FC<CardProps> = ({ data, onApprove, onView }) => 
   return (
     <div className="bg-white p-7 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
       
-      {/* Top Row */}
       <div className="flex justify-between items-start mb-5">
         <h3 className="text-xl font-bold text-gray-700 tracking-tight">{data.id}</h3>
         <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide ${
@@ -209,25 +214,30 @@ const ConsolidationCard: React.FC<CardProps> = ({ data, onApprove, onView }) => 
         </span>
       </div>
 
-      {/* Info Rows */}
       <div className="space-y-1.5 mb-5 flex-grow">
         <p className="text-[14px] text-gray-400">
           Customer: <span className="text-gray-600 font-medium">{data.customer}</span>
         </p>
+          {/* Show weight only if Pending */}
+          {data.status === 'Pending' && (
+          <p className="text-[14px] text-gray-400">
+            Total Weight: <span className="text-gray-600 font-bold">{data.weight.toFixed(1)} kg</span>
+          </p>
+        )}
         <p className="text-[14px] text-gray-400">
           Requested: <span className="text-gray-600 font-medium">{data.date}</span>
         </p>
+        
+        
       </div>
 
-      {/* Package Count Box */}
       <div className="flex items-center gap-3 bg-[#f9fafb] p-3 rounded-xl mb-6 border border-gray-100">
         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
            <Box size={16} />
         </div>
-        <span className="text-sm text-gray-500 font-medium">{data.packages} package(s) in this consolidation</span>
+        <span className="text-sm text-gray-500 font-medium">{data.packages} package(s) • {data.weight.toFixed(1)} kg</span>
       </div>
 
-      {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-4 mt-auto">
         <button 
           onClick={onView}
@@ -249,12 +259,11 @@ const ConsolidationCard: React.FC<CardProps> = ({ data, onApprove, onView }) => 
           </button>
         )}
       </div>
-      
     </div>
   );
 };
 
-/* --- MODAL COMPONENT --- */
+/* --- MODAL COMPONENT (Updated to include weight input when creating) --- */
 interface ModalProps {
   mode: 'create' | 'view';
   data: ConsolidationData | null;
@@ -265,10 +274,11 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
   const [customer, setCustomer] = useState("");
   const [packages, setPackages] = useState(1);
+  const [weight, setWeight] = useState(5.0); // new state for weight
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ customer, packages });
+    onSubmit({ customer, packages, weight });
   };
 
   return (
@@ -309,8 +319,8 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
               <div className="flex items-center gap-3">
                 <Package className="text-gray-400" size={18} />
                 <div>
-                  <div className="text-xs text-gray-400">Items</div>
-                  <div className="font-medium text-gray-800">{data.packages} packages</div>
+                  <div className="text-xs text-gray-400">Packages</div>
+                  <div className="font-medium text-gray-800">{data.packages} packages • {data.weight.toFixed(1)} kg</div>
                 </div>
               </div>
             </div>
@@ -340,6 +350,18 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
                 min="1"
                 value={packages}
                 onChange={(e) => setPackages(Number(e.target.value))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Total Weight (kg)</label>
+              <input 
+                required
+                type="number"
+                min="0.1"
+                step="0.1"
+                value={weight}
+                onChange={(e) => setWeight(Number(e.target.value))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
               />
             </div>
