@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { 
   Search, Plus, Calendar, ChevronDown, Check, 
-  Info, X, Package as PackageIcon, DollarSign, 
+  X, Package as PackageIcon, DollarSign, 
   Box, ChevronRight, Save, Trash2, ArrowUpDown
 } from "lucide-react";
 
