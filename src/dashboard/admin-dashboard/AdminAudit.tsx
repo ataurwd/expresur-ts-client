@@ -8,7 +8,7 @@ import {
   ShieldAlert, 
   XCircle, 
   ChevronRight,
-  X // For close button
+ // For close button
 } from 'lucide-react';
 
 // --- TYPES ---

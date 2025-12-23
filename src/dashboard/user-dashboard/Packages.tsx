@@ -66,12 +66,7 @@ const PURCHASED: Purchased[] = [
   },
 ];
 
-const SERVICES: ServicePkg[] = [
-  { id: "S-01", name: "Plan Básico", price: "$39 USD/mes", features: ["20 GB storage", "3 usuarios", "Soporte por email"] },
-  { id: "S-02", name: "Plan Inicial", price: "$49 USD/mes", features: ["50 GB storage", "5 usuarios", "Email + Chat"], tag: "Popular" },
-  { id: "S-03", name: "Plan Empresarial", price: "$129 USD/mes", features: ["200 GB", "25 usuarios", "Soporte prioritario"] },
-  { id: "S-04", name: "Plan Premium", price: "$249 USD/mes", features: ["500 GB", "Ilimitados usuarios", "Soporte 24/7"], tag: "Best" },
-];
+
 
 /* ================= Helper ================= */
 function fmt(d: string) {
@@ -88,11 +83,6 @@ export default function PackagesPage() {
   const filteredPurchased = useMemo(() => {
     const q = query.trim().toLowerCase();
     return PURCHASED.filter(p => p.id.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.packageId.toLowerCase().includes(q));
-  }, [query]);
-
-  const filteredServices = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return SERVICES.filter(s => s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q));
   }, [query]);
 
   return (

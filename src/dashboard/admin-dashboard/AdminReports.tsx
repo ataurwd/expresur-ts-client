@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet";
-import { Download, Search, ChevronLeft, ChevronRight, X, Bell } from "lucide-react";
+import { Download, Search, ChevronLeft, ChevronRight, Bell } from "lucide-react";
 
 type PackageRow = {
   paymentId: string;

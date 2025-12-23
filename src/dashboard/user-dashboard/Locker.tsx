@@ -37,7 +37,7 @@ function copyToClipboard(text: string) {
 
 export default function Locker() {
   const [copied, setCopied] = useState(false);
-  const [showJSON, setShowJSON] = useState(false);
+  const [showJSON,] = useState(false);
 
   async function handleCopy() {
     await copyToClipboard(FAKE_LOCKER.id);
@@ -45,15 +45,6 @@ export default function Locker() {
     setTimeout(() => setCopied(false), 1800);
   }
 
-  function handleDownloadJSON() {
-    const blob = new Blob([JSON.stringify(FAKE_LOCKER, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${FAKE_LOCKER.id}_locker.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
