@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Download, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Download, Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 type PackageRow = {
   paymentId: string;
@@ -88,6 +88,7 @@ export default function PackageTrackingDashboard() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"All" | PackageRow["status"]>("All");
   const [page, setPage] = useState(1);
+  const [selectedPackage, setSelectedPackage] = useState<PackageRow | null>(null);
   const perPage = 10;
 
   const filtered = useMemo(() => {
@@ -134,6 +135,17 @@ export default function PackageTrackingDashboard() {
         return "●";
       case "Cancelled":
         return "✕";
+    }
+  };
+
+  const getDetailStatusStyle = (status: PackageRow["status"]) => {
+    switch (status) {
+      case "Delivered":
+        return "bg-green-100 text-green-700";
+      case "Delayed":
+        return "bg-orange-100 text-orange-700";
+      case "Cancelled":
+        return "bg-red-100 text-red-700";
     }
   };
 
@@ -261,7 +273,10 @@ export default function PackageTrackingDashboard() {
                     </span>
                   </td>
                   <td className="px-5 py-4 text-center">
-                    <button className="text-green-600 font-medium hover:text-green-800 transition text-sm">
+                    <button
+                      onClick={() => setSelectedPackage(row)}
+                      className="px-4 py-1.5 bg-gray-50 text-gray-400 text-xs font-medium rounded-lg hover:bg-white hover:text-[#106F3E] hover:shadow-md transition-all border border-transparent hover:border-gray-100"
+                    >
                       View
                     </button>
                   </td>
@@ -305,6 +320,66 @@ export default function PackageTrackingDashboard() {
           </div>
         )}
       </div>
+
+      {/* Details Modal - Matches your image exactly */}
+      {selectedPackage && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative">
+            <h2 className="text-2xl font-bold text-gray-800 mb-8">Report Details</h2>
+
+            <div className="bg-gray-50 rounded-2xl p-6 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <p className="text-sm text-gray-500">Payment ID</p>
+                  <p className="font-semibold text-gray-900 mt-1">{selectedPackage.paymentId}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Package ID</p>
+                  <p className="font-semibold text-gray-900 mt-1">{selectedPackage.packageId}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <p className="text-sm text-gray-500">Customer</p>
+                  <p className="font-semibold text-gray-900 mt-1">{selectedPackage.customerName}</p>
+                  <p className="text-sm text-gray-500">{selectedPackage.customerEmail}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Amount</p>
+                  <p className="font-semibold text-gray-900 mt-1">{selectedPackage.amount}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <p className="text-sm text-gray-500">Date</p>
+                  <p className="font-semibold text-gray-900 mt-1">{selectedPackage.date}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <span
+                    className={`inline-block px-5 py-2 rounded-full font-medium mt-1 ${getDetailStatusStyle(
+                      selectedPackage.status
+                    )}`}
+                  >
+                    {selectedPackage.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 text-right">
+              <button
+                onClick={() => setSelectedPackage(null)}
+                className="text-green-600 font-semibold hover:text-green-700 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
