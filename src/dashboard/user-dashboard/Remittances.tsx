@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner'; // Toaster removed to avoid duplicates
 import { 
   Bell, 
   Search, 
@@ -7,10 +7,9 @@ import {
   CheckCircle, 
   RefreshCw, 
   ArrowRight, 
-  Loader2,
   XCircle
 } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Link import করা হয়েছে
+import { Link } from 'react-router-dom';
 
 // --- Types ---
 type TransferStatus = 'Delivered' | 'Delayed' | 'In Transit' | 'Processing';
@@ -92,10 +91,11 @@ const Remittances = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
-      <Toaster position="top-center" richColors closeButton />
+      
+      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 
       {/* --- Header --- */}
-      <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Remittances</h1>
           <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
@@ -123,7 +123,7 @@ const Remittances = () => {
         </div>
       </div>
 
-      <div className=" mx-auto space-y-8">
+      <div className="max-w-[1400px] mx-auto space-y-8">
         
         {/* --- Transfer Status Section (Interactive Filters) --- */}
         <div>
