@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner'; // Toaster ইম্পোর্ট করার দরকার নেই যদি মেইন ফাইলে থাকে
 import { 
   Bell, 
   Camera, 
@@ -46,10 +46,13 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
-      <Toaster position="top-center" richColors closeButton />
+      
+      {/* NOTE: <Toaster /> এখান থেকে সরিয়ে দেওয়া হয়েছে। 
+         এটি আপনার App.tsx বা Main Layout ফাইলে একবার থাকলেই পুরো অ্যাপে কাজ করবে।
+      */}
 
       {/* --- Header --- */}
-      <div className="mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Profile & Settings</h1>
           <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
@@ -57,10 +60,11 @@ const Profile = () => {
 
         <div className="flex items-center gap-6 mt-6 md:mt-0">
           
-          {/* Notification Bell with Link */}
+          {/* Notification Bell with Link & Alert Dot */}
           <Link to="/dashboard/notifications">
             <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
               <Bell size={20} className="text-gray-600" />
+              {/* Active Alert Dot */}
               <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
           </Link>
@@ -77,7 +81,7 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className=" mx-auto space-y-6">
+      <div className="max-w-[1400px] mx-auto space-y-6">
         
         {/* --- 1. Personal Information Card --- */}
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
