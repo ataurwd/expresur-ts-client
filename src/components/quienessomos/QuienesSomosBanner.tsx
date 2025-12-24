@@ -8,8 +8,10 @@ const QuienesSomosBanner: React.FC = () => {
     <div className="overflow-x-hidden">
       <div
         style={{
-          backgroundImage: `url(${HeroBg})`,
-          backgroundPosition: "bottom",
+          backgroundImage: `linear-gradient(90deg, #0b5b39 0%, #8fc6b4 45%, #f5b370 100%), url(${HeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
         }}
       >
         <div className="relative w-full overflow-x-hidden">
@@ -90,7 +92,7 @@ const QuienesSomosBanner: React.FC = () => {
 
 
       `}</style>
- </div>
+    </div>
   );
 };
 
