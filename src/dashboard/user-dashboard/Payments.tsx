@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner'; // Toaster removed
 import { 
   Bell, 
   DollarSign, 
@@ -78,10 +78,11 @@ const Payments = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
-      <Toaster position="top-center" richColors closeButton />
+      
+      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 
       {/* --- Header --- */}
-      <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      <div className="mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Financial Overview</h1>
           <p className="text-gray-500 mt-2 text-sm">Track your packages</p>

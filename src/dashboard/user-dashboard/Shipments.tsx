@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner'; // Toaster removed
 import { Bell, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Link import করা হয়েছে
+import { Link } from 'react-router-dom';
 
 // --- Form Data Interface ---
 interface ShipmentFormData {
@@ -97,7 +97,8 @@ const Shipments = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
-      <Toaster position="top-center" richColors closeButton />
+      
+      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 
       {/* --- Header --- */}
       <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
@@ -128,7 +129,7 @@ const Shipments = () => {
         </div>
       </div>
 
-      <div className=" mx-auto">
+      <div className="mx-auto">
         
         {/* --- Main Form Card --- */}
         <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative">

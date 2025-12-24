@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'sonner'; // Toaster removed
 import { 
   Bell, Box, Truck, Wallet, Plus, Layers, Send, 
   CheckCircle, AlertTriangle, Tag, MoreHorizontal, 
@@ -74,6 +75,7 @@ const DashboardUser = () => {
     // Reset & Close
     setNewPackageId('');
     setIsModalOpen(false);
+    toast.success("Package added successfully!");
   };
 
   // Handle removing an alert
@@ -94,6 +96,8 @@ const DashboardUser = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-6 font-sans text-gray-800 relative">
       
+      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
+
       {/* --- MODAL FOR ADDING PACKAGE --- */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
@@ -284,25 +288,27 @@ const DashboardUser = () => {
         <div className="xl:col-span-1 space-y-8">
           
           {/* Profile Header */}
-         <div className="flex items-center gap-6 mt-6 md:mt-0">
-          {/* Notification Bell with Link */}
-          <Link to="/dashboard/notifications">
-            <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
-              <Bell size={20} className="text-gray-600" />
-              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-            </button>
-          </Link>
-          
-          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
-               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
-              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
+          <div className="flex items-center gap-6 mt-6 md:mt-0 justify-end">
+            {/* Notification Bell with Link */}
+            <Link to="/dashboard/notifications">
+              <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+                <Bell size={20} className="text-gray-600" />
+                {/* Alert Dot Added */}
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+              </button>
+            </Link>
+            
+            <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
+              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
+                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
+                <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
+              </div>
             </div>
           </div>
-        </div>
+
           {/* Interactive Alerts */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 min-h-[600px]">
             <div className="flex items-center gap-2 mb-6">

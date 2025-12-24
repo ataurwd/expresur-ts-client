@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner'; // Toaster removed to avoid duplicates
 import { 
   Bell, 
   Search, 
@@ -34,7 +34,7 @@ const Packages = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Form State for New Package (Updated to match new Modal)
+  // Form State for New Package
   const [newPackage, setNewPackage] = useState({
     item: '',
     trackingNumber: '',
@@ -76,10 +76,10 @@ const Packages = () => {
 
     const pkg: PackageData = {
       id: newPackage.trackingNumber,
-      from: 'Processing...', // Default since modal doesn't have this
-      destination: newPackage.customer, // Mapping Customer to Destination for now
+      from: 'Processing...', 
+      destination: newPackage.customer,
       weight: 'N/A',
-      carrier: newPackage.category, // Mapping Category to Carrier for demo
+      carrier: newPackage.category,
       date: new Date().toLocaleDateString(),
       status: 'In Warehouse',
       desc: newPackage.item
@@ -87,7 +87,7 @@ const Packages = () => {
 
     setPackages([pkg, ...packages]);
     setIsModalOpen(false);
-    setNewPackage({ item: '', trackingNumber: '', category: '', customer: '', note: '' }); // Reset form
+    setNewPackage({ item: '', trackingNumber: '', category: '', customer: '', note: '' }); 
     toast.success('Package added successfully');
   };
 
@@ -121,10 +121,11 @@ const Packages = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative">
-      <Toaster position="top-center" richColors closeButton />
+      
+      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 
       {/* --- Header --- */}
-      <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      <div className="mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Packages</h1>
           <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
@@ -132,12 +133,12 @@ const Packages = () => {
 
         <div className="flex items-center gap-6 mt-6 md:mt-0">
            {/* Notification Bell with Link */}
-          <Link to="/dashboard/notifications">
+           <Link to="/dashboard/notifications">
             <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
               <Bell size={20} className="text-gray-600" />
               <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
-          </Link>
+           </Link>
           
           <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner'; // Toaster removed to avoid duplicates
 import { 
   Bell, 
   Copy, 
@@ -87,7 +87,7 @@ const Locker: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10">
       
-      <Toaster position="top-center" richColors closeButton />
+      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 
       {/* --- Header --- */}
       <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
@@ -130,7 +130,7 @@ const Locker: React.FC = () => {
 
           <h3 className="text-lg font-medium text-gray-500 mb-6">Locker Shipping Address</h3>
 
-          {/* Address List - Border removed here */}
+          {/* Address List */}
           <div className="space-y-3 w-full"> 
             {[
               "Maria González",
@@ -139,7 +139,6 @@ const Locker: React.FC = () => {
               "Miami, FL 33152",
               "+1 (305) 555-7890"
             ].map((text, index) => (
-              // border-dashed removed from class below
               <div key={index} className="flex items-center justify-between group py-1">
                 <span className="text-gray-800 font-medium text-[15px]">{text}</span>
                 <button 
