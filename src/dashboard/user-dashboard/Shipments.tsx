@@ -1,235 +1,292 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { Toaster, toast } from 'sonner';
+import { Bell, ChevronDown } from 'lucide-react';
 
-type Shipment = {
-  id: string;
-  type: "local" | "locker" | "consolidated";
-  from: string;
-  to: string;
+// --- Form Data Interface ---
+interface ShipmentFormData {
+  country: string;
+  state: string;
+  city: string;
+  address: string;
+  postalCode: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
   weight: number;
-  status: "received" | "in_transit" | "delivered";
-  date: string;
-  timeline: string[];
-  trackingNumber: string; // 👈 Now required for all shipments
-};
+  declaredValue: number;
+  description: string;
+}
 
-/* 🔥 Fake Client Shipments WITH TRACKING NUMBER FOR ALL */
-const FAKE_SHIPMENTS: Shipment[] = [
-  {
-    id: "CUB-23011",
-    type: "local",
-    from: "La Habana",
-    to: "Santiago de Cuba",
-    weight: 2.5,
-    status: "in_transit",
-    date: "2025-01-10",
-    trackingNumber: "TRK-CUB-23011",
-    timeline: ["Recibido en La Habana", "En tránsito a Camagüey"],
-  },
-  {
-    id: "LOC-55214",
-    type: "local",
-    from: "Camagüey",
-    to: "Holguín",
-    weight: 1.1,
-    status: "delivered",
-    date: "2025-01-08",
-    trackingNumber: "TRK-LOC-55214",
-    timeline: ["Recibido", "Enviado", "Entregado"],
-  },
-  {
-    id: "INT-99231",
-    type: "locker",
-    from: "Locker Miami (EXPRESUR XG15STV)",
-    to: "La Habana",
-    weight: 3.8,
-    status: "received",
-    date: "2025-01-12",
-    trackingNumber: "TRK-INT-99231",
-    timeline: ["Recibido en Miami", "Preparado para envío"],
-  },
-  {
-    id: "CNL-77452",
-    type: "consolidated",
-    from: "Miami (3 paquetes)",
-    to: "Matanzas",
-    weight: 7.4,
-    status: "in_transit",
-    date: "2025-01-11",
-    trackingNumber: "TRK-CNL-77452",
-    timeline: ["Consolidado", "Salida del almacén"],
-  },
-];
+const Shipments = () => {
+  // --- State for Form Data ---
+  const [formData, setFormData] = useState<ShipmentFormData>({
+    country: 'United State',
+    state: '',
+    city: '',
+    address: '',
+    postalCode: '',
+    fullName: '',
+    phoneNumber: '',
+    email: '',
+    weight: 1,
+    declaredValue: 0,
+    description: '',
+  });
 
-export default function Shipments() {
-  const [selected, setSelected] = useState<Shipment | null>(null);
-  const [query, setQuery] = useState("");
+  // --- Handlers ---
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'number' ? parseFloat(value) : value,
+    }));
+  };
 
-  const filtered = FAKE_SHIPMENTS.filter((s) =>
-    s.id.toLowerCase().includes(query.toLowerCase())
-  );
-
-  function getStatusColor(status: Shipment["status"]) {
-    switch (status) {
-      case "received":
-        return "bg-blue-100 text-blue-700";
-      case "in_transit":
-        return "bg-yellow-100 text-yellow-700";
-      case "delivered":
-        return "bg-green-100 text-green-700";
-      default:
-        return "";
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Basic validation for required fields
+    if (!formData.city || !formData.address || !formData.postalCode || !formData.fullName || !formData.phoneNumber || formData.weight <= 0) {
+      toast.error('Please fill in all required fields (*).');
+      return;
     }
-  }
+    console.log('Shipment Form Data:', formData);
+    toast.success('Shipment created successfully!');
+    // Reset form or redirect here
+  };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="mx-auto">
-        <h2 className="text-2xl font-semibold mb-4">Mis Envíos</h2>
+    <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
+      <Toaster position="top-center" richColors closeButton />
 
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Buscar por ID de envío..."
-          className="px-3 py-2 border rounded-md w-full mb-4"
-        />
-
-        {/* DESKTOP TABLE */}
-        <div className="hidden md:block bg-white rounded-xl shadow overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-100 border-b">
-              <tr>
-                <th className="p-3 text-left">ID</th>
-                <th className="p-3 text-left">Tipo</th>
-                <th className="p-3 text-left">Tracking</th>
-                <th className="p-3 text-left">De</th>
-                <th className="p-3 text-left">A</th>
-                <th className="p-3 text-left">Peso</th>
-                <th className="p-3 text-left">Estado</th>
-                <th className="p-3 text-right">Acciones</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filtered.map((s) => (
-                <tr key={s.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">{s.id}</td>
-                  <td className="p-3 capitalize">{s.type}</td>
-
-                  {/* Tracking number ALWAYS visible */}
-                  <td className="p-3 font-semibold text-blue-700">
-                    {s.trackingNumber}
-                  </td>
-
-                  <td className="p-3">{s.from}</td>
-                  <td className="p-3">{s.to}</td>
-                  <td className="p-3">{s.weight} kg</td>
-
-                  <td className="p-3">
-                    <span
-                      className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                        s.status
-                      )}`}
-                    >
-                      {s.status.replace("_", " ")}
-                    </span>
-                  </td>
-
-                  <td className="p-3 text-right">
-                    <button
-                      onClick={() => setSelected(s)}
-                      className="px-3 py-1 bg-green-700 text-white rounded-md"
-                    >
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* --- Header --- */}
+      <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Shipments</h1>
+          <p className="text-gray-500 mt-2 text-sm">Enter shipment details to get pricing and carriers</p>
         </div>
 
-        {/* MOBILE CARDS */}
-        <div className="md:hidden space-y-3">
-          {filtered.map((s) => (
-            <div
-              key={s.id}
-              className="bg-white p-4 rounded-lg shadow border border-gray-100"
-            >
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-semibold">{s.id}</p>
-                  <p className="text-sm text-gray-500 capitalize">{s.type}</p>
-
-                  <p className="text-sm text-blue-600 font-semibold">
-                    Tracking: {s.trackingNumber}
-                  </p>
-                </div>
-
-                <span
-                  className={`px-2 py-1 h-fit text-xs rounded-md ${getStatusColor(
-                    s.status
-                  )}`}
-                >
-                  {s.status.replace("_", " ")}
-                </span>
-              </div>
-
-              <div className="mt-2 text-sm">
-                <p><b>De:</b> {s.from}</p>
-                <p><b>A:</b> {s.to}</p>
-                <p><b>Peso:</b> {s.weight} kg</p>
-              </div>
-
-              <button
-                onClick={() => setSelected(s)}
-                className="w-full mt-3 py-2 bg-green-700 text-white rounded-md"
-              >
-                Ver Detalles
-              </button>
+        <div className="flex items-center gap-6 mt-6 md:mt-0">
+          <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+            <Bell size={20} className="text-gray-600" />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+          </button>
+          
+          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
+               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* MODAL */}
-      {selected && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg w-full max-w-lg p-6">
-
-            <h3 className="text-xl font-bold mb-2">Detalles del Envío</h3>
-            <p className="text-sm text-gray-600 mb-4">ID: {selected.id}</p>
-
-            <p><b>Tipo:</b> {selected.type}</p>
-            <p><b>De:</b> {selected.from}</p>
-            <p><b>A:</b> {selected.to}</p>
-            <p><b>Peso:</b> {selected.weight} kg</p>
-
-            {/* Tracking ALWAYS visible */}
-            <p className="mt-2">
-              <b>Tracking:</b> {selected.trackingNumber}
-            </p>
-
-            <div className="mt-4">
-              <h4 className="font-semibold">Historial</h4>
-              <ul className="list-disc ml-5 mt-1 text-sm">
-                {selected.timeline.map((step, i) => (
-                  <li key={i}>{step}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={() => setSelected(null)}
-                className="px-4 py-2 border rounded-md"
-              >
-                Cerrar
-              </button>
-             
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
+              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
             </div>
           </div>
         </div>
-      )}
+      </div>
+
+      <div className=" mx-auto">
+        
+        {/* --- Main Form Card --- */}
+        <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative">
+          
+          {/* --- 1. Destination Section --- */}
+          <div className="mb-10">
+            <h3 className="text-lg font-bold text-gray-800 mb-6">Destination</h3>
+            <div className="space-y-6">
+              
+              {/* Country Dropdown */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-600">Country *</label>
+                <div className="relative">
+                  <select 
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 appearance-none bg-white pr-10"
+                  >
+                    <option value="United State">United State</option>
+                    <option value="Canada">Canada</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-4 text-gray-400 pointer-events-none" size={18} />
+                </div>
+              </div>
+
+              {/* State & City */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">State</label>
+                  <input 
+                    type="text" 
+                    name="state"
+                    placeholder="eg, California" 
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">City *</label>
+                  <input 
+                    type="text" 
+                    name="city"
+                    placeholder="Enter city" 
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Address & Postal Code */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Address *</label>
+                  <input 
+                    type="text" 
+                    name="address"
+                    placeholder="Street address" 
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Postal Code *</label>
+                  <input 
+                    type="text" 
+                    name="postalCode"
+                    placeholder="Enter zip code" 
+                    value={formData.postalCode}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                    required
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* --- 2. Recipient Information Section --- */}
+          <div className="mb-10">
+            <h3 className="text-lg font-bold text-gray-800 mb-6">Recipient Information</h3>
+            <div className="space-y-6">
+              
+              {/* Full Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-600">Full Name *</label>
+                <input 
+                  type="text" 
+                  name="fullName"
+                  placeholder="Recipient name" 
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                  required
+                />
+              </div>
+
+              {/* Phone Number & Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Phone Number *</label>
+                  <div className="flex">
+                    <div className="flex items-center border border-r-0 border-gray-200 rounded-l-lg px-3 bg-gray-50/50">
+                      <span className="text-xl mr-2">🇺🇸</span>
+                      <span className="text-gray-600 font-medium text-sm">+1</span>
+                      <ChevronDown size={14} className="text-gray-400 ml-1" />
+                    </div>
+                    <input 
+                      type="tel" 
+                      name="phoneNumber"
+                      placeholder="555 000 0000" 
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-200 rounded-r-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Email</label>
+                  <input 
+                    type="email" 
+                    name="email"
+                    placeholder="email@example.com" 
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* --- 3. Package Details Section --- */}
+          <div className="mb-10">
+            <h3 className="text-lg font-bold text-gray-800 mb-6">Package Details</h3>
+            <div className="space-y-6">
+              
+              {/* Weight & Declared Value */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Weight (kg) *</label>
+                  <input 
+                    type="number" 
+                    name="weight"
+                    min="0.1"
+                    step="0.1"
+                    value={formData.weight}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Declared Value ($)</label>
+                  <input 
+                    type="number" 
+                    name="declaredValue"
+                    min="0"
+                    step="0.01"
+                    value={formData.declaredValue}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 placeholder-gray-300"
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="space-y-2">
+                 <label className="text-sm font-medium text-gray-600">Description</label>
+                 <textarea 
+                    name="description"
+                    placeholder="Brief description of package....."
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 resize-none h-32 placeholder-gray-300"
+                 />
+              </div>
+
+            </div>
+          </div>
+
+          {/* --- Submit Button --- */}
+          <button 
+            type="submit"
+            className="w-full bg-[#005f33] hover:bg-[#004d2a] text-white py-4 rounded-xl font-bold text-sm transition-all shadow-md active:scale-[0.99]"
+          >
+            Create Shipment
+          </button>
+
+        </form>
+
+      </div>
     </div>
   );
-}
+};
+
+export default Shipments;

@@ -41,7 +41,7 @@ const menuItems: MenuItem[] = [
   { text: "Packages", icon: <Inventory2Outlined />, path: "/dashboard/packages" },
   { text: "Consolidations", icon: <CallSplitOutlined />, path: "/dashboard/consolidate" },
   { text: "Shipments", icon: <DirectionsBoatFilledOutlined />, path: "/dashboard/shipments" },
-  { text: "Pickup", icon: <LocalShippingOutlined />, path: "/dashboard/pickup" },
+  // { text: "Pickup", icon: <LocalShippingOutlined />, path: "/dashboard/pickup" },
   { text: "Wallet", icon: <CreditCardOutlined />, path: "/dashboard/payments" },
   { text: "Remittances", icon: <LayersOutlined />, path: "/dashboard/remittances" },
   { text: "Settings", icon: <SettingsOutlined />, path: "/dashboard/profile" },

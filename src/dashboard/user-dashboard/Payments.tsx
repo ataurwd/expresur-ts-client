@@ -1,379 +1,318 @@
-import React, { useState, useMemo } from "react";
-import { Helmet } from "react-helmet";
+import React, { useState } from 'react';
+import { Toaster, toast } from 'sonner';
+import { 
+  Bell, 
+  DollarSign, 
+  Plus, 
+  CreditCard, 
+  Send, 
+  ArrowRight, 
+  ArrowLeft,
+  X
+} from 'lucide-react';
 
-/* -------- Fake Payments Data -------- */
-type Payment = {
+// --- Types ---
+interface Transaction {
   id: string;
-  type: "envio" | "consolidacion" | "pickup" | "locker";
-  amount: number;
-  currency: "USD" | "CUP";
-  date: string; // ISO
-  status: "pagado" | "pendiente" | "fallido";
-  desc: string;
-  items?: string[];
-  txId?: string | null; // transaction id if paid
-};
-
-const INITIAL_PAYMENTS: Payment[] = [
-  {
-    id: "PAY-99121",
-    type: "envio",
-    amount: 39,
-    currency: "USD",
-    date: "2025-01-12",
-    status: "pagado",
-    desc: "Envío Miami → La Habana",
-    items: ["Etiqueta aérea", "Manejo", "Entrega final"],
-    txId: "TX-AAA111",
-  },
-  {
-    id: "PAY-55231",
-    type: "pickup",
-    amount: 5,
-    currency: "USD",
-    date: "2025-01-09",
-    status: "pendiente",
-    desc: "Servicio de retiro doméstico",
-    items: ["Pickup urbano"],
-    txId: null,
-  },
-  {
-    id: "PAY-88210",
-    type: "consolidacion",
-    amount: 12,
-    currency: "USD",
-    date: "2025-01-06",
-    status: "pagado",
-    desc: "Consolidación de 3 paquetes",
-    items: ["Mano de obra", "Clasificación", "Reempaque"],
-    txId: "TX-BBB222",
-  },
-  {
-    id: "PAY-44781",
-    type: "locker",
-    amount: 3,
-    currency: "USD",
-    date: "2025-01-03",
-    status: "fallido",
-    desc: "Cargo de almacenamiento (Locker)",
-    items: ["Locker mensual"],
-    txId: null,
-  },
-];
-
-/* Helpers */
-function statusBadge(s: Payment["status"]) {
-  switch (s) {
-    case "pagado":
-      return "bg-green-100 text-green-700";
-    case "pendiente":
-      return "bg-yellow-100 text-yellow-700";
-    case "fallido":
-      return "bg-red-100 text-red-700";
-    default:
-      return "";
-  }
-}
-function rnd(prefix = "TX") {
-  return `${prefix}-${Math.random().toString(36).slice(2, 9).toUpperCase()}`;
+  type: string;
+  details: string;
+  date: string;
+  amount: string;
+  status?: string;
+  // Extra details for modal
+  name: string;
+  email: string;
 }
 
-/* ---------------- Component ---------------- */
-export default function Payments() {
-  const [payments, setPayments] = useState<Payment[]>(INITIAL_PAYMENTS);
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<Payment | null>(null);
+const Payments = () => {
+  // --- State ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  /* Online payment modal state */
-  const [payModalOpen, setPayModalOpen] = useState(false);
-  const [payTarget, setPayTarget] = useState<Payment | null>(null);
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvc, setCardCvc] = useState("");
-  const [processing, setProcessing] = useState(false);
-  const [lastTx, setLastTx] = useState<string | null>(null);
+  // --- Mock Data ---
+  const transactions: Transaction[] = [
+    { 
+      id: 'TXN-001', 
+      type: 'Deposit', 
+      details: 'Bank Transfer', 
+      date: '7/5/2024', 
+      amount: '$500', 
+      name: 'Tyrion Lannister', 
+      email: 'tyrion@example.com' 
+    },
+    { 
+      id: 'TXN-002', 
+      type: 'Payment', 
+      details: 'PayPal deposit', 
+      date: '7/5/2024', 
+      amount: '$500', 
+      name: 'Tyrion Lannister', 
+      email: 'tyrion@example.com' 
+    },
+    { 
+      id: 'TXN-003', 
+      type: 'Remittance', 
+      details: 'To John Smith', 
+      date: '7/5/2024', 
+      amount: '$500', 
+      name: 'John Smith', 
+      email: 'john.smith@example.com' 
+    },
+  ];
 
-  const filtered = useMemo(() => {
-    const q = query.toLowerCase();
-    return payments.filter(
-      (p) =>
-        p.id.toLowerCase().includes(q) ||
-        p.desc.toLowerCase().includes(q) ||
-        p.type.toLowerCase().includes(q)
-    );
-  }, [payments, query]);
+  // --- Handlers ---
+  const handleActionClick = (action: string) => {
+    toast.info(`Action triggered: ${action}`);
+  };
 
-  /* KPI */
-  const totalPaid = payments.filter((p) => p.status === "pagado").reduce((sum, p) => sum + p.amount, 0);
-  const pending = payments.filter((p) => p.status === "pendiente").length;
-  const lastPaid = [...payments].reverse().find((p) => p.status === "pagado");
+  const handleViewTransaction = (txn: Transaction) => {
+    setSelectedTransaction(txn);
+    setIsModalOpen(true);
+  };
 
-  /* Open pay modal for a payment */
-  function openPayModal(p: Payment) {
-    setPayTarget(p);
-    setCardNumber("");
-    setCardExpiry("");
-    setCardCvc("");
-    setPayModalOpen(true);
-  }
-
-  /* Simulate online payment */
-  async function handleFakePay() {
-    if (!payTarget) return;
-    // basic validation
-    if (cardNumber.trim().length < 12 || cardExpiry.trim().length < 3 || cardCvc.trim().length < 3) {
-      return alert("Ingrese datos de tarjeta válidos (fake).");
-    }
-
-    setProcessing(true);
-    // simulate network / payment gateway delay
-    await new Promise((r) => setTimeout(r, 1200));
-
-    // simulate random success/failure bias (mostly success)
-    const success = Math.random() > 0.08; // 92% success
-    if (success) {
-      const tx = rnd("TX");
-      setPayments(prev =>
-        prev.map(pay =>
-          pay.id === payTarget.id ? { ...pay, status: "pagado", txId: tx, date: new Date().toISOString().slice(0,10) } : pay
-        )
-      );
-      setLastTx(tx);
-      setProcessing(false);
-      setPayModalOpen(false);
-      alert(`Pago exitoso — TX: ${tx}`);
-    } else {
-      // mark as failed
-      setPayments(prev =>
-        prev.map(pay =>
-          pay.id === payTarget.id ? { ...pay, status: "fallido", txId: null } : pay
-        )
-      );
-      setProcessing(false);
-      setPayModalOpen(false);
-      alert("Pago fallido. Intenta con otra tarjeta.");
-    }
-  }
-
-  function downloadReceipt(p: Payment) {
-    const receipt = {
-      id: p.id,
-      amount: p.amount,
-      currency: p.currency,
-      status: p.status,
-      txId: p.txId ?? "—",
-      desc: p.desc,
-      date: p.date,
-    };
-    const blob = new Blob([JSON.stringify(receipt, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${p.id}_receipt.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+  const handleDownloadReceipt = () => {
+    toast.success('Receipt downloaded successfully!');
+  };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <Helmet><title>Payments | EXPRESUR</title></Helmet>
-      <div className=" mx-auto">
+    <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
+      <Toaster position="top-center" richColors closeButton />
 
-        {/* Header */}
-        <h2 className="text-2xl font-bold text-[#166534] mb-2">Pagos</h2>
-        <p className="text-gray-600 mb-6">Historial de pagos, facturas pendientes y pago online (simulado).</p>
-
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="text-xs text-gray-500">Total Pagado</div>
-            <div className="text-2xl font-bold text-[#166534]">${totalPaid}</div>
-            <div className="text-xs text-gray-400 mt-1">Historial completo</div>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="text-xs text-gray-500">Pendientes</div>
-            <div className="text-2xl font-bold text-yellow-600">{pending}</div>
-            <div className="text-xs text-gray-400 mt-1">Pagos por completar</div>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="text-xs text-gray-500">Último Pago</div>
-            <div className="text-xl font-semibold">{lastPaid ? lastPaid.date : "—"}</div>
-            <div className="text-xs text-gray-400 mt-1">{lastPaid?.desc}</div>
-          </div>
+      {/* --- Header --- */}
+      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Financial Overview</h1>
+          <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
         </div>
 
-        {/* Search */}
-        <div className="flex justify-between mb-3">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar pago por ID, tipo o descripción..."
-            className="px-3 py-2 border rounded-md w-72"
-          />
-        </div>
-
-        {/* Table (desktop) */}
-        <div className="hidden md:block bg-white rounded-xl shadow overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-3 text-left">ID</th>
-                <th className="p-3 text-left">Tipo</th>
-                <th className="p-3 text-left">Descripción</th>
-                <th className="p-3 text-left">Monto</th>
-                <th className="p-3 text-left">Fecha</th>
-                <th className="p-3 text-left">Estado</th>
-                <th className="p-3 text-right">Acciones</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filtered.map((p) => (
-                <tr key={p.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">{p.id}</td>
-                  <td className="p-3 capitalize">{p.type}</td>
-                  <td className="p-3">{p.desc}</td>
-                  <td className="p-3">${p.amount}</td>
-                  <td className="p-3">{p.date}</td>
-                  <td className="p-3">
-                    <span className={`px-2 py-1 rounded-full text-xs ${statusBadge(p.status)}`}>{p.status}</span>
-                  </td>
-                  <td className="p-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => setSelected(p)} className="px-3 py-1 border rounded-md">Ver</button>
-
-                      {p.status === "pendiente" && (
-                        <button onClick={() => openPayModal(p)} className="px-3 py-1 bg-[#166534] text-white rounded-md">Pay Online</button>
-                      )}
-
-                    </div>
-                  </td>
-                </tr>
-              ))}
-
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="p-6 text-center text-gray-500">No se encontraron pagos.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Cards (mobile) */}
-        <div className="md:hidden space-y-3">
-          {filtered.map((p) => (
-            <div key={p.id} className="bg-white p-4 rounded-lg shadow border">
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-semibold">{p.id}</p>
-                  <p className="text-sm text-gray-500">{p.type}</p>
-                </div>
-                <span className={`px-2 py-1 rounded-full text-xs ${statusBadge(p.status)}`}>{p.status}</span>
-              </div>
-
-              <div className="mt-2 text-sm">
-                <p><b>Monto:</b> ${p.amount}</p>
-                <p><b>Fecha:</b> {p.date}</p>
-                <p><b>Descripción:</b> {p.desc}</p>
-              </div>
-
-              <div className="mt-3 flex gap-2">
-                <button onClick={() => setSelected(p)} className="flex-1 px-3 py-2 border rounded-md">Ver</button>
-                {p.status === "pendiente" && (
-                  <button onClick={() => openPayModal(p)} className="px-3 py-2 bg-[#166534] text-white rounded-md">Pay Online</button>
-                )}
-              </div>
+        <div className="flex items-center gap-6 mt-6 md:mt-0">
+          <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+            <Bell size={20} className="text-gray-600" />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+          </button>
+          
+          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
+               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
             </div>
-          ))}
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
+              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Modal details */}
-      {selected && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-40">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full shadow-lg">
-            <h3 className="text-xl font-bold">{selected.id}</h3>
-            <p className="text-gray-600">{selected.desc}</p>
-
-            <div className="mt-4 space-y-2">
-              <p><b>Monto:</b> ${selected.amount}</p>
-              <p><b>Fecha:</b> {selected.date}</p>
-              <p><b>Estado:</b> <span className={`px-2 py-1 rounded-md text-xs ${statusBadge(selected.status)}`}>{selected.status}</span></p>
-              <p><b>Tx ID:</b> {selected.txId ?? "—"}</p>
-
-              {selected.items && (
-                <div>
-                  <b>Incluye:</b>
-                  <ul className="list-disc ml-6 text-sm mt-1">
-                    {selected.items.map((i, idx) => <li key={idx}>{i}</li>)}
-                  </ul>
+      <div className="max-w-[1400px] mx-auto space-y-8">
+        
+        {/* --- Stats Cards Grid --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {/* Card 1: Current Balance */}
+          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative">
+             <div className="flex justify-between items-start mb-4">
+                <span className="text-gray-500 font-medium">Current Balance</span>
+                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+                   <DollarSign size={16} />
                 </div>
-              )}
+             </div>
+             <h2 className="text-3xl font-bold text-gray-900">$0.00</h2>
+             <p className="text-xs font-medium text-green-500 mt-2">+12% from last period</p>
+          </div>
+
+          {/* Card 2: Total Deposits */}
+          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative">
+             <div className="flex justify-between items-start mb-4">
+                <span className="text-gray-500 font-medium">Total Deposits</span>
+                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+                   <DollarSign size={16} />
+                </div>
+             </div>
+             <h2 className="text-3xl font-bold text-gray-900">$0.00</h2>
+             <p className="text-xs font-medium text-red-500 mt-2">-3% from last period</p>
+          </div>
+
+          {/* Card 3: Total Spent */}
+          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative">
+             <div className="flex justify-between items-start mb-4">
+                <span className="text-gray-500 font-medium">Total Spent</span>
+                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+                   <DollarSign size={16} />
+                </div>
+             </div>
+             <h2 className="text-3xl font-bold text-gray-900">$0.00</h2>
+             <p className="text-xs font-medium text-green-500 mt-2">+15% from last period</p>
+          </div>
+
+          {/* Card 4: Account Status */}
+          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative flex flex-col justify-between">
+             <span className="text-gray-500 font-medium mb-6 block">Account Status</span>
+             <div>
+                <div className="flex items-center gap-2 mb-1">
+                   <span className="w-3 h-3 rounded-full bg-green-500 block"></span>
+                </div>
+                <span className="text-sm text-gray-400">Active</span>
+             </div>
+          </div>
+
+        </div>
+
+        {/* --- Action Buttons Grid --- */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+           <button 
+             onClick={() => handleActionClick('Add Funds')}
+             className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group hover:border-gray-200 transition"
+           >
+              <span className="text-gray-600 font-medium">Add Funds</span>
+              <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 transition">
+                 <Plus size={16} />
+              </div>
+           </button>
+
+           <button 
+             onClick={() => handleActionClick('Pay with wallet')}
+             className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group hover:border-gray-200 transition"
+           >
+              <span className="text-gray-600 font-medium">Pay with wallet</span>
+              <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 transition">
+                 <CreditCard size={16} />
+              </div>
+           </button>
+
+           <button 
+             onClick={() => handleActionClick('Send Remittance')}
+             className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group hover:border-gray-200 transition"
+           >
+              <span className="text-gray-600 font-medium">Send Remittance</span>
+              <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 transition">
+                 <Send size={16} />
+              </div>
+           </button>
+        </div>
+
+        {/* --- Recent Transaction Table --- */}
+        <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 min-h-[400px]">
+          <h3 className="text-lg font-medium text-gray-700 mb-8">Recent Transaction</h3>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-gray-50 text-xs text-gray-400 uppercase tracking-wider font-medium">
+                  <th className="py-4 pl-2 font-medium w-1/4">Type</th>
+                  <th className="py-4 font-medium w-1/4">Details</th>
+                  <th className="py-4 font-medium w-1/4">Date</th>
+                  <th className="py-4 font-medium w-1/6">Amount</th>
+                  <th className="py-4 font-medium text-right pr-2">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm">
+                {transactions.map((tx, idx) => (
+                  <tr key={idx} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition">
+                    <td className="py-6 pl-2 text-gray-500 font-medium">{tx.type}</td>
+                    <td className="py-6 text-gray-500">{tx.details}</td>
+                    <td className="py-6 text-gray-500">{tx.date}</td>
+                    <td className="py-6 text-gray-500">{tx.amount}</td>
+                    <td className="py-6 text-right pr-2">
+                       <button 
+                         onClick={() => handleViewTransaction(tx)}
+                         className="bg-[#F9FAFB] text-gray-400 px-6 py-2 rounded-lg text-xs font-medium hover:bg-gray-100 hover:text-gray-600 transition"
+                       >
+                         View
+                       </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-end items-center gap-6 mt-12 text-sm font-medium select-none">
+            <button 
+              className="text-gray-300 cursor-not-allowed"
+              disabled
+            >
+              Previous
+            </button>
+            <button 
+              className="flex items-center gap-1 text-[#005f33] hover:text-[#004d2a] transition"
+            >
+              Next <ArrowRight size={16} strokeWidth={2} />
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* --- TRANSACTION DETAILS MODAL --- */}
+      {isModalOpen && selectedTransaction && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-50 p-4 font-sans">
+          <div className="bg-white rounded-2xl w-full max-w-lg p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            
+            <h2 className="text-xl font-medium text-gray-700 mb-6">Transaction Details</h2>
+            
+            <div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-8">
+               
+               <div>
+                 <p className="text-xs text-gray-400 mb-1">Name</p>
+                 <p className="text-sm font-medium text-gray-600">{selectedTransaction.name}</p>
+               </div>
+
+               <div>
+                 <p className="text-xs text-gray-400 mb-1">Email</p>
+                 <p className="text-sm font-medium text-gray-600">{selectedTransaction.email}</p>
+               </div>
+
+               <div>
+                 <p className="text-xs text-gray-400 mb-1">Type</p>
+                 <p className="text-sm font-medium text-gray-600">{selectedTransaction.type}</p>
+               </div>
+
+               <div>
+                 <p className="text-xs text-gray-400 mb-1">Details</p>
+                 <p className="text-sm font-medium text-gray-600">{selectedTransaction.details}</p>
+               </div>
+
+               <div>
+                 <p className="text-xs text-gray-400 mb-1">Date</p>
+                 <p className="text-sm font-medium text-gray-600">{selectedTransaction.date}</p>
+               </div>
+
+               <div>
+                 <p className="text-xs text-gray-400 mb-1">Amount</p>
+                 <p className="text-sm font-medium text-gray-600">{selectedTransaction.amount}</p>
+               </div>
+
             </div>
 
-            <div className="mt-6 flex justify-end gap-3">
-              <button onClick={() => setSelected(null)} className="px-4 py-2 border rounded-md">Cerrar</button>
-              <button onClick={() => { downloadReceipt(selected); }} className="px-4 py-2 bg-[#166534] text-white rounded-md">Descargar Recibo</button>
+            {/* Receipt Button */}
+            <div className="mb-6">
+               <button 
+                 onClick={handleDownloadReceipt}
+                 className="bg-[#005f33] text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-[#004d2a] transition shadow-sm"
+               >
+                 Download Receipt
+               </button>
             </div>
+
+            {/* Cancel Button (Bottom Right) */}
+            <div className="flex justify-end">
+               <button 
+                 onClick={() => setIsModalOpen(false)}
+                 className="text-[#005f33] font-medium hover:text-[#004d2a] transition text-sm"
+               >
+                 Cancel
+               </button>
+            </div>
+
           </div>
         </div>
       )}
 
-      {/* Pay Modal (fake online) */}
-      {payModalOpen && payTarget && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="text-lg font-bold">Pagar en línea — {payTarget.id}</h3>
-                <p className="text-sm text-gray-500">Monto: ${payTarget.amount} — {payTarget.desc}</p>
-              </div>
-              <button onClick={() => setPayModalOpen(false)} className="text-gray-600">✕</button>
-            </div>
-
-            <div className="mt-4">
-              <label className="text-sm text-gray-500">Número de tarjeta (fake)</label>
-              <input value={cardNumber} onChange={e => setCardNumber(e.target.value)} placeholder="4111 1111 1111 1111" className="w-full border rounded p-2 mt-1" />
-
-              <div className="flex gap-2 mt-3">
-                <div className="flex-1">
-                  <label className="text-sm text-gray-500">MM/AA</label>
-                  <input value={cardExpiry} onChange={e => setCardExpiry(e.target.value)} placeholder="12/25" className="w-full border rounded p-2 mt-1" />
-                </div>
-                <div className="w-32">
-                  <label className="text-sm text-gray-500">CVC</label>
-                  <input value={cardCvc} onChange={e => setCardCvc(e.target.value)} placeholder="123" className="w-full border rounded p-2 mt-1" />
-                </div>
-              </div>
-
-              <div className="mt-4 text-sm text-gray-600">Nota: Este es un pago simulado (fake). No se realiza ninguna transacción real.</div>
-
-              <div className="mt-4 flex items-center justify-between">
-                <div className="text-sm">Total</div>
-                <div className="text-2xl font-bold">${payTarget.amount}</div>
-              </div>
-
-              <div className="mt-4 flex justify-end gap-2">
-                <button onClick={() => setPayModalOpen(false)} className="px-3 py-2 border rounded-md">Cancelar</button>
-                <button onClick={handleFakePay} disabled={processing} className={`px-4 py-2 rounded-md text-white ${processing ? 'bg-gray-400' : 'bg-[#166534]'}`}>
-                  {processing ? "Procesando..." : "Pagar ahora"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* small toast / info about last tx */}
-      {lastTx && (
-        <div className="fixed left-4 bottom-4 bg-white p-3 rounded shadow border">
-          <div className="text-sm">Última transacción: <b>{lastTx}</b></div>
-          <div className="text-xs text-gray-500">Puedes descargar el recibo en el historial.</div>
-        </div>
-      )}
     </div>
   );
-}
+};
+
+export default Payments;
