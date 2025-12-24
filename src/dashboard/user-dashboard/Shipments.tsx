@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Toaster, toast } from 'sonner';
 import { Bell, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Link import করা হয়েছে
 
 // --- Form Data Interface ---
 interface ShipmentFormData {
@@ -17,10 +18,30 @@ interface ShipmentFormData {
   description: string;
 }
 
+// --- Data for Phone Codes ---
+const phoneCountryCodes = [
+  { code: '+1', flag: '🇺🇸', name: 'USA' },
+  { code: '+53', flag: '🇨🇺', name: 'Cuba' },
+  { code: '+1', flag: '🌴', name: 'Miami' },
+  { code: '+880', flag: '🇧🇩', name: 'Bangladesh' },
+  { code: '+44', flag: '🇬🇧', name: 'UK' },
+  { code: '+1', flag: '🇨🇦', name: 'Canada' },
+];
+
+// --- Data for Destination Countries ---
+const destinationCountries = [
+  { name: 'United States', flag: '🇺🇸' },
+  { name: 'Canada', flag: '🇨🇦' },
+  { name: 'United Kingdom', flag: '🇬🇧' },
+  { name: 'Australia', flag: '🇦🇺' },
+  { name: 'Bangladesh', flag: '🇧🇩' },
+  { name: 'China', flag: '🇨🇳' },
+];
+
 const Shipments = () => {
   // --- State for Form Data ---
   const [formData, setFormData] = useState<ShipmentFormData>({
-    country: 'United State',
+    country: 'United States',
     state: '',
     city: '',
     address: '',
@@ -33,6 +54,12 @@ const Shipments = () => {
     description: '',
   });
 
+  // --- Dropdown States ---
+  const [selectedPhoneCode, setSelectedPhoneCode] = useState(phoneCountryCodes[0]);
+  const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
+  
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+
   // --- Handlers ---
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -42,17 +69,31 @@ const Shipments = () => {
     }));
   };
 
+  const handlePhoneCodeSelect = (country: typeof phoneCountryCodes[0]) => {
+    setSelectedPhoneCode(country);
+    setIsPhoneDropdownOpen(false);
+  };
+
+  const handleDestinationCountrySelect = (countryName: string) => {
+    setFormData(prev => ({ ...prev, country: countryName }));
+    setIsCountryDropdownOpen(false);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Basic validation for required fields
     if (!formData.city || !formData.address || !formData.postalCode || !formData.fullName || !formData.phoneNumber || formData.weight <= 0) {
       toast.error('Please fill in all required fields (*).');
       return;
     }
-    console.log('Shipment Form Data:', formData);
+    console.log('Final Data:', { 
+      ...formData, 
+      fullPhone: `${selectedPhoneCode.code} ${formData.phoneNumber}` 
+    });
     toast.success('Shipment created successfully!');
-    // Reset form or redirect here
   };
+
+  // Helper to find flag for currently selected destination country
+  const currentDestinationFlag = destinationCountries.find(c => c.name === formData.country)?.flag || '🏳️';
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
@@ -66,10 +107,14 @@ const Shipments = () => {
         </div>
 
         <div className="flex items-center gap-6 mt-6 md:mt-0">
-          <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
-            <Bell size={20} className="text-gray-600" />
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-          </button>
+          
+          {/* Notification Bell with Link */}
+          <Link to="/dashboard/notifications">
+            <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+              <Bell size={20} className="text-gray-600" />
+              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+            </button>
+          </Link>
           
           <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
@@ -93,22 +138,40 @@ const Shipments = () => {
             <h3 className="text-lg font-bold text-gray-800 mb-6">Destination</h3>
             <div className="space-y-6">
               
-              {/* Country Dropdown */}
-              <div className="space-y-2">
+              {/* CUSTOM COUNTRY DROPDOWN WITH FLAGS */}
+              <div className="space-y-2 relative">
                 <label className="text-sm font-medium text-gray-600">Country *</label>
-                <div className="relative">
-                  <select 
-                    name="country"
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-200 rounded-lg p-3.5 outline-none focus:ring-2 focus:ring-green-50 focus:border-[#005f33] transition text-gray-700 appearance-none bg-white pr-10"
-                  >
-                    <option value="United State">United State</option>
-                    <option value="Canada">Canada</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-4 text-gray-400 pointer-events-none" size={18} />
+                
+                <div 
+                  className="w-full border border-gray-200 rounded-lg p-3.5 flex justify-between items-center cursor-pointer bg-white hover:border-gray-300 transition"
+                  onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{currentDestinationFlag}</span>
+                    <span className="text-gray-700">{formData.country}</span>
+                  </div>
+                  <ChevronDown className={`text-gray-400 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`} size={18} />
                 </div>
+
+                {/* Dropdown Menu */}
+                {isCountryDropdownOpen && (
+                  <>
+                    <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-100 rounded-xl shadow-xl z-30 overflow-hidden max-h-60 overflow-y-auto">
+                      {destinationCountries.map((country, idx) => (
+                        <div 
+                          key={idx}
+                          onClick={() => handleDestinationCountrySelect(country.name)}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-green-50 cursor-pointer transition border-b border-gray-50 last:border-0"
+                        >
+                          <span className="text-xl">{country.flag}</span>
+                          <span className="text-sm text-gray-700 font-medium">{country.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Backdrop */}
+                    <div className="fixed inset-0 z-20" onClick={() => setIsCountryDropdownOpen(false)}></div>
+                  </>
+                )}
               </div>
 
               {/* State & City */}
@@ -190,14 +253,42 @@ const Shipments = () => {
 
               {/* Phone Number & Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+                
+                {/* CUSTOM PHONE DROPDOWN */}
+                <div className="space-y-2 relative">
                   <label className="text-sm font-medium text-gray-600">Phone Number *</label>
-                  <div className="flex">
-                    <div className="flex items-center border border-r-0 border-gray-200 rounded-l-lg px-3 bg-gray-50/50">
-                      <span className="text-xl mr-2">🇺🇸</span>
-                      <span className="text-gray-600 font-medium text-sm">+1</span>
+                  <div className="flex relative">
+                    <button 
+                      type="button"
+                      onClick={() => setIsPhoneDropdownOpen(!isPhoneDropdownOpen)}
+                      className="flex items-center border border-r-0 border-gray-200 rounded-l-lg px-3 bg-gray-50/50 hover:bg-gray-100 transition cursor-pointer min-w-[100px] justify-between"
+                    >
+                      <span className="text-xl mr-2">{selectedPhoneCode.flag}</span>
+                      <span className="text-gray-600 font-medium text-sm">{selectedPhoneCode.code}</span>
                       <ChevronDown size={14} className="text-gray-400 ml-1" />
-                    </div>
+                    </button>
+
+                    {isPhoneDropdownOpen && (
+                      <>
+                        <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-100 rounded-xl shadow-xl z-30 overflow-hidden max-h-60 overflow-y-auto">
+                          {phoneCountryCodes.map((country, idx) => (
+                            <div 
+                              key={idx}
+                              onClick={() => handlePhoneCodeSelect(country)}
+                              className="flex items-center justify-between px-4 py-3 hover:bg-green-50 cursor-pointer transition border-b border-gray-50 last:border-0"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl">{country.flag}</span>
+                                <span className="text-sm text-gray-700 font-medium">{country.name}</span>
+                              </div>
+                              <span className="text-xs text-gray-400 font-mono">{country.code}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="fixed inset-0 z-20" onClick={() => setIsPhoneDropdownOpen(false)}></div>
+                      </>
+                    )}
+
                     <input 
                       type="tel" 
                       name="phoneNumber"
@@ -209,6 +300,8 @@ const Shipments = () => {
                     />
                   </div>
                 </div>
+                
+                {/* Email Field */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-600">Email</label>
                   <input 
