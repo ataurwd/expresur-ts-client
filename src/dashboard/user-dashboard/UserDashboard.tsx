@@ -9,7 +9,7 @@ import {
   IconButton,
   Box,
   Typography,
-  SvgIconProps // Importamos el tipo para los iconos
+  SvgIconProps
 } from "@mui/material";
 import {
   GridView,
@@ -23,12 +23,12 @@ import {
   SettingsOutlined,
   KeyboardBackspace,
 } from "@mui/icons-material";
-import { useLocation, matchPath, NavLink } from "react-router-dom";
+// Link ইম্পোর্ট করা হয়েছে এখানে
+import { useLocation, matchPath, NavLink, Link } from "react-router-dom";
 
-// Definimos la interfaz para los ítems del menú
 interface MenuItem {
   text: string;
-  icon: React.ReactElement<SvgIconProps>; // Esto asegura que el icono acepte sx y fontSize
+  icon: React.ReactElement<SvgIconProps>;
   path: string;
 }
 
@@ -41,7 +41,6 @@ const menuItems: MenuItem[] = [
   { text: "Packages", icon: <Inventory2Outlined />, path: "/dashboard/packages" },
   { text: "Consolidations", icon: <CallSplitOutlined />, path: "/dashboard/consolidate" },
   { text: "Shipments", icon: <DirectionsBoatFilledOutlined />, path: "/dashboard/shipments" },
-  // { text: "Pickup", icon: <LocalShippingOutlined />, path: "/dashboard/pickup" },
   { text: "Wallet", icon: <CreditCardOutlined />, path: "/dashboard/payments" },
   { text: "Remittances", icon: <LayersOutlined />, path: "/dashboard/remittances" },
   { text: "Settings", icon: <SettingsOutlined />, path: "/dashboard/profile" },
@@ -56,8 +55,6 @@ export default function UserSidebar() {
 
   const BG_GREEN = "#065f46"; 
   const ACTIVE_ORANGE = "#f97316"; 
-
-  
 
   return (
     <Drawer
@@ -80,9 +77,20 @@ export default function UserSidebar() {
     >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 3, mb: 2 }}>
         {open && (
-           <Typography variant="h5" sx={{ fontWeight: 900, color: "#f97316", letterSpacing: 1 }}>
+      
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                fontWeight: 900, 
+                color: "#f97316", 
+                letterSpacing: 1,
+                cursor: "pointer" 
+              }}
+            >
               EXPRESUR
-           </Typography>
+            </Typography>
+          </Link>
         )}
         <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
           <KeyboardBackspace sx={{ transform: open ? "rotate(0deg)" : "rotate(180deg)", transition: "0.3s" }} />
@@ -125,7 +133,6 @@ export default function UserSidebar() {
                     mr: open ? 2 : 0,
                   }}
                 >
-                  {/* Clonamos el icono pasando las props de estilo correctamente */}
                   {React.cloneElement(item.icon, {
                     sx: { fontSize: isSelected ? 22 : 26 }
                   })}
