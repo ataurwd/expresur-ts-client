@@ -72,6 +72,7 @@ const Profile = () => {
         </div>
       </div>
 
+      
       <div className=" mx-auto space-y-6">
         
         {/* --- 1. Personal Information Card --- */}
