@@ -80,7 +80,7 @@ const Payments = () => {
       <Toaster position="top-center" richColors closeButton />
 
       {/* --- Header --- */}
-      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Financial Overview</h1>
           <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
@@ -104,7 +104,7 @@ const Payments = () => {
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto space-y-8">
+      <div className=" mx-auto space-y-8">
         
         {/* --- Stats Cards Grid --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
