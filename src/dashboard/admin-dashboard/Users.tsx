@@ -1,12 +1,13 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   RefreshCw, 
   Bell, 
   ChevronRight, 
   X,
-  Save,
-  User as UserIcon
+  User as UserIcon,
+  Trash2  // Added for Delete icon
 } from 'lucide-react';
 
 // --- TYPES ---
@@ -34,37 +35,17 @@ const INITIAL_USERS: UserType[] = [
 
 const ITEMS_PER_PAGE = 5;
 
-// --- MODAL COMPONENT ---
+// --- MODAL COMPONENT (View only now) ---
 const UserModal = ({ 
   isOpen, 
-  mode, 
   user, 
   onClose, 
-  onSave 
 }: { 
   isOpen: boolean; 
-  mode: 'view' | 'edit'; 
   user: UserType | null; 
   onClose: () => void; 
-  onSave: (u: UserType) => void; 
 }) => {
-  const [formData, setFormData] = useState<UserType | null>(null);
-
-  // Load user data into form when modal opens
-  useEffect(() => {
-    setFormData(user);
-  }, [user]);
-
-  if (!isOpen || !formData) return null;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData) onSave(formData);
-  };
+  if (!isOpen || !user) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm animate-fadeIn">
@@ -72,12 +53,8 @@ const UserModal = ({
         {/* Modal Header */}
         <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
-              {mode === 'edit' ? 'Edit User Details' : 'User Details'}
-            </h2>
-            <p className="text-sm text-gray-500 mt-1">
-              {mode === 'edit' ? 'Update customer information below' : 'Viewing customer profile information'}
-            </p>
+            <h2 className="text-xl font-bold text-gray-900">User Details</h2>
+            <p className="text-sm text-gray-500 mt-1">Viewing customer profile information</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400">
             <X size={24} />
@@ -86,99 +63,68 @@ const UserModal = ({
 
         {/* Modal Body */}
         <div className="p-8 overflow-y-auto custom-scrollbar">
-          <form id="userForm" onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* Field: Name */}
             <div className="col-span-2">
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
-              <input 
-                type="text" 
-                name="name"
-                disabled={mode === 'view'}
-                value={formData.name}
-                onChange={handleChange}
-                className={`w-full p-4 rounded-xl border ${mode === 'edit' ? 'border-gray-200 focus:border-green-600 focus:ring-1 focus:ring-green-600 bg-white' : 'bg-gray-50 border-transparent text-gray-600'} outline-none transition-all`}
-              />
+              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
+                {user.name}
+              </div>
             </div>
 
             {/* Field: Email */}
             <div>
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
-              <input 
-                type="email" 
-                name="email"
-                disabled={mode === 'view'}
-                value={formData.email}
-                onChange={handleChange}
-                className={`w-full p-4 rounded-xl border ${mode === 'edit' ? 'border-gray-200 focus:border-green-600 focus:ring-1 focus:ring-green-600 bg-white' : 'bg-gray-50 border-transparent text-gray-600'} outline-none transition-all`}
-              />
+              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
+                {user.email}
+              </div>
             </div>
 
             {/* Field: Phone */}
             <div>
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Phone Number</label>
-              <input 
-                type="text" 
-                name="phone"
-                disabled={mode === 'view'}
-                value={formData.phone}
-                onChange={handleChange}
-                className={`w-full p-4 rounded-xl border ${mode === 'edit' ? 'border-gray-200 focus:border-green-600 focus:ring-1 focus:ring-green-600 bg-white' : 'bg-gray-50 border-transparent text-gray-600'} outline-none transition-all`}
-              />
+              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
+                {user.phone}
+              </div>
             </div>
 
-            {/* Field: Locker ID (Read Only usually) */}
+            {/* Field: Locker ID */}
             <div>
                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Locker ID</label>
                <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-500 font-mono">
-                 {formData.lockerId}
+                 {user.lockerId}
                </div>
             </div>
 
-            {/* Field: Date (Read Only usually) */}
+            {/* Field: Date */}
             <div>
                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Registration Date</label>
                <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-500">
-                 {formData.date}
+                 {user.date}
                </div>
             </div>
 
              {/* Field: Address */}
              <div className="col-span-2">
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Address</label>
-              <textarea 
-                name="address"
-                rows={3}
-                disabled={mode === 'view'}
-                value={formData.address}
-                onChange={handleChange}
-                className={`w-full p-4 rounded-xl border ${mode === 'edit' ? 'border-gray-200 focus:border-green-600 focus:ring-1 focus:ring-green-600 bg-white' : 'bg-gray-50 border-transparent text-gray-600'} outline-none transition-all resize-none`}
-              />
+              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
+                {user.address}
+              </div>
             </div>
 
-          </form>
+          </div>
         </div>
 
         {/* Modal Footer */}
-        <div className="px-8 py-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end gap-3">
+        <div className="px-8 py-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end">
           <button 
             type="button" 
             onClick={onClose} 
             className="px-6 py-2.5 rounded-xl text-gray-500 font-medium hover:bg-white hover:text-gray-800 hover:shadow-sm transition-all border border-transparent hover:border-gray-200"
           >
-            {mode === 'edit' ? 'Cancel' : 'Close'}
+            Close
           </button>
-          
-          {mode === 'edit' && (
-            <button 
-              type="submit" 
-              form="userForm"
-              className="px-6 py-2.5 rounded-xl bg-[#106F3E] text-white font-medium hover:bg-green-800 active:scale-95 transition-all shadow-md shadow-green-200 flex items-center gap-2"
-            >
-              <Save size={18} />
-              Save Changes
-            </button>
-          )}
         </div>
       </div>
     </div>
@@ -187,15 +133,15 @@ const UserModal = ({
 
 // --- MAIN PAGE COMPONENT ---
 const Users = () => {
+  const navigate = useNavigate();
   // --- STATE ---
   const [users, setUsers] = useState<UserType[]>(INITIAL_USERS);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Modal State
+  // Modal State (View only)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'view' | 'edit'>('view');
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   // --- LOGIC ---
@@ -218,7 +164,7 @@ const Users = () => {
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
-      setUsers(INITIAL_USERS); // Reset to default for demo
+      setUsers(INITIAL_USERS);
       setSearchTerm('');
       setCurrentPage(1);
       setIsRefreshing(false);
@@ -233,25 +179,10 @@ const Users = () => {
     if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
 
-  // --- MODAL HANDLERS ---
-  
+  // --- MODAL HANDLER (View only) ---
   const handleView = (user: UserType) => {
     setSelectedUser(user);
-    setModalMode('view');
     setIsModalOpen(true);
-  };
-
-  const handleEdit = (user: UserType) => {
-    setSelectedUser(user);
-    setModalMode('edit');
-    setIsModalOpen(true);
-  };
-
-  const handleSaveUser = (updatedUser: UserType) => {
-    // Update local state
-    setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
-    setIsModalOpen(false);
-    // In a real app, you would send API request here
   };
 
   return (
@@ -265,10 +196,10 @@ const Users = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
             <Bell size={20} />
           </button>
-          <div className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
             <img 
               src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
               alt="Profile" 
@@ -284,7 +215,6 @@ const Users = () => {
 
       {/* --- CONTROLS --- */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        {/* Search Bar */}
         <div className="relative w-full md:w-[400px]">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
@@ -299,7 +229,6 @@ const Users = () => {
           />
         </div>
 
-        {/* Refresh Button */}
         <button 
           onClick={handleRefresh}
           className="flex items-center gap-2 bg-white px-5 py-3 rounded-full shadow-sm text-gray-500 hover:text-gray-800 hover:bg-gray-50 transition-all text-sm font-medium"
@@ -348,11 +277,12 @@ const Users = () => {
                     <td className="p-6 text-sm text-gray-500">{user.date}</td>
                     <td className="p-6">
                       <div className="flex items-center justify-center gap-2">
+                        {/* Delete button (no functionality) */}
                         <button 
-                          onClick={() => handleEdit(user)}
-                          className="px-4 py-1.5 rounded-lg bg-gray-100 text-gray-600 text-xs font-bold hover:bg-[#106F3E] hover:text-white transition-all shadow-sm"
+                          className="px-4 py-1.5 rounded-lg bg-red-100 text-red-600 text-xs font-bold hover:bg-red-200 transition-all shadow-sm flex items-center gap-1.5"
                         >
-                          Edit
+                          <Trash2 size={14} />
+                          Delete
                         </button>
                         <button 
                           onClick={() => handleView(user)}
@@ -406,10 +336,8 @@ const Users = () => {
       {/* --- RENDER MODAL --- */}
       <UserModal 
         isOpen={isModalOpen} 
-        mode={modalMode} 
         user={selectedUser} 
         onClose={() => setIsModalOpen(false)} 
-        onSave={handleSaveUser}
       />
       
       <style>{`

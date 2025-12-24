@@ -39,6 +39,7 @@ import AdminLocker from "../dashboard/admin-dashboard/AdminLocker";
 import AdminLogistic from "../dashboard/admin-dashboard/AdminLogistic";
 import AdminQrCode from "../dashboard/admin-dashboard/AdminQrCode";
 import AdminWallet from "../dashboard/admin-dashboard/AdminWallet";
+import AdminNotifications from "../dashboard/admin-dashboard/AdminNotifications";
 import AdminAudit from "../dashboard/admin-dashboard/AdminAudit";
 import AdminApi from "../dashboard/admin-dashboard/AdminApi";
 
@@ -204,6 +205,10 @@ const Routes = createBrowserRouter([
       {
         path: "admin-reports",
         element: <AdminReports />,
+      },
+      {
+        path: "admin-notifications",
+        element: <AdminNotifications />,
       },
       {
         path: "admin-shipments",
