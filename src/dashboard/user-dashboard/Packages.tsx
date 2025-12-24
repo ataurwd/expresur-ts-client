@@ -1,308 +1,360 @@
-import React, { useMemo, useState } from "react";
-import { Helmet } from "react-helmet";
+import React, { useState, useMemo } from 'react';
+import { Toaster, toast } from 'sonner';
+import { 
+  Bell, 
+  Search, 
+  Plus, 
+  ArrowRight, 
+  ArrowLeft,
+  Package, 
+  Truck, 
+  CheckCircle, 
+  AlertCircle,
+  X,
+  ChevronDown
+} from 'lucide-react';
 
-/* ================= Fake Data ================= */
-type Purchased = {
+// --- Types ---
+interface PackageData {
   id: string;
-  packageId: string;
-  name: string;
-  origin: string;
-  status: "Created" | "In Transit" | "In Miami" | "Customs" | "Delivered";
-  estDelivery: string;
-  createdAt: string;
-  history: { date: string; status: string; note?: string }[];
-};
-
-type ServicePkg = {
-  id: string;
-  name: string;
-  price: string;
-  features: string[];
-  tag?: string;
-};
-
-const PURCHASED: Purchased[] = [
-  {
-    id: "TRK-9001",
-    packageId: "XG15STV",
-    name: "Electronics Box",
-    origin: "Havana, Cuba",
-    status: "In Miami",
-    estDelivery: "2025-02-04",
-    createdAt: "2025-01-09",
-    history: [
-      { date: "2025-01-09", status: "Created", note: "Shipment created in Havana" },
-      { date: "2025-01-11", status: "In Transit", note: "Left local hub" },
-      { date: "2025-01-12", status: "In Miami", note: "Arrived Miami warehouse" },
-    ],
-  },
-  {
-    id: "TRK-9002",
-    packageId: "AB93HRT",
-    name: "Clothes & Accessories",
-    origin: "Santiago de Cuba",
-    status: "Customs",
-    estDelivery: "2025-02-10",
-    createdAt: "2025-01-07",
-    history: [
-      { date: "2025-01-07", status: "Created" },
-      { date: "2025-01-10", status: "In Transit" },
-      { date: "2025-01-12", status: "Customs", note: "Under customs review" },
-    ],
-  },
-  {
-    id: "TRK-9003",
-    packageId: "XG15STV",
-    name: "Fragile – Glassware",
-    origin: "Camagüey",
-    status: "Delivered",
-    estDelivery: "2025-01-20",
-    createdAt: "2025-01-03",
-    history: [
-      { date: "2025-01-03", status: "Created" },
-      { date: "2025-01-15", status: "In Transit" },
-      { date: "2025-01-20", status: "Delivered", note: "Left at locker" },
-    ],
-  },
-];
-
-
-
-/* ================= Helper ================= */
-function fmt(d: string) {
-  return new Date(d).toLocaleDateString();
+  from: string;
+  destination: string;
+  weight: string;
+  carrier: string;
+  date: string;
+  status: 'Delivered' | 'Consolidated' | 'Shipped' | 'In Warehouse' | 'Delayed';
+  desc: string;
 }
 
-/* ================= Component ================= */
-export default function PackagesPage() {
-  const [tab, setTab] = useState<"purchased" | "market">("purchased");
-  const [query, setQuery] = useState("");
-  const [selectedTrack, setSelectedTrack] = useState<Purchased | null>(null);
-  const [selectedService, setSelectedService] = useState<ServicePkg | null>(null);
+const Packages = () => {
+  // --- State ---
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  const filteredPurchased = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return PURCHASED.filter(p => p.id.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.packageId.toLowerCase().includes(q));
-  }, [query]);
+  // Form State for New Package (Updated to match new Modal)
+  const [newPackage, setNewPackage] = useState({
+    item: '',
+    trackingNumber: '',
+    category: '',
+    customer: '',
+    note: ''
+  });
+
+  // --- Initial Data ---
+  const [packages, setPackages] = useState<PackageData[]>([
+    { id: 'ORD-1001', from: 'Shanghai, China', destination: 'Sydney, Australia', weight: '2.5kg', carrier: 'UPS', date: '7/5/2024', status: 'Delivered', desc: 'Fashion items' },
+    { id: 'ORD-1002', from: 'Shanghai, China', destination: 'Sydney, Australia', weight: '3kg', carrier: 'Fedex', date: '7/5/2024', status: 'Consolidated', desc: 'Fragile - contains glassware' },
+    { id: 'ORD-1001', from: 'Shanghai, China', destination: 'Sydney, Australia', weight: '5kg', carrier: 'USPS', date: '7/5/2024', status: 'Shipped', desc: 'Fashion items' },
+    { id: 'ORD-1002', from: 'Shanghai, China', destination: 'Sydney, Australia', weight: '3kg', carrier: 'Fedex', date: '7/5/2024', status: 'In Warehouse', desc: 'Fashion items' },
+  ]);
+
+  // --- 1. Dynamic Stats Calculation ---
+  const stats = useMemo(() => {
+    const total = packages.length;
+    const delivered = packages.filter(p => p.status === 'Delivered').length;
+    const inTransit = packages.filter(p => p.status === 'Shipped' || p.status === 'In Warehouse').length;
+    const delayed = packages.filter(p => p.status === 'Delayed' || p.status === 'Consolidated').length;
+
+    return [
+      { title: 'Total Packages', count: total, change: '+12% from last period', isPositive: true, icon: <Package size={20} className="text-gray-500" /> },
+      { title: 'In Transit', count: inTransit, change: '-3% from last period', isPositive: false, icon: <Truck size={20} className="text-gray-500" /> },
+      { title: 'Delivered', count: delivered, change: '+15% from last period', isPositive: true, icon: <CheckCircle size={20} className="text-gray-500" /> },
+      { title: 'Delayed', count: delayed, change: '+2% from last period', isPositive: false, icon: <AlertCircle size={20} className="text-gray-500" /> }
+    ];
+  }, [packages]);
+
+  // --- 2. Add Package Logic ---
+  const handleAddPackage = () => {
+    // Validation
+    if (!newPackage.item || !newPackage.trackingNumber || !newPackage.category || !newPackage.customer) {
+      toast.error('Please fill in all required fields (*)');
+      return;
+    }
+
+    const pkg: PackageData = {
+      id: newPackage.trackingNumber,
+      from: 'Processing...', // Default since modal doesn't have this
+      destination: newPackage.customer, // Mapping Customer to Destination for now
+      weight: 'N/A',
+      carrier: newPackage.category, // Mapping Category to Carrier for demo
+      date: new Date().toLocaleDateString(),
+      status: 'In Warehouse',
+      desc: newPackage.item
+    };
+
+    setPackages([pkg, ...packages]);
+    setIsModalOpen(false);
+    setNewPackage({ item: '', trackingNumber: '', category: '', customer: '', note: '' }); // Reset form
+    toast.success('Package added successfully');
+  };
+
+  // --- 3. Search & Filter Logic ---
+  const filteredPackages = useMemo(() => {
+    return packages.filter(pkg => 
+      pkg.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pkg.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pkg.carrier.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [packages, searchTerm]);
+
+  // --- 4. Pagination Logic ---
+  const totalPages = Math.ceil(filteredPackages.length / itemsPerPage);
+  const currentData = filteredPackages.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Helper for Status Colors
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Delivered': return 'text-green-500';
+      case 'Consolidated': return 'text-orange-400';
+      case 'Shipped': return 'text-blue-500';
+      case 'In Warehouse': return 'text-fuchsia-500';
+      case 'Delayed': return 'text-red-500';
+      default: return 'text-gray-500';
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <Helmet><title>Packages | EXPRESUR</title></Helmet>
-      <div className=" mx-auto">
-        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-[#166534]">Packages</h1>
-            <p className="text-sm text-gray-500">Your shipments & available service plans</p>
-          </div>
+    <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative">
+      <Toaster position="top-center" richColors closeButton />
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="flex gap-1 bg-white rounded-md shadow-sm overflow-hidden">
-              <button onClick={() => setTab("purchased")} className={`px-4 py-2 ${tab === "purchased" ? "bg-[#166534] text-white" : "text-gray-700"}`}>Purchased</button>
-              {/* <button onClick={() => setTab("market")} className={`px-4 py-2 ${tab === "market" ? "bg-[#166534] text-white" : "text-gray-700"}`}>Marketplace</button> */}
+      {/* --- Header --- */}
+      <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Packages</h1>
+          <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
+        </div>
+
+        <div className="flex items-center gap-6 mt-6 md:mt-0">
+          <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+            <Bell size={20} className="text-gray-600" />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+          </button>
+          
+          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
+               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
             </div>
-
-            <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by id, name..." className="px-3 py-2 border rounded-md w-72" />
-          </div>
-        </header>
-
-        {/* CONTENT */}
-        {tab === "purchased" ? (
-          <section>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* left: list/table */}
-              <div className="lg:col-span-2">
-                <div className="bg-white rounded-lg shadow p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">Purchased Shipments</h3>
-                    <div className="text-sm text-gray-500">{filteredPurchased.length} results</div>
-                  </div>
-
-                  <div className="hidden md:block">
-                    <table className="min-w-full">
-                      <thead className="bg-gray-100">
-                        <tr>
-                          <th className="p-3 text-left">Tracking ID</th>
-                          <th className="p-3 text-left">Package</th>
-                          <th className="p-3 text-left">Origin</th>
-                          <th className="p-3 text-left">Status</th>
-                          <th className="p-3 text-left">ETA</th>
-                          <th className="p-3 text-right">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredPurchased.map(p => (
-                          <tr key={p.id} className="border-b hover:bg-gray-50">
-                            <td className="p-3 font-medium">{p.id}</td>
-                            <td className="p-3">{p.name}</td>
-                            <td className="p-3">{p.origin}</td>
-                            <td className="p-3">
-                              <span className={`px-2 py-1 rounded-full text-xs ${p.status === 'Delivered' ? 'bg-green-100 text-green-800' : p.status === 'Customs' ? 'bg-yellow-100 text-yellow-800' : 'bg-indigo-100 text-indigo-800'}`}>{p.status}</span>
-                            </td>
-                            <td className="p-3">{fmt(p.estDelivery)}</td>
-                            <td className="p-3 text-right">
-                              <button onClick={() => setSelectedTrack(p)} className="px-3 py-1 rounded-md bg-[#166534] text-white">View</button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* mobile cards */}
-                  <div className="md:hidden space-y-3">
-                    {filteredPurchased.map(p => (
-                      <div key={p.id} className="bg-gray-50 border rounded-lg p-3">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <div className="font-medium">{p.name}</div>
-                            <div className="text-xs text-gray-500">{p.id} • {p.origin}</div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-sm">ETA: {fmt(p.estDelivery)}</div>
-                            <div className="mt-2">
-                              <button onClick={() => setSelectedTrack(p)} className="px-3 py-1 rounded-md bg-[#166534] text-white text-sm">View</button>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mt-3 flex items-center gap-2 text-sm">
-                          <span className={`px-2 py-1 rounded-full ${p.status === 'Delivered' ? 'bg-green-100 text-green-800' : p.status === 'Customs' ? 'bg-yellow-100 text-yellow-800' : 'bg-indigo-100 text-indigo-800'}`}>{p.status}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* quick stats */}
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="bg-white rounded-lg shadow p-4">
-                    <div className="text-sm text-gray-500">Total Shipments</div>
-                    <div className="text-2xl font-bold text-[#166534]">{PURCHASED.length}</div>
-                  </div>
-                  <div className="bg-white rounded-lg shadow p-4">
-                    <div className="text-sm text-gray-500">Delivered</div>
-                    <div className="text-2xl font-bold text-green-600">{PURCHASED.filter(x=>x.status==='Delivered').length}</div>
-                  </div>
-                  <div className="bg-white rounded-lg shadow p-4">
-                    <div className="text-sm text-gray-500">In Miami / Customs</div>
-                    <div className="text-2xl font-bold text-indigo-700">{PURCHASED.filter(x=>x.status!=='Delivered').length}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* right: details / actions */}
-              <aside className="bg-white rounded-lg shadow p-4">
-                {selectedTrack ? (
-                  <div>
-                    <h4 className="font-semibold">{selectedTrack.name}</h4>
-                    <div className="text-xs text-gray-500">{selectedTrack.id} • {selectedTrack.origin}</div>
-
-                    <div className="mt-3">
-                      <div className="text-sm text-gray-500">Status</div>
-                      <div className="font-medium mt-1">{selectedTrack.status}</div>
-                    </div>
-
-                    <div className="mt-3">
-                      <div className="text-sm text-gray-500">Estimated Delivery</div>
-                      <div className="font-medium mt-1">{selectedTrack.estDelivery}</div>
-                    </div>
-
-                    <div className="mt-4">
-                      <h5 className="text-sm font-semibold">Tracking History</h5>
-                      <ul className="mt-2 space-y-2 text-sm">
-                        {selectedTrack.history.map((h, i) => (
-                          <li key={i} className="flex items-start justify-between">
-                            <div>
-                              <div className="font-medium">{h.status}</div>
-                              <div className="text-xs text-gray-500">{h.date} {h.note ? `• ${h.note}` : ''}</div>
-                            </div>
-                            <div className="text-xs text-gray-400">{h.date}</div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="mt-4 flex gap-2">
-                      {/* <button onClick={() => alert('Download manifest (simulated)')} className="px-3 py-2 bg-[#166534] text-white rounded-md">Download Manifest</button> */}
-                      <button onClick={() => setSelectedTrack(null)} className="px-3 py-2 border rounded-md">Close</button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-sm text-gray-500">Select a shipment to see details.</div>
-                )}
-              </aside>
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
+              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
             </div>
-          </section>
-        ) : (
-          /* MARKETPLACE */
-          <section>
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {filteredServices.map(s => (
-                <div key={s.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm text-gray-500">{s.id}</div>
-                      <div className="font-semibold mt-1">{s.name}</div>
-                    </div>
-                    {s.tag && <div className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded">{s.tag}</div>}
-                  </div>
-
-                  <div className="mt-3 flex-1">
-                    <div className="text-2xl font-bold text-[#166534]">{s.price}</div>
-                    <ul className="mt-2 text-sm text-gray-700 space-y-1">
-                      {s.features.map((f, i) => <li key={i}>• {f}</li>)}
-                    </ul>
-                  </div>
-
-                  <div className="mt-4 flex gap-2">
-                    <button onClick={() => setSelectedService(s)} className="px-3 py-2 bg-[#166534] text-white rounded-md flex-1">Buy / Upgrade</button>
-                    <button onClick={() => alert('Compare (simulated)')} className="px-3 py-2 border rounded-md">Compare</button>
-                  </div>
-                </div>
-              ))}
-            </div> */}
-
-            {/* quick CTA */}
-            {/* <div className="mt-6 bg-white rounded-lg shadow p-4 flex items-center justify-between">
-              <div>
-                <div className="text-sm text-gray-500">Need help choosing?</div>
-                <div className="font-medium">Contact our support or request a demo</div>
-              </div>
-              <div>
-                <button onClick={() => alert('Contact support (simulated)')} className="px-4 py-2 bg-[#166534] text-white rounded-md">Contact</button>
-              </div>
-            </div> */}
-
-            {/* service modal */}
-            {selectedService && (
-              <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-lg p-6 max-w-xl w-full">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold">{selectedService.name}</h3>
-                      <div className="text-sm text-gray-500">{selectedService.id} • {selectedService.price}</div>
-                    </div>
-                    <div>
-                      <button onClick={() => setSelectedService(null)} className="text-gray-600">✕</button>
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <ul className="text-sm text-gray-700 space-y-2">
-                      {selectedService.features.map((f, i) => <li key={i}>• {f}</li>)}
-                    </ul>
-                  </div>
-
-                  <div className="mt-6 flex justify-end gap-3">
-                    <button onClick={() => setSelectedService(null)} className="px-4 py-2 border rounded-md">Cancel</button>
-                    <button onClick={() => { alert('Purchased (simulated)'); setSelectedService(null); }} className="px-4 py-2 bg-[#166534] text-white rounded-md">Confirm Purchase</button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </section>
-        )}
+          </div>
+        </div>
       </div>
+
+      <div className=" mx-auto space-y-8">
+        
+        {/* --- Dynamic Stats Cards --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative">
+              <div className="flex justify-between items-start">
+                <span className="text-gray-500 font-medium">{stat.title}</span>
+                <div className="p-2 bg-gray-50 rounded-full">{stat.icon}</div>
+              </div>
+              <div className="mt-4">
+                <h2 className="text-3xl font-bold text-gray-900">{stat.count}</h2>
+                <p className={`text-xs mt-2 font-medium ${stat.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                  {stat.change}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* --- Package History & Controls --- */}
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 min-h-[500px]">
+          <h3 className="text-xl font-bold text-gray-800 mb-8">Package History</h3>
+
+          {/* Toolbar */}
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+             <div className="flex items-center gap-4 w-full md:w-auto">
+                <button className="bg-[#005f33] text-white px-6 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
+                  All ({filteredPackages.length})
+                </button>
+                <div className="relative w-full md:w-80">
+                  <Search className="absolute left-4 top-3 text-gray-400" size={18} />
+                  <input 
+                    type="text" 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Tracking number, item..." 
+                    className="w-full bg-[#F9FAFB] border-none outline-none text-gray-700 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:ring-2 focus:ring-green-100 transition placeholder-gray-400"
+                  />
+                </div>
+             </div>
+             
+             <button 
+                onClick={() => setIsModalOpen(true)}
+                className="bg-[#005f33] hover:bg-[#004d2a] text-white px-6 py-2.5 rounded-lg text-sm font-semibold shadow-sm flex items-center gap-2 transition w-full md:w-auto justify-center"
+             >
+                <Plus size={18} /> Add Package
+             </button>
+          </div>
+
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-[#F9FAFB] text-xs text-gray-400 uppercase tracking-wider">
+                  <th className="py-4 pl-6 rounded-l-xl font-medium">Tracking Number</th>
+                  <th className="py-4 font-medium">From</th>
+                  <th className="py-4 font-medium">Destination</th>
+                  <th className="py-4 font-medium">Weight</th>
+                  <th className="py-4 font-medium">Carrier</th>
+                  <th className="py-4 font-medium">Arrival Date</th>
+                  <th className="py-4 font-medium">Status</th>
+                  <th className="py-4 pr-6 rounded-r-xl font-medium">Description</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm">
+                {currentData.length > 0 ? currentData.map((pkg, idx) => (
+                  <tr key={idx} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition group">
+                    <td className="py-5 pl-6 font-medium text-gray-600">{pkg.id}</td>
+                    <td className="py-5 text-gray-500">{pkg.from}</td>
+                    <td className="py-5 text-gray-500">{pkg.destination}</td>
+                    <td className="py-5 text-gray-500">{pkg.weight}</td>
+                    <td className="py-5 text-gray-500">{pkg.carrier}</td>
+                    <td className="py-5 text-gray-500">{pkg.date}</td>
+                    <td className="py-5">
+                      <span className={`font-medium ${getStatusColor(pkg.status)}`}>
+                        {pkg.status}
+                      </span>
+                    </td>
+                    <td className="py-5 pr-6 text-gray-500">{pkg.desc}</td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan={8} className="text-center py-10 text-gray-400">No packages found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-end items-center gap-8 mt-8 text-sm font-medium select-none">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className={`flex items-center gap-2 transition ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-gray-900'}`}
+            >
+              <ArrowLeft size={16} strokeWidth={2.5} /> Previous
+            </button>
+            <span className="text-gray-400 font-normal">Page {currentPage} of {totalPages || 1}</span>
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+              className={`flex items-center gap-2 transition ${currentPage === totalPages || totalPages === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-[#005f33] hover:text-[#004d2a]'}`}
+            >
+              Next <ArrowRight size={16} strokeWidth={2.5} />
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* --- ADD PACKAGE MODAL (Updated) --- */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-50 p-4 font-sans">
+          <div className="bg-white rounded-xl w-full max-w-2xl p-8 shadow-2xl transform transition-all relative">
+            
+            {/* Modal Title */}
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Add Package</h2>
+            
+            {/* Modal Form */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              
+              {/* Item Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-500">Item *</label>
+                <input 
+                  type="text" 
+                  className="w-full border border-gray-200 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-50 focus:border-green-500 transition text-gray-700"
+                  value={newPackage.item}
+                  onChange={(e) => setNewPackage({...newPackage, item: e.target.value})}
+                />
+              </div>
+
+              {/* Tracking Number Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-500">Tracking Number *</label>
+                <input 
+                  type="text" 
+                  className="w-full border border-gray-200 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-50 focus:border-green-500 transition text-gray-700"
+                  value={newPackage.trackingNumber}
+                  onChange={(e) => setNewPackage({...newPackage, trackingNumber: e.target.value})}
+                />
+              </div>
+
+              {/* Category Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-500">Category *</label>
+                <div className="relative">
+                  <select 
+                    className="w-full border border-gray-200 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-50 focus:border-green-500 transition text-gray-700 appearance-none bg-white"
+                    value={newPackage.category}
+                    onChange={(e) => setNewPackage({...newPackage, category: e.target.value})}
+                  >
+                    <option value="" disabled>Select a type</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Fragile">Fragile</option>
+                    <option value="Documents">Documents</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-3.5 text-gray-400 pointer-events-none" size={16} />
+                </div>
+              </div>
+
+              {/* Customer Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-500">Customer *</label>
+                <input 
+                  type="text" 
+                  className="w-full border border-gray-200 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-50 focus:border-green-500 transition text-gray-700"
+                  value={newPackage.customer}
+                  onChange={(e) => setNewPackage({...newPackage, customer: e.target.value})}
+                />
+              </div>
+            </div>
+
+            {/* Note Field (Full Width) */}
+            <div className="space-y-2 mb-8">
+               <label className="text-sm font-medium text-gray-500">Note (Optional)</label>
+               <textarea 
+                  className="w-full border border-gray-200 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-50 focus:border-green-500 transition text-gray-700 resize-none h-24"
+                  value={newPackage.note}
+                  onChange={(e) => setNewPackage({...newPackage, note: e.target.value})}
+               />
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end items-center gap-6">
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-500 font-medium hover:text-gray-700 transition"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleAddPackage}
+                className="text-[#005f33] font-bold hover:text-[#004d2a] transition"
+              >
+                Add Package
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
-}
+};
+
+export default Packages;
