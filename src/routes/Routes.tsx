@@ -42,6 +42,7 @@ import AdminWallet from "../dashboard/admin-dashboard/AdminWallet";
 import AdminNotifications from "../dashboard/admin-dashboard/AdminNotifications";
 import AdminAudit from "../dashboard/admin-dashboard/AdminAudit";
 import AdminApi from "../dashboard/admin-dashboard/AdminApi";
+import Remittances from "../dashboard/user-dashboard/Remittances";
 
 const Routes = createBrowserRouter([
   {
@@ -147,6 +148,10 @@ const Routes = createBrowserRouter([
       {
         path: "payments",
         element: <Payments />,
+      },
+        {
+        path: "remittances",
+        element: <Remittances />,
       },
       {
         path: "profile",
