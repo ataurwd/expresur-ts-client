@@ -1,334 +1,225 @@
-import React, { useMemo, useState } from "react";
-import { Helmet } from "react-helmet";
+import React, { useState, useMemo } from 'react';
+import { Toaster, toast } from 'sonner';
+import { 
+  Bell, 
+  Check,
+  ArrowRight,
+  ArrowLeft
+} from 'lucide-react';
 
-/*
-  Consolidate.client.cuba.tsx
-  - Client flow localized for Cuba (Spanish labels) + Cuban locations
-  - Fake shipments originate from Cuban cities; UI texts in Spanish (Cuban-friendly)
-*/
-
-type Shipment = {
+// --- Types ---
+interface PackageData {
   id: string;
-  lockerId: string;
-  name: string;
-  origin: string;
-  weightKg: number;
-  volumeM3: number;
-  receivedAt: string;
-  status: "Recibido" | "En Casillero" | "Consolidado";
-  note?: string;
-};
-
-const FAKE_SHIPMENTS: Shipment[] = [
-  { id: "SHP-CU-1001", lockerId: "XG15STV", name: "Caja Electrónica", origin: "La Habana", weightKg: 4.2, volumeM3: 0.02, receivedAt: "2025-01-09", status: "Recibido" },
-  { id: "SHP-CU-1002", lockerId: "AB93HRT", name: "Ropa", origin: "Santiago de Cuba", weightKg: 2.5, volumeM3: 0.015, receivedAt: "2025-01-10", status: "Recibido" },
-  { id: "SHP-CU-1003", lockerId: "XG15STV", name: "Cristalería (frágil)", origin: "Camagüey", weightKg: 6.0, volumeM3: 0.04, receivedAt: "2025-01-07", status: "En Casillero" },
-  { id: "SHP-CU-1004", lockerId: "LP22AAA", name: "Libros", origin: "Holguín", weightKg: 3.1, volumeM3: 0.025, receivedAt: "2025-01-11", status: "Recibido" },
-  { id: "SHP-CU-1005", lockerId: "MK11ZZZ", name: "Zapatos", origin: "Pinar del Río", weightKg: 1.8, volumeM3: 0.01, receivedAt: "2025-01-12", status: "Recibido" },
-];
-
-/* Helpers */
-function fmtDate(d: string) { return new Date(d).toLocaleDateString(); }
-function rndId(prefix = "CNL") { return `${prefix}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`; }
-
-/* Fee model (localized currency: USD shown but feel free to adapt) */
-const CITY_TIERS: Record<string, number> = {
-  "La Habana": 0,
-  "Santiago de Cuba": 1,
-  "Camagüey": 1,
-  "Holguín": 1,
-  "Pinar del Río": 1,
-  "Matanzas": 1,
-  "Bayamo": 2
-};
-
-function calcConsolidationFee(totalKg: number, totalVol: number) {
-  const base = 10;
-  const perKg = 1.2 * totalKg;
-  const volSurcharge = totalVol > 0.05 ? 18 : 0;
-  const insurance = Math.ceil(totalKg / 5) * 2;
-  return Math.round((base + perKg + volSurcharge + insurance) * 100) / 100;
+  packageId: string;
+  from: string;
+  to: string;
+  receivedDate: string;
+  weight: number;
+  isSelected: boolean;
 }
 
-function calcDeliveryFee(totalKg: number, destCity: string, type: "normal" | "express") {
-  const tier = CITY_TIERS[destCity] ?? 1;
-  const base = 15 + tier * 5; // base en USD
-  const perKg = 2.0 * totalKg;
-  const speedMultiplier = type === "express" ? 1.4 : 1.0;
-  const fee = (base + perKg) * speedMultiplier;
-  return Math.round(fee * 100) / 100;
-}
+const Consolidate = () => {
+  // --- State ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-export default function ConsolidateClientCuba() {
-  const [shipments, setShipments] = useState<Shipment[]>(FAKE_SHIPMENTS);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [selectAll, setSelectAll] = useState(false);
-  const [notes, setNotes] = useState("");
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [consolidatedResult, setConsolidatedResult] = useState<null | { id: string; items: string[]; fee: number }>(null);
+  // --- Mock Data ---
+  const [packages, setPackages] = useState<PackageData[]>([
+    { 
+      id: '1',
+      packageId: 'ORD-1001',
+      from: 'Shanghai, China',
+      to: 'Sydney, Australia',
+      receivedDate: 'Dec 15, 2024',
+      weight: 10,
+      isSelected: false 
+    },
+    { 
+      id: '2',
+      packageId: 'ORD-1001', 
+      from: 'Shanghai, China',
+      to: 'Sydney, Australia',
+      receivedDate: 'Dec 15, 2024',
+      weight: 5,
+      isSelected: true 
+    },
+    { 
+      id: '3',
+      packageId: 'ORD-1002',
+      from: 'Beijing, China',
+      to: 'Dhaka, BD',
+      receivedDate: 'Dec 16, 2024',
+      weight: 2.5,
+      isSelected: false
+    },
+    { 
+      id: '4',
+      packageId: 'ORD-1003',
+      from: 'London, UK',
+      to: 'NY, USA',
+      receivedDate: 'Dec 17, 2024',
+      weight: 1.5,
+      isSelected: false
+    },
+  ]);
 
-  const [deliveryOpen, setDeliveryOpen] = useState(false);
-  const [deliveryDest, setDeliveryDest] = useState<string>("Santiago de Cuba");
-  const [deliveryType, setDeliveryType] = useState<"normal" | "express">("normal");
-  const [deliveryOrder, setDeliveryOrder] = useState<null | { id: string; consolidatedId: string; dest: string; fee: number }>(null);
+  // --- Logic ---
+  const toggleSelection = (id: string) => {
+    setPackages(prevPackages => 
+      prevPackages.map(pkg => 
+        pkg.id === id ? { ...pkg, isSelected: !pkg.isSelected } : pkg
+      )
+    );
+  };
 
-  const available = shipments.filter(s => s.status === "Recibido" || s.status === "En Casillero");
+  const summary = useMemo(() => {
+    const selected = packages.filter(p => p.isSelected);
+    const totalWeight = selected.reduce((sum, p) => sum + p.weight, 0);
+    return {
+      count: selected.length,
+      weight: totalWeight
+    };
+  }, [packages]);
 
-  function toggle(id: string) { setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]); }
-  function toggleSelectAll() { if (selectAll) { setSelectedIds([]); setSelectAll(false); } else { setSelectedIds(available.map(s => s.id)); setSelectAll(true); } }
+  const handleCreateShipment = () => {
+    if (summary.count === 0) {
+      toast.error('Please select at least one package');
+      return;
+    }
+    toast.success('Shipment created successfully!', {
+      description: `${summary.count} packages consolidated (${summary.weight} kg)`
+    });
+  };
 
-  const selectedItems = shipments.filter(s => selectedIds.includes(s.id));
-
-  const totals = useMemo(() => {
-    const totalKg = selectedItems.reduce((a, b) => a + b.weightKg, 0);
-    const totalVol = selectedItems.reduce((a, b) => a + b.volumeM3, 0);
-    const fee = calcConsolidationFee(totalKg, totalVol);
-    return { totalKg: Math.round(totalKg * 100) / 100, totalVol: Math.round(totalVol * 1000) / 1000, fee };
-  }, [selectedItems]);
-
-  function handleConsolidate() {
-    if (selectedItems.length < 2) { alert("Seleccione al menos 2 envíos para consolidar."); return; }
-    setConfirmModalOpen(true);
-  }
-
-  function confirmConsolidation() {
-    const id = rndId("CNL");
-    setShipments(prev => prev.map(s => selectedIds.includes(s.id) ? { ...s, status: "Consolidado" } : s));
-    setConsolidatedResult({ id, items: selectedIds.slice(), fee: totals.fee });
-    setSelectedIds([]); setSelectAll(false); setNotes(""); setConfirmModalOpen(false); setDeliveryOpen(true);
-  }
-
-  function createDeliveryRequest() {
-    if (!consolidatedResult) return alert("Primero consolide los paquetes.");
-    const fee = calcDeliveryFee(totals.totalKg || 1, deliveryDest, deliveryType);
-    const orderId = rndId("DEL");
-    setDeliveryOrder({ id: orderId, consolidatedId: consolidatedResult.id, dest: deliveryDest, fee });
-    setDeliveryOpen(false);
-    alert(`Orden creada: ${orderId} — destino: ${deliveryDest} — tarifa: $${fee}`);
-  }
-
-  function downloadManifestFor(conId?: string) {
-    const cid = conId ?? consolidatedResult?.id; if (!cid) return;
-    const manifest = { consolidatedId: cid, items: consolidatedResult?.items ?? [], fee: consolidatedResult?.fee ?? 0, createdAt: new Date().toISOString() };
-    const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = `${cid}_manifest.json`; a.click(); URL.revokeObjectURL(url);
-  }
+  const totalPages = Math.ceil(packages.length / itemsPerPage);
+  const currentData = packages.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <Helmet><title>Consolidar Envíos | EXPRESUR</title></Helmet>
-      <div className=" mx-auto">
-        {/* header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-[#166534]">Consolidar Envíos (Cliente)</h1>
-            <p className="text-sm text-gray-500">Seleccione los paquetes recibidos en La Habana y únalos para envío a otras ciudades de Cuba.</p>
-          </div>
+    <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-40">
+      <Toaster position="top-center" richColors closeButton />
 
-          <div className="flex items-center gap-2">
-            <button onClick={() => { setSelectedIds([]); setSelectAll(false); }} className="px-3 py-2 border rounded-md">Limpiar</button>
-            <button onClick={toggleSelectAll} className="px-3 py-2 border rounded-md">{selectAll ? "Deseleccionar todo" : "Seleccionar todo"}</button>
-            <button onClick={handleConsolidate} className="px-4 py-2 bg-[#166534] text-white rounded-md">Crear caja consolidada</button>
-          </div>
+      {/* --- Header --- */}
+      <div className="mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Consolidation</h1>
+          <p className="text-gray-500 mt-2 text-sm">Manage consolidations</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold">Envíos disponibles ({available.length})</h3>
-                <div className="text-sm text-gray-500">Seleccione 2 o más para consolidar</div>
-              </div>
+        <div className="flex items-center gap-6 mt-6 md:mt-0">
+          <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+            <Bell size={20} className="text-gray-600" />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+          </button>
+          
+          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
+               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
+              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div className="hidden md:block">
-                <table className="min-w-full">
-                  <thead className="bg-gray-100">
-                    <tr>
-                      <th className="p-3 w-12"><input type="checkbox" checked={selectAll} onChange={toggleSelectAll} /></th>
-                      <th className="p-3">ID</th>
-                      <th className="p-3">Descripción</th>
-                      <th className="p-3">Origen</th>
-                      <th className="p-3">Peso (kg)</th>
-                      <th className="p-3">Volumen (m³)</th>
-                      <th className="p-3">Recibido</th>
-                      <th className="p-3">Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {available.map(s => (
-                      <tr key={s.id} className="border-b hover:bg-gray-50">
-                        <td className="p-3"><input type="checkbox" checked={selectedIds.includes(s.id)} onChange={() => toggle(s.id)} /></td>
-                        <td className="p-3 font-medium">{s.id}</td>
-                        <td className="p-3">{s.name}</td>
-                        <td className="p-3">{s.origin}</td>
-                        <td className="p-3">{s.weightKg}</td>
-                        <td className="p-3">{s.volumeM3}</td>
-                        <td className="p-3">{fmtDate(s.receivedAt)}</td>
-                        <td className="p-3">{s.status}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+      <div className=" mx-auto space-y-6">
+        
+        {/* --- Main Section --- */}
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 min-h-[500px] relative">
+          <h3 className="text-xl font-bold text-gray-800">Request Consolidation</h3>
+          <p className="text-gray-500 mt-2 mb-8 text-sm">Select packages to consolidate into a single shipment</p>
 
-              <div className="md:hidden space-y-3">
-                {available.map(s => (
-                  <div key={s.id} className="bg-gray-50 border rounded-lg p-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <div className="font-medium">{s.name}</div>
-                        <div className="text-xs text-gray-500">{s.id} • {s.origin}</div>
-                        <div className="text-xs text-gray-500 mt-1">Recibido: {fmtDate(s.receivedAt)}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium">{s.weightKg} kg</div>
-                        <div className="text-xs text-gray-500">{s.volumeM3} m³</div>
-                        <div className="mt-2"><input type="checkbox" checked={selectedIds.includes(s.id)} onChange={() => toggle(s.id)} /></div>
-                      </div>
+          {/* --- Package List --- */}
+          <div className="space-y-4">
+            {currentData.map((pkg) => (
+              <div 
+                key={pkg.id} 
+                className={`flex justify-between items-start p-5 rounded-xl border transition-all cursor-pointer ${
+                  pkg.isSelected ? 'bg-gray-50 border-gray-200' : 'bg-[#F9FAFB] border-transparent hover:border-gray-200'
+                }`}
+                onClick={() => toggleSelection(pkg.id)}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Checkbox */}
+                  <div className={`mt-1 w-5 h-5 rounded-[4px] border flex items-center justify-center transition-colors ${
+                    pkg.isSelected ? 'bg-[#005f33] border-[#005f33]' : 'border-gray-300 bg-transparent'
+                  }`}>
+                    {pkg.isSelected && <Check size={14} className="text-white" strokeWidth={3} />}
+                  </div>
+                  
+                  {/* Details (Font sizes adjusted to text-sm) */}
+                  <div>
+                    <h4 className="text-base font-bold text-gray-700 mb-2">{pkg.packageId}</h4>
+                    <div className="text-sm text-gray-500 space-y-1">
+                      <p><span className="font-medium text-gray-600">From:</span> {pkg.from}</p>
+                      <p><span className="font-medium text-gray-600">To:</span> {pkg.to}</p>
+                      <p><span className="font-medium text-gray-600">Received:</span> {pkg.receivedDate}</p>
                     </div>
                   </div>
-                ))}
+                </div>
+                
+                {/* Weight (Font size adjusted) */}
+                <div className="text-sm font-bold text-gray-800 mt-1">
+                  {pkg.weight} kg
+                </div>
               </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="bg-white rounded-lg shadow p-4">
-                <div className="text-sm text-gray-500">Items seleccionados</div>
-                <div className="text-2xl font-bold text-[#166534]">{selectedIds.length}</div>
-              </div>
-              <div className="bg-white rounded-lg shadow p-4">
-                <div className="text-sm text-gray-500">Peso total (kg)</div>
-                <div className="text-2xl font-bold">{totals.totalKg}</div>
-              </div>
-              <div className="bg-white rounded-lg shadow p-4">
-                <div className="text-sm text-gray-500">Volumen total (m³)</div>
-                <div className="text-2xl font-bold">{totals.totalVol}</div>
-              </div>
-            </div>
+            ))}
           </div>
 
-          <aside className="bg-white rounded-lg shadow p-4">
-            <h4 className="font-semibold">Resumen de consolidación</h4>
-            <div className="mt-3 text-sm text-gray-500">Items seleccionados</div>
-            <ul className="mt-2 text-sm space-y-1">
-              {selectedItems.length === 0 && <li className="text-gray-400">No hay items seleccionados</li>}
-              {selectedItems.map(s => (
-                <li key={s.id} className="flex items-center justify-between">
-                  <div>{s.id} • {s.name}</div>
-                  <div className="text-sm text-gray-500">{s.weightKg} kg</div>
-                </li>
-              ))}
-            </ul>
+          {/* --- Pagination --- */}
+          <div className="flex justify-end items-center gap-6 mt-10 text-sm font-medium select-none mb-4">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className={`transition ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              Previous
+            </button>
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+              className={`flex items-center gap-1 transition ${currentPage === totalPages || totalPages === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-[#005f33] hover:text-[#004d2a]'}`}
+            >
+              Next <ArrowRight size={16} strokeWidth={2} />
+            </button>
+          </div>
 
-            <div className="mt-4 border-t pt-3">
-              <div className="flex items-center justify-between text-sm text-gray-600"><div>Peso total</div><div>{totals.totalKg} kg</div></div>
-              <div className="flex items-center justify-between text-sm text-gray-600 mt-1"><div>Volumen total</div><div>{totals.totalVol} m³</div></div>
-              <div className="flex items-center justify-between text-sm font-semibold mt-3"><div>Tarifa estimada</div><div>${totals.fee}</div></div>
-            </div>
-
-            <div className="mt-4">
-              <label className="text-sm text-gray-500">Notas para el almacén</label>
-              <textarea value={notes} onChange={e => setNotes(e.target.value)} className="w-full mt-2 border rounded p-2" placeholder="Fragile, manejar con cuidado..." rows={3} />
-            </div>
-
-            <div className="mt-4 flex flex-col gap-2">
-              <button onClick={handleConsolidate} className="px-3 py-2 bg-[#166534] text-white rounded-md">Proceder a consolidar</button>
-              <button onClick={() => { setSelectedIds([]); setNotes(""); }} className="px-3 py-2 border rounded-md">Reiniciar</button>
-
-              {consolidatedResult && (
-                <div className="mt-3 text-sm">
-                  <div className="font-medium">Última consolidación:</div>
-                  <div className="mt-1">ID: <span className="font-semibold">{consolidatedResult.id}</span></div>
-                  <div className="mt-1">Items: {consolidatedResult.items.join(', ')}</div>
-                  <div className="mt-2 flex gap-2">
-                    <button onClick={() => downloadManifestFor(consolidatedResult.id)} className="px-3 py-2 border rounded-md">Descargar manifiesto</button>
-                    <button onClick={() => navigator.clipboard?.writeText(consolidatedResult.id)} className="px-3 py-2 border rounded-md">Copiar ID</button>
-                    <button onClick={() => setDeliveryOpen(true)} className="px-3 py-2 bg-indigo-600 text-white rounded-md">Crear solicitud de entrega</button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </aside>
         </div>
 
-        {confirmModalOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg p-6 max-w-lg w-full">
-              <h3 className="text-xl font-bold">Confirmar consolidación</h3>
-              <div className="mt-3 text-sm text-gray-600">Va a consolidar {selectedItems.length} envíos en una sola caja.</div>
-
-              <div className="mt-4">
-                <div className="text-sm text-gray-500">Totales estimados</div>
-                <div className="mt-2 flex items-center justify-between"><div>Peso total</div><div className="font-medium">{totals.totalKg} kg</div></div>
-                <div className="mt-1 flex items-center justify-between"><div>Volumen total</div><div className="font-medium">{totals.totalVol} m³</div></div>
-                <div className="mt-3 flex items-center justify-between text-sm font-semibold"><div>Tarifa estimada</div><div>${totals.fee}</div></div>
-              </div>
-
-              <div className="mt-5 flex justify-end gap-3">
-                <button onClick={() => setConfirmModalOpen(false)} className="px-3 py-2 border rounded-md">Cancelar</button>
-                <button onClick={confirmConsolidation} className="px-3 py-2 bg-[#166534] text-white rounded-md">Confirmar y crear</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {deliveryOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full">
-              <h3 className="text-lg font-bold">Crear solicitud de entrega</h3>
-              <p className="text-sm text-gray-500 mt-1">ID consolidado: <span className="font-medium">{consolidatedResult?.id}</span></p>
-
-              <div className="mt-4 space-y-3">
-                <div>
-                  <label className="text-sm text-gray-500">Ciudad destino</label>
-                  <select value={deliveryDest} onChange={e => setDeliveryDest(e.target.value)} className="w-full border rounded p-2 mt-1">
-                    <option>La Habana</option>
-                    <option>Santiago de Cuba</option>
-                    <option>Camagüey</option>
-                    <option>Holguín</option>
-                    <option>Pinar del Río</option>
-                    <option>Matanzas</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-sm text-gray-500">Tipo de entrega</label>
-                  <div className="flex gap-2 mt-1">
-                    <button onClick={() => setDeliveryType("normal")} className={`px-3 py-2 rounded-md ${deliveryType === "normal" ? "bg-[#166534] text-white" : "border"}`}>Normal</button>
-                    <button onClick={() => setDeliveryType("express")} className={`px-3 py-2 rounded-md ${deliveryType === "express" ? "bg-[#166534] text-white" : "border"}`}>Express</button>
-                  </div>
-                </div>
-
-                <div className="border-t pt-3">
-                  <div className="flex items-center justify-between text-sm"><div>Tarifa estimada de entrega</div><div className="font-medium">${calcDeliveryFee(totals.totalKg || 1, deliveryDest, deliveryType)}</div></div>
-                </div>
-              </div>
-
-              <div className="mt-4 flex justify-end gap-2">
-                <button onClick={() => setDeliveryOpen(false)} className="px-3 py-2 border rounded-md">Cancelar</button>
-                <button onClick={createDeliveryRequest} className="px-3 py-2 bg-[#166534] text-white rounded-md">Crear entrega</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {deliveryOrder && (
-          <div className="mt-6 bg-white rounded-lg shadow p-4">
-            <div className="flex items-center justify-between">
+        {/* --- Summary Footer Section --- */}
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+           <div className="flex justify-between items-end mb-6">
+              {/* Left Side: Count */}
               <div>
-                <div className="text-sm text-gray-500">Orden de entrega</div>
-                <div className="font-semibold">{deliveryOrder.id} — hacia {deliveryOrder.dest}</div>
+                <p className="text-[#005f33] font-bold text-sm mb-1">Selected Packages</p>
+                {/* Adjusted number size to 3xl */}
+                <p className="text-3xl font-bold text-gray-900">{summary.count}</p>
               </div>
-              <div className="flex gap-2 items-center">
-                <div className="text-sm text-gray-500">Tarifa</div>
-                <div className="font-medium">${deliveryOrder.fee}</div>
-                <button onClick={() => navigator.clipboard?.writeText(deliveryOrder.id)} className="px-2 py-1 border rounded">Copiar</button>
+
+              {/* Right Side: Weight */}
+              <div className="text-right">
+                <p className="text-[#005f33] font-bold text-sm mb-1">Total Weight</p>
+                {/* Adjusted number size to 3xl */}
+                <p className="text-3xl font-bold text-[#005f33]">{summary.weight} <span className="text-xl">kg</span></p>
               </div>
-            </div>
-          </div>
-        )}
+           </div>
+
+           {/* Full Width Button */}
+           <button 
+              onClick={handleCreateShipment}
+              className="w-full bg-[#005f33] hover:bg-[#004d2a] text-white py-4 rounded-xl font-bold text-sm transition-all shadow-md active:scale-[0.99]"
+           >
+              Create shipment
+           </button>
+        </div>
 
       </div>
     </div>
   );
-}
+};
+
+export default Consolidate;
