@@ -35,7 +35,8 @@ import {
   Logout,
 } from "@mui/icons-material";
 
-import { useNavigate, useLocation, matchPath, NavLink } from "react-router-dom";
+// Link ইম্পোর্ট করা হয়েছে
+import { useNavigate, useLocation, matchPath, NavLink, Link } from "react-router-dom";
 
 type Props = {
   adminName?: string;
@@ -122,18 +123,23 @@ export default function AdminSidebar({
         }}
       >
         {open && (
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              fontWeight: 800,
-              color: ACTIVE_ORANGE,
-              fontFamily: '"Poppins", sans-serif',
-              letterSpacing: "0.5px",
-            }}
-          >
-            EXPRESUR
-          </Typography>
+          // Link কম্পোনেন্ট ব্যবহার করা হয়েছে
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Typography
+              variant="h5"
+              noWrap
+              sx={{
+                fontWeight: 800,
+                color: ACTIVE_ORANGE,
+                fontFamily: '"Poppins", sans-serif',
+                letterSpacing: "0.5px",
+                cursor: "pointer", // কার্সার পয়েন্টার দেওয়া হয়েছে
+                "&:hover": { opacity: 0.9 }
+              }}
+            >
+              EXPRESUR
+            </Typography>
+          </Link>
         )}
         
         <IconButton onClick={handleToggle} sx={{ color: "#fff", p: 0.5 }}>
