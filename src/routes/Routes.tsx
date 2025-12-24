@@ -43,6 +43,7 @@ import AdminNotifications from "../dashboard/admin-dashboard/AdminNotifications"
 import AdminAudit from "../dashboard/admin-dashboard/AdminAudit";
 import AdminApi from "../dashboard/admin-dashboard/AdminApi";
 import Remittances from "../dashboard/user-dashboard/Remittances";
+import Notification from "../dashboard/user-dashboard/Notification";
 
 const Routes = createBrowserRouter([
   {
@@ -152,6 +153,10 @@ const Routes = createBrowserRouter([
         {
         path: "remittances",
         element: <Remittances />,
+      },
+         {
+        path: "notifications",
+        element: <Notification/>,
       },
       {
         path: "profile",
