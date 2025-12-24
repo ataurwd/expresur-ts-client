@@ -10,6 +10,7 @@ import {
   Loader2,
   XCircle
 } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Link import করা হয়েছে
 
 // --- Types ---
 type TransferStatus = 'Delivered' | 'Delayed' | 'In Transit' | 'Processing';
@@ -83,7 +84,7 @@ const Remittances = () => {
         return { color: 'text-orange-400', icon: <Clock size={16} /> };
       case 'In Transit':
       case 'Processing':
-        return { color: 'text-gray-500', icon: <RefreshCw size={16} /> }; // Removed spin styling here too
+        return { color: 'text-gray-500', icon: <RefreshCw size={16} /> }; 
       default:
         return { color: 'text-gray-500', icon: <Search size={16} /> };
     }
@@ -94,17 +95,21 @@ const Remittances = () => {
       <Toaster position="top-center" richColors closeButton />
 
       {/* --- Header --- */}
-      <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Remittances</h1>
           <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
         </div>
 
         <div className="flex items-center gap-6 mt-6 md:mt-0">
-          <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
-            <Bell size={20} className="text-gray-600" />
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-          </button>
+          
+          {/* Notification Bell with Link */}
+          <Link to="/dashboard/notifications">
+            <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+              <Bell size={20} className="text-gray-600" />
+              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+            </button>
+          </Link>
           
           <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
@@ -118,7 +123,7 @@ const Remittances = () => {
         </div>
       </div>
 
-      <div className=" mx-auto space-y-8">
+      <div className="max-w-[1400px] mx-auto space-y-8">
         
         {/* --- Transfer Status Section (Interactive Filters) --- */}
         <div>
@@ -136,7 +141,7 @@ const Remittances = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            {/* Card 1: Processing (Fixed: Normal click effect, no spin) */}
+            {/* Card 1: Processing */}
             <div 
               onClick={() => handleFilterClick('Processing')}
               className={`p-6 rounded-3xl shadow-sm border relative h-32 flex flex-col justify-between cursor-pointer transition-all active:scale-[0.98] ${
@@ -146,7 +151,6 @@ const Remittances = () => {
                <div className="flex justify-between items-start">
                   <span className={`font-medium ${statusFilter === 'Processing' ? 'text-gray-800' : 'text-gray-600'}`}>Processing</span>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center ${statusFilter === 'Processing' ? 'bg-gray-200 text-gray-600' : 'bg-gray-50 text-gray-400'}`}>
-                     {/* No animation here */}
                      <Search size={16} />
                   </div>
                </div>

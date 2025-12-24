@@ -4,6 +4,7 @@ import {
   CheckCircle, AlertTriangle, Tag, MoreHorizontal, 
   ArrowUpRight, Clock, X
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // --- Type Definitions ---
 type Package = {
@@ -284,10 +285,13 @@ const DashboardUser = () => {
           
           {/* Profile Header */}
           <div className="bg-white rounded-[40px] p-2 pr-6 flex items-center gap-4 shadow-sm border border-gray-100 w-full max-w-sm ml-auto cursor-pointer hover:shadow-md transition">
-             <button className="p-3 bg-gray-50 rounded-full text-gray-500 hover:bg-gray-100 relative">
-                <Bell size={20} />
-                <span className="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-             </button>
+             {/* Notification Bell with Link */}
+          <Link to="/dashboard/notifications">
+            <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+              <Bell size={20} className="text-gray-600" />
+              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+            </button>
+          </Link>
              <img src="https://avatar.iran.liara.run/public/boy?username=Tyrion" alt="User" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
              <div className="flex-1 overflow-hidden">
                <h4 className="font-bold text-gray-900 text-sm truncate">Tyrion Lannister</h4>

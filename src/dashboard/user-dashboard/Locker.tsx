@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Plus
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // --- Types ---
 interface Package {
@@ -96,10 +97,13 @@ const Locker: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-6 mt-6 md:mt-0">
-          <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
-            <Bell size={20} className="text-gray-600" />
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-          </button>
+          {/* Notification Bell with Link */}
+          <Link to="/dashboard/notifications">
+            <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+              <Bell size={20} className="text-gray-600" />
+              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+            </button>
+          </Link>
           
           <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
