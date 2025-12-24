@@ -121,7 +121,7 @@ const DashboardUser = () => {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-4 gap-8">
+      <div className=" mx-auto grid grid-cols-1 xl:grid-cols-4 gap-8">
         
         {/* --- Main Content Area --- */}
         <div className="xl:col-span-3 space-y-8">
