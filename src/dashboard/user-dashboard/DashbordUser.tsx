@@ -1,227 +1,337 @@
-import React, { useMemo, useState } from "react";
-import { Helmet } from "react-helmet";
+import React, { useState } from 'react';
+import { 
+  Bell, Box, Truck, Wallet, Plus, Layers, Send, 
+  CheckCircle, AlertTriangle, Tag, MoreHorizontal, 
+  ArrowUpRight, Clock, X
+} from 'lucide-react';
 
-// -----------------------------------------------------
-//  FAKE DATA (replace with API later)
-// -----------------------------------------------------
-
-type Shipment = {
+// --- Type Definitions ---
+type Package = {
   id: string;
-  type: "local" | "locker" | "consolidated";
-  from: string;
-  to: string;
-  weight: number;
-  status: "received" | "in_transit" | "delivered" | "ready";
-  expectedDelivery?: string;
-  shippedAt?: string;
-  createdAt: string;
+  status: string;
+  date: string;
+  type: string;
 };
 
-type LockerItem = {
-  id: string;
+type Alert = {
+  id: number;
   title: string;
-  lockerId: string;
-  weightKg: number;
-  arrivedAt: string;
-  ready: boolean;
+  desc: string;
+  time: string;
+  icon: React.ReactNode;
+  bg: string;
 };
 
-type Invoice = {
-  id: string;
-  amount: number;
-  status: "paid" | "due" | "overdue";
-  dueDate: string;
-};
+const DashboardUser = () => {
+  // --- STATE MANAGEMENT (Data Store) ---
+  
+  // 1. Stats State
+  const [stats, setStats] = useState({
+    packages: 7523,
+    shipments: 1284,
+    balance: 11300
+  });
 
-const FAKE_SHIPMENTS: Shipment[] = [
-  { id: "CUB-23011", type: "local", from: "La Habana", to: "Santiago de Cuba", weight: 2.5, status: "in_transit", expectedDelivery: "2025-01-18", shippedAt: "2025-01-12", createdAt: "2025-01-12" },
-  { id: "INT-99231", type: "locker", from: "Miami Locker (XG15STV)", to: "La Habana", weight: 3.8, status: "received", expectedDelivery: "2025-01-20", createdAt: "2025-01-12" },
-  { id: "LOC-55214", type: "local", from: "Camagüey", to: "Holguín", weight: 1.1, status: "delivered", expectedDelivery: "2025-01-10", shippedAt: "2025-01-08", createdAt: "2025-01-06" },
-  { id: "CNL-77452", type: "consolidated", from: "Miami (3 items)", to: "Matanzas", weight: 7.4, status: "in_transit", expectedDelivery: "2025-01-19", shippedAt: "2025-01-11", createdAt: "2025-01-11" },
-];
+  // 2. Packages List State
+  const [recentPackages, setRecentPackages] = useState<Package[]>([
+    { id: "ORD-1001", status: "In Transit", date: "1/12/2025", type: "transit" },
+    { id: "ORD-1002", status: "Delivered", date: "1/12/2025", type: "delivered" },
+    { id: "ORD-1003", status: "Cancelled", date: "1/12/2025", type: "cancelled" },
+  ]);
 
-const FAKE_LOCKER: LockerItem[] = [
-  { id: "MIAM-1001", title: "Zapatos Nike", lockerId: "XG15STV", weightKg: 1.4, arrivedAt: "2025-01-10", ready: true },
-  { id: "MIAM-1003", title: "Ropa x3", lockerId: "XG15STV", weightKg: 2.1, arrivedAt: "2025-01-12", ready: true },
-];
+  // 3. Alerts State (With Delete Functionality)
+  const [alerts, setAlerts] = useState<Alert[]>([
+    { id: 1, title: "Package Arrived", desc: "Your package PKG001 has arrived.", time: "Mar 10, 9:25AM", icon: <CheckCircle className="text-emerald-500" size={18} />, bg: "bg-emerald-50" },
+    { id: 2, title: "Shipment Delayed", desc: "Shipment SHP2024 may be delayed.", time: "Mar 10, 9:25AM", icon: <AlertTriangle className="text-rose-500" size={18} />, bg: "bg-rose-50" },
+    { id: 3, title: "Special Promotion", desc: "Get 10% off this week!", time: "Mar 10, 9:25AM", icon: <Tag className="text-blue-500" size={18} />, bg: "bg-blue-50" },
+  ]);
 
-const FAKE_INVOICES: Invoice[] = [
-  { id: "INV-1001", amount: 12.5, dueDate: "2025-01-18", status: "due" },
-  { id: "INV-1002", amount: 5, dueDate: "2025-01-09", status: "overdue" },
-];
+  // 4. Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newPackageId, setNewPackageId] = useState('');
 
-// -----------------------------------------------------
-//  Helper
-// -----------------------------------------------------
-function fmt(d?: string) {
-  if (!d) return "—";
-  return new Date(d).toLocaleDateString();
-}
+  // --- HANDLERS (Functions) ---
 
-// -----------------------------------------------------
-//  DASHBOARD COMPONENT
-// -----------------------------------------------------
-const DashbordUser = () => {
-  const [shipments] = useState(FAKE_SHIPMENTS);
-  const [locker] = useState(FAKE_LOCKER);
-  const [invoices, setInvoices] = useState(FAKE_INVOICES);
+  // Handle adding a new package
+  const handleAddPackage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPackageId) return;
 
-  // KPI counts
-  const totalParcels = shipments.length + locker.length;
-  const incoming = shipments.filter(s => s.status === "received" || s.status === "ready").length + locker.filter(l => l.ready).length;
-  const sent = shipments.filter(s => s.shippedAt).length;
-  const pendingPayments = invoices.filter(i => i.status !== "paid").length;
+    const newPkg: Package = {
+      id: newPackageId,
+      status: "In Transit",
+      date: new Date().toLocaleDateString(),
+      type: "transit"
+    };
 
-  const upcoming = shipments.filter(s => s.expectedDelivery).slice(0, 5);
-  const recent = shipments.slice().sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).slice(0, 6);
+    // Update List
+    setRecentPackages([newPkg, ...recentPackages]);
+    
+    // Update Stats (Increment Counter)
+    setStats(prev => ({ ...prev, packages: prev.packages + 1 }));
 
-  const pay = (id: string) => {
-    setInvoices(prev => prev.map(i => (i.id === id ? { ...i, status: "paid" } : i)));
-    alert("Pago realizado (fake)");
+    // Reset & Close
+    setNewPackageId('');
+    setIsModalOpen(false);
+  };
+
+  // Handle removing an alert
+  const removeAlert = (id: number) => {
+    setAlerts(alerts.filter(alert => alert.id !== id));
+  };
+
+  // Helper for badges
+  const getStatusBadge = (type: string) => {
+    switch(type) {
+      case 'transit': return <span className="flex items-center gap-1 text-blue-500 bg-blue-50 px-2 py-1 rounded text-xs font-medium"><Clock size={12}/> In Transit</span>;
+      case 'delivered': return <span className="flex items-center gap-1 text-emerald-500 bg-emerald-50 px-2 py-1 rounded text-xs font-medium"><CheckCircle size={12}/> Delivered</span>;
+      case 'cancelled': return <span className="flex items-center gap-1 text-rose-500 bg-rose-50 px-2 py-1 rounded text-xs font-medium"><AlertTriangle size={12}/> Cancelled</span>;
+      default: return null;
+    }
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <Helmet><title>Dashboard Usuario | EXPRESUR</title></Helmet>
-      <div className=" mx-auto">
+    <div className="min-h-screen bg-[#f8f9fa] p-6 font-sans text-gray-800 relative">
+      
+      {/* --- MODAL FOR ADDING PACKAGE --- */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in duration-200">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Add New Package</h3>
+              <button onClick={() => setIsModalOpen(false)} className="p-1 hover:bg-gray-100 rounded-full"><X size={20}/></button>
+            </div>
+            <form onSubmit={handleAddPackage} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Tracking Number</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. ORD-9999"
+                  className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={newPackageId}
+                  onChange={(e) => setNewPackageId(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit" className="w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-800 transition">
+                Add Package
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
-        {/* HEADER */}
-        <h1 className="text-2xl font-bold text-[#166534]">Dashboard del Cliente</h1>
-        <p className="text-gray-600 mb-6">Resumen de tus envíos, casillero y pagos.</p>
-
-        {/* KPI CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-xs text-gray-600">Paquetes Totales</p>
-            <p className="text-2xl font-bold text-[#166534]">{totalParcels}</p>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-4 gap-8">
+        
+        {/* --- Main Content Area --- */}
+        <div className="xl:col-span-3 space-y-8">
+          
+          {/* Header */}
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Welcome back!</h1>
+            <p className="text-gray-500 mt-1">Welcome to EXPRESUR Client Dashboard</p>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-xs text-gray-600">Por Recibir</p>
-            <p className="text-2xl font-bold text-yellow-600">{incoming}</p>
+          {/* Dynamic Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1 */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between h-40">
+              <div className="flex justify-between items-start">
+                <span className="text-gray-500 font-medium">Packages in Locker</span>
+                <div className="p-2 bg-gray-100 rounded-full"><Box size={20} className="text-gray-500" /></div>
+              </div>
+              <div>
+                <h2 className="text-4xl font-bold text-gray-900">{stats.packages}</h2>
+                <p className="text-sm mt-2 font-medium text-emerald-500">+12% <span className="text-gray-400 font-normal">from last period</span></p>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between h-40">
+              <div className="flex justify-between items-start">
+                <span className="text-gray-500 font-medium">Active Shipments</span>
+                <div className="p-2 bg-gray-100 rounded-full"><Truck size={20} className="text-gray-500" /></div>
+              </div>
+              <div>
+                <h2 className="text-4xl font-bold text-gray-900">{stats.shipments}</h2>
+                <p className="text-sm mt-2 font-medium text-rose-500">-3% <span className="text-gray-400 font-normal">from last period</span></p>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between h-40">
+              <div className="flex justify-between items-start">
+                <span className="text-gray-500 font-medium">Wallet Balance</span>
+                <div className="p-2 bg-gray-100 rounded-full"><Wallet size={20} className="text-gray-500" /></div>
+              </div>
+              <div>
+                <h2 className="text-4xl font-bold text-gray-900">${stats.balance.toLocaleString()}</h2>
+                <p className="text-sm mt-2 font-medium text-emerald-500">+15% <span className="text-gray-400 font-normal">from last period</span></p>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-xs text-gray-600">Enviados</p>
-            <p className="text-2xl font-bold text-blue-600">{sent}</p>
+          {/* Functional Quick Actions */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              
+              {/* Add Package Button - Opens Modal */}
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="bg-gray-50 p-6 rounded-2xl hover:bg-white hover:shadow-md transition-all duration-200 text-left border border-transparent hover:border-gray-100 group cursor-pointer"
+              >
+                <div className="bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:bg-black group-hover:text-white transition-colors text-gray-600">
+                  <Plus size={20} />
+                </div>
+                <h4 className="font-semibold text-gray-800">Add Package</h4>
+                <p className="text-xs text-gray-400 mt-1">Add more packages</p>
+              </button>
+
+              {/* Other Static Buttons (Placeholders) */}
+              <button className="bg-gray-50 p-6 rounded-2xl hover:bg-white hover:shadow-md transition-all duration-200 text-left border border-transparent hover:border-gray-100 group">
+                <div className="bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:bg-gray-50 text-gray-600">
+                  <Layers size={20} />
+                </div>
+                <h4 className="font-semibold text-gray-800">Consolidate</h4>
+                <p className="text-xs text-gray-400 mt-1">Create Consolidates</p>
+              </button>
+
+              <button className="bg-gray-50 p-6 rounded-2xl hover:bg-white hover:shadow-md transition-all duration-200 text-left border border-transparent hover:border-gray-100 group">
+                <div className="bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:bg-gray-50 text-gray-600">
+                  <Truck size={20} />
+                </div>
+                <h4 className="font-semibold text-gray-800">Create Shipment</h4>
+                <p className="text-xs text-gray-400 mt-1">Add more shipment</p>
+              </button>
+
+              <button className="bg-gray-50 p-6 rounded-2xl hover:bg-white hover:shadow-md transition-all duration-200 text-left border border-transparent hover:border-gray-100 group">
+                <div className="bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:bg-gray-50 text-gray-600">
+                  <Send size={20} />
+                </div>
+                <h4 className="font-semibold text-gray-800">Send Money</h4>
+                <p className="text-xs text-gray-400 mt-1">Money transactions</p>
+              </button>
+            </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-xs text-gray-600">Pagos Pendientes</p>
-            <p className="text-2xl font-bold text-red-600">{pendingPayments}</p>
+          {/* Dynamic Recent Packages List */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="p-1.5 bg-gray-100 rounded-full"><Box size={16} className="text-gray-500"/></div>
+                <h3 className="text-lg font-bold text-gray-800">Recent Packages</h3>
+              </div>
+              
+              <div className="overflow-x-auto max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                <table className="w-full text-left">
+                  <thead className="sticky top-0 bg-white">
+                    <tr className="text-gray-400 text-sm border-b border-gray-50">
+                      <th className="pb-3 font-normal">Tracking Number</th>
+                      <th className="pb-3 font-normal">Status</th>
+                      <th className="pb-3 font-normal">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {recentPackages.map((pkg, i) => (
+                      <tr key={i} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                        <td className="py-4 font-medium text-gray-700">{pkg.id}</td>
+                        <td className="py-4">{getStatusBadge(pkg.type)}</td>
+                        <td className="py-4 text-gray-500">{pkg.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {recentPackages.length === 0 && <p className="text-center text-gray-400 py-8">No packages found.</p>}
+              </div>
+            </div>
+
+            {/* Recent Transaction (Static for demo) */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-2">
+                   <div className="p-1.5 bg-gray-100 rounded-full"><ArrowUpRight size={16} className="text-gray-500"/></div>
+                   <h3 className="text-lg font-bold text-gray-800">Recent Transaction</h3>
+                </div>
+                <div className="flex gap-2">
+                  <button className="text-xs bg-gray-100 px-3 py-1.5 rounded-full text-gray-600 hover:bg-gray-200 transition">Show All</button>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex justify-between items-center hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer">
+                    <div>
+                      <h4 className="font-semibold text-gray-800 text-sm">Sent</h4>
+                      <p className="text-xs text-gray-400 mt-0.5">Today, 11:55 AM</p>
+                    </div>
+                    <span className="font-bold text-sm text-emerald-500">+21.17</span>
+                </div>
+                {/* More static transactions can be added here */}
+                 <div className="flex justify-between items-center hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer">
+                    <div>
+                      <h4 className="font-semibold text-gray-800 text-sm">Pending</h4>
+                      <p className="text-xs text-gray-400 mt-0.5">Yesterday, 3:15 PM</p>
+                    </div>
+                    <span className="font-bold text-sm text-orange-500">+10.05</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* --- Sidebar (Alerts) --- */}
+        <div className="xl:col-span-1 space-y-8">
+          
+          {/* Profile Header */}
+          <div className="bg-white rounded-[40px] p-2 pr-6 flex items-center gap-4 shadow-sm border border-gray-100 w-full max-w-sm ml-auto cursor-pointer hover:shadow-md transition">
+             <button className="p-3 bg-gray-50 rounded-full text-gray-500 hover:bg-gray-100 relative">
+                <Bell size={20} />
+                <span className="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+             </button>
+             <img src="https://avatar.iran.liara.run/public/boy?username=Tyrion" alt="User" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
+             <div className="flex-1 overflow-hidden">
+               <h4 className="font-bold text-gray-900 text-sm truncate">Tyrion Lannister</h4>
+               <p className="text-xs text-gray-500 truncate">tyrion@example.com</p>
+             </div>
+          </div>
 
-          {/* LEFT SIDE */}
-          <div className="space-y-6">
-            {/* UPCOMING DELIVERIES */}
-            <div className="bg-white p-4 rounded-lg shadow">
-              <h2 className="font-semibold mb-2">Próximas Entregas</h2>
-              {upcoming.length === 0 ? (
-                <p className="text-gray-500 text-sm">No tienes entregas próximas.</p>
+          {/* Interactive Alerts */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 min-h-[600px]">
+            <div className="flex items-center gap-2 mb-6">
+               <div className="p-1.5 bg-gray-50 rounded-full border border-gray-100"><Bell size={16} className="text-gray-500"/></div>
+               <h3 className="text-lg font-bold text-gray-800">Important Alerts</h3>
+            </div>
+
+            <div className="space-y-4">
+              {alerts.length === 0 ? (
+                <p className="text-gray-400 text-center text-sm">No new alerts</p>
               ) : (
-                <ul className="space-y-3 text-sm">
-                  {upcoming.map(s => (
-                    <li key={s.id} className="flex justify-between border-b pb-2">
-                      <p>
-                        <b>{s.id}</b> <br />
-                        {s.from} → {s.to}
-                      </p>
-                      <p className="text-right">{fmt(s.expectedDelivery)}</p>
-                    </li>
-                  ))}
-                </ul>
+                alerts.map((alert) => (
+                  <div key={alert.id} className="bg-gray-50/50 p-4 rounded-xl border border-gray-100 hover:bg-white hover:shadow-sm transition-all group relative">
+                    <button 
+                      onClick={() => removeAlert(alert.id)}
+                      className="absolute top-2 right-2 p-1 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded opacity-0 group-hover:opacity-100 transition-all"
+                    >
+                      <X size={14}/>
+                    </button>
+                    <div className="flex items-start gap-3">
+                      <div className={`mt-1 min-w-[20px]`}>{alert.icon}</div>
+                      <div>
+                        <h4 className="font-semibold text-gray-800 text-sm">{alert.title}</h4>
+                        <p className="text-xs text-gray-500 mt-1 leading-relaxed">{alert.desc}</p>
+                        <p className="text-[10px] text-gray-400 mt-2">{alert.time}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
               )}
             </div>
-
-            {/* LOCKER SUMMARY */}
-            <div className="bg-white p-4 rounded-lg shadow">
-              <h2 className="font-semibold mb-2">Mi Casillero</h2>
-
-              {locker.map((l) => (
-                <div key={l.id} className="border rounded p-3 mb-2 flex justify-between">
-                  <div>
-                    <p className="font-medium">{l.title}</p>
-                    <p className="text-xs text-gray-500">ID: {l.id}</p>
-                  </div>
-                  <p className={`text-xs px-2 py-1 rounded ${l.ready ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
-                    {l.ready ? "Listo" : "En almacén"}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* PENDING PAYMENTS */}
-            <div className="bg-white p-4 rounded-lg shadow">
-              <h2 className="font-semibold mb-2">Facturas Pendientes</h2>
-
-              {invoices.filter(i => i.status !== "paid").map(inv => (
-                <div key={inv.id} className="border rounded p-3 mb-2 flex justify-between">
-                  <div>
-                    <p className="font-semibold">{inv.id}</p>
-                    <p className="text-xs text-gray-600">Vence: {fmt(inv.dueDate)}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => pay(inv.id)} className="px-3 py-1 bg-[#166534] text-white rounded text-sm">
-                      Pagar
-                    </button>
-                    <button className="px-3 py-1 border rounded text-sm">PDF</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT SIDE — RECENT SHIPMENTS */}
-          <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow">
-            <h2 className="font-semibold mb-3">Envíos Recientes</h2>
-
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="p-2 text-left">ID</th>
-                    <th className="p-2 text-left">Origen → Destino</th>
-                    <th className="p-2 text-left">Peso</th>
-                    <th className="p-2 text-left">Estado</th>
-                    <th className="p-2 text-left">Fecha</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {recent.map(s => (
-                    <tr key={s.id} className="border-b hover:bg-gray-50">
-                      <td className="p-2">{s.id}</td>
-                      <td className="p-2">{s.from} → {s.to}</td>
-                      <td className="p-2">{s.weight} kg</td>
-                      <td className="p-2">
-                        <span
-                          className={`px-2 py-1 text-xs rounded ${
-                            s.status === "delivered"
-                              ? "bg-green-100 text-green-700"
-                              : s.status === "in_transit"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-blue-100 text-blue-700"
-                          }`}
-                        >
-                          {s.status}
-                        </span>
-                      </td>
-                      <td className="p-2">{fmt(s.createdAt)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
 
         </div>
-
       </div>
     </div>
   );
 };
 
-export default DashbordUser;
+export default DashboardUser;
