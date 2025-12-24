@@ -61,7 +61,7 @@ const HeroOne: React.FC = () => {
                 w-[500px]
                 sm:w-[700px]
                 md:w-[900px]
-                lg:w-[1300px]
+                lg:w-[1100px]
                 object-contain
               "
             />
