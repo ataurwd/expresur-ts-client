@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Box, Plus, X, Calendar, User, Package, Search, Truck } from 'lucide-react';
+import { Box, Plus, X, Calendar, User, Package, Search, Truck, Bell } from 'lucide-react';
 
 /* --- INTERFACE --- */
 interface ConsolidationData {
@@ -43,6 +44,7 @@ const INITIAL_DATA: ConsolidationData[] = [
 ];
 
 const AdminConsolidations = () => {
+  const navigate = useNavigate();
   const [consolidations, setConsolidations] = useState<ConsolidationData[]>(INITIAL_DATA);
   const [activeTab, setActiveTab] = useState<'Pending' | 'History'>('Pending');
   const [search, setSearch] = useState('');
@@ -99,11 +101,16 @@ const AdminConsolidations = () => {
           <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
           <p className="text-gray-400 mt-1 text-[15px]">Handle consolidation requests and prepare for shipping</p>
         </div>
-        <div className="flex items-center gap-3 bg-white pl-1 pr-4 py-1.5 rounded-full shadow-sm border border-gray-100">
-          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
-          <div className="hidden md:block">
-            <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
-            <p className="text-xs text-gray-400">tyrion@example.com</p>
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+            <Bell size={20} />
+          </button>
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
+            <div className="hidden md:block">
+              <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
+              <p className="text-xs text-gray-400">tyrion@example.com</p>
+            </div>
           </div>
         </div>
       </div>

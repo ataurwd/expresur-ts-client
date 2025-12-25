@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Package, Users, CreditCard, BarChart3, 
   Bell, ArrowUpRight
@@ -34,6 +35,7 @@ interface ProgressBarProps {
 }
 
 const AdminAdmins = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       
@@ -47,17 +49,23 @@ const AdminAdmins = () => {
             <p className="text-gray-400 mt-1">Welcome to EXPRESUR Admin Dashboard</p>
           </div>
 
-          <div className="flex items-center gap-4 bg-white p-2 pr-6 pl-2 rounded-full shadow-sm">
-            <img 
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
-              alt="User" 
-              className="w-10 h-10 rounded-full bg-green-100"
-            />
-            <div className="hidden md:block">
-              <h4 className="text-sm font-bold text-gray-800">Tyrion Lannister</h4>
-              <p className="text-xs text-gray-500">tyrion@example.com</p>
+            <div className="flex items-center gap-4">
+              <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+                <Bell size={20} />
+              </button>
+
+              <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+                <img 
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
+                  alt="User" 
+                  className="w-10 h-10 rounded-full bg-green-100 border border-white"
+                />
+                <div className="hidden md:block">
+                  <h4 className="text-sm font-bold text-gray-800">Tyrion Lannister</h4>
+                  <p className="text-xs text-gray-500">tyrion@example.com</p>
+                </div>
+              </div>
             </div>
-          </div>
         </header>
 
         {/* STATS CARDS */}

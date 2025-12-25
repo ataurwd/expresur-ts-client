@@ -1,7 +1,8 @@
 import React, { memo, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Search, ChevronDown, ChevronRight, Check,
-  Truck, X, Clock, Box,  Package, 
+  Truck, X, Clock, Box, Package, Bell,
 } from 'lucide-react';
 
 interface Shipment {
@@ -27,6 +28,7 @@ const INITIAL_DATA: Shipment[] = [
 ];
 
 const AdminShipments = memo(() => {
+  const navigate = useNavigate();
   const [data] = useState<Shipment[]>(INITIAL_DATA);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('Status');
@@ -67,11 +69,20 @@ const AdminShipments = memo(() => {
           <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight">Shipment Management</h1>
           <p className="text-gray-400 mt-1 text-[15px]">Manage all shipments and tracking information</p>
         </div>
-        <div className="flex items-center gap-3 bg-[#F9FAFB] pl-1 pr-4 py-1.5 rounded-full shadow-sm border border-gray-100">
-          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
-          <div className="hidden md:block">
-            <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
-            <p className="text-xs text-gray-400">tyrion@example.com</p>
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+            <Bell size={20} />
+          </button>
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+            <img 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
+              alt="Profile" 
+              className="w-10 h-10 rounded-full bg-green-100 border border-white"
+            />
+            <div className="text-sm">
+              <p className="font-bold text-gray-900 leading-tight">Tyrion Lannister</p>
+              <p className="text-gray-400 text-xs">tyrion@example.com</p>
+            </div>
           </div>
         </div>
       </div>

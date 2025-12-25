@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, Plus, Calendar, ChevronDown, Check, 
   X, Package as PackageIcon, DollarSign, 
-  Box, ChevronRight, Save, Trash2, ArrowUpDown
+  Box, ChevronRight, Save, Trash2, ArrowUpDown, Bell
 } from "lucide-react";
 
 /** ---------------- Types ---------------- */
@@ -35,6 +36,7 @@ const INITIAL_PACKAGES: PackageData[] = [
 ];
 
 export default function PackageManagement() {
+  const navigate = useNavigate();
   // --- State ---
   const [packages, setPackages] = useState<PackageData[]>(INITIAL_PACKAGES);
   const [query, setQuery] = useState("");
@@ -145,12 +147,21 @@ export default function PackageManagement() {
           <h1 className="text-[28px] font-bold text-[#111827] tracking-tight">Package Management</h1>
           <p className="text-gray-400 mt-1 text-[15px]">View and manage all packages with detailed analytics</p>
         </div>
-        <div className="flex items-center gap-3 bg-[#F9FAFB] pl-1 pr-4 py-1.5 rounded-full shadow-sm border border-gray-100">
-           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
-            <div className="hidden md:block">
-              <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
-              <p className="text-xs text-gray-400">tyrion@example.com</p>
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+            <Bell size={20} />
+          </button>
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+            <img 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
+              alt="Profile" 
+              className="w-10 h-10 rounded-full bg-green-100 border border-white"
+            />
+            <div className="text-sm">
+              <p className="font-bold text-gray-900 leading-tight">Tyrion Lannister</p>
+              <p className="text-gray-400 text-xs">tyrion@example.com</p>
             </div>
+          </div>
         </div>
       </div>
 

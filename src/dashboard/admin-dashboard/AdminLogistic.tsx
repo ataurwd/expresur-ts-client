@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Info, Plus, Box, Plane, Ship, 
-  ChevronRight, Package, X, Save, Trash2, Check
+  ChevronRight, Package, X, Save, Trash2, Check, Bell
 } from 'lucide-react';
 
 /* --- TYPES --- */
@@ -63,6 +64,7 @@ const INITIAL_DATA: LogisticsGroup[] = [
 ];
 
 const AdminLogistic = () => {
+  const navigate = useNavigate();
   /* --- STATE --- */
   const [data, setData] = useState<LogisticsGroup[]>(INITIAL_DATA);
   const [filter, setFilter] = useState('All');
@@ -143,16 +145,21 @@ const AdminLogistic = () => {
           <p className="text-gray-400 mt-1 text-[15px]">Manage maritime containers, air flights, and express bags</p>
         </div>
         
-        <div className="flex items-center gap-3 bg-white pl-1 pr-4 py-1.5 rounded-full shadow-sm border border-gray-100">
-           <img 
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+            <Bell size={20} />
+          </button>
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+            <img 
               src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" 
-              alt="User" 
-              className="w-10 h-10 rounded-full bg-green-100"
+              alt="Profile" 
+              className="w-10 h-10 rounded-full bg-green-100 border border-white"
             />
-            <div className="hidden md:block">
-              <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
-              <p className="text-xs text-gray-400">tyrion@example.com</p>
+            <div className="text-sm">
+              <p className="font-bold text-gray-900 leading-tight">Tyrion Lannister</p>
+              <p className="text-gray-400 text-xs">tyrion@example.com</p>
             </div>
+          </div>
         </div>
       </div>
 
