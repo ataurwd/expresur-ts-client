@@ -166,10 +166,13 @@ export default function PackageManagement() {
       </div>
 
       {/* KPI CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <StatCard title="Total Packages" value={String(packages.length)} icon={<PackageIcon size={20} className="text-gray-400" />} />
-        <StatCard title="Active Packages" value={String(activeCount)} icon={<Box size={20} className="text-gray-400" />} />
-        <StatCard title="Total Profit" value={`$${totalProfit.toLocaleString()}`} icon={<DollarSign size={20} className="text-gray-400" />} />
+      <div className="mb-10">
+        <div className="bg-white p-4 rounded-3xl shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <StatCard title="Total Packages" value={String(packages.length)} icon={<PackageIcon size={20} className="text-gray-400" />} />
+            <StatCard title="Active Packages" value={String(activeCount)} icon={<Box size={20} className="text-gray-400" />} />
+          </div>
+        </div>
       </div>
 
       {/* ACTIONS BAR */}
