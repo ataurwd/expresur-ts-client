@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Package, Users, CreditCard, BarChart3, 
-  Bell, ArrowUpRight
+  Bell, ArrowUpRight, Layers
 } from 'lucide-react';
 
 /* --- INTERFACES --- */
@@ -86,7 +86,7 @@ const AdminAdmins = () => {
             title="Total pickup requests" 
             value="42" 
             sub="Pending pickups" 
-            icon={<Bell className="text-gray-400" />} 
+            icon={<Layers className="text-gray-400" />} 
           />
           <StatCard 
             title="Income" 
