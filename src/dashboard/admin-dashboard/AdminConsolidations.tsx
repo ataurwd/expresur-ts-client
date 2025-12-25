@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Box, Plus, X, Calendar, User, Package, Search, Truck, Bell } from 'lucide-react';
+import { Box, Plus, X, Calendar, User, Package, Search, Truck, Bell, QrCode, Check } from 'lucide-react';
 
 /* --- INTERFACE --- */
 interface ConsolidationData {
@@ -284,6 +284,15 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
   const [packages, setPackages] = useState(1);
   const [weight, setWeight] = useState(5.0);
 
+  // For create-mode advanced UI
+  const [scanInput, setScanInput] = useState('');
+  const [availablePackages] = useState([
+    { id: 'TRK001234567', desc: 'UPS • 2.5 kg • 30×20×15 cm' },
+    { id: 'TRK001234568', desc: 'UPS • 2.5 kg • 30×20×15 cm' },
+    { id: 'TRK007283945', desc: 'UPS • 4.2 kg • 45×35×25 cm' },
+  ]);
+  const [selectedPackageIds, setSelectedPackageIds] = useState<string[]>([availablePackages[2].id]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ customer, packages, weight });
@@ -291,7 +300,7 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
+      <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#f8f9fa]">
           <h3 className="text-lg font-bold text-gray-800">
             {mode === 'create' ? 'New Consolidation' : 'Consolidation Details'}
@@ -353,47 +362,52 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          // Create-mode: show scan input + selectable package list matching design
+          <div className="p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
-              <input
-                required
-                type="text"
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
-                placeholder="e.g. John Doe"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-2">Scan to Add Package</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="text"
+                  placeholder="Scan Tracking Number"
+                  value={scanInput}
+                  onChange={(e) => setScanInput(e.target.value)}
+                  className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none"
+                />
+                <button onClick={() => { /* simulate scan action */ }} type="button" className="bg-[#166534] text-white p-2 rounded-lg">
+                  <QrCode size={18} />
+                </button>
+              </div>
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Number of Packages</label>
-              <input
-                required
-                type="number"
-                min="1"
-                value={packages}
-                onChange={(e) => setPackages(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
-              />
+              <div className="text-sm text-gray-600 mb-2">Select Packages ({selectedPackageIds.length} selected)</div>
+              <div className="space-y-3">
+                {availablePackages.map(pkg => (
+                  <label key={pkg.id} className="flex items-start gap-3 p-3 bg-white border border-gray-100 rounded-lg">
+                    <input
+                      type="checkbox"
+                      checked={selectedPackageIds.includes(pkg.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) setSelectedPackageIds(prev => [...prev, pkg.id]);
+                        else setSelectedPackageIds(prev => prev.filter(id => id !== pkg.id));
+                      }}
+                      className="mt-1"
+                    />
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-800">{pkg.id}</div>
+                      <div className="text-gray-500 text-xs mt-1">{pkg.desc}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Total Weight (kg)</label>
-              <input
-                required
-                type="number"
-                min="0.1"
-                step="0.1"
-                value={weight}
-                onChange={(e) => setWeight(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
-              />
+
+            <div className="flex justify-end items-center gap-6">
+              <button onClick={onClose} className="text-gray-600">Cancel</button>
+              <button onClick={() => { onSubmit({ customer, packages: selectedPackageIds.length, weight }); }} className="text-green-600 font-semibold">Create</button>
             </div>
-            <div className="pt-2">
-              <button type="submit" className="w-full bg-[#166534] text-white py-2.5 rounded-lg font-semibold hover:bg-[#14532d] transition-colors shadow-md">
-                Create Consolidation
-              </button>
-            </div>
-          </form>
+          </div>
         )}
       </div>
     </div>
