@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Logo from "../../assets/Grupo 1.png"; // Ensure this path is correct for your project
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
