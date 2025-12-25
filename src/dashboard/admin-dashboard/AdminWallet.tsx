@@ -316,63 +316,60 @@ const AdminWallet = () => {
 
       </div>
 
-      {/* --- TRANSACTION DETAILS MODAL --- */}
+      {/* --- TRANSACTION DETAILS MODAL (compact payment details) --- */}
       {isModalOpen && selectedTransaction && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100">
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                    <h3 className="font-bold text-gray-800">Transaction Details</h3>
-                    <button onClick={() => setIsModalOpen(false)} className="p-1 rounded-full hover:bg-gray-200 transition-colors text-gray-400 hover:text-red-500">
-                        <X size={20} />
-                    </button>
-                </div>
-                
-                <div className="p-8 flex flex-col items-center">
-                    <div className="w-16 h-16 bg-green-50 text-[#106F3E] rounded-full flex items-center justify-center mb-4 border border-green-100">
-                        <CreditCard size={32} />
-                    </div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-1 tracking-tight">
-                        {selectedTransaction.currency} {selectedTransaction.amount.toFixed(2)}
-                    </h2>
-                    <p className={`text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mb-8 mt-2
-                        ${selectedTransaction.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                        {selectedTransaction.status}
-                    </p>
-
-                    <div className="w-full space-y-4">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Transaction ID</span>
-                            <span className="font-mono text-gray-700 font-medium">{selectedTransaction.id}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Date</span>
-                            <span className="text-gray-700">{selectedTransaction.date}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Customer</span>
-                            <span className="text-gray-700 font-medium">{selectedTransaction.customerName}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Type</span>
-                            <span className="text-gray-700">{selectedTransaction.type}</span>
-                        </div>
-                        <div className="h-px bg-gray-100 my-4 border-dashed border-t"></div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Balance After</span>
-                            <span className="text-gray-700 font-bold">{selectedTransaction.currency} {selectedTransaction.balanceAfter}</span>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-3 w-full mt-8">
-                        <button className="flex-1 flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all font-medium">
-                            <Share2 size={16} /> Share
-                        </button>
-                        <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#106F3E] text-white rounded-xl text-sm hover:bg-green-800 shadow-lg shadow-green-100 hover:shadow-xl transition-all font-medium">
-                            <Printer size={16} /> Print
-                        </button>
-                    </div>
-                </div>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6 animate-fadeIn">
+          <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg p-6">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Payment Details</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 p-1 rounded-full">
+                <X size={18} />
+              </button>
             </div>
+
+            <div className="bg-gray-100 rounded-xl p-5">
+              <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs text-gray-400">Customer</p>
+                    <p className="text-sm text-gray-800 font-medium">{selectedTransaction.customerName}</p>
+                    <p className="text-xs text-gray-400">{selectedTransaction.customerEmail}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400">Type</p>
+                    <p className="text-sm text-gray-800">{selectedTransaction.type}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400">Date</p>
+                    <p className="text-sm text-gray-800">{selectedTransaction.date}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs text-gray-400">Amount</p>
+                    <p className="text-sm text-gray-800 font-medium">{selectedTransaction.currency} {selectedTransaction.amount.toFixed(2)}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400">Balance After</p>
+                    <p className="text-sm text-gray-800">{selectedTransaction.currency} {selectedTransaction.balanceAfter}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400">Transaction ID</p>
+                    <p className="text-sm text-gray-800 font-mono">{selectedTransaction.id}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <button onClick={() => setIsModalOpen(false)} className="text-[#106F3E] font-medium">Cancel</button>
+            </div>
+          </div>
         </div>
       )}
 
