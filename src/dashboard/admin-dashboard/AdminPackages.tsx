@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, Plus, Calendar, ChevronDown, Check, 
-  X, Package as PackageIcon, DollarSign, 
+  X, Package as PackageIcon, 
   Box, ChevronRight, Save, Trash2, ArrowUpDown, Bell
 } from "lucide-react";
 
@@ -135,7 +135,6 @@ export default function PackageManagement() {
   };
 
   // KPI Calculations
-  const totalProfit = packages.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
   const activeCount = packages.filter(p => p.status !== 'Cancelled').length;
 
   return (
