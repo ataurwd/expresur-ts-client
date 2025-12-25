@@ -178,7 +178,7 @@ export default function PackageTrackingDashboard() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 overflow-x-auto pb-2">
         <div className="bg-white rounded-2xl shadow-sm p-6 min-w-[220px]">
-          <div className="bg-[#F0F2F5] rounded-xl p-6 flex flex-col justify-between h-[160px]">
+          <div className="bg-[#f9fafb] rounded-xl p-6 flex flex-col justify-between h-[160px]">
             <div className="flex justify-between items-start">
               <span className="text-gray-500 font-medium">Daily Packages</span>
               <div className="bg-white p-2 rounded-full text-gray-400">
@@ -196,7 +196,7 @@ export default function PackageTrackingDashboard() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-6 min-w-[220px]">
-          <div className="bg-[#F0F2F5] rounded-xl p-6 flex flex-col justify-between h-[160px]">
+          <div className="bg-[#f9fafb] rounded-xl p-6 flex flex-col justify-between h-[160px]">
             <div className="flex justify-between items-start">
               <span className="text-gray-500 font-medium">Delayed Packages</span>
               <div className="bg-white p-2 rounded-full text-gray-400">
@@ -211,7 +211,7 @@ export default function PackageTrackingDashboard() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-6 min-w-[220px]">
-          <div className="bg-[#F0F2F5] rounded-xl p-6 flex flex-col justify-between h-[160px]">
+          <div className="bg-[#f9fafb] rounded-xl p-6 flex flex-col justify-between h-[160px]">
             <div className="flex justify-between items-start">
               <span className="text-gray-500 font-medium">Not Scanned</span>
               <div className="bg-white p-2 rounded-full text-gray-400">
