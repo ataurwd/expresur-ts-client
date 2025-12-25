@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, Plus, ChevronDown, ChevronRight,
-  Bell
+  Bell, X, Check, QrCode
 } from 'lucide-react';
 
 interface PackageItem {
@@ -35,6 +35,14 @@ const AdminLocker = () => {
   const [isLockerDropdownOpen, setIsLockerDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+
+  // Modal for adding package
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form, setForm] = useState({ trackingNumber: '', carrier: 'UPS', locker: '', weight: '', note: '' });
+  const [isScanOpen, setIsScanOpen] = useState(false);
+  const [scanResult,] = useState({ trackingNumber: 'ORD-1001', carrier: 'UPS', method: 'Barcode', clientName: 'María González', clientId: '0001002', lockerId: 'LCK-127A', identified: true });
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [selectedLocker, setSelectedLocker] = useState<PackageItem | null>(null);
 
   const uniqueLockers = useMemo(() => {
     const lockers = new Set(data.map(item => item.lockerId));
@@ -130,10 +138,10 @@ const AdminLocker = () => {
         </div>
 
         <div className="flex gap-3">
-          <button className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition justify-center shadow-sm">
-            Scan Package
+          <button onClick={() => setIsScanOpen(true)} className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition justify-center shadow-sm">
+            <QrCode size={16} /> Scan Package
           </button>
-          <button className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition justify-center shadow-sm">
+          <button onClick={() => setIsModalOpen(true)} className="bg-[#166534] hover:bg-[#14532d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition justify-center shadow-sm">
             <Plus size={18} /> Add Package
           </button>
         </div>
@@ -167,7 +175,7 @@ const AdminLocker = () => {
                   <td className="p-5 text-gray-600">{item.totalPackages}</td>
                   <td className="p-5 text-gray-600">{item.createdDate}</td>
                   <td className="p-5 text-right">
-                    <button className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded text-xs font-medium transition-colors">
+                    <button onClick={() => { setSelectedLocker(item); setIsViewOpen(true); }} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded text-xs font-medium transition-colors">
                       View
                     </button>
                   </td>
@@ -176,6 +184,139 @@ const AdminLocker = () => {
             </tbody>
           </table>
         </div>
+            {/* ADD PACKAGE MODAL */}
+            {isModalOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#F9FAFB]">
+                    <h3 className="text-lg font-bold text-gray-900">Add Package Manually</h3>
+                    <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+                  </div>
+
+                  <form onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); }} className="p-6 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">Tracking Number *</label>
+                        <input value={form.trackingNumber} onChange={(e) => setForm({ ...form, trackingNumber: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">Carrier *</label>
+                        <select value={form.carrier} onChange={(e) => setForm({ ...form, carrier: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none">
+                          <option>UPS</option>
+                          <option>USPS</option>
+                          <option>FedEx</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">Locker *</label>
+                        <select value={form.locker} onChange={(e) => setForm({ ...form, locker: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none">
+                          <option value="">Select Locker</option>
+                          {uniqueLockers.filter(l => l !== 'All Lockers').map(l => <option key={l} value={l}>{l}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">Weight (kg)</label>
+                        <input value={form.weight} onChange={(e) => setForm({ ...form, weight: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Note (Optional)</label>
+                      <textarea value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none h-28" />
+                    </div>
+
+                    <div className="flex justify-end items-center gap-6">
+                      <button type="button" onClick={() => setIsModalOpen(false)} className="text-gray-600">Cancel</button>
+                      <button type="submit" className="text-green-600 font-semibold">Add Package</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            {/* SCAN PACKAGE MODAL */}
+            {isScanOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#F9FAFB]">
+                    <h3 className="text-lg font-bold text-gray-900">Scan Barcode/QR</h3>
+                    <button onClick={() => setIsScanOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+                  </div>
+
+                  <div className="p-6 space-y-6">
+                    <div className="border-2 border-dashed border-[#F3F4F6] rounded-lg h-36 flex items-center justify-center text-gray-300">
+                      <QrCode size={28} />
+                    </div>
+
+                    <div className="bg-[#F9FAFB] p-4 rounded-lg">
+                      <h4 className="text-sm font-semibold text-gray-700 mb-2">Package Details</h4>
+                      <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                        <div>Tracking Number</div><div className="text-right font-medium">{scanResult.trackingNumber}</div>
+                        <div>Carrier</div><div className="text-right">{scanResult.carrier}</div>
+                        <div>Scan Method</div><div className="text-right">{scanResult.method}</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#F9FAFB] p-4 rounded-lg flex items-start gap-4">
+                      <div className="text-green-500"><Check size={20} /></div>
+                      <div>
+                        <div className="text-sm font-semibold text-green-600">Client Identified</div>
+                        <div className="text-sm text-gray-700 mt-2">Client Name <span className="float-right text-gray-600">{scanResult.clientName}</span></div>
+                        <div className="text-sm text-gray-700">Client ID <span className="float-right text-gray-600">{scanResult.clientId}</span></div>
+                        <div className="text-sm text-gray-700">Locker ID <span className="float-right text-gray-600">{scanResult.lockerId}</span></div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end items-center gap-6">
+                      <button onClick={() => setIsScanOpen(false)} className="text-gray-600">Cancel</button>
+                      <button onClick={() => { /* confirm + add package logic can go here */ setIsScanOpen(false); }} className="text-green-600 font-semibold">Confirm & Add Package</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* LOCKER DETAILS VIEW MODAL */}
+            {isViewOpen && selectedLocker && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#F9FAFB]">
+                    <h3 className="text-lg font-bold text-gray-900">Locker Details</h3>
+                    <button onClick={() => setIsViewOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="bg-[#F9FAFB] rounded-lg p-6 text-sm text-gray-700 grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-gray-500">Client</div>
+                        <div className="font-medium text-gray-900 mt-1">{selectedLocker.clientName}</div>
+                        <div className="text-gray-500 text-xs mt-1">{selectedLocker.clientEmail}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Tracking Number</div>
+                        <div className="font-medium text-gray-900 mt-1">{selectedLocker.trackingNumber}</div>
+                      </div>
+
+                      <div>
+                        <div className="text-gray-500">Locker created Date</div>
+                        <div className="font-medium text-gray-900 mt-1">{selectedLocker.createdDate}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Total Packages</div>
+                        <div className="font-medium text-gray-900 mt-1">{selectedLocker.totalPackages}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end mt-6">
+                      <button onClick={() => setIsViewOpen(false)} className="text-gray-600">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
       </div>
 
         {/* PAGINATION */}
