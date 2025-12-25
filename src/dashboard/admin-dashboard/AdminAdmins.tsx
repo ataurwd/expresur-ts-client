@@ -37,7 +37,7 @@ interface ProgressBarProps {
 const AdminAdmins = () => {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-[#f6f6f6] font-sans">
       
       {/* MAIN CONTENT */}
       <main className="w-full p-8">
