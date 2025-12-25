@@ -66,7 +66,7 @@ const AdminShipments = memo(() => {
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
-          <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight">Shipment Management</h1>
+          <h1 className="text-4xl font-bold text-[#111827] tracking-tight leading-tight">Shipment Management</h1>
           <p className="text-gray-400 mt-1 text-[15px]">Manage all shipments and tracking information</p>
         </div>
         <div className="flex items-center gap-4">
@@ -88,111 +88,120 @@ const AdminShipments = memo(() => {
       </div>
 
       {/* KPI CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <StatCard label="Total Shipment" value={String(stats.total)} icon={<Truck className="text-gray-400" size={20} />} />
-        <StatCard label="Delivered" value={String(stats.delivered)} icon={<Check className="text-gray-400" size={20} />} />
-        <StatCard label="In Transit" value={String(stats.inTransit)} icon={<Truck className="text-gray-400" size={20} />} />
-        <StatCard label="Pending" value={String(stats.pending)} icon={<Clock className="text-gray-400" size={20} />} />
-      </div>
-
-      {/* CONTROLS */}
-      <div className="flex flex-col lg:flex-row justify-between items-center mb-6 gap-4">
-        <h2 className="text-lg font-medium text-gray-700 w-full lg:w-auto">All Shipment</h2>
-        <div className="flex flex-wrap gap-3 w-full lg:w-auto justify-end">
-          <div className="relative flex-1 lg:flex-none">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by name, locker ID, date..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-white border border-gray-100 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-green-500 w-full lg:w-80 shadow-sm text-gray-600"
-            />
-          </div>
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="appearance-none bg-[#F9FAFB] border border-transparent hover:border-gray-200 text-gray-500 text-sm px-4 py-2 pr-8 rounded-lg outline-none cursor-pointer font-medium"
-            >
-              <option>Status</option>
-              <option>Delivered</option>
-              <option>In Transit</option>
-              <option>Cancelled</option>
-              <option>Pending</option>
-              <option>Assigned</option>
-            </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          </div>
-          <div className="relative">
-            <select
-              value={carrierFilter}
-              onChange={(e) => setCarrierFilter(e.target.value)}
-              className="appearance-none bg-[#F9FAFB] border border-transparent hover:border-gray-200 text-gray-500 text-sm px-4 py-2 pr-8 rounded-lg outline-none cursor-pointer font-medium"
-            >
-              <option>Carrier</option>
-              <option>UPS</option>
-              <option>USPS</option>
-              <option>FedEx</option>
-              <option>DHL</option>
-            </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+      <div className="mb-10">
+        <div className="bg-white p-4 rounded-3xl shadow-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatCard label="Total Shipment" value={String(stats.total)} icon={<Truck className="text-gray-400" size={20} />} />
+            <StatCard label="Delivered" value={String(stats.delivered)} icon={<Check className="text-gray-400" size={20} />} />
+            <StatCard label="In Transit" value={String(stats.inTransit)} icon={<Truck className="text-gray-400" size={20} />} />
+            <StatCard label="Pending" value={String(stats.pending)} icon={<Clock className="text-gray-400" size={20} />} />
           </div>
         </div>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-50 overflow-hidden mb-4">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium border-b border-gray-100">
-              <tr>
-                <th className="p-5 font-normal">Customer</th>
-                <th className="p-5 font-normal">Package ID</th>
-                <th className="p-5 font-normal">Locker ID</th>
-                <th className="p-5 font-normal">Route</th>
-                <th className="p-5 font-normal">Carrier</th>
-                <th className="p-5 font-normal">Estimated date</th>
-                <th className="p-5 font-normal">Status</th>
-                <th className="p-5 font-normal text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="text-[14px] divide-y divide-gray-50">
-              {paginatedData.length > 0 ? paginatedData.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
-                  <td className="p-5">
-                    <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
-                    <div className="text-[13px] text-gray-500">{item.customerPhone}</div>
-                  </td>
-                  <td className="p-5 text-gray-600">{item.packageId}</td>
-                  <td className="p-5 text-gray-600">{item.lockerId}</td>
-                  <td className="p-5">
-                    <div className="text-gray-600 leading-tight">{item.routeFrom.split(',')[0]},</div>
-                    <div className="text-gray-500 text-[13px]">Spain → Havana, Cuba</div>
-                  </td>
-                  <td className="p-5 text-gray-600">{item.carrier}</td>
-                  <td className="p-5 text-gray-600">{item.estimatedDate}</td>
-                  <td className="p-5"><StatusBadge status={item.status} /></td>
-                  <td className="p-5 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded text-xs font-medium transition-colors">View</button>
-                    </div>
-                  </td>
-                </tr>
-              )) : (
-                <tr><td colSpan={8} className="p-10 text-center text-gray-400">No shipments found.</td></tr>
-              )}
-            </tbody>
-          </table>
+      {/* CONTROLS + TABLE WRAPPER */}
+      <div className="bg-white p-6 rounded-3xl shadow-sm mb-6">
+        {/* CONTROLS */}
+        <div className="flex flex-col lg:flex-row justify-between items-center mb-6 gap-4">
+          <h2 className="text-lg font-medium text-gray-700 w-full lg:w-auto">All Shipment</h2>
+          <div className="flex flex-wrap gap-3 w-full lg:w-auto justify-end">
+            <div className="relative flex-1 lg:flex-none">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search by name, locker ID, date..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 pr-4 py-2 bg-white border border-gray-100 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-green-500 w-full lg:w-80 shadow-sm text-gray-600"
+              />
+            </div>
+            <div className="relative">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="appearance-none bg-[#F9FAFB] border border-transparent hover:border-gray-200 text-gray-500 text-sm px-4 py-2 pr-8 rounded-lg outline-none cursor-pointer font-medium"
+              >
+                <option>Status</option>
+                <option>Delivered</option>
+                <option>In Transit</option>
+                <option>Cancelled</option>
+                <option>Pending</option>
+                <option>Assigned</option>
+              </select>
+              <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            <div className="relative">
+              <select
+                value={carrierFilter}
+                onChange={(e) => setCarrierFilter(e.target.value)}
+                className="appearance-none bg-[#F9FAFB] border border-transparent hover:border-gray-200 text-gray-500 text-sm px-4 py-2 pr-8 rounded-lg outline-none cursor-pointer font-medium"
+              >
+                <option>Carrier</option>
+                <option>UPS</option>
+                <option>USPS</option>
+                <option>FedEx</option>
+                <option>DHL</option>
+              </select>
+              <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* PAGINATION */}
-      <div className="flex justify-end items-center gap-6 mt-6 text-[14px]">
-        <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="text-gray-400 hover:text-gray-600 disabled:opacity-50">Previous</button>
-        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="text-[#16a34a] font-semibold flex items-center gap-1 hover:text-[#15803d] disabled:opacity-50">
-          Next <ChevronRight size={16} />
-        </button>
+        {/* TABLE */}
+        <div className="rounded-xl overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-50 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium border-b border-gray-100">
+                  <tr>
+                    <th className="p-5 font-normal">Customer</th>
+                    <th className="p-5 font-normal">Package ID</th>
+                    <th className="p-5 font-normal">Locker ID</th>
+                    <th className="p-5 font-normal">Route</th>
+                    <th className="p-5 font-normal">Carrier</th>
+                    <th className="p-5 font-normal">Estimated date</th>
+                    <th className="p-5 font-normal">Status</th>
+                    <th className="p-5 font-normal text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[14px] divide-y divide-gray-50">
+                  {paginatedData.length > 0 ? paginatedData.map((item) => (
+                    <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
+                      <td className="p-5">
+                        <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
+                        <div className="text-[13px] text-gray-500">{item.customerPhone}</div>
+                      </td>
+                      <td className="p-5 text-gray-600">{item.packageId}</td>
+                      <td className="p-5 text-gray-600">{item.lockerId}</td>
+                      <td className="p-5">
+                        <div className="text-gray-600 leading-tight">{item.routeFrom.split(',')[0]},</div>
+                        <div className="text-gray-500 text-[13px]">Spain → Havana, Cuba</div>
+                      </td>
+                      <td className="p-5 text-gray-600">{item.carrier}</td>
+                      <td className="p-5 text-gray-600">{item.estimatedDate}</td>
+                      <td className="p-5"><StatusBadge status={item.status} /></td>
+                      <td className="p-5 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded text-xs font-medium transition-colors">View</button>
+                        </div>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr><td colSpan={8} className="p-10 text-center text-gray-400">No shipments found.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* PAGINATION */}
+        <div className="flex justify-end items-center gap-6 mt-6 text-[14px]">
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="text-gray-400 hover:text-gray-600 disabled:opacity-50">Previous</button>
+          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="text-[#16a34a] font-semibold flex items-center gap-1 hover:text-[#15803d] disabled:opacity-50">
+            Next <ChevronRight size={16} />
+          </button>
+        </div>
       </div>
 
       {/* MODAL */}

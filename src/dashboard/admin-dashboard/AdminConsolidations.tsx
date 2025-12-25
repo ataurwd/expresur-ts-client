@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Box, Plus, X, Calendar, User, Package, Search, Truck, Bell, QrCode, Check } from 'lucide-react';
+import { Box, Plus, X, Calendar, User, Package, Search, Truck, Bell, QrCode, } from 'lucide-react';
 
 /* --- INTERFACE --- */
 interface ConsolidationData {
@@ -281,7 +281,6 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
   const [customer, ] = useState("");
-  const [packages, ] = useState(1);
   const [weight, ] = useState(5.0);
 
   // For create-mode advanced UI
