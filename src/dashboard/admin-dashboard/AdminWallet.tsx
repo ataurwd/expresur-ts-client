@@ -142,42 +142,48 @@ const AdminWallet = () => {
       {/* --- STATS CARDS --- */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between h-[160px]">
+          <div className="bg-[#F8F9FB] rounded-xl p-6 h-full flex flex-col justify-between">
            <div className="flex justify-between items-start">
-              <span className="text-gray-500 font-medium">Total Credits</span>
-              <div className="p-2 bg-gray-100 rounded-full text-gray-400">
-                <DollarSign size={16} />
-              </div>
+             <span className="text-gray-500 font-medium">Total Credits</span>
+             <div className=" bg-white p-2 rounded-full text-gray-400">
+              <DollarSign size={16} />
+             </div>
            </div>
            <div>
-              <h3 className="text-4xl font-bold text-gray-900 mb-2">$11,300</h3>
-              <span className="text-xs text-gray-400">+15% from last period</span>
+             <h3 className="text-4xl font-bold text-gray-900 ">$11,300</h3>
+             <span className="text-xs text-green-600">+15% from last period</span>
            </div>
+          </div>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between h-[160px]">
+          <div className="bg-[#F8F9FB] rounded-xl p-6 h-full flex flex-col justify-between">
            <div className="flex justify-between items-start">
-              <span className="text-gray-500 font-medium">Total Debits</span>
-              <div className="p-2 bg-gray-100 rounded-full text-gray-400">
-                <DollarSign size={16} />
-              </div>
+             <span className="text-gray-500 font-medium">Total Debits</span>
+             <div className="bg-white p-2 rounded-full text-gray-400">
+              <DollarSign size={16} />
+             </div>
            </div>
            <div>
-              <h3 className="text-4xl font-bold text-gray-900 mb-2">$1,200</h3>
-              <span className="text-xs text-gray-400">-15% from last period</span>
+             <h3 className="text-4xl font-bold text-gray-900">$1,200</h3>
+             <span className="text-xs text-red-600">-15% from last period</span>
            </div>
+          </div>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between h-[160px]">
+          <div className="bg-[#F8F9FB] rounded-xl p-6 h-full flex flex-col justify-between">
            <div className="flex justify-between items-start">
-              <span className="text-gray-500 font-medium">Total Transactions</span>
-              <div className="p-2 bg-gray-100 rounded-full text-gray-400">
-                <FileText size={16} />
-              </div>
+             <span className="text-gray-500 font-medium">Total Transactions</span>
+             <div className=" bg-white p-2 rounded-full text-gray-400">
+              <FileText size={16} />
+             </div>
            </div>
            <div>
-              <h3 className="text-4xl font-bold text-gray-900 mb-2">{filteredTransactions.length}</h3>
-              <span className="text-xs text-gray-400">+15% from last period</span>
+             <h3 className="text-4xl font-bold text-gray-900 ">{filteredTransactions.length}</h3>
+             <span className="text-xs text-green-600">+15% from last period</span>
            </div>
+          </div>
         </div>
       </div>
 
