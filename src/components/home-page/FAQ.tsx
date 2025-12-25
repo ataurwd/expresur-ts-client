@@ -78,7 +78,7 @@ const FAQ: React.FC = () => {
                   "
                 >
                   rápidos, económicos y seguros Lorem ipsum dolor?
-                </h3>
+                 </h3>
 
                 <p
                   className="

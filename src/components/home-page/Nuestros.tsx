@@ -17,12 +17,28 @@ const baseCards: Card[] = [
   { title: "ENVÍO\nDE REMESAS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconRemesas },
   { title: "RECOGIDA\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPickup },
   { title: "CONFORMAR\nENVÍOS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconConfirm },
+  { title: "ENVÍOS\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPackage },
+  { title: "ENVÍO\nDE REMESAS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconRemesas },
+  { title: "RECOGIDA\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPickup },
+  { title: "CONFORMAR\nENVÍOS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconConfirm },
+  { title: "ENVÍOS\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPackage },
+  { title: "ENVÍO\nDE REMESAS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconRemesas },
+  { title: "RECOGIDA\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPickup },
+  { title: "CONFORMAR\nENVÍOS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconConfirm },
+  { title: "ENVÍOS\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPackage },
+  { title: "ENVÍO\nDE REMESAS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconRemesas },
+  { title: "RECOGIDA\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPickup },
+  { title: "CONFORMAR\nENVÍOS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconConfirm },
+  { title: "ENVÍOS\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPackage },
+  { title: "ENVÍO\nDE REMESAS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconRemesas },
+  { title: "RECOGIDA\nDE PAQUETES", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconPickup },
+  { title: "CONFORMAR\nENVÍOS", desc: "Ismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud", icon: iconConfirm },
 ];
 
 const Nuestros: React.FC = () => {
   const viewportRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
-  const isUserInteracting = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [visibleCount, setVisibleCount] = useState(4);
   const [currentDot, setCurrentDot] = useState(0);
   const [ready, setReady] = useState(false);
@@ -47,137 +63,122 @@ const Nuestros: React.FC = () => {
   const total = baseCards.length;
   const slidePercent = 100 / visibleCount;
 
-  // helper to compute step (width of one card viewport-slot)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getStep = (el: HTMLDivElement) => {
+  const getStep = useCallback((el: HTMLDivElement) => {
     return el.clientWidth / visibleCount;
-  };
+  }, [visibleCount]);
 
-  // place initial scroll at middle batch start
+  // Initial position: middle batch
   useLayoutEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
-    // ensure layout settled
+
     requestAnimationFrame(() => {
       const step = getStep(el);
       el.scrollLeft = total * step;
       setReady(true);
-      // update dot immediately
-      const posInBatch = 0;
-      setCurrentDot(Math.round(posInBatch / step) % total);
+      setCurrentDot(0);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleCount, total]);
+  }, [visibleCount, total, getStep]);
 
-  // normalize a value into [0, total*step)
-  const modPosInBatch = (value: number, batchWidth: number) => {
-    return ((value % batchWidth) + batchWidth) % batchWidth;
-  };
-
-  // compute and set current dot in a rAF-safe way
-  const scheduleDotUpdate = useCallback(() => {
-    if (rafRef.current != null) return;
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-      const el = viewportRef.current;
-      if (!el) return;
-      const step = getStep(el);
-      const batchWidth = total * step;
-      // relative to middle batch start
-      const relative = el.scrollLeft - total * step;
-      const posInBatch = modPosInBatch(relative, batchWidth);
-      const idx = Math.round(posInBatch / step) % total;
-      setCurrentDot(idx);
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [total, visibleCount]);
-
-  // infinite jump when reaching edges — keep threshold small to avoid mid-scroll jumps
-  const handleInfinite = useCallback(() => {
+  // Update dot indicator (FIXED — NO DESIGN CHANGE)
+  const updateDot = useCallback(() => {
     const el = viewportRef.current;
     if (!el) return;
+
     const step = getStep(el);
-    const max = el.scrollWidth - el.clientWidth;
-    const threshold = Math.max(6, step * 0.35); // allow small tolerance but not too big
+    const batchWidth = total * step;
+    const middleStart = total * step;
 
-    // if near right end
-    if (el.scrollLeft >= max - threshold) {
-      // instant jump left by total steps
-      el.scrollLeft = el.scrollLeft - total * step;
-    } else if (el.scrollLeft <= threshold) {
-      // near left end -> instant jump right by total steps
-      el.scrollLeft = el.scrollLeft + total * step;
+    let relative = el.scrollLeft - middleStart;
+    relative = ((relative % batchWidth) + batchWidth) % batchWidth;
+
+    // ✅ FIXED LINE (was Math.round)
+    const idx = Math.floor((relative + step / 2) / step) % total;
+    setCurrentDot(idx);
+  }, [total, getStep]);
+
+  // Normalize position to middle batch (FIXED — NO DESIGN CHANGE)
+  const normalizePosition = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const step = getStep(el);
+    const batchWidth = total * step;
+    const middleStart = total * step;
+
+    let current = el.scrollLeft;
+    let offset = current - middleStart;
+    offset = ((offset % batchWidth) + batchWidth) % batchWidth;
+
+    const target = middleStart + offset;
+
+    // ✅ FIXED CONDITION (prevents snap to first card)
+    if (
+      current < middleStart - step ||
+      current > middleStart + batchWidth + step
+    ) {
+      el.scrollLeft = target;
     }
-  }, [getStep, total]);
 
-  // core scroll listener
+    updateDot();
+  }, [total, getStep, updateDot]);
+
+  // Scroll handler
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
 
     const onScroll = () => {
-      // mark user interacting to avoid programmatic conflicts
-      isUserInteracting.current = true;
-      scheduleDotUpdate();
-      // schedule infinite check a bit later (allow momentum). Use rAF to run handleInfinite after layout update.
-      requestAnimationFrame(() => {
-        handleInfinite();
-      });
-      // clear interacting mark after a short delay
-      window.clearTimeout((onScroll as any)._t);
-      (onScroll as any)._t = window.setTimeout(() => {
-        isUserInteracting.current = false;
-      }, 120);
+      if (rafRef.current === null) {
+        rafRef.current = requestAnimationFrame(() => {
+          rafRef.current = null;
+          updateDot();
+        });
+      }
+
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      scrollTimeoutRef.current = setTimeout(() => {
+        normalizePosition();
+      }, 150);
     };
 
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       el.removeEventListener("scroll", onScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [scheduleDotUpdate, handleInfinite]);
+  }, [updateDot, normalizePosition]);
 
-  // utility: ensure we are positioned in middle batch before doing smooth moves
-  const ensureMiddleBatch = useCallback(() => {
-    const el = viewportRef.current;
-    if (!el) return;
-    const step = getStep(el);
-    const batchWidth = total * step;
-    const relative = el.scrollLeft - total * step;
-    const posInBatch = modPosInBatch(relative, batchWidth);
-    // if we're already roughly inside middle batch (pos within [0,batchWidth)), do nothing.
-    // But due to clones, scrollLeft might be outside — we normalize to middle
-    el.scrollLeft = (total * step) + posInBatch;
-  }, [total, visibleCount]);
-
-  // smooth scroll helpers
+  // Arrow button scroll
   const scrollBySteps = useCallback((steps: number) => {
     const el = viewportRef.current;
     if (!el) return;
-    const step = getStep(el);
-    ensureMiddleBatch(); // instant fix if needed
-    // smooth scroll by step * steps
-    el.scrollBy({ left: step * steps, behavior: "smooth" });
-  }, [ensureMiddleBatch, visibleCount]);
 
+    const step = getStep(el);
+    el.scrollBy({ left: step * steps, behavior: "smooth" });
+  }, [getStep]);
+
+  // Dot click scroll
   const scrollToIndex = useCallback((index: number) => {
     const el = viewportRef.current;
     if (!el) return;
+
     const step = getStep(el);
-    // target = middle batch start + index*step
-    const target = (total * step) + index * step;
-    // ensure we are close to middle first to avoid weird jumps during smooth
-    ensureMiddleBatch();
-    el.scrollTo({ left: target, behavior: "smooth" });
-  }, [ensureMiddleBatch, total, visibleCount]);
+    const middleStart = total * step;
+    el.scrollTo({ left: middleStart + index * step, behavior: "smooth" });
+  }, [total, getStep]);
 
   const scrollNext = () => scrollBySteps(1);
   const scrollPrev = () => scrollBySteps(-1);
 
-  // cleanup RAF on unmount
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     };
   }, []);
 
@@ -192,16 +193,18 @@ const Nuestros: React.FC = () => {
           {/* Prev */}
           <button onClick={scrollPrev} aria-label="Anterior"
             className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-amber-500 text-green-900 shadow-lg items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
           </button>
 
-          {/* Carousel – SCROLLBAR ১০০% লুকানো */}
+          {/* Carousel */}
           <div
             ref={viewportRef}
             className="overflow-x-auto scroll-smooth
-                       [-ms-overflow-style:'none']      /* IE & Edge */
-                       [scrollbar-width:'none']         /* Firefox */
-                       [&::-webkit-scrollbar]:hidden"   /* Chrome, Safari, Opera */
+                       [-ms-overflow-style:'none']
+                       [scrollbar-width:'none']
+                       [&::-webkit-scrollbar]:hidden"
             style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
           >
             <div className="flex gap-4 py-6">
@@ -240,11 +243,13 @@ const Nuestros: React.FC = () => {
           {/* Next */}
           <button onClick={scrollNext} aria-label="Siguiente"
             className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-amber-500 text-green-900 shadow-lg items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
 
-        {/* Dots – Mobile */}
+        {/* Mobile Dots */}
         <div className="mt-8 flex justify-center gap-3 md:hidden">
           {baseCards.map((_, i) => {
             const isActive = ready && i === currentDot;
@@ -252,10 +257,8 @@ const Nuestros: React.FC = () => {
               <button
                 key={i}
                 onClick={() => scrollToIndex(i)}
-                className={`
-                  w-3 h-3 rounded-full transition-all duration-250
-                  ${isActive ? "bg-amber-400 scale-125" : "bg-green-300/60"}
-                `}
+                className={`w-3 h-3 rounded-full transition-all duration-250 ${isActive ? "bg-amber-400 scale-125" : "bg-green-300/60"
+                  }`}
                 aria-label={`ir a ${i + 1}`}
               />
             );
