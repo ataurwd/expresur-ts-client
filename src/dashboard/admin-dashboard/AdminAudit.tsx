@@ -290,51 +290,46 @@ const AdminAudit = () => {
 
       {/* --- VIEW DETAILS MODAL --- */}
       {isViewModalOpen && selectedLog && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={closeModal}>
-          <div 
-            className="bg-white rounded-3xl shadow-xl w-full max-w-2xl p-8"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Audit Details</h2>
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-6 backdrop-blur-sm" onClick={closeModal}>
+          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-[28px] shadow-2xl w-full max-w-3xl p-8 md:p-10">
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-6">Audit Details</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">User</p>
-                <p className="text-gray-900 font-medium">{selectedLog.user}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Entity</p>
-                <p className="text-gray-900 font-medium">{selectedLog.entityType}</p>
-                <p className="text-gray-500 text-sm font-mono">{selectedLog.entityId}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Description</p>
-                <p className="text-gray-900">{selectedLog.description}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Date</p>
-                <p className="text-gray-900 font-medium">{selectedLog.date}</p>
+            <div className="bg-[#F8F9FB] rounded-xl p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-gray-700">
+                <div>
+                  <p className="text-sm md:text-sm text-gray-400 mb-2">User</p>
+                  <p className="text-lg md:text-xl text-gray-900 font-medium">{selectedLog.user}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm md:text-sm text-gray-400 mb-2">Entity</p>
+                  <p className="text-lg md:text-xl text-gray-900 font-medium">{selectedLog.entityType}</p>
+                  <p className="text-sm text-gray-400 mt-2 font-mono">{selectedLog.entityId}</p>
+                </div>
+
+                <div className="md:col-span-1">
+                  <p className="text-sm text-gray-400 mb-2">Description</p>
+                  <p className="text-lg text-gray-900">{selectedLog.description}</p>
+                </div>
+
+                <div className="md:col-span-1">
+                  <p className="text-sm text-gray-400 mb-2">Date</p>
+                  <p className="text-lg text-gray-900 font-medium">{selectedLog.date}</p>
+                </div>
               </div>
             </div>
 
-            <div className="mb-10">
-              <p className="text-sm font-medium text-gray-500 mb-2">Status</p>
-              <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium ${
-                selectedLog.status === 'Success' 
-                  ? 'bg-green-100 text-green-700' 
-                  : 'bg-red-100 text-red-700'
-              }`}>
-                {selectedLog.event}
-              </span>
-            </div>
+            <div className="flex items-center justify-between mt-6">
+              <div>
+                <p className="text-sm text-gray-400 mb-2">Status</p>
+                <span className={`inline-flex items-center px-4 py-2 rounded-full text-base font-medium ${
+                  selectedLog.event === 'Scan' || selectedLog.status === 'Success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}>{selectedLog.event}</span>
+              </div>
 
-            <div className="flex justify-end">
-              <button 
-                onClick={closeModal}
-                className="px-6 py-3 text-gray-700 font-medium hover:text-gray-900 transition-colors"
-              >
-                Cancel
-              </button>
+              <div>
+                <button onClick={closeModal} className="text-[#106F3E] font-medium text-base">Cancel</button>
+              </div>
             </div>
           </div>
         </div>
