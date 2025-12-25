@@ -6,11 +6,8 @@ import {
   ChevronRight, 
   ChevronDown, 
   X, 
-  Printer, 
-  Share2,
   DollarSign,
   FileText,
-  CreditCard,
   Download
 } from 'lucide-react';
 
