@@ -191,7 +191,7 @@ const Users = () => {
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">User Management</h1>
+          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">User Management</h1>
           <p className="text-gray-400 mt-1">Manage all customer and admin accounts</p>
         </div>
 
@@ -214,28 +214,32 @@ const Users = () => {
       </div>
 
       {/* --- CONTROLS --- */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="relative w-full md:w-[400px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search by name, locker ID, date...." 
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); 
-            }}
-            className="w-full bg-white pl-12 pr-4 py-3 rounded-full shadow-sm border-none outline-none focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400 text-sm"
-          />
-        </div>
+      <div className="mb-6">
+        <div className="bg-white p-4 rounded-3xl shadow-sm flex flex-col md:flex-row md:justify-between items-center gap-4">
+          <div className="relative flex-1 md:max-w-[900px] w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input 
+              type="text" 
+              placeholder="Search by name, locker ID, date...." 
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1); 
+              }}
+              className="w-full bg-transparent pl-12 pr-4 py-3 rounded-full border-none outline-none focus:ring-0 placeholder:text-gray-400 text-sm"
+            />
+          </div>
 
-        <button 
-          onClick={handleRefresh}
-          className="flex items-center gap-2 bg-white px-5 py-3 rounded-full shadow-sm text-gray-500 hover:text-gray-800 hover:bg-gray-50 transition-all text-sm font-medium"
-        >
-          <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-          Refresh
-        </button>
+          <div className="flex-shrink-0 md:ml-0 ml-auto">
+            <button 
+              onClick={handleRefresh}
+              className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm text-gray-500 hover:text-gray-800 hover:bg-gray-50 transition-all text-sm font-medium border border-gray-100"
+            >
+              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+              Refresh
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* --- TABLE --- */}
