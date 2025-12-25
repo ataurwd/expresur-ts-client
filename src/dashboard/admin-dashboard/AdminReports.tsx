@@ -364,69 +364,66 @@ export default function PackageTrackingDashboard() {
         )}
       </div>
 
-      {/* Details Modal - Exactly matches the provided image */}
+      {/* Details Modal - updated to match provided design */}
       {selectedPackage && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
-            {/* Header */}
-            <div className="bg-gray-100 px-8 py-6">
-              <h2 className="text-xl font-semibold text-gray-800">Report Details</h2>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center px-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden">
+            <div className="px-6 py-5">
+              <h2 className="text-lg font-semibold text-gray-700">Report Details</h2>
             </div>
 
-            {/* Content */}
-            <div className="p-8 pt-10">
-              <div className="space-y-8">
-                <div className="flex justify-between">
+            <div className="px-6 pb-6">
+              <div className="bg-gray-50 rounded-xl p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <p className="text-sm text-gray-600">Payment ID</p>
                     <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.paymentId}</p>
+
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600">Customer</p>
+                      <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.customerName}</p>
+                      <p className="text-sm text-gray-500">{selectedPackage.customerEmail}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
+
+                  <div>
                     <p className="text-sm text-gray-600">Package ID</p>
                     <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.packageId}</p>
-                  </div>
-                </div>
 
-                <div>
-                  <p className="text-sm text-gray-600">Customer</p>
-                  <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.customerName}</p>
-                  <p className="text-sm text-gray-500">{selectedPackage.customerEmail}</p>
-                </div>
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600">Amount</p>
+                      <p className="font-medium text-gray-900 mt-0.5 text-lg">{selectedPackage.amount}</p>
+                    </div>
 
-                <div className="flex justify-between items-end">
-                  <div>
-                    <p className="text-sm text-gray-600">Amount</p>
-                    <p className="font-medium text-gray-900 mt-0.5 text-lg">{selectedPackage.amount}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Date</p>
-                    <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.date}</p>
-                  </div>
-                </div>
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600">Date</p>
+                      <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.date}</p>
+                    </div>
 
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm text-gray-600">Status</p>
-                    <span
-                      className={`inline-block px-6 py-2 rounded-full text-sm font-medium mt-2 ${
-                        selectedPackage.status === "Delivered"
-                          ? "bg-green-100 text-green-700"
-                          : selectedPackage.status === "Delayed"
-                          ? "bg-orange-100 text-orange-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {selectedPackage.status}
-                    </span>
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600">Status</p>
+                      <div className="mt-2">
+                        <span
+                          className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                            selectedPackage.status === "Delivered"
+                              ? "bg-green-100 text-green-700"
+                              : selectedPackage.status === "Delayed"
+                              ? "bg-orange-100 text-orange-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {selectedPackage.status}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Cancel Button */}
-              <div className="mt-12 text-right">
+              <div className="mt-6 text-right">
                 <button
                   onClick={() => setSelectedPackage(null)}
-                  className="text-green-600 font-semibold hover:text-green-700 transition"
+                  className="text-green-700 font-semibold hover:text-green-800 transition"
                 >
                   Cancel
                 </button>
