@@ -98,7 +98,7 @@ const AdminConsolidations = () => {
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
-          <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
+          <h1 className="text-4xl font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
           <p className="text-gray-400 mt-1 text-[15px]">Handle consolidation requests and prepare for shipping</p>
         </div>
         <div className="flex items-center gap-3">
@@ -185,7 +185,7 @@ interface CardProps {
 const ConsolidationCard: React.FC<CardProps> = ({ data, isHistory, onView }) => {
   if (isHistory) {
     return (
-      <div className="bg-white p-7 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col">
+      <div className="bg-white p-8 rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col">
         <div className="flex justify-between items-start mb-6">
           <h3 className="text-xl font-bold text-gray-800">{data.id}</h3>
           <span className="text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide bg-green-100 text-green-800">
@@ -236,7 +236,7 @@ const ConsolidationCard: React.FC<CardProps> = ({ data, isHistory, onView }) => 
 
   // Pending Card
   return (
-    <div className="bg-white p-7 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
+    <div className="bg-white p-8 rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
       <div className="flex justify-between items-start mb-5">
         <h3 className="text-xl font-bold text-gray-700 tracking-tight">{data.id}</h3>
         <span className="text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide bg-[#ffedd5] text-[#c2410c]">
@@ -280,9 +280,9 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
-  const [customer, setCustomer] = useState("");
-  const [packages, setPackages] = useState(1);
-  const [weight, setWeight] = useState(5.0);
+  const [customer, ] = useState("");
+  const [packages, ] = useState(1);
+  const [weight, ] = useState(5.0);
 
   // For create-mode advanced UI
   const [scanInput, setScanInput] = useState('');
@@ -293,10 +293,6 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
   ]);
   const [selectedPackageIds, setSelectedPackageIds] = useState<string[]>([availablePackages[2].id]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ customer, packages, weight });
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
