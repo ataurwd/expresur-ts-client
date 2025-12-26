@@ -54,8 +54,8 @@ const AdminAdmins = () => {
         {/* HEADER */}
         <header className="flex justify-between items-start mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">Admin Panel</h2>
-            <p className="text-gray-400 mt-1">Welcome to EXPRESUR Admin Dashboard</p>
+            <h2 className="text-[30px] font-bold text-gray-800">Admin Panel</h2>
+            <p className="text-gray-400 mt-1 text-[20px]">Welcome to EXPRESUR Admin Dashboard</p>
           </div>
 
           <div className="flex items-center gap-4">
