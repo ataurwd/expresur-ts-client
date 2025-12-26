@@ -226,7 +226,7 @@ export default function PackageTrackingDashboard() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-6 min-w-[220px]">
-          <div className="bg-[#F0F2F5] rounded-xl p-6 flex flex-col justify-between h-[160px]">
+          <div className="bg-[#f9fafb] rounded-xl p-6 flex flex-col justify-between h-[160px]">
             <div className="flex justify-between items-start">
               <span className="text-gray-500 font-medium">Status by Country</span>
               <div className="bg-white p-2 rounded-full text-gray-400">
@@ -354,32 +354,32 @@ export default function PackageTrackingDashboard() {
       {/* Modal - unchanged as requested */}
       {selectedPackage && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center px-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden">
-            <div className="px-6 py-5 md:px-8 md:py-6">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden">
+            <div className="px-8 py-6 md:px-12 md:py-8">
               <h2 className="text-lg md:text-xl font-semibold text-gray-700">Report Details</h2>
             </div>
-            <div className="px-6 pb-6 md:px-8 md:pb-8">
-              <div className="bg-gray-50 rounded-xl p-6 md:p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="px-8 pb-8 md:px-12 md:pb-12">
+              <div className="bg-gray-50 rounded-xl p-8 md:p-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <p className="text-sm text-gray-600">Payment ID</p>
-                    <p className="font-medium text-gray-900 mt-0.5 text-base md:text-lg">{selectedPackage.paymentId}</p>
+                    <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.paymentId}</p>
                     <div className="mt-4">
                       <p className="text-sm text-gray-600">Customer</p>
-                      <p className="font-medium text-gray-900 mt-0.5 text-base md:text-lg">{selectedPackage.customerName}</p>
-                      <p className="text-xs md:text-sm text-gray-500">{selectedPackage.customerEmail}</p>
+                      <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.customerName}</p>
+                      <p className="text-sm text-gray-500">{selectedPackage.customerEmail}</p>
                     </div>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Package ID</p>
-                    <p className="font-medium text-gray-900 mt-0.5 text-base md:text-lg">{selectedPackage.packageId}</p>
+                    <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.packageId}</p>
                     <div className="mt-4">
                       <p className="text-sm text-gray-600">Amount</p>
-                      <p className="font-semibold text-gray-900 mt-0.5 text-xl md:text-2xl">{selectedPackage.amount}</p>
+                      <p className="font-medium text-gray-900 mt-0.5 text-lg">{selectedPackage.amount}</p>
                     </div>
                     <div className="mt-4">
                       <p className="text-sm text-gray-600">Date</p>
-                      <p className="font-medium text-gray-900 mt-0.5 text-base md:text-lg">{selectedPackage.date}</p>
+                      <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.date}</p>
                     </div>
                     <div className="mt-4">
                       <p className="text-sm text-gray-600">Status</p>
