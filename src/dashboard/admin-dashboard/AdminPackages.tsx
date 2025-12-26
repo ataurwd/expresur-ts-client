@@ -27,6 +27,14 @@ type SortConfig = {
   direction: 'asc' | 'desc';
 };
 
+type Note = {
+  id: string;
+  author: string;
+  avatar?: string;
+  text: string;
+  date: string;
+};
+
 /** ---------------- Initial Data ---------------- */
 const INITIAL_PACKAGES: PackageData[] = [
   { id: "1", trackingId: "ORD-1001", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Delivered" },
@@ -54,8 +62,27 @@ export default function PackageManagement() {
 
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'add'>('view');
+  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'add' | 'notes'>('view');
   const [currentPackage, setCurrentPackage] = useState<PackageData | null>(null);
+
+  // Notes map (packageId -> notes[])
+  const [notesMap, setNotesMap] = useState<Record<string, Note[]>>({
+    "1": [
+      { id: 'n1', author: 'María González', avatar: 'https://i.pravatar.cc/40?u=maria', text: 'Client requested to hold the shipment until Monday.', date: '7/22/2025 10:14AM' },
+      { id: 'n2', author: 'Tyrion Lannister', avatar: 'https://i.pravatar.cc/40?u=tyrion', text: 'Reminder: Verify with shipping partner regarding custom clearance.', date: '7/22/2025 10:14PM' }
+    ]
+  });
+
+  const addNoteToPackage = (pkgId: string, text: string) => {
+    const newNote: Note = {
+      id: Math.random().toString(36).substr(2, 9),
+      author: 'Tyrion Lannister',
+      avatar: 'https://i.pravatar.cc/40?u=tyrion',
+      text,
+      date: new Date().toLocaleString(),
+    };
+    setNotesMap(prev => ({ ...prev, [pkgId]: [newNote, ...(prev[pkgId] || [])] }));
+  };
 
   // --- Logic ---
 
@@ -98,7 +125,7 @@ export default function PackageManagement() {
     setSortConfig({ key, direction });
   };
 
-  const handleOpenModal = (pkg: PackageData | null, mode: 'view' | 'edit' | 'add') => {
+  const handleOpenModal = (pkg: PackageData | null, mode: 'view' | 'edit' | 'add' | 'notes') => {
     if (mode === 'add') {
       // Empty template for new package
       setCurrentPackage({
@@ -277,8 +304,8 @@ export default function PackageManagement() {
                   <td className="p-5"><StatusBadge status={item.status} /></td>
                   <td className="p-5 text-right">
                     <div className="flex items-center justify-end gap-2 text-gray-500">
-                      <button onClick={() => handleOpenModal(item, 'edit')} className="hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">Edit</button>
-                      <button onClick={() => handleOpenModal(item, 'view')} className="hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">View</button>
+                                  <button onClick={() => handleOpenModal(item, 'notes')} className="hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">Notes</button>
+                                  <button onClick={() => handleOpenModal(item, 'view')} className="hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">View</button>
                     </div>
                   </td>
                 </tr>
@@ -331,6 +358,8 @@ export default function PackageManagement() {
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
           onDelete={handleDelete}
+          notes={notesMap[currentPackage.id] || []}
+          onAddNote={addNoteToPackage}
         />
       )}
     </div>
@@ -377,15 +406,18 @@ const SortableHeader = ({ label, sortKey, currentSort, onSort }: any) => (
 /* --- MODAL --- */
 interface ModalProps {
   isOpen: boolean;
-  mode: 'view' | 'edit' | 'add';
+  mode: 'view' | 'edit' | 'add' | 'notes';
   data: PackageData;
   onClose: () => void;
   onSave: (data: PackageData) => void;
   onDelete: (id: string) => void;
+  notes?: Note[];
+  onAddNote?: (pkgId: string, text: string) => void;
 }
 
-const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete }: ModalProps) => {
+const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete, notes = [], onAddNote }: ModalProps) => {
   const [formData, setFormData] = useState<PackageData>(data);
+  const [noteText, setNoteText] = useState("");
 
   if (!isOpen) return null;
 
@@ -474,6 +506,35 @@ const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete }: ModalProps) =>
               </div>
             </div>
           </form>
+        ) : mode === 'notes' ? (
+          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto w-full">
+            <h3 className="text-lg font-semibold text-gray-900">Note Details</h3>
+            <div className="space-y-4">
+              {notes.length === 0 ? (
+                <div className="text-sm text-gray-400">No notes yet.</div>
+              ) : (
+                notes.map(n => (
+                  <div key={n.id} className="bg-[#F9FAFB] p-4 rounded-lg flex gap-3">
+                    <img src={n.avatar} alt={n.author} className="w-10 h-10 rounded-full" />
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-400">{n.date}</div>
+                      <div className="text-sm text-gray-700 mt-1">{n.text}</div>
+                      <div className="text-xs text-gray-400 mt-2">{n.author}</div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div className="mt-3 flex gap-3">
+              <input value={noteText} onChange={(e) => setNoteText(e.target.value)} placeholder="Add an internal note...." className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" />
+              <button onClick={() => { if (onAddNote && data.id) { onAddNote(data.id, noteText); setNoteText(''); } }} className="px-4 py-2 bg-green-600 text-white rounded-lg">Add Note</button>
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <button onClick={onClose} className="text-gray-600">Cancel</button>
+            </div>
+          </div>
         ) : (
           <>
             {mode === 'view' ? (
