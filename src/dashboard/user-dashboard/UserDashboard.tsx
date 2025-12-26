@@ -12,20 +12,17 @@ import {
   SvgIconProps
 } from "@mui/material";
 import {
-  GridView,
-  LockOutlined,
-  Inventory2Outlined,
   CallSplitOutlined,
   DirectionsBoatFilledOutlined,
   CreditCardOutlined,
   LayersOutlined,
   SettingsOutlined,
-  KeyboardBackspace,
+ 
 } from "@mui/icons-material";
 // Link ইম্পোর্ট করা হয়েছে এখানে
-import { useLocation, matchPath, NavLink, Link } from "react-router-dom";
+import { useLocation, matchPath, NavLink, Link,  } from "react-router-dom";
 
-import { LayoutDashboard, ArrowLeftToLine } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftToLine, LockKeyholeOpen, Package, Wallet, Layers  } from 'lucide-react';
 
 interface MenuItem {
   text: string;
@@ -38,12 +35,12 @@ const collapsedWidth = 80;
 
 const menuItems: MenuItem[] = [
   { text: "Dashboard", icon: <LayoutDashboard />, path: "/dashboard/user-dashboard" },
-  { text: "My Locker", icon: <LockOutlined />, path: "/dashboard/locker" },
-  { text: "Packages", icon: <Inventory2Outlined />, path: "/dashboard/packages" },
+  { text: "My Locker", icon: <LockKeyholeOpen />, path: "/dashboard/locker" },
+  { text: "Packages", icon: <Package />, path: "/dashboard/packages" },
   { text: "Consolidations", icon: <CallSplitOutlined />, path: "/dashboard/consolidate" },
   { text: "Shipments", icon: <DirectionsBoatFilledOutlined />, path: "/dashboard/shipments" },
-  { text: "Wallet", icon: <CreditCardOutlined />, path: "/dashboard/payments" },
-  { text: "Remittances", icon: <LayersOutlined />, path: "/dashboard/remittances" },
+  { text: "Wallet", icon: <Wallet />, path: "/dashboard/payments" },
+  { text: "Remittances", icon: <Layers/>, path: "/dashboard/remittances" },
   { text: "Settings", icon: <SettingsOutlined />, path: "/dashboard/profile" },
 ];
 
@@ -134,9 +131,13 @@ export default function UserSidebar() {
                     mr: open ? 2 : 0,
                   }}
                 >
-                  {React.cloneElement(item.icon, {
-                    sx: { fontSize: isSelected ? 22 : 26 }
-                  })}
+                  {React.isValidElement(item.icon)
+                    ? React.cloneElement(item.icon as React.ReactElement<any>, {
+                        sx: { fontSize: isSelected ? 22 : 26 },
+                        htmlColor: isSelected ? "#ffffff" : "#ababab",
+                        style: { fontSize: isSelected ? 22 : 26, color: isSelected ? "#ffffff" : "#ababab" },
+                      })
+                    : item.icon}
                 </ListItemIcon>
                 
                 <ListItemText
