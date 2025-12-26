@@ -46,7 +46,7 @@ const AdminAdmins = () => {
   return (
     <>
       <Helmet>
-        <title>Admin Dashboard</title>
+        <title>Admin Dashboard | EXPRESUR</title>
       </Helmet>
 
       <div className="min-h-screen bg-[#f6f6f6] font-sans relative">
