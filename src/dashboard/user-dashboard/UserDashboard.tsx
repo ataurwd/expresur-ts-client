@@ -12,9 +12,9 @@ import {
   SvgIconProps
 } from "@mui/material";
 import {
-  CallSplitOutlined,
   DirectionsBoatFilledOutlined,
   SettingsOutlined,
+  Shuffle as ConsolidateIcon
 
 } from "@mui/icons-material";
 // Link ইম্পোর্ট করা হয়েছে এখানে
@@ -35,7 +35,7 @@ const menuItems: MenuItem[] = [
   { text: "Dashboard", icon: <LayoutDashboard />, path: "/dashboard/user-dashboard" },
   { text: "My Locker", icon: <LockKeyholeOpen />, path: "/dashboard/locker" },
   { text: "Packages", icon: <Package />, path: "/dashboard/packages" },
-  { text: "Consolidations", icon: <CallSplitOutlined />, path: "/dashboard/consolidate" },
+  { text: "Consolidations", icon: <ConsolidateIcon />, path: "/dashboard/consolidate" },
   { text: "Shipments", icon: <DirectionsBoatFilledOutlined />, path: "/dashboard/shipments" },
   { text: "Wallet", icon: <Wallet />, path: "/dashboard/payments" },
   { text: "Remittances", icon: <Layers />, path: "/dashboard/remittances" },
