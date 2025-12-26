@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import {
-  Bell, Box, Truck, Wallet, Plus, Layers,
-  CheckCircle, AlertTriangle, ArrowUpRight, Clock, X, Tag
+  Bell, Box, Truck, Wallet, Layers,
+  CheckCircle, AlertTriangle,  Clock, X, Tag
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
