@@ -9,6 +9,7 @@ import {
   Bell, 
   BarChart3,
 } from 'lucide-react';
+import { Helmet } from 'react-helmet';
 
 /* --- INTERFACES --- */
 interface StatCardProps {
@@ -43,7 +44,12 @@ const AdminAdmins = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#f6f6f6] font-sans relative">
+    <>
+      <Helmet>
+        <title>Admin Dashboard</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#f6f6f6] font-sans relative">
       <main className="w-full p-8">
         {/* HEADER */}
         <header className="flex justify-between items-start mb-8">
@@ -207,6 +213,7 @@ const AdminAdmins = () => {
         </div>
       </main>
     </div>
+    </>
   );
 };
 
