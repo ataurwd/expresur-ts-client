@@ -111,8 +111,8 @@ const AdminApi = () => {
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">API Integrations</h1>
-          <p className="text-gray-400 mt-1">Monitor and manage external API connections</p>
+          <h1 className="text-[30px] font-bold text-gray-900 tracking-tight">API Integrations</h1>
+          <p className="text-gray-400 mt-1 text-[20px]">Monitor and manage external API connections</p>
         </div>
 
         <div className="flex items-center gap-4">
