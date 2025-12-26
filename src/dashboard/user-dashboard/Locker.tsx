@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { toast } from 'sonner'; // Toaster removed to avoid duplicates
-import { 
-  Bell, 
-  Copy, 
-  Search, 
-  CheckCircle, 
-  AlertCircle, 
-  ArrowRightLeft, 
+import {
+  Bell,
+  Copy,
+  Search,
+  CheckCircle,
+  AlertCircle,
+  ArrowRightLeft,
   ArrowRight,
   ArrowLeft,
   Plus
@@ -52,19 +52,19 @@ const Locker: React.FC = () => {
 
     const newPackage: Package = {
       id: trackingInput.toUpperCase(),
-      arrivalDate: new Date().toLocaleDateString(), 
+      arrivalDate: new Date().toLocaleDateString(),
       status: 'Under Review',
-      statusType: 'warning', 
+      statusType: 'warning',
       showConsolidate: false
     };
 
-    setPackages([newPackage, ...packages]); 
-    setTrackingInput(''); 
+    setPackages([newPackage, ...packages]);
+    setTrackingInput('');
     toast.success('New tracking added');
   };
 
   const filteredPackages = useMemo(() => {
-    return packages.filter(pkg => 
+    return packages.filter(pkg =>
       pkg.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       pkg.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -86,7 +86,7 @@ const Locker: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10">
-      
+
       {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 
       {/* --- Header --- */}
@@ -104,10 +104,10 @@ const Locker: React.FC = () => {
               <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
           </Link>
-          
+
           <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
-               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover" />
             </div>
             <div>
               <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
@@ -118,11 +118,11 @@ const Locker: React.FC = () => {
       </div>
 
       <div className=" mx-auto space-y-8">
-        
+
         {/* --- Locker Details Card --- */}
-        <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100">
+        {/* <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100">
           
-          {/* Locker ID Row */}
+        
           <div className="flex justify-between items-center mb-6 border-b border-gray-50 pb-6">
             <span className="text-gray-500 font-medium text-base">Locker ID</span>
             <span className="text-gray-800 font-bold text-lg">LCK-127A</span>
@@ -130,7 +130,7 @@ const Locker: React.FC = () => {
 
           <h3 className="text-lg font-medium text-gray-500 mb-6">Locker Shipping Address</h3>
 
-          {/* Address List */}
+         
           <div className="space-y-3 w-full"> 
             {[
               "Maria González",
@@ -157,10 +157,10 @@ const Locker: React.FC = () => {
             </div>
             <span className="text-sm font-semibold">Use this address to receive your packages.</span>
           </div>
-        </div>
+        </div> */}
 
         {/* --- Add Tracking Input --- */}
-        <div className="bg-white rounded-3xl p-5 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col md:flex-row items-center gap-4">
+        {/* <div className="bg-white rounded-3xl p-5 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col md:flex-row items-center gap-4">
             <input 
               type="text" 
               value={trackingInput}
@@ -180,32 +180,101 @@ const Locker: React.FC = () => {
             >
               <Plus size={18} /> Add Tracking
             </button>
+        </div> */}
+
+        {/* --- Locker Details Card --- */}
+        <div className="bg-[#F9FAFB] rounded-3xl p-8 border border-gray-100 shadow-sm">
+
+          {/* Locker ID Row */}
+          <div className="flex justify-between items-center mb-10">
+            <span className="text-gray-500 font-semibold text-lg">Locker ID</span>
+            <span className="text-gray-600 font-medium text-lg">LCK-127A</span>
+          </div>
+
+          <h3 className="text-xl font-semibold text-gray-500 mb-8">Locker Shipping Address</h3>
+
+          {/* Address List */}
+          <div className="space-y-4">
+            {[
+              { label: "Name", value: "Client Name" },
+              { label: "Address Line 1", value: "8852 SW 215th LN" },
+              { label: "Address Line 2", value: "Expresur (US123456)" },
+              { label: "City", value: "Cutler Bay" },
+              { label: "State", value: "Florida" },
+              { label: "Zip Code", value: "33189" },
+              { label: "Phone Number", value: "(786) 314-4045" },
+            ].map((item, index) => (
+              <div key={index} className="flex items-center justify-between group">
+                <div className="flex gap-2 items-baseline">
+                  <span className="text-gray-500 font-medium text-sm whitespace-nowrap">{item.label}:</span>
+                  <span className="text-gray-600 font-medium text-sm">{item.value}</span>
+                </div>
+                <button
+                  onClick={() => handleCopy(item.value)}
+                  className="flex items-center gap-2 text-[13px] text-gray-400 bg-white px-4 py-1.5 rounded-lg border border-gray-100 hover:bg-gray-50 transition shadow-sm active:scale-95"
+                >
+                  <Copy size={14} className="text-gray-300" /> Copy
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Notification Banner */}
+          <div className="mt-10 bg-[#FEF9C3]/50 border border-[#FEF3C7] rounded-2xl p-6 flex items-center gap-4">
+            <div className="w-6 h-6 rounded-full border-2 border-[#EAB308] flex items-center justify-center flex-shrink-0">
+              <span className="text-[#EAB308] font-bold text-xs">i</span>
+            </div>
+            <span className="text-[#A16207] text-lg font-medium">Use this address to receive your packages.</span>
+          </div>
+        </div>
+
+        {/* --- Add Tracking Input --- */}
+        <div className="bg-[#F9FAFB] rounded-2xl p-3 border border-gray-100 shadow-sm flex items-center gap-4 mt-8">
+          <input
+            type="text"
+            value={trackingInput}
+            onChange={(e) => setTrackingInput(e.target.value)}
+            placeholder="Enter Tracking number ....."
+            className="flex-1 bg-transparent outline-none text-gray-500 px-4 py-2 placeholder-gray-400 font-normal"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddTracking();
+              }
+            }}
+          />
+          <button
+            onClick={handleAddTracking}
+            className="bg-[#065F46] hover:bg-[#047857] text-white px-6 py-3 rounded-xl font-medium text-sm transition-all active:scale-95"
+          >
+            Add Tracking
+          </button>
         </div>
 
         {/* --- Packages Table --- */}
-        <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 min-h-[500px] flex flex-col">
+        {/* <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 min-h-[500px] flex flex-col">
           <h3 className="text-xl font-bold text-gray-800 mb-8">Your Packages</h3>
 
-          {/* Filters & Search */}
+        
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-             <div className="flex gap-2 w-full md:w-auto">
-                <button className="bg-[#005f33] text-white px-6 py-2.5 rounded-lg text-sm font-semibold shadow-sm w-full md:w-auto">
-                  All ({filteredPackages.length})
-                </button>
-             </div>
-             <div className="relative w-full md:w-72">
-                <Search className="absolute left-4 top-3 text-gray-400" size={18} />
-                <input 
-                  type="text" 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Tracking number, status..." 
-                  className="w-full bg-[#F9FAFB] border border-gray-100 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-50 transition"
-                />
-             </div>
+            <div className="flex gap-2 w-full md:w-auto">
+              <button className="bg-[#005f33] text-white px-6 py-2.5 rounded-lg text-sm font-semibold shadow-sm w-full md:w-auto">
+                All ({filteredPackages.length})
+              </button>
+            </div>
+            <div className="relative w-full md:w-72">
+              <Search className="absolute left-4 top-3 text-gray-400" size={18} />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Tracking number, status..."
+                className="w-full bg-[#F9FAFB] border border-gray-100 pl-11 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-50 transition"
+              />
+            </div>
           </div>
 
-          {/* Table */}
+       
           <div className="overflow-x-auto flex-grow">
             {currentData.length > 0 ? (
               <table className="w-full text-left border-collapse">
@@ -227,7 +296,7 @@ const Locker: React.FC = () => {
                           {pkg.statusType === 'success' && <CheckCircle size={18} className="text-green-500" />}
                           {pkg.statusType === 'warning' && <AlertCircle size={18} className="text-orange-400" />}
                           {pkg.statusType === 'info' && <ArrowRightLeft size={18} className="text-blue-500" />}
-                          
+
                           <span className={`font-semibold 
                             ${pkg.statusType === 'success' ? 'text-green-600' : ''}
                             ${pkg.statusType === 'warning' ? 'text-orange-500' : ''}
@@ -240,14 +309,14 @@ const Locker: React.FC = () => {
                       <td className="py-5 pr-2">
                         <div className="flex justify-end items-center gap-3 opacity-90 group-hover:opacity-100 transition-opacity">
                           {pkg.showConsolidate && (
-                            <button 
+                            <button
                               onClick={() => toast.info(`Consolidation initiated for ${pkg.id}`)}
                               className="bg-[#005f33] text-white px-5 py-2 rounded-lg text-xs font-semibold hover:bg-[#004d2a] shadow-sm transition active:scale-95"
                             >
                               Consolidate
                             </button>
                           )}
-                          <button 
+                          <button
                             onClick={() => toast('Showing details', { description: `Package ID: ${pkg.id}` })}
                             className="bg-[#F3F4F6] text-gray-600 px-5 py-2 rounded-lg text-xs font-semibold hover:bg-gray-200 transition active:scale-95"
                           >
@@ -266,21 +335,21 @@ const Locker: React.FC = () => {
             )}
           </div>
 
-          {/* Pagination Controls */}
+        
           <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-50">
             <div className="text-xs text-gray-400">
               Showing {currentData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to {Math.min(currentPage * itemsPerPage, filteredPackages.length)} of {filteredPackages.length} entries
             </div>
             <div className="flex items-center gap-4 text-sm font-medium">
-              <button 
+              <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
                 className={`flex items-center gap-2 transition ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-gray-900'}`}
               >
                 <ArrowLeft size={16} strokeWidth={2.5} /> Previous
               </button>
-              
-              <button 
+
+              <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages || totalPages === 0}
                 className={`flex items-center gap-2 transition ${currentPage === totalPages || totalPages === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-[#005f33] hover:text-[#004d2a]'}`}
@@ -290,6 +359,121 @@ const Locker: React.FC = () => {
             </div>
           </div>
 
+        </div> */}
+
+
+        {/* --- Packages Table --- */}
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 min-h-[500px] flex flex-col">
+          <h3 className="text-xl font-bold text-gray-700 mb-6">Your Packages</h3>
+
+          {/* Filters & Search */}
+          <div className="flex flex-col md:flex-row items-center mb-8 gap-4">
+            <button className="bg-[#005f33] text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm w-full md:w-auto">
+              All
+            </button>
+            <div className="relative w-full md:w-80">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Tracking number, customer....."
+                className="w-full bg-[#F3F4F6]/50 border-none pl-4 pr-11 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-100 transition placeholder-gray-400"
+              />
+              <Search className="absolute right-4 top-3 text-gray-400" size={18} />
+            </div>
+          </div>
+
+          {/* Table Container */}
+          <div className="overflow-hidden rounded-2xl border border-gray-50 flex-grow">
+            {currentData.length > 0 ? (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#F9FAFB] text-sm text-gray-400 font-medium">
+                    <th className="py-4 px-6 font-medium">Tracking Number</th>
+                    <th className="py-4 px-6 font-medium">Arrival Date</th>
+                    <th className="py-4 px-6 font-medium">Status</th>
+                    <th className="py-4 px-6 font-medium text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[15px]">
+                  {currentData.map((pkg, idx) => (
+                    <tr key={idx} className="border-b border-gray-50 last:border-none hover:bg-gray-50/50 transition-colors">
+                      <td className="py-6 px-6 text-gray-600 font-medium">{pkg.id}</td>
+                      <td className="py-6 px-6 text-gray-500">{pkg.arrivalDate}</td>
+                      <td className="py-6 px-6">
+                        <div className="flex items-center gap-2">
+                          {pkg.statusType === 'success' && (
+                            <>
+                              <CheckCircle size={18} className="text-[#22C55E]" strokeWidth={2.5} />
+                              <span className="text-[#22C55E] font-medium">{pkg.status}</span>
+                            </>
+                          )}
+                          {pkg.statusType === 'warning' && (
+                            <>
+                              <AlertCircle size={18} className="text-[#FBBF24]" strokeWidth={2.5} />
+                              <span className="text-[#FBBF24] font-medium">{pkg.status}</span>
+                            </>
+                          )}
+                          {pkg.statusType === 'info' && (
+                            <>
+                              <ArrowRightLeft size={18} className="text-[#3B82F6]" strokeWidth={2.5} />
+                              <span className="text-[#3B82F6] font-medium">{pkg.status}</span>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-6 px-6">
+                        <div className="flex justify-end items-center gap-3">
+                          {pkg.showConsolidate && (
+                            <button
+                              onClick={() => toast.info(`Consolidation initiated`)}
+                              className="bg-[#005f33] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#004d2a] transition active:scale-95 shadow-sm"
+                            >
+                              Consolidate
+                            </button>
+                          )}
+                          <button
+                            onClick={() => toast('Details for ' + pkg.id)}
+                            className="bg-[#F3F4F6] text-gray-500 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition active:scale-95"
+                          >
+                            View
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-center py-20 text-gray-400">
+                <p>No packages found.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-6 pt-4">
+            <div className="text-xs text-gray-400">
+              Showing {currentData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to {Math.min(currentPage * itemsPerPage, filteredPackages.length)} of {filteredPackages.length} entries
+            </div>
+            <div className="flex items-center gap-6 text-sm font-medium">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className={`flex items-center gap-2 transition ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-gray-800'}`}
+              >
+                <ArrowLeft size={16} strokeWidth={2.5} /> Previous
+              </button>
+
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages || totalPages === 0}
+                className={`flex items-center gap-2 transition ${currentPage === totalPages || totalPages === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-[#005f33] hover:text-[#004d2a]'}`}
+              >
+                Next <ArrowRight size={16} strokeWidth={2.5} />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
