@@ -104,8 +104,8 @@ const AdminAudit = () => {
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Audit Logs</h1>
-          <p className="text-gray-400 mt-1">Complete system activity and change history</p>
+          <h1 className="text-[30px] font-bold text-gray-900 tracking-tight">Audit Logs</h1>
+          <p className="text-gray-400 mt-1 text-[20px]">Complete system activity and change history</p>
         </div>
 
         <div className="flex items-center gap-4">
