@@ -389,7 +389,7 @@ const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete }: ModalProps) =>
 
   if (!isOpen) return null;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -403,123 +403,196 @@ const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete }: ModalProps) =>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
         </div>
 
-        <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-          <div className="grid grid-cols-2 gap-4">
+        {mode === 'add' ? (
+          <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Item *</label>
+                <input
+                  name="itemName"
+                  value={formData.itemName}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Item"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Tracking Number *</label>
+                <input
+                  name="trackingId"
+                  value={formData.trackingId}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Tracking #"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Category *</label>
+                <select name="category" value={formData.category} onChange={handleChange} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500">
+                  <option value="">Select a type</option>
+                  <option>Micro</option>
+                  <option>Small Businesses</option>
+                  <option>Enterprise</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Customer *</label>
+                <input
+                  name="customerName"
+                  value={formData.customerName}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Customer"
+                  required
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Tracking ID</label>
-              <input 
-                name="trackingId" 
-                disabled={mode !== 'add'} 
-                value={formData.trackingId} 
-                onChange={handleChange} 
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 disabled:cursor-not-allowed outline-none focus:ring-2 focus:ring-green-500" 
+              <label className="block text-xs font-medium text-gray-500 mb-1">Note (Optional)</label>
+              <textarea
+                name="itemDesc"
+                value={formData.itemDesc}
+                onChange={handleChange}
+                className="w-full border border-gray-200 rounded-lg px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-green-500 min-h-[120px] resize-none"
+                placeholder=""
               />
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Status</label>
-              <select 
-                name="status" 
-                disabled={mode === 'view'} 
-                value={formData.status} 
-                onChange={handleChange} 
-                className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white border-gray-300"
-              >
-                <option value="Delivered">Delivered</option>
-                <option value="In Transit">In Transit</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
+
+            <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+              <div />
+              <div className="flex items-center gap-6">
+                <button type="button" onClick={onClose} className="text-gray-600">Cancel</button>
+                <button type="submit" className="text-green-600 font-semibold">Add Package</button>
+              </div>
             </div>
-          </div>
+          </form>
+        ) : (
+          <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Tracking ID</label>
+                <input 
+                  name="trackingId" 
+                  disabled={true} 
+                  value={formData.trackingId} 
+                  onChange={handleChange} 
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 disabled:cursor-not-allowed outline-none focus:ring-2 focus:ring-green-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Status</label>
+                <select 
+                  name="status" 
+                  disabled={mode === 'view'} 
+                  value={formData.status} 
+                  onChange={handleChange} 
+                  className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white border-gray-300"
+                >
+                  <option value="Delivered">Delivered</option>
+                  <option value="In Transit">In Transit</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
 
-          <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Item Name</label>
-            <input 
-              name="itemName" 
-              disabled={mode === 'view'} 
-              value={formData.itemName} 
-              onChange={handleChange} 
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Name</label>
-            <input 
-              name="customerName" 
-              disabled={mode === 'view'} 
-              value={formData.customerName} 
-              onChange={handleChange} 
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Phone</label>
-            <input 
-              name="customerPhone" 
-              disabled={mode === 'view'} 
-              value={formData.customerPhone} 
-              onChange={handleChange} 
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Category</label>
+              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Item Name</label>
               <input 
-                name="category" 
+                name="itemName" 
                 disabled={mode === 'view'} 
-                value={formData.category} 
+                value={formData.itemName} 
                 onChange={handleChange} 
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
               />
             </div>
+
             <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Price ($)</label>
+              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Name</label>
               <input 
-                type="number" 
-                name="price" 
+                name="customerName" 
                 disabled={mode === 'view'} 
-                value={formData.price} 
+                value={formData.customerName} 
                 onChange={handleChange} 
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
               />
             </div>
-          </div>
 
-          {/* Note (optional) – now placed directly under Category & Price */}
-          <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Note (optional)</label>
-            <input 
-              name="itemDesc" 
-              disabled={mode === 'view'} 
-              value={formData.itemDesc} 
-              onChange={handleChange}
-              placeholder="Add any additional notes here..."
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-            />
-          </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Phone</label>
+              <input 
+                name="customerPhone" 
+                disabled={mode === 'view'} 
+                value={formData.customerPhone} 
+                onChange={handleChange} 
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+              />
+            </div>
 
-          <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
-            {mode === 'edit' ? (
-              <button type="button" onClick={() => onDelete(data.id)} className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 flex items-center gap-2">
-                <Trash2 size={16} /> Delete
-              </button>
-            ) : <div></div>}
-            
-            <div className="flex gap-3">
-              <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                {mode === 'view' ? 'Close' : 'Cancel'}
-              </button>
-              {mode !== 'view' && (
-                <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-[#166534] rounded-lg hover:bg-[#14532d] flex items-center gap-2">
-                  <Save size={16} /> Save Changes
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Category</label>
+                <input 
+                  name="category" 
+                  disabled={mode === 'view'} 
+                  value={formData.category} 
+                  onChange={handleChange} 
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Price ($)</label>
+                <input 
+                  type="number" 
+                  name="price" 
+                  disabled={mode === 'view'} 
+                  value={formData.price} 
+                  onChange={handleChange} 
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                />
+              </div>
+            </div>
+
+            {/* Note (optional) – now placed directly under Category & Price */}
+            <div>
+              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Note (optional)</label>
+              <input 
+                name="itemDesc" 
+                disabled={mode === 'view'} 
+                value={formData.itemDesc} 
+                onChange={handleChange}
+                placeholder="Add any additional notes here..."
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+              />
+            </div>
+
+            <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+              {mode === 'edit' ? (
+                <button type="button" onClick={() => onDelete(data.id)} className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 flex items-center gap-2">
+                  <Trash2 size={16} /> Delete
                 </button>
-              )}
+              ) : <div />}
+              
+              <div className="flex gap-3">
+                <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                  {mode === 'view' ? 'Close' : 'Cancel'}
+                </button>
+                {mode !== 'view' && (
+                  <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-[#166534] rounded-lg hover:bg-[#14532d] flex items-center gap-2">
+                    <Save size={16} /> Save Changes
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
     </div>
   );
