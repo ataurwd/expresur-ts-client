@@ -33,6 +33,7 @@ import {
   KeyboardDoubleArrowRight,
   Logout,
 } from "@mui/icons-material";
+import { Package, LockKeyholeOpen } from 'lucide-react';
 
 // Link ইম্পোর্ট করা হয়েছে
 import { useNavigate, useLocation, matchPath, NavLink, Link } from "react-router-dom";
@@ -50,7 +51,7 @@ const collapsedWidth = 70;
 /* Updated Menu Items to match the screenshot exactly */
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
-  { text: "Packages", icon: <PackagesIcon />, path: "/dashboard/admin-packages" },
+  { text: "Packages", icon: <Package />, path: "/dashboard/admin-packages" },
   { text: "Locker", icon: <LockerIcon />, path: "/dashboard/admin-locker" },
   { text: "Consolidations", icon: <ConsolidateIcon />, path: "/dashboard/admin-consolidations" },
   { text: "Shipments", icon: <ShipmentsIcon />, path: "/dashboard/admin-shipments" },
