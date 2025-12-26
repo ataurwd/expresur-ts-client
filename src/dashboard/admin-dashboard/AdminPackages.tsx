@@ -427,7 +427,7 @@ const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete, notes = [], onAd
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 mx-4">
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#F9FAFB]">
           <h3 className="text-lg font-bold text-gray-900">
             {mode === 'add' ? 'Add New Package' : mode === 'edit' ? 'Edit Package' : 'Package Details'}
