@@ -11,6 +11,8 @@ import {
  // For close button
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 // --- TYPES ---
 interface LogItem {
   id: number;
@@ -92,7 +94,12 @@ const AdminAudit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] p-4 md:p-8 font-sans text-gray-800" onClick={() => setActiveDropdown(null)}>
+    <>
+      <Helmet>
+        <title>Audit Logs | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#F8F9FB] p-4 md:p-8 font-sans text-gray-800" onClick={() => setActiveDropdown(null)}>
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -335,6 +342,7 @@ const AdminAudit = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

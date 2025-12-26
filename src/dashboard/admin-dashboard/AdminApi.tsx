@@ -8,6 +8,8 @@ import {
   EyeOff
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 // --- TYPES ---
 interface Integration {
   id: string;
@@ -99,7 +101,12 @@ const AdminApi = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
+    <>
+      <Helmet>
+        <title>API Integrations | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -265,6 +272,7 @@ const AdminApi = () => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 

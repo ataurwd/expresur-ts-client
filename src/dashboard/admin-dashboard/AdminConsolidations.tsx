@@ -307,54 +307,46 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
 
         {mode === 'view' && data ? (
           <div className="p-6 space-y-4">
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-              <div className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">Status</div>
-              <div className={`text-lg font-bold ${data.status === 'Pending' ? 'text-orange-600' : 'text-green-600'}`}>
-                {data.status}
+            <div className="mb-2">
+              <h2 className="text-2xl font-bold text-gray-900">{data.id}</h2>
+              <p className="text-sm text-gray-500">Packages in Consolidation</p>
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+              <div className="grid grid-cols-12 gap-4 items-center text-xs text-gray-400 border-b border-gray-100 pb-3 mb-3">
+                <div className="col-span-4">Tracking</div>
+                <div className="col-span-3">Carrier</div>
+                <div className="col-span-2">Weight</div>
+                <div className="col-span-3 text-right">Created Date</div>
+              </div>
+
+              <div className="space-y-2">
+                {availablePackages.map((pkg, idx) => (
+                  <div
+                    key={pkg.id + idx}
+                    className={`bg-white px-4 py-3 grid grid-cols-12 items-center rounded-lg shadow-sm ${idx < availablePackages.length - 1 ? '' : ''}`}
+                  >
+                    <div className="col-span-4 font-medium text-gray-800">{pkg.id.replace('TRK00','PK-').replace('TRK0','PK-')}</div>
+                    <div className="col-span-3 text-gray-600">UPS</div>
+                    <div className="col-span-2 text-gray-600">2.5 kg</div>
+                    <div className="col-span-3 text-right text-gray-500">{data.date}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <User className="text-gray-400" size={18} />
-                <div>
-                  <div className="text-xs text-gray-400">Customer</div>
-                  <div className="font-medium text-gray-800">{data.customer}</div>
-                </div>
+            <div className="flex items-center justify-between mt-4">
+              <div>
+                <div className="text-xs text-gray-400 mb-1 font-semibold">Status</div>
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${data.status === 'Pending' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
+                  {data.status}
+                </span>
               </div>
-              <div className="flex items-center gap-3">
-                <Calendar className="text-gray-400" size={18} />
-                <div>
-                  <div className="text-xs text-gray-400">Date Requested</div>
-                  <div className="font-medium text-gray-800">{data.date}</div>
-                </div>
+
+              <div>
+                <button onClick={onClose} className="px-4 py-2 rounded-lg bg-white border border-green-100 text-green-600 font-medium hover:bg-green-50">Cancel</button>
               </div>
-              <div className="flex items-center gap-3">
-                <Package className="text-gray-400" size={18} />
-                <div>
-                  <div className="text-xs text-gray-400">Packages & Weight</div>
-                  <div className="font-medium text-gray-800">{data.packages} packages • {data.weight.toFixed(1)} kg</div>
-                </div>
-              </div>
-              {data.contents && (
-                <div>
-                  <div className="text-xs text-gray-400">Contents</div>
-                  <div className="font-medium text-gray-800">{data.contents}</div>
-                </div>
-              )}
-              {data.trackingNumber && (
-                <div className="flex items-center gap-3">
-                  <Truck className="text-gray-400" size={18} />
-                  <div>
-                    <div className="text-xs text-gray-400">Tracking Number</div>
-                    <div className="font-medium text-gray-800">{data.trackingNumber}</div>
-                  </div>
-                </div>
-              )}
             </div>
-            <button onClick={onClose} className="w-full mt-4 bg-gray-100 text-gray-600 py-2.5 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
-              Close
-            </button>
           </div>
         ) : (
           // Create-mode: show scan input + selectable package list matching design

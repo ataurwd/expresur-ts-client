@@ -12,6 +12,8 @@ import {
   Clock // Added for time icon
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 interface ModeConfigType {
   label: string;
   Icon: LucideIcon;
@@ -129,7 +131,12 @@ const AdminQrCode = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
+    <>
+      <Helmet>
+        <title>QR Scanning Center | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
       {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -330,6 +337,7 @@ const AdminQrCode = () => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 

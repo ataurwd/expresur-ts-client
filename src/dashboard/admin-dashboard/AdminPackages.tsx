@@ -6,6 +6,8 @@ import {
   Box, ChevronRight, Save, Trash2, ArrowUpDown, Bell
 } from "lucide-react";
 
+import { Helmet } from 'react-helmet';
+
 /** ---------------- Types ---------------- */
 type PackageData = {
   id: string;
@@ -138,7 +140,12 @@ export default function PackageManagement() {
   const activeCount = packages.filter(p => p.status !== 'Cancelled').length;
 
   return (
-    <div className="min-h-screen bg-[#f6f6f6] p-6 md:p-10 font-sans text-gray-800 relative">
+    <>
+      <Helmet>
+        <title>Package Management | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#f6f6f6] p-6 md:p-10 font-sans text-gray-800 relative">
       
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
@@ -327,6 +334,7 @@ export default function PackageManagement() {
         />
       )}
     </div>
+    </>
   );
 }
 

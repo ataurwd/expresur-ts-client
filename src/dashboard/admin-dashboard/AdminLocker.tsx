@@ -5,6 +5,8 @@ import {
   Bell, X, Check, QrCode
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 interface PackageItem {
   clientId: string;
   clientName: string;
@@ -65,7 +67,12 @@ const AdminLocker = () => {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-6 md:p-10 font-sans text-gray-800">
+    <>
+      <Helmet>
+        <title>Locker Management | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#F9FAFB] p-6 md:p-10 font-sans text-gray-800">
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
@@ -338,6 +345,7 @@ const AdminLocker = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

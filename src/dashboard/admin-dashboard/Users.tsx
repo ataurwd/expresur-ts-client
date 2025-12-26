@@ -10,6 +10,8 @@ import {
   Trash2
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 // --- TYPES ---
 interface UserType {
   id: number;
@@ -170,7 +172,12 @@ const Users = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
+    <>
+      <Helmet>
+        <title>User Management | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -337,6 +344,7 @@ const Users = () => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 

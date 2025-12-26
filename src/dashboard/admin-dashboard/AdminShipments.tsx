@@ -5,6 +5,8 @@ import {
   Truck, X, Clock, Box, Package, Bell,
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 interface Shipment {
   id: string;
   customerName: string;
@@ -62,7 +64,12 @@ const AdminShipments = memo(() => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f6f6] p-6 md:p-10 font-sans text-gray-800 relative">
+    <>
+      <Helmet>
+        <title>Shipment Management | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#f6f6f6] p-6 md:p-10 font-sans text-gray-800 relative">
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
@@ -217,6 +224,7 @@ const AdminShipments = memo(() => {
         />
       )}
     </div>
+    </>
   );
 });
 

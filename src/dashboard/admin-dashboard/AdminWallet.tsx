@@ -11,6 +11,8 @@ import {
   Download
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 interface Transaction {
   id: string;
   date: string; // MM/DD/YYYY
@@ -113,7 +115,12 @@ const AdminWallet = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] p-4 md:p-8 font-sans text-gray-800">
+    <>
+      <Helmet>
+        <title>Internal Wallet | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#F8F9FB] p-4 md:p-8 font-sans text-gray-800">
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
@@ -343,6 +350,7 @@ const AdminWallet = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

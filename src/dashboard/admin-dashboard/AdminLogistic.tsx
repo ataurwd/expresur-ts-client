@@ -5,6 +5,8 @@ import {
   ChevronRight, Package, X, Save, Trash2, Check, Bell
 } from 'lucide-react';
 
+import { Helmet } from 'react-helmet';
+
 /* --- TYPES --- */
 interface LogisticsGroup {
   id: string;
@@ -79,7 +81,12 @@ const GroupCard: React.FC<{
   };
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-50 flex flex-col h-full hover:shadow-md transition-shadow">
+    <>
+      <Helmet>
+        <title>Logistic Groups | EXPRESUR</title>
+      </Helmet>
+
+      <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-50 flex flex-col h-full hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div className="flex items-center gap-3">
@@ -147,6 +154,7 @@ const GroupCard: React.FC<{
         </div>
       </div>
     </div>
+    </>
   );
 };
 
