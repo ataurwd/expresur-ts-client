@@ -354,13 +354,13 @@ export default function PackageTrackingDashboard() {
       {/* Modal - unchanged as requested */}
       {selectedPackage && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center px-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden">
-            <div className="px-6 py-5">
-              <h2 className="text-lg font-semibold text-gray-700">Report Details</h2>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden">
+            <div className="px-8 py-6 md:px-12 md:py-8">
+              <h2 className="text-lg md:text-xl font-semibold text-gray-700">Report Details</h2>
             </div>
-            <div className="px-6 pb-6">
-              <div className="bg-gray-50 rounded-xl p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="px-8 pb-8 md:px-12 md:pb-12">
+              <div className="bg-gray-50 rounded-xl p-8 md:p-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <p className="text-sm text-gray-600">Payment ID</p>
                     <p className="font-medium text-gray-900 mt-0.5">{selectedPackage.paymentId}</p>
