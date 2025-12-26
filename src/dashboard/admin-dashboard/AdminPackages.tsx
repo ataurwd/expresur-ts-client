@@ -202,8 +202,8 @@ export default function PackageManagement() {
         <div className="mb-10">
           <div className="bg-white p-4 rounded-3xl shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <StatCard title="Total Packages" value={String(packages.length)} icon={<Truck size={20} className="text-gray-400" />} />
-              <StatCard title="Active Packages" value={String(activeCount)} icon={<Box size={20} className="text-gray-400" />} />
+              <StatCard title="Total Packages" value={String(packages.length)} icon={<Truck size={28} className="text-gray-400" />} valueClass="text-[40px] font-bold" iconWrapperClass="w-11 h-11 rounded-full bg-[#E5E7EB] flex items-center justify-center" titleClass="text-[30px]  text-gray-500" />
+              <StatCard title="Active Packages" value={String(activeCount)} icon={<Box size={20} className="text-gray-400" />} valueClass="text-[40px] font-bold" iconWrapperClass="w-11 h-11 rounded-full bg-[#E5E7EB] flex items-center justify-center" titleClass="text-[30px]  text-gray-500" />
             </div>
           </div>
         </div>
@@ -369,13 +369,13 @@ export default function PackageManagement() {
 
 /* --- SUB COMPONENTS --- */
 
-const StatCard = ({ title, value, icon }: { title: string, value: string, icon: React.ReactNode }) => (
+const StatCard = ({ title, value, icon, valueClass, iconWrapperClass, titleClass }: { title: string, value: string, icon: React.ReactNode, valueClass?: string, iconWrapperClass?: string, titleClass?: string }) => (
   <div className="bg-[#F9FAFB] p-6 rounded-[20px] flex flex-col justify-between h-[140px] relative">
     <div className="flex justify-between items-start">
-      <h3 className="text-gray-500 font-medium text-[15px]">{title}</h3>
-      <div className="w-9 h-9 rounded-full bg-[#E5E7EB] flex items-center justify-center">{icon}</div>
+      <h3 className={`${titleClass || 'text-gray-500 font-medium text-[15px]'}`}>{title}</h3>
+      <div className={`${iconWrapperClass || 'w-9 h-9 rounded-full bg-[#E5E7EB] flex items-center justify-center'}`}>{icon}</div>
     </div>
-    <div className="text-[32px] font-medium text-gray-900 tracking-tight">{value}</div>
+    <div className={`${valueClass || 'text-[32px] font-medium'} text-gray-900 tracking-tight`}>{value}</div>
   </div>
 );
 
