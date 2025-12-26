@@ -44,6 +44,7 @@ import AdminAudit from "../dashboard/admin-dashboard/AdminAudit";
 import AdminApi from "../dashboard/admin-dashboard/AdminApi";
 import Remittances from "../dashboard/user-dashboard/Remittances";
 import Notification from "../dashboard/user-dashboard/Notification";
+import InternalUsersRoles from "../dashboard/admin-dashboard/InternalUsersRoles";
 
 const Routes = createBrowserRouter([
   {
@@ -239,6 +240,10 @@ const Routes = createBrowserRouter([
       {
         path: "qr-scanning",
         element: <AdminQrCode/>,
+      },
+       {
+        path: "internal-users",
+        element: <InternalUsersRoles/>,
       },
       {
         

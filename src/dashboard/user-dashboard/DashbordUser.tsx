@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'sonner'; // Toaster removed
 import { 
   Bell, Box, Truck, Wallet, Plus, Layers, Send, 
-  CheckCircle, AlertTriangle, Tag, MoreHorizontal, 
+  CheckCircle, AlertTriangle, Tag,  
   ArrowUpRight, Clock, X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
