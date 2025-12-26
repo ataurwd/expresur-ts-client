@@ -25,7 +25,7 @@ import {
 // Link ইম্পোর্ট করা হয়েছে এখানে
 import { useLocation, matchPath, NavLink, Link } from "react-router-dom";
 
-import { LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftToLine } from 'lucide-react';
 
 interface MenuItem {
   text: string;
@@ -54,8 +54,8 @@ export default function UserSidebar() {
   const handleToggle = () => setOpen((prev) => !prev);
   const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
 
-  const BG_GREEN = "#065f46"; 
-  const ACTIVE_ORANGE = "#f97316"; 
+  const BG_GREEN = "#025939"; 
+  const ACTIVE_ORANGE = "#fb923c"; 
 
   return (
     <Drawer
@@ -84,7 +84,7 @@ export default function UserSidebar() {
               variant="h5" 
               sx={{ 
                 fontWeight: 900, 
-                color: "#f97316", 
+                color: "#fb923c", 
                 letterSpacing: 1,
                 cursor: "pointer" 
               }}
@@ -94,7 +94,7 @@ export default function UserSidebar() {
           </Link>
         )}
         <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
-          <KeyboardBackspace sx={{ transform: open ? "rotate(0deg)" : "rotate(180deg)", transition: "0.3s" }} />
+          <ArrowLeftToLine style={{ transform: open ? "rotate(0deg)" : "rotate(180deg)", transition: "0.3s", transformOrigin: "center" }} />
         </IconButton>
       </Box>
 
