@@ -31,14 +31,14 @@ const INITIAL_DATA: Shipment[] = [
 
 const AdminShipments = memo(() => {
   const navigate = useNavigate();
-  const [data] = useState<Shipment[]>(INITIAL_DATA);
+  const [data, setData] = useState<Shipment[]>(INITIAL_DATA);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('Status');
   const [carrierFilter, setCarrierFilter] = useState('Carrier');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const [modal, setModal] = useState<{ open: boolean; mode: 'view'; data: Shipment | null }>({
+  const [modal, setModal] = useState<{ open: boolean; mode: 'view' | 'edit'; data: Shipment | null }>({
     open: false, mode: 'view', data: null
   });
 
@@ -59,7 +59,7 @@ const AdminShipments = memo(() => {
 
   const stats = { total: 857, delivered: 100, inTransit: 11, pending: 15 };
 
-  const handleOpenModal = (item: Shipment, mode: 'view') => {
+  const handleOpenModal = (item: Shipment, mode: 'view' | 'edit') => {
     setModal({ open: true, mode, data: item });
   };
 
@@ -190,6 +190,7 @@ const AdminShipments = memo(() => {
                       <td className="p-5 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded text-xs font-medium transition-colors">View</button>
+                          <button onClick={() => handleOpenModal(item, 'edit')} className="bg-white border border-green-100 text-green-600 px-3 py-1.5 rounded text-xs font-semibold hover:bg-green-50 transition-colors">Edit</button>
                         </div>
                       </td>
                     </tr>
@@ -213,15 +214,14 @@ const AdminShipments = memo(() => {
 
       {/* MODAL */}
       {modal.open && modal.data && (
-        <ShipmentModal
-          mode={modal.mode}
-          data={modal.data}
-          onClose={() => setModal({ ...modal, open: false })}
-          onSave={(updated) => {
-            // In real app, update state here
+        modal.mode === 'view' ? (
+          <ShipmentViewModal data={modal.data} onClose={() => setModal({ ...modal, open: false })} />
+        ) : (
+          <ShipmentEditModal data={modal.data} onClose={() => setModal({ ...modal, open: false })} onSave={(updated) => {
+            setData(prev => prev.map(d => d.id === updated.id ? updated : d));
             setModal({ ...modal, open: false });
-          }}
-        />
+          }} />
+        )
       )}
     </div>
     </>
@@ -251,14 +251,8 @@ const StatusBadge = ({ status }: { status: Shipment['status'] }) => {
   return <div className={`flex items-center gap-2 ${color} font-medium text-[13px]`}>{icon} {status}</div>;
 };
 
-/* NEW VIEW-ONLY MODAL MATCHING THE IMAGE */
-const ShipmentModal = ({ mode, data, onClose }: { mode: 'view' | 'edit'; data: Shipment; onClose: () => void; onSave?: (d: Shipment) => void }) => {
-  if (mode === 'edit') {
-    // Keep simple edit form (or expand if needed)
-    return <div>...</div>; // You can keep your previous edit form here
-  }
-
-  // Timeline steps with timestamps (matching the image exactly)
+/* View-only modal (keep identical to original view) */
+const ShipmentViewModal = ({ data, onClose }: { data: Shipment; onClose: () => void }) => {
   const timelineSteps = [
     { status: 'Assigned', time: '7/22/2025 10:43AM', active: true, icon: <Package className="w-4 h-4" /> },
     { status: 'Pending', time: '7/22/2025 10:44AM', active: true, icon: <Clock className="w-4 h-4" /> },
@@ -270,16 +264,12 @@ const ShipmentModal = ({ mode, data, onClose }: { mode: 'view' | 'edit'; data: S
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden">
-        {/* Header */}
         <div className="bg-[#F9FAFB] px-8 py-5 flex justify-between items-center">
           <h2 className="text-xl font-bold text-gray-900">Shipment Details</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X size={24} />
-          </button>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X size={24} /></button>
         </div>
 
         <div className="p-8 space-y-8">
-          {/* Top Info Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div>
@@ -306,10 +296,13 @@ const ShipmentModal = ({ mode, data, onClose }: { mode: 'view' | 'edit'; data: S
                 <div className="text-sm text-gray-500 font-medium">Estimated date</div>
                 <div className="font-semibold text-gray-900">{data.estimatedDate}</div>
               </div>
+              <div>
+                <div className="text-sm text-gray-500 font-medium">Status</div>
+                <div className="mt-1 inline-block px-3 py-1 rounded-full text-[13px] font-semibold bg-green-100 text-green-600">{data.status}</div>
+              </div>
             </div>
           </div>
 
-          {/* Timeline */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Shipment status Timeline</h3>
             <div className="relative">
@@ -332,14 +325,83 @@ const ShipmentModal = ({ mode, data, onClose }: { mode: 'view' | 'edit'; data: S
             </div>
           </div>
 
-          {/* Bottom Buttons */}
           <div className="flex justify-end gap-4 pt-6 border-t border-gray-100">
-            <button onClick={onClose} className="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg font-medium hover:bg-gray-200 transition">
-              Cancel
-            </button>
-            <button className="px-6 py-3 text-white bg-green-600 rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2">
-              <Package size={18} /> Go to Packages
-            </button>
+            <button onClick={onClose} className="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg font-medium hover:bg-gray-200 transition">Cancel</button>
+            <button className="px-6 py-3 text-white bg-green-600 rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2"><Package size={18} /> Go to Packages</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* Edit modal matching provided design */
+const ShipmentEditModal = ({ data, onClose, onSave }: { data: Shipment; onClose: () => void; onSave?: (d: Shipment) => void }) => {
+  const [form, setForm] = useState<Shipment>({ ...data });
+  const handleChange = (k: keyof Shipment, v: string) => setForm(prev => ({ ...prev, [k]: v as any }));
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="w-full max-w-4xl rounded-2xl bg-white shadow-2xl overflow-hidden">
+        <div className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Shipment Details</h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+          </div>
+
+          <div className="flex gap-6">
+            {/* Left: light gray form panel */}
+            <div className="flex-1 bg-[#F3F4F6] p-6 rounded-lg">
+              <div className="space-y-4">
+                <div>
+                  <div className="text-sm text-gray-400 font-medium">Customer</div>
+                  <input value={form.customerName} onChange={(e) => handleChange('customerName', e.target.value)} className="w-full mt-1 p-3 border border-transparent rounded bg-white text-sm" />
+                  <input value={form.customerPhone} onChange={(e) => handleChange('customerPhone', e.target.value)} className="w-full mt-2 p-2 text-sm text-gray-500 border border-transparent rounded bg-white" />
+                </div>
+
+                <div>
+                  <div className="text-sm text-gray-400 font-medium">Route</div>
+                  <div className="flex gap-2 mt-1">
+                    <input value={form.routeFrom} onChange={(e) => handleChange('routeFrom', e.target.value)} className="w-1/2 p-2 border border-transparent rounded bg-white text-sm" />
+                    <input value={form.routeTo} onChange={(e) => handleChange('routeTo', e.target.value)} className="w-1/2 p-2 border border-transparent rounded bg-white text-sm" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-sm text-gray-400 font-medium">Package ID</div>
+                    <input value={form.packageId} onChange={(e) => handleChange('packageId', e.target.value)} className="w-full mt-1 p-2 border border-transparent rounded bg-white text-sm" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-400 font-medium">Estimated date</div>
+                    <input value={form.estimatedDate} onChange={(e) => handleChange('estimatedDate', e.target.value)} className="w-full mt-1 p-2 border border-transparent rounded bg-white text-sm" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: white info card */}
+            <div className="w-80 bg-white p-5 rounded-lg shadow-sm border border-gray-50">
+              <div className="text-sm text-gray-400 font-medium">Tracking Number</div>
+              <div className="font-semibold text-gray-900 mb-3">{form.lockerId}</div>
+
+              <div className="text-sm text-gray-400 font-medium">Carrier</div>
+              <div className="font-semibold text-gray-900 mb-3">{form.carrier}</div>
+
+              <div className="text-sm text-gray-400 font-medium">Route</div>
+              <div className="text-sm text-gray-600 mb-3">{form.routeFrom} → {form.routeTo}</div>
+
+              <div className="text-sm text-gray-400 font-medium">Estimated date</div>
+              <div className="font-semibold text-gray-900 mb-3">{form.estimatedDate}</div>
+
+              <div className="text-sm text-gray-400 font-medium">Status</div>
+              <div className="mt-2 inline-block px-3 py-1 rounded-full text-[13px] font-semibold bg-green-100 text-green-600">{form.status}</div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-6 mt-6 items-center">
+            <button onClick={onClose} className="text-gray-700">Cancel</button>
+            <button onClick={() => { if (onSave) onSave(form); onClose(); }} className="text-green-600 font-semibold">Edit & Save</button>
           </div>
         </div>
       </div>
