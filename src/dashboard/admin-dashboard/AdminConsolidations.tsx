@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Box, Plus, X, Calendar, User, Package, Search, Truck, Bell, QrCode, } from 'lucide-react';
+import { Box, Plus, X,  Search, Truck, Bell, QrCode, } from 'lucide-react';
 
 /* --- INTERFACE --- */
 interface ConsolidationData {
@@ -92,14 +92,14 @@ const AdminConsolidations = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-6 md:p-10 font-sans text-gray-800 relative">
       <Helmet>
-        <title>AdminConsolidations | EXPRESUR</title>
+        <title>Admin Consolidations | EXPRESUR</title>
       </Helmet>
 
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
-          <p className="text-gray-400 mt-1 text-[15px]">Handle consolidation requests and prepare for shipping</p>
+          <h1 className="text-[30px] font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
+          <p className="text-gray-400 mt-1 text-[20px]">Handle consolidation requests and prepare for shipping</p>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
