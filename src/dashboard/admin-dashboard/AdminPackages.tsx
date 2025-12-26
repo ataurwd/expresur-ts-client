@@ -475,123 +475,149 @@ const Modal = ({ isOpen, mode, data, onClose, onSave, onDelete }: ModalProps) =>
             </div>
           </form>
         ) : (
-          <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Tracking ID</label>
-                <input 
-                  name="trackingId" 
-                  disabled={true} 
-                  value={formData.trackingId} 
-                  onChange={handleChange} 
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 disabled:cursor-not-allowed outline-none focus:ring-2 focus:ring-green-500" 
-                />
+          <>
+            {mode === 'view' ? (
+              <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white">
+                    <h4 className="text-sm text-gray-500 mb-2">Client</h4>
+                    <div className="font-bold text-gray-900">{formData.customerName}</div>
+                    <div className="text-sm text-gray-400 mb-4">{formData.customerPhone}</div>
+
+                    <div className="text-sm text-gray-500">Package weight</div>
+                    <div className="font-medium text-gray-900">5kg</div>
+
+                    <div className="mt-4 text-sm text-gray-500">Price</div>
+                    <div className="font-medium text-gray-900">${formData.price}</div>
+
+                    <button className="mt-6 inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg">Download</button>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-gray-500">Tracking Number</div>
+                    <div className="font-bold text-gray-900 mb-3">{formData.trackingId}</div>
+
+                    <div className="text-sm text-gray-500">Dimensions</div>
+                    <div className="font-medium text-gray-900 mb-3">12×12×12</div>
+
+                    <div className="text-sm text-gray-500">Description</div>
+                    <div className="text-gray-700">{formData.itemDesc || '—'}</div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+                  <button onClick={onClose} className="text-gray-600">Cancel</button>
+                  <a href={`/dashboard/admin-shipments/${data.id}`} onClick={() => onClose()} className="text-green-600 font-semibold">Go to shipment</a>
+                </div>
               </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Status</label>
-                <select 
-                  name="status" 
-                  disabled={mode === 'view'} 
-                  value={formData.status} 
-                  onChange={handleChange} 
-                  className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white border-gray-300"
-                >
-                  <option value="Delivered">Delivered</option>
-                  <option value="In Transit">In Transit</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
-              </div>
-            </div>
+            ) : (
+              <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Tracking ID</label>
+                    <input 
+                      name="trackingId" 
+                      disabled={true} 
+                      value={formData.trackingId} 
+                      onChange={handleChange} 
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 disabled:cursor-not-allowed outline-none focus:ring-2 focus:ring-green-500" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Status</label>
+                    <select 
+                      name="status" 
+                      value={formData.status} 
+                      onChange={handleChange} 
+                      className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white border-gray-300"
+                    >
+                      <option value="Delivered">Delivered</option>
+                      <option value="In Transit">In Transit</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                </div>
 
-            <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Item Name</label>
-              <input 
-                name="itemName" 
-                disabled={mode === 'view'} 
-                value={formData.itemName} 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-              />
-            </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Item Name</label>
+                  <input 
+                    name="itemName" 
+                    value={formData.itemName} 
+                    onChange={handleChange} 
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                  />
+                </div>
 
-            <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Name</label>
-              <input 
-                name="customerName" 
-                disabled={mode === 'view'} 
-                value={formData.customerName} 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-              />
-            </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Name</label>
+                  <input 
+                    name="customerName" 
+                    value={formData.customerName} 
+                    onChange={handleChange} 
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                  />
+                </div>
 
-            <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Phone</label>
-              <input 
-                name="customerPhone" 
-                disabled={mode === 'view'} 
-                value={formData.customerPhone} 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-              />
-            </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Customer Phone</label>
+                  <input 
+                    name="customerPhone" 
+                    value={formData.customerPhone} 
+                    onChange={handleChange} 
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                  />
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Category</label>
-                <input 
-                  name="category" 
-                  disabled={mode === 'view'} 
-                  value={formData.category} 
-                  onChange={handleChange} 
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Price ($)</label>
-                <input 
-                  type="number" 
-                  name="price" 
-                  disabled={mode === 'view'} 
-                  value={formData.price} 
-                  onChange={handleChange} 
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-                />
-              </div>
-            </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Category</label>
+                    <input 
+                      name="category" 
+                      value={formData.category} 
+                      onChange={handleChange} 
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Price ($)</label>
+                    <input 
+                      type="number" 
+                      name="price" 
+                      value={formData.price} 
+                      onChange={handleChange} 
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                    />
+                  </div>
+                </div>
 
-            {/* Note (optional) – now placed directly under Category & Price */}
-            <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Note (optional)</label>
-              <input 
-                name="itemDesc" 
-                disabled={mode === 'view'} 
-                value={formData.itemDesc} 
-                onChange={handleChange}
-                placeholder="Add any additional notes here..."
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
-              />
-            </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Note (optional)</label>
+                  <input 
+                    name="itemDesc" 
+                    value={formData.itemDesc} 
+                    onChange={handleChange}
+                    placeholder="Add any additional notes here..."
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500" 
+                  />
+                </div>
 
-            <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
-              {mode === 'edit' ? (
-                <button type="button" onClick={() => onDelete(data.id)} className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 flex items-center gap-2">
-                  <Trash2 size={16} /> Delete
-                </button>
-              ) : <div />}
-              
-              <div className="flex gap-3">
-                <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                  {mode === 'view' ? 'Close' : 'Cancel'}
-                </button>
-                {mode !== 'view' && (
-                  <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-[#166534] rounded-lg hover:bg-[#14532d] flex items-center gap-2">
-                    <Save size={16} /> Save Changes
-                  </button>
-                )}
-              </div>
-            </div>
-          </form>
+                <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+                  {mode === 'edit' ? (
+                    <button type="button" onClick={() => onDelete(data.id)} className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 flex items-center gap-2">
+                      <Trash2 size={16} /> Delete
+                    </button>
+                  ) : <div />}
+                  
+                  <div className="flex gap-3">
+                    <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                    <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-[#166534] rounded-lg hover:bg-[#14532d] flex items-center gap-2">
+                      <Save size={16} /> Save Changes
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+          </>
         )}
       </div>
     </div>
