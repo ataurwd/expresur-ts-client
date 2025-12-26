@@ -14,15 +14,13 @@ import {
 import {
   CallSplitOutlined,
   DirectionsBoatFilledOutlined,
-  CreditCardOutlined,
-  LayersOutlined,
   SettingsOutlined,
- 
+
 } from "@mui/icons-material";
 // Link ইম্পোর্ট করা হয়েছে এখানে
-import { useLocation, matchPath, NavLink, Link,  } from "react-router-dom";
+import { useLocation, matchPath, NavLink, Link, } from "react-router-dom";
 
-import { LayoutDashboard, ArrowLeftToLine, LockKeyholeOpen, Package, Wallet, Layers  } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftToLine, LockKeyholeOpen, Package, Wallet, Layers } from 'lucide-react';
 
 interface MenuItem {
   text: string;
@@ -40,7 +38,7 @@ const menuItems: MenuItem[] = [
   { text: "Consolidations", icon: <CallSplitOutlined />, path: "/dashboard/consolidate" },
   { text: "Shipments", icon: <DirectionsBoatFilledOutlined />, path: "/dashboard/shipments" },
   { text: "Wallet", icon: <Wallet />, path: "/dashboard/payments" },
-  { text: "Remittances", icon: <Layers/>, path: "/dashboard/remittances" },
+  { text: "Remittances", icon: <Layers />, path: "/dashboard/remittances" },
   { text: "Settings", icon: <SettingsOutlined />, path: "/dashboard/profile" },
 ];
 
@@ -51,8 +49,8 @@ export default function UserSidebar() {
   const handleToggle = () => setOpen((prev) => !prev);
   const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
 
-  const BG_GREEN = "#025939"; 
-  const ACTIVE_ORANGE = "#fb923c"; 
+  const BG_GREEN = "#025939";
+  const ACTIVE_ORANGE = "#fb923c";
 
   return (
     <Drawer
@@ -75,15 +73,15 @@ export default function UserSidebar() {
     >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 3, mb: 2 }}>
         {open && (
-      
+
           <Link to="/" style={{ textDecoration: "none" }}>
-            <Typography 
-              variant="h5" 
-              sx={{ 
-                fontWeight: 900, 
-                color: "#fb923c", 
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 900,
+                color: "#fb923c",
                 letterSpacing: 1,
-                cursor: "pointer" 
+                cursor: "pointer"
               }}
             >
               EXPRESUR
@@ -133,13 +131,13 @@ export default function UserSidebar() {
                 >
                   {React.isValidElement(item.icon)
                     ? React.cloneElement(item.icon as React.ReactElement<any>, {
-                        sx: { fontSize: isSelected ? 22 : 26 },
-                        htmlColor: isSelected ? "#ffffff" : "#ababab",
-                        style: { fontSize: isSelected ? 22 : 26, color: isSelected ? "#ffffff" : "#ababab" },
-                      })
+                      sx: { fontSize: isSelected ? 22 : 26 },
+                      htmlColor: isSelected ? "#ffffff" : "#ababab",
+                      style: { fontSize: isSelected ? 22 : 26, color: isSelected ? "#ffffff" : "#ababab" },
+                    })
                     : item.icon}
                 </ListItemIcon>
-                
+
                 <ListItemText
                   primary={item.text}
                   sx={{
