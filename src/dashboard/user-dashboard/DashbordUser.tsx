@@ -105,7 +105,7 @@ const DashboardUser = () => {
     <div className="min-h-screen bg-[#f7f7f7] p-6 md:p-10 font-sans text-gray-800 relative">
 
       {/* --- MODAL FOR ADDING PACKAGE --- */}
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
           <div className="bg-white p-6 rounded-[32px] shadow-2xl w-full max-w-md animate-in fade-in zoom-in duration-200">
             <div className="flex justify-between items-center mb-4">
@@ -123,6 +123,51 @@ const DashboardUser = () => {
               />
               <button type="submit" className="w-full bg-[#006D35] text-white py-4 rounded-2xl font-semibold hover:bg-[#005a2c] transition">
                 Add Package
+              </button>
+            </form>
+          </div>
+        </div>
+      )} */}
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm p-4">
+          {/* Main Container - Matches Card Selected.png */}
+          <div className="bg-white p-8 rounded-[40px] shadow-2xl w-full max-w-4xl animate-in fade-in zoom-in duration-300 relative">
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-6 right-8 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X size={24} strokeWidth={1.5} />
+            </button>
+
+            {/* Header */}
+            <h3 className="text-[32px] font-bold text-[#555555] mb-8">
+              Add Tracking
+            </h3>
+
+            {/* Input Group */}
+            <form
+              onSubmit={handleAddPackage}
+              className="flex items-center bg-[#F7F7F7] rounded-[20px] p-2 pl-8 border border-transparent focus-within:border-[#006D35]/20 transition-all"
+            >
+              <input
+                autoFocus
+                type="text"
+                placeholder="Enter Tracking number ....."
+                className="bg-transparent flex-1 py-4 outline-none text-[18px] text-gray-600 placeholder:text-[#A3A3A3]"
+                value={newPackageId}
+                onChange={(e) => setNewPackageId(e.target.value)}
+                required
+              />
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="bg-[#006D35] text-white px-10 py-4 rounded-[16px] font-semibold text-[18px] hover:bg-[#005a2c] transition-all"
+              >
+                Add Tracking
               </button>
             </form>
           </div>
@@ -198,6 +243,11 @@ const DashboardUser = () => {
               </button>
             </div>
           </div>
+
+
+
+
+
 
           {/* RECENT PACKAGES & TRANSACTIONS */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
