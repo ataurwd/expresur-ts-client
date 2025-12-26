@@ -354,9 +354,9 @@ const Packages = () => {
                     <td className="py-6">
                       {/* Vibrant status colors per image */}
                       <span className={`font-normal ${pkg.status === 'Delivered' ? 'text-green-500' :
-                          pkg.status === 'Consolidated' ? 'text-orange-400' :
-                            pkg.status === 'Shipped' ? 'text-blue-500' :
-                              'text-purple-500'
+                        pkg.status === 'Consolidated' ? 'text-orange-400' :
+                          pkg.status === 'Shipped' ? 'text-blue-500' :
+                            'text-purple-500'
                         }`}>
                         {pkg.status}
                       </span>
@@ -394,16 +394,16 @@ const Packages = () => {
       </div>
 
       {/* --- ADD PACKAGE MODAL (Updated) --- */}
-   {isModalOpen && (
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-50 p-4 font-sans">
-              <div className="bg-white rounded-xl w-full max-w-4xl p-8 shadow-2xl transform transition-all relative">
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-50 p-4 font-sans">
+          <div className="bg-white rounded-xl w-full max-w-4xl p-8 shadow-2xl transform transition-all relative">
 
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Add Package</h2>
 
-       
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
-            
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">Item *</label>
                 <input
@@ -414,7 +414,7 @@ const Packages = () => {
                 />
               </div>
 
-         
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">Tracking Number *</label>
                 <input
@@ -425,7 +425,7 @@ const Packages = () => {
                 />
               </div>
 
-           
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">Category *</label>
                 <div className="relative">
@@ -444,7 +444,7 @@ const Packages = () => {
                 </div>
               </div>
 
-         
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">Customer *</label>
                 <input
@@ -456,7 +456,7 @@ const Packages = () => {
               </div>
             </div>
 
-   
+
             <div className="space-y-2 mb-8">
               <label className="text-sm font-medium text-gray-500">Note (Optional)</label>
               <textarea
@@ -466,7 +466,7 @@ const Packages = () => {
               />
             </div>
 
-  
+
             <div className="flex justify-end items-center gap-6">
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -484,7 +484,7 @@ const Packages = () => {
 
           </div>
         </div>
-      )} 
+      )}
 
 
 
