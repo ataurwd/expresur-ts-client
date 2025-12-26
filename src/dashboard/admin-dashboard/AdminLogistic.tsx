@@ -73,6 +73,7 @@ const GroupCard: React.FC<{
 }> = ({ data, onView, onAdd }) => {
   const percent = Math.round((data.currentWeight / data.maxWeight) * 100);
   const isGreen = data.status === 'Active';
+  
 
   const Icon = () => {
     if (data.type === 'Air') return <Plane size={20} className="text-gray-400" />;
@@ -81,12 +82,7 @@ const GroupCard: React.FC<{
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Logistic Groups | EXPRESUR</title>
-      </Helmet>
-
-      <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-50 flex flex-col h-full hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-50 flex flex-col h-full hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div className="flex items-center gap-3">
@@ -125,36 +121,38 @@ const GroupCard: React.FC<{
         </div>
       </div>
 
-      {/* Progress Bar */}
+      {/* Progress + Actions */}
       <div className="mt-auto">
-        <div className="flex justify-between text-sm text-gray-400 mb-2">
-          <span>Weight Capacity</span>
-          <span className="font-medium text-gray-500">{data.currentWeight}/{data.maxWeight} kg</span>
-        </div>
-        
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
-          <div 
-            className={`h-full rounded-full transition-all duration-500 ${
-              percent < 80 ? 'bg-[#22c55e]' : percent < 95 ? 'bg-orange-400' : 'bg-[#ef4444]'
-            }`} 
-            style={{ width: `${Math.min(percent, 100)}%` }}
-          />
+        <div className="bg-gray-50 p-4 rounded-lg mb-4">
+          <div className="flex justify-between items-center text-sm text-gray-500 mb-3">
+            <span className="font-medium text-gray-600">Weight Capacity</span>
+            <span className="text-sm text-gray-500">{data.currentWeight}/{data.maxWeight} kg</span>
+          </div>
+
+          <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-gray-100">
+            <div 
+              className={`h-full rounded-full transition-all duration-500 ${
+                percent < 80 ? 'bg-[#22c55e]' : percent < 95 ? 'bg-orange-400' : 'bg-[#ef4444]'
+              }`} 
+              style={{ width: `${Math.min(percent, 100)}%` }}
+            />
+          </div>
+
+          <div className="flex justify-end mt-2">
+            <div className="text-xs text-gray-400">{percent}% full • {data.packageCount} packages</div>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-3">
-          <div className="text-sm text-gray-400">{percent}% full • {data.packageCount} packages</div>
-          <div className="flex items-center gap-3">
-            <button onClick={onAdd} className="px-3 h-9 border border-gray-100 rounded-lg flex items-center gap-2 text-gray-500 hover:bg-gray-50 transition-colors text-sm font-medium">
-              <Package size={16} /> Add
-            </button>
-            <button onClick={onView} className="bg-[#166534] hover:bg-[#14532d] text-white py-2.5 px-6 rounded-lg text-sm font-semibold transition-colors">
-              View Details
-            </button>
-          </div>
+        <div className="flex items-center gap-3">
+          <button onClick={onView} className="flex-1 bg-[#166534] hover:bg-[#14532d] text-white py-2.5 px-4 rounded-lg text-sm font-semibold transition-colors">
+            View Details
+          </button>
+          <button onClick={onAdd} className="w-10 h-10 flex items-center justify-center border border-gray-100 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors bg-white">
+            <Package size={16} />
+          </button>
         </div>
       </div>
     </div>
-    </>
   );
 };
 
@@ -390,6 +388,9 @@ const AdminLogistic: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] p-6 md:p-10 font-sans text-gray-800">
+      <Helmet>
+        <title>Logistics Groups | EXPRESUR</title>
+      </Helmet>
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
