@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Shield, Zap } from 'lucide-react';
+import { Bell, Shield,Users } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
 interface StaffMember {
@@ -172,7 +172,7 @@ const InternalUsersRoles = memo(() => {
             <div className="bg-white rounded-[24px] p-6 shadow-sm">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                  <Zap size={16} className="text-gray-300" />
+                  <Users size={16} className="text-gray-300" />
                 </div>
                 <h3 className="text-[16px] font-semibold text-gray-600">Quick Stats</h3>
               </div>
