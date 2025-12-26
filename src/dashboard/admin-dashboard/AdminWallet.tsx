@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Bell,
@@ -124,8 +124,8 @@ const AdminWallet = () => {
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Internal Wallet</h1>
-          <p className="text-gray-400 mt-1">Manage customer wallet transactions</p>
+          <h1 className="text-[30px] font-bold text-gray-900 tracking-tight">Internal Wallet</h1>
+          <p className="text-[18px] text-gray-400 mt-1">Manage customer wallet transactions</p>
         </div>
         <div className="flex items-center gap-4">
           <button className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">

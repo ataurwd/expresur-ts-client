@@ -182,8 +182,8 @@ const Users = () => {
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">User Management</h1>
-          <p className="text-gray-400 mt-1">Manage all customer and admin accounts</p>
+          <h1 className="text-[30px] font-bold text-gray-900 tracking-tight">User Management</h1>
+          <p className="text-[18px] text-gray-400 mt-1">Manage all customer and admin accounts</p>
         </div>
 
         <div className="flex items-center gap-4">
