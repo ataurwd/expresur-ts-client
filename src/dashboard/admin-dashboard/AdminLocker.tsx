@@ -76,8 +76,8 @@ const AdminLocker = () => {
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight">Locker Management</h1>
-          <p className="text-gray-400 mt-1 text-[15px]">Manage packages and locker assignments</p>
+          <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight text-[30px]">Locker Management</h1>
+          <p className="text-gray-400 mt-1 text-[20px]">Manage packages and locker assignments</p>
         </div>
 
         <div className="flex items-center gap-4">
