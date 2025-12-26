@@ -17,7 +17,6 @@ import {
   Inventory2Outlined,
   CallSplitOutlined,
   DirectionsBoatFilledOutlined,
-  LocalShippingOutlined,
   CreditCardOutlined,
   LayersOutlined,
   SettingsOutlined,
@@ -25,6 +24,8 @@ import {
 } from "@mui/icons-material";
 // Link ইম্পোর্ট করা হয়েছে এখানে
 import { useLocation, matchPath, NavLink, Link } from "react-router-dom";
+
+import { LayoutDashboard } from 'lucide-react';
 
 interface MenuItem {
   text: string;
@@ -36,7 +37,7 @@ const drawerWidth = 280;
 const collapsedWidth = 80;
 
 const menuItems: MenuItem[] = [
-  { text: "Dashboard", icon: <GridView />, path: "/dashboard/user-dashboard" },
+  { text: "Dashboard", icon: <LayoutDashboard />, path: "/dashboard/user-dashboard" },
   { text: "My Locker", icon: <LockOutlined />, path: "/dashboard/locker" },
   { text: "Packages", icon: <Inventory2Outlined />, path: "/dashboard/packages" },
   { text: "Consolidations", icon: <CallSplitOutlined />, path: "/dashboard/consolidate" },
