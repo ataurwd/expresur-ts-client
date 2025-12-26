@@ -306,7 +306,7 @@ const AdminWallet = () => {
       {/* MODAL - same as before, omitted for brevity but kept in full code */}
       {isModalOpen && selectedTransaction && (
         <div onClick={() => setIsModalOpen(false)} className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl shadow-2xl w-full max-w-xl p-6 md:p-8">
+          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-6 md:p-8">
             <h3 className="text-gray-700 text-2xl font-semibold mb-4">Payment Details</h3>
 
             <div className="bg-gray-100 rounded-xl p-6 md:p-8 text-base text-gray-700">
