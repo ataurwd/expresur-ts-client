@@ -33,7 +33,7 @@ import {
   KeyboardDoubleArrowRight,
   Logout,
 } from "@mui/icons-material";
-import { Package, LockKeyholeOpen } from 'lucide-react';
+import { Package, LockKeyholeOpen, Layers, QrCode } from 'lucide-react';
 
 // Link ইম্পোর্ট করা হয়েছে
 import { useNavigate, useLocation, matchPath, NavLink, Link } from "react-router-dom";
@@ -52,11 +52,11 @@ const collapsedWidth = 70;
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
   { text: "Packages", icon: <Package />, path: "/dashboard/admin-packages" },
-  { text: "Locker", icon: <LockerIcon />, path: "/dashboard/admin-locker" },
+  { text: "Locker", icon: <LockKeyholeOpen />, path: "/dashboard/admin-locker" },
   { text: "Consolidations", icon: <ConsolidateIcon />, path: "/dashboard/admin-consolidations" },
   { text: "Shipments", icon: <ShipmentsIcon />, path: "/dashboard/admin-shipments" },
-  { text: "Logistic Group", icon: <LogisticGroupIcon />, path: "/dashboard/logistic-group" },
-  { text: "QR Scanning", icon: <QrIcon />, path: "/dashboard/qr-scanning" },
+  { text: "Logistic Group", icon: <Layers />, path: "/dashboard/logistic-group" },
+  { text: "QR Scanning", icon: <QrCode />, path: "/dashboard/qr-scanning" },
   { text: "Users", icon: <UsersIcon />, path: "/dashboard/admin-users" },
   { text: "Wallet", icon: <WalletIcon />, path: "/dashboard/admin-wallet" },
   { text: "Report", icon: <ReportIcon />, path: "/dashboard/admin-reports" },
