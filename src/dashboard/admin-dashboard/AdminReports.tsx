@@ -241,6 +241,8 @@ export default function PackageTrackingDashboard() {
         </div>
       </div>
 
+      
+
       {/* Table Section */}
       <div className="bg-white rounded-3xl shadow-sm p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -286,8 +288,9 @@ export default function PackageTrackingDashboard() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        <div className="bg-white p-4 rounded-t-3xl">
+          <div className="overflow-x-auto pt-4 rounded-[18px] bg-[#f6f6f6]">
+          <table className="w-full text-left  ">
             <thead>
               <tr className="border-b border-gray-100">
                 <th className="py-4 pl-4 text-xs font-normal text-gray-400 uppercase tracking-wider">Payment ID</th>
@@ -331,6 +334,9 @@ export default function PackageTrackingDashboard() {
             </tbody>
           </table>
         </div>
+      </div>
+
+        
 
         {/* Pagination */}
         <div className="flex justify-end items-center gap-6 mt-8 pt-4 border-t border-gray-100">
