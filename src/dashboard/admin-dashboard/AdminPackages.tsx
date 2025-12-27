@@ -208,71 +208,72 @@ export default function PackageManagement() {
           </div>
         </div>
 
-        {/* ACTIONS BAR */}
-        <div className="flex flex-col xl:flex-row justify-between items-center gap-4 mb-6">
-          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-            {/* All Button */}
-            <button
-              onClick={() => setStatusFilter("All Status")}
-              className={`px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors ${statusFilter === 'All Status' ? 'bg-[#166534] text-white' : 'bg-[#F9FAFB] text-gray-500 hover:bg-gray-100'}`}
-            >
-              All
-            </button>
-
-            {/* Status Dropdown */}
-            <div className="relative">
+        <div className="p-4 bg-white rounded-[18px]">
+          {/* ACTIONS BAR */}
+          <div className="flex flex-col xl:flex-row justify-between items-center gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+              {/* All Button */}
               <button
-                onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-40 justify-between"
+                onClick={() => setStatusFilter("All Status")}
+                className={`px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors ${statusFilter === 'All Status' ? 'bg-[#166534] text-white' : 'bg-[#F9FAFB] text-gray-500 hover:bg-gray-100'}`}
               >
-                {statusFilter} <ChevronDown size={16} className="text-gray-400" />
+                All
               </button>
 
-              {/* Dropdown Menu */}
-              {isStatusDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 overflow-hidden">
-                  {["All Status", "Delivered", "In Transit", "Cancelled"].map(status => (
-                    <div
-                      key={status}
-                      onClick={() => { setStatusFilter(status); setIsStatusDropdownOpen(false); }}
-                      className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700 hover:text-green-700 transition-colors"
-                    >
-                      {status}
-                    </div>
-                  ))}
-                </div>
-              )}
+              {/* Status Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+                  className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-40 justify-between"
+                >
+                  {statusFilter} <ChevronDown size={16} className="text-gray-400" />
+                </button>
 
-              {/* Backdrop to close dropdown on click outside */}
-              {isStatusDropdownOpen && (
-                <div className="fixed inset-0 z-10" onClick={() => setIsStatusDropdownOpen(false)}></div>
-              )}
+                {/* Dropdown Menu */}
+                {isStatusDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 overflow-hidden">
+                    {["All Status", "Delivered", "In Transit", "Cancelled"].map(status => (
+                      <div
+                        key={status}
+                        onClick={() => { setStatusFilter(status); setIsStatusDropdownOpen(false); }}
+                        className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700 hover:text-green-700 transition-colors"
+                      >
+                        {status}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Backdrop to close dropdown on click outside */}
+                {isStatusDropdownOpen && (
+                  <div className="fixed inset-0 z-10" onClick={() => setIsStatusDropdownOpen(false)}></div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium">
+                01/11/24 <Calendar size={16} className="text-gray-400 ml-2" />
+              </div>
+
+              <div className="relative flex-1 xl:flex-none">
+                <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={query}
+                  onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
+                  className="pl-10 pr-4 py-2.5 bg-[#F9FAFB] rounded-lg text-sm font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 w-full xl:w-80"
+                />
+              </div>
             </div>
 
-            <div className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium">
-              01/11/24 <Calendar size={16} className="text-gray-400 ml-2" />
-            </div>
-
-            <div className="relative flex-1 xl:flex-none">
-              <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={query}
-                onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
-                className="pl-10 pr-4 py-2.5 bg-[#F9FAFB] rounded-lg text-sm font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 w-full xl:w-80"
-              />
-            </div>
+            <button onClick={() => handleOpenModal(null, 'add')} className="bg-[#166534] hover:bg-[#14532d] text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition w-full xl:w-auto justify-center shadow-sm">
+              <Plus size={18} /> Add Package
+            </button>
           </div>
 
-          <button onClick={() => handleOpenModal(null, 'add')} className="bg-[#166534] hover:bg-[#14532d] text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition w-full xl:w-auto justify-center shadow-sm">
-            <Plus size={18} /> Add Package
-          </button>
-        </div>
+          {/* TABLE */}
 
-        {/* TABLE */}
 
-        <div className="p-4 bg-white rounded-[18px]">
           {/* TABLE */}
           <div className="bg-white rounded-xl overflow-hidden mb-4 min-h-[400px]">
             <div className="overflow-x-auto">
