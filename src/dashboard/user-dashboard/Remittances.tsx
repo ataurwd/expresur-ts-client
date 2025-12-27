@@ -200,9 +200,9 @@ const Remittances = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse ">
               <thead>
-                <tr className="border-b border-gray-50 text-xs text-gray-400 uppercase tracking-wider font-medium">
+                <tr className="border-b border-gray-50 text-xs text-gray-400 uppercase tracking-wider font-medium bg-[#f6f6f6] ">
                   <th className="py-4 pl-2 font-medium">Recipient</th>
                   <th className="py-4 font-medium">Amount</th>
                   <th className="py-4 font-medium">Status</th>
