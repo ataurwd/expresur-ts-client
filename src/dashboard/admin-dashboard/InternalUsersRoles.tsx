@@ -138,7 +138,7 @@ const InternalUsersRoles = memo(() => {
 
                         <div className="flex justify-end items-center mt-8 gap-8">
                             <button className="text-[14px] text-gray-300">Previous</button>
-                            <button className="text-[14px] text-green-600 font-bold flex items-center gap-1">
+                            <button className="text-[14px] text-green-600 font-normal flex items-center gap-1">
                                 Next <span className="text-lg">→</span>
                             </button>
                         </div>
