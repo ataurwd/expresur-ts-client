@@ -294,9 +294,6 @@ export default function PackageManagement() {
                   {paginatedData.length > 0 ? paginatedData.map((item, idx) => {
                     const isEven = idx % 2 === 0;
                     const rowBg = isEven ? 'bg-white' : 'bg-[#f6f6f6]';
-                    const primaryText = isEven ? 'text-gray-900' : 'text-gray-900';
-                    const secondaryText = isEven ? 'text-[13px] text-gray-500' : 'text-[13px] text-gray-500';
-                    const cellText = isEven ? 'text-gray-600' : 'text-gray-600';
                     const actionText = isEven ? 'text-gray-500' : 'text-gray-500';
                     const buttonBg = isEven ? 'bg-[#f6f6f6]' : 'bg-[#f6f6f6]';
                     return (
@@ -312,8 +309,8 @@ export default function PackageManagement() {
                         {/* <td className="p-5"><StatusBadge status={item.status} /></td> */}
                         <td className={`p-5 text-right`}>
                           <div className={`flex items-center justify-end gap-2 ${actionText}`}>
-                            <button onClick={() => handleOpenModal(item, 'notes')} className={`hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>Notes</button>
-                            <button onClick={() => handleOpenModal(item, 'view')} className={`hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>View</button>
+                            <button onClick={() => handleOpenModal(item, 'notes')} className={`hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-[18px] text-[13px] font-medium transition-colors ${buttonBg}`}>Notes</button>
+                            <button onClick={() => handleOpenModal(item, 'view')} className={`hover:bg-gray-100 hover:text-green-600 px-3 py-1 rounded-[18px] text-[13px] font-medium transition-colors ${buttonBg}`}>View</button>
                           </div>
                         </td>
                       </tr>
