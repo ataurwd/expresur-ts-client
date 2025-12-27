@@ -9,7 +9,6 @@ import {
   ArrowRightLeft,
   ArrowRight,
   ArrowLeft,
-  Plus
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
