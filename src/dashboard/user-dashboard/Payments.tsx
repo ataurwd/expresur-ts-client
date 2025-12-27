@@ -8,7 +8,8 @@ import {
   Send,
   ArrowRight,
   ArrowLeft,
-  X
+  X,
+  Wallet
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -217,7 +218,7 @@ const Payments = () => {
         </div>
 
         {/* --- Action Buttons Grid --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <button
             onClick={() => handleActionClick('Add Funds')}
             className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group hover:border-gray-200 transition"
@@ -247,10 +248,43 @@ const Payments = () => {
               <Send size={16} />
             </div>
           </button>
+        </div> */}
+
+        {/* --- Action Buttons Grid --- */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white rounded-[28px]">
+          <button
+            onClick={() => handleActionClick('Add Funds')}
+            className="bg-[#F8F8F8] p-6 rounded-[20px] border border-gray-100 flex items-center justify-between group hover:bg-[#F3F3F3] transition-all duration-200"
+          >
+            <span className="text-[#666666] text-lg font-normal">Add Funds</span>
+            <div className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition">
+              <Plus size={18} strokeWidth={1.5} />
+            </div>
+          </button>
+
+          <button
+            onClick={() => handleActionClick('Pay with wallet')}
+            className="bg-[#F8F8F8] p-6 rounded-[20px] border border-gray-100 flex items-center justify-between group hover:bg-[#F3F3F3] transition-all duration-200"
+          >
+            <span className="text-[#666666] text-lg font-normal">Pay with wallet</span>
+            <div className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition">
+              <Wallet size={18} strokeWidth={1.5} />
+            </div>
+          </button>
+
+          <button
+            onClick={() => handleActionClick('Send Remittance')}
+            className="bg-[#F8F8F8] p-6 rounded-[20px] border border-gray-100 flex items-center justify-between group hover:bg-[#F3F3F3] transition-all duration-200"
+          >
+            <span className="text-[#666666] text-lg font-normal">Send Remittance</span>
+            <div className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition">
+              <Send size={18} strokeWidth={1.5} />
+            </div>
+          </button>
         </div>
 
         {/* --- Recent Transaction Table --- */}
-        <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 min-h-[400px]">
+        {/* <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 min-h-[400px]">
           <h3 className="text-lg font-medium text-gray-700 mb-8">Recent Transaction</h3>
 
           <div className="overflow-x-auto">
@@ -285,7 +319,7 @@ const Payments = () => {
             </table>
           </div>
 
-          {/* Pagination */}
+        
           <div className="flex justify-end items-center gap-6 mt-12 text-sm font-medium select-none">
             <button
               className="text-gray-300 cursor-not-allowed"
@@ -300,7 +334,59 @@ const Payments = () => {
             </button>
           </div>
 
-        </div>
+        </div> */}
+
+        {/* --- Recent Transaction Table --- */}
+<div className="bg-white rounded-[32px] p-8 shadow-sm border border-gray-50 min-h-[400px]">
+  <h3 className="text-xl font-normal text-gray-600 mb-8">Recent Transaction</h3>
+
+  <div className="overflow-x-auto">
+    <table className="w-full text-left border-separate border-spacing-y-2">
+      <thead>
+        <tr className="bg-[#F8F8F8] text-sm text-gray-400 font-normal">
+          <th className="py-5 pl-6 rounded-l-[16px] font-normal">Type</th>
+          <th className="py-5 font-normal">Details</th>
+          <th className="py-5 font-normal">Date</th>
+          <th className="py-5 font-normal">Amount</th>
+          <th className="py-5 pr-6 text-right rounded-r-[16px] font-normal">Amount</th>
+        </tr>
+      </thead>
+      <tbody className="text-sm">
+        {transactions.map((tx, idx) => (
+          <tr key={idx} className="hover:bg-gray-50/50 transition-colors group">
+            <td className="py-6 pl-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.type}</td>
+            <td className="py-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.details}</td>
+            <td className="py-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.date}</td>
+            <td className="py-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.amount}</td>
+            <td className="py-6 pr-6 text-right border-b border-gray-50 group-last:border-0">
+              <button
+                onClick={() => handleViewTransaction(tx)}
+                className="bg-[#F8F8F8] text-gray-400 px-6 py-2 rounded-full text-xs font-normal hover:bg-[#F3F3F3] hover:text-gray-600 transition"
+              >
+                View
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {/* Pagination */}
+  <div className="flex justify-end items-center gap-8 mt-12 text-sm font-normal">
+    <button
+      className="text-gray-400 hover:text-gray-600 transition disabled:opacity-30"
+      disabled
+    >
+      Previous
+    </button>
+    <button
+      className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 transition"
+    >
+      Next <ArrowRight size={18} strokeWidth={1.5} />
+    </button>
+  </div>
+</div>
 
       </div>
 
