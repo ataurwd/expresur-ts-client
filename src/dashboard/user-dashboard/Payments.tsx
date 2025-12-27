@@ -395,7 +395,7 @@ const Payments = () => {
       {/* --- TRANSACTION DETAILS MODAL --- */}
 {isModalOpen && selectedTransaction && (
   <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4 font-sans">
-    <div className="bg-white rounded-[32px] w-full max-w-lg p-10 shadow-xl relative animate-in fade-in zoom-in duration-200">
+    <div className="bg-white rounded-[32px] w-full max-w-3xl p-10 shadow-xl relative animate-in fade-in zoom-in duration-200">
       
       {/* Title */}
       <h2 className="text-2xl font-normal text-gray-600 mb-6">Transaction Details</h2>
