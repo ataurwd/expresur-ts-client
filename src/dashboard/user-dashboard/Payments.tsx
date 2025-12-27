@@ -4,11 +4,8 @@ import {
   Bell,
   DollarSign,
   Plus,
-  CreditCard,
   Send,
   ArrowRight,
-  ArrowLeft,
-  X,
   Wallet
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -28,7 +25,6 @@ interface Transaction {
 
 const Payments = () => {
   // --- State ---
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
