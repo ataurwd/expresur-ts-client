@@ -282,34 +282,43 @@ export default function PackageManagement() {
                   <th className="p-5 font-normal">Category</th>
                   <SortableHeader label="Price" sortKey="price" currentSort={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Created" sortKey="created" currentSort={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Status" sortKey="status" currentSort={sortConfig} onSort={handleSort} />
+                  {/* <SortableHeader label="Status" sortKey="status" currentSort={sortConfig} onSort={handleSort} /> */}
                   <th className="p-5 font-normal text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="text-[14px] divide-y divide-gray-50">
-                {paginatedData.length > 0 ? paginatedData.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
-                    <td className="p-5">
-                      <div className="font-bold text-gray-900 mb-0.5">{item.itemName}</div>
-                      <div className="text-[13px] text-gray-500 leading-tight">{item.itemDesc}</div>
-                    </td>
-                    <td className="p-5">
-                      <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
-                      <div className="text-[13px] text-gray-500">{item.customerPhone}</div>
-                    </td>
-                    <td className="p-5 text-gray-600">{item.trackingId}</td>
-                    <td className="p-5 text-gray-600">{item.category}</td>
-                    <td className="p-5 text-gray-600">${item.price} USD</td>
-                    <td className="p-5 text-gray-600">{item.created}</td>
-                    <td className="p-5"><StatusBadge status={item.status} /></td>
-                    <td className="p-5 text-right">
-                      <div className="flex items-center justify-end gap-2 text-gray-500">
-                        <button onClick={() => handleOpenModal(item, 'notes')} className="hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">Notes</button>
-                        <button onClick={() => handleOpenModal(item, 'view')} className="hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">View</button>
-                      </div>
-                    </td>
-                  </tr>
-                )) : (
+                {paginatedData.length > 0 ? paginatedData.map((item, idx) => {
+                  const isEven = idx % 2 === 0;
+                  const rowBg = isEven ? 'bg-white' : 'bg-[#f6f6f6]';
+                  const primaryText = isEven ? 'text-gray-900' : 'text-gray-900';
+                  const secondaryText = isEven ? 'text-[13px] text-gray-500' : 'text-[13px] text-gray-500';
+                  const cellText = isEven ? 'text-gray-600' : 'text-gray-600';
+                  const actionText = isEven ? 'text-gray-500' : 'text-gray-500';
+                  const buttonBg = isEven ? 'bg-[#f6f6f6]' : 'bg-[#f6f6f6]';
+                  return (
+                    <tr key={item.id} className={`${rowBg} transition-colors group`}>
+                      <td className="p-5">
+                        <div className={`font-bold ${primaryText} mb-0.5`}>{item.itemName}</div>
+                        <div className={`${secondaryText} leading-tight`}>{item.itemDesc}</div>
+                      </td>
+                      <td className="p-5">
+                        <div className={`font-bold ${primaryText} mb-0.5`}>{item.customerName}</div>
+                        <div className={`${secondaryText}`}>{item.customerPhone}</div>
+                      </td>
+                      <td className={`p-5 ${cellText}`}>{item.trackingId}</td>
+                      <td className={`p-5 ${cellText}`}>{item.category}</td>
+                      <td className={`p-5 ${cellText}`}>${item.price} USD</td>
+                      <td className={`p-5 ${cellText}`}>{item.created}</td>
+                      {/* <td className="p-5"><StatusBadge status={item.status} /></td> */}
+                      <td className={`p-5 text-right`}>
+                        <div className={`flex items-center justify-end gap-2 ${actionText}`}>
+                          <button onClick={() => handleOpenModal(item, 'notes')} className={`hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>Notes</button>
+                          <button onClick={() => handleOpenModal(item, 'view')} className={`hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>View</button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                }) : (
                   <tr>
                     <td colSpan={8} className="p-10 text-center text-gray-400">No packages found.</td>
                   </tr>
