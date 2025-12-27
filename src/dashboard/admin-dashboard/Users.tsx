@@ -232,20 +232,20 @@ const Users = () => {
           </div>
         </div>
       </div>
-
-      {/* --- TABLE --- */}
-      <div className="bg-white rounded-3xl shadow-sm overflow-hidden min-h-[500px] flex flex-col">
-        <div className="overflow-x-auto flex-grow">
+      <div className='p-4 rounded-[18px] bg-white '>
+         {/* --- TABLE --- */}
+      <div className="bg-[#f6f6f6] rounded-3xl shadow-sm overflow-hidden min-h-[500px] flex flex-col">
+        <div className="overflow-x-auto flex-grow ">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide">Full Name</th>
-                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide">Locker ID</th>
-                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide">Email</th>
-                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide">Phone</th>
-                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide">Address</th>
-                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide">Registration Date</th>
-                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide text-center">Actions</th>
+                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide ">Full Name</th>
+                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide ">Locker ID</th>
+                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide ">Email</th>
+                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide ">Phone</th>
+                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide ">Address</th>
+                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide ">Registration Date</th>
+                <th className="p-6 text-xs font-normal text-gray-400 uppercase tracking-wide text-center ">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -255,7 +255,7 @@ const Users = () => {
                     key={user.id} 
                     className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-[#FAFAFA]'}`}
                   >
-                    <td className="p-6 text-sm text-gray-600 font-medium">
+                    <td className="p-8 text-sm text-gray-600 font-medium">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
                            <UserIcon size={14} />
@@ -263,14 +263,14 @@ const Users = () => {
                         {user.name}
                       </div>
                     </td>
-                    <td className="p-6 text-sm text-gray-500 font-mono">{user.lockerId}</td>
-                    <td className="p-6 text-sm text-gray-500">{user.email}</td>
-                    <td className="p-6 text-sm text-gray-500">{user.phone}</td>
-                    <td className="p-6 text-sm text-gray-500 max-w-[200px] leading-relaxed truncate">
+                    <td className="p-8 text-sm text-gray-500 font-mono">{user.lockerId}</td>
+                    <td className="p-8 text-sm text-gray-500">{user.email}</td>
+                    <td className="p-8text-sm text-gray-500">{user.phone}</td>
+                    <td className="p-8 text-sm text-gray-500 max-w-[200px] leading-relaxed truncate">
                       {user.address}
                     </td>
-                    <td className="p-6 text-sm text-gray-500">{user.date}</td>
-                    <td className="p-6">
+                    <td className="p-8 text-sm text-gray-500">{user.date}</td>
+                    <td className="p-8">
                       <div className="flex items-center justify-center gap-2">
                         <button 
                           className="px-4 py-1.5 rounded-lg bg-red-100 text-red-600 text-xs font-bold hover:bg-red-200 transition-all shadow-sm flex items-center gap-1.5"
@@ -300,7 +300,7 @@ const Users = () => {
         </div>
 
         {/* --- PAGINATION --- */}
-        <div className="p-6 flex justify-end items-center gap-6 border-t border-gray-50">
+        <div className="p-6 flex justify-end items-center gap-6 border-t border-gray-50 bg-white">
            <button 
              onClick={handlePrev}
              disabled={currentPage === 1}
@@ -344,6 +344,8 @@ const Users = () => {
         }
       `}</style>
     </div>
+      </div>
+      
     </>
   );
 };
