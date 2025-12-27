@@ -390,70 +390,76 @@ const Payments = () => {
 
       </div>
 
+    
+
       {/* --- TRANSACTION DETAILS MODAL --- */}
-      {isModalOpen && selectedTransaction && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-50 p-4 font-sans">
-          <div className="bg-white rounded-2xl w-full max-w-lg p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+{isModalOpen && selectedTransaction && (
+  <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4 font-sans">
+    <div className="bg-white rounded-[32px] w-full max-w-lg p-10 shadow-xl relative animate-in fade-in zoom-in duration-200">
+      
+      {/* Title */}
+      <h2 className="text-2xl font-normal text-gray-600 mb-6">Transaction Details</h2>
 
-            <h2 className="text-xl font-medium text-gray-700 mb-6">Transaction Details</h2>
+      {/* Inner Gray Card */}
+      <div className="bg-[#F8F8F8] rounded-[24px] p-8 mb-8">
+        <div className="grid grid-cols-2 gap-y-8 gap-x-4">
 
-            <div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-8">
-
-              <div>
-                <p className="text-xs text-gray-400 mb-1">Name</p>
-                <p className="text-sm font-medium text-gray-600">{selectedTransaction.name}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-400 mb-1">Email</p>
-                <p className="text-sm font-medium text-gray-600">{selectedTransaction.email}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-400 mb-1">Type</p>
-                <p className="text-sm font-medium text-gray-600">{selectedTransaction.type}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-400 mb-1">Details</p>
-                <p className="text-sm font-medium text-gray-600">{selectedTransaction.details}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-400 mb-1">Date</p>
-                <p className="text-sm font-medium text-gray-600">{selectedTransaction.date}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-400 mb-1">Amount</p>
-                <p className="text-sm font-medium text-gray-600">{selectedTransaction.amount}</p>
-              </div>
-
-            </div>
-
-            {/* Receipt Button */}
-            <div className="mb-6">
-              <button
-                onClick={handleDownloadReceipt}
-                className="bg-[#005f33] text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-[#004d2a] transition shadow-sm"
-              >
-                Download Receipt
-              </button>
-            </div>
-
-            {/* Cancel Button (Bottom Right) */}
-            <div className="flex justify-end">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-[#005f33] font-medium hover:text-[#004d2a] transition text-sm"
-              >
-                Cancel
-              </button>
-            </div>
-
+          <div>
+            <p className="text-sm text-gray-400 mb-1">Name</p>
+            <p className="text-base font-normal text-gray-600">{selectedTransaction.name}</p>
           </div>
+
+          <div>
+            <p className="text-sm text-gray-400 mb-1">Email</p>
+            <p className="text-base font-normal text-gray-600">{selectedTransaction.email}</p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-400 mb-1">Type</p>
+            <p className="text-base font-normal text-gray-600">{selectedTransaction.type}</p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-400 mb-1">Details</p>
+            <p className="text-base font-normal text-gray-600">{selectedTransaction.details}</p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-400 mb-1">Date</p>
+            <p className="text-base font-normal text-gray-600">{selectedTransaction.date}</p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-400 mb-1">Amount</p>
+            <p className="text-base font-normal text-gray-600">{selectedTransaction.amount}</p>
+          </div>
+
         </div>
-      )}
+
+        {/* Download Receipt Button */}
+        <div className="mt-8">
+          <button
+            onClick={handleDownloadReceipt}
+            className="bg-[#006837] text-white px-6 py-3 rounded-[12px] text-sm font-medium hover:bg-[#00522b] transition shadow-sm"
+          >
+            Download Receipt
+          </button>
+        </div>
+      </div>
+
+      {/* Cancel Button (Bottom Right) */}
+      <div className="flex justify-end pr-2">
+        <button
+          onClick={() => setIsModalOpen(false)}
+          className="text-[#2D7A4D] text-lg font-normal hover:text-[#1e5334] transition"
+        >
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
 
     </div>
   );
