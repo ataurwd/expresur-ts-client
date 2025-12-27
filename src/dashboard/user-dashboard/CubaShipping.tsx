@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Helmet } from 'react-helmet';
 
 /**
  * CubaShipping.CubaOnly.tsx
@@ -156,6 +157,9 @@ export default function CubaShippingCubaOnly() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      <Helmet>
+        <title>Cuba Shipping | EXPRESUR</title>
+      </Helmet>
       <div className="mx-auto">
         {/* Top notice: only locker → Cuba, no intra-Cuba transport yet */}
         <div className="bg-white rounded-lg shadow p-4 mb-6 border-l-4 border-[#166534]">

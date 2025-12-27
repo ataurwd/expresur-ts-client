@@ -36,8 +36,8 @@ const AdminNotifications: React.FC = () => {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Notifications Panel</h1>
-          <p className="text-gray-500 mt-1">System alerts and important messages</p>
+          <h1 className="text-[30px] font-bold text-gray-900">Notifications Panel</h1>
+          <p className=" text-[18px] text-gray-500 mt-1">System alerts and important messages</p>
         </div>
 
         <div className="flex items-center gap-4">

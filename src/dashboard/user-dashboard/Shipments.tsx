@@ -30,12 +30,12 @@ const phoneCountryCodes = [
 
 // --- Data for Destination Countries ---
 const destinationCountries = [
-  { name: 'United States', flag: '🇺🇸' },
-  { name: 'Canada', flag: '🇨🇦' },
-  { name: 'United Kingdom', flag: '🇬🇧' },
-  { name: 'Australia', flag: '🇦🇺' },
-  { name: 'Bangladesh', flag: '🇧🇩' },
-  { name: 'China', flag: '🇨🇳' },
+  { name: 'United States', flag: '' },
+  { name: 'Canada', flag: '' },
+  { name: 'United Kingdom', flag: '' },
+  { name: 'Australia', flag: '' },
+  { name: 'Bangladesh', flag: '' },
+  { name: 'China', flag: '' },
 ];
 
 const Shipments = () => {
@@ -93,7 +93,7 @@ const Shipments = () => {
   };
 
   // Helper to find flag for currently selected destination country
-  const currentDestinationFlag = destinationCountries.find(c => c.name === formData.country)?.flag || '🏳️';
+  const currentDestinationFlag = destinationCountries.find(c => c.name === formData.country)?.flag ;
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
@@ -148,7 +148,7 @@ const Shipments = () => {
                   onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">{currentDestinationFlag}</span>
+                    <span className="text-xl" role="img" aria-label={`${formData.country} flag`} style={{ fontFamily: 'Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji, "Twemoji Mozilla", "EmojiOne"' }}>{currentDestinationFlag}</span>
                     <span className="text-gray-700">{formData.country}</span>
                   </div>
                   <ChevronDown className={`text-gray-400 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`} size={18} />
@@ -164,7 +164,7 @@ const Shipments = () => {
                           onClick={() => handleDestinationCountrySelect(country.name)}
                           className="flex items-center gap-3 px-4 py-3 hover:bg-green-50 cursor-pointer transition border-b border-gray-50 last:border-0"
                         >
-                          <span className="text-xl">{country.flag}</span>
+                          <span className="text-xl" role="img" aria-label={`${country.name} flag`} style={{ fontFamily: 'Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji, "Twemoji Mozilla", "EmojiOne"' }}>{country.flag}</span>
                           <span className="text-sm text-gray-700 font-medium">{country.name}</span>
                         </div>
                       ))}

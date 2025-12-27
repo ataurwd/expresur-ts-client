@@ -12,22 +12,15 @@ import {
   SvgIconProps
 } from "@mui/material";
 import {
-  GridView,
-  LockOutlined,
-  Inventory2Outlined,
-  CallSplitOutlined,
   DirectionsBoatFilledOutlined,
-  CreditCardOutlined,
-  LayersOutlined,
   SettingsOutlined,
-  KeyboardBackspace,
-  Logout,
-} from "@mui/icons-material";
+  Shuffle as ConsolidateIcon
 
-// --- 1. Imports for Logic ---
-import Cookies from "js-cookie";
-import { toast } from "sonner"; // Using 'sonner' as requested in your example
-import { useLocation, matchPath, NavLink, Link, useNavigate } from "react-router-dom";
+} from "@mui/icons-material";
+// Link ইম্পোর্ট করা হয়েছে এখানে
+import { useLocation, matchPath, NavLink, Link, } from "react-router-dom";
+
+import { LayoutDashboard, ArrowLeftToLine, LockKeyholeOpen, Package, Wallet, Layers } from 'lucide-react';
 
 interface MenuItem {
   text: string;
@@ -38,37 +31,26 @@ interface MenuItem {
 const drawerWidth = 280;
 const collapsedWidth = 80;
 
-// User Dashboard Menu Items
 const menuItems: MenuItem[] = [
-  { text: "Dashboard", icon: <GridView />, path: "/dashboard/user-dashboard" },
-  { text: "My Locker", icon: <LockOutlined />, path: "/dashboard/locker" },
-  { text: "Packages", icon: <Inventory2Outlined />, path: "/dashboard/packages" },
-  { text: "Consolidations", icon: <CallSplitOutlined />, path: "/dashboard/consolidate" },
+  { text: "Dashboard", icon: <LayoutDashboard />, path: "/dashboard/user-dashboard" },
+  { text: "My Locker", icon: <LockKeyholeOpen />, path: "/dashboard/locker" },
+  { text: "Packages", icon: <Package />, path: "/dashboard/packages" },
+  { text: "Consolidations", icon: <ConsolidateIcon />, path: "/dashboard/consolidate" },
   { text: "Shipments", icon: <DirectionsBoatFilledOutlined />, path: "/dashboard/shipments" },
-  { text: "Wallet", icon: <CreditCardOutlined />, path: "/dashboard/payments" },
-  { text: "Remittances", icon: <LayersOutlined />, path: "/dashboard/remittances" },
+  { text: "Wallet", icon: <Wallet />, path: "/dashboard/payments" },
+  { text: "Remittances", icon: <Layers />, path: "/dashboard/remittances" },
   { text: "Settings", icon: <SettingsOutlined />, path: "/dashboard/profile" },
 ];
 
 export default function UserSidebar() {
   const [open, setOpen] = useState(true);
   const location = useLocation();
-  const navigate = useNavigate(); // Hook for navigation
-
-  // --- 2. Handle Logout Logic ---
-  const handleLogout = () => {
-    Cookies.remove("currentUser");
-    toast.success("Logged out successfully!", {
-      duration: 1500,
-    });
-    navigate("/");
-  };
 
   const handleToggle = () => setOpen((prev) => !prev);
   const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
 
-  const BG_GREEN = "#065f46"; 
-  const ACTIVE_ORANGE = "#f97316"; 
+  const BG_GREEN = "#025939";
+  const ACTIVE_ORANGE = "#fb923c";
 
   return (
     <Drawer
@@ -91,14 +73,15 @@ export default function UserSidebar() {
     >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 3, mb: 2 }}>
         {open && (
+
           <Link to="/" style={{ textDecoration: "none" }}>
-            <Typography 
-              variant="h5" 
-              sx={{ 
-                fontWeight: 900, 
-                color: "#f97316", 
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 900,
+                color: "#fb923c",
                 letterSpacing: 1,
-                cursor: "pointer" 
+                cursor: "pointer"
               }}
             >
               EXPRESUR
@@ -106,11 +89,11 @@ export default function UserSidebar() {
           </Link>
         )}
         <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
-          <KeyboardBackspace sx={{ transform: open ? "rotate(0deg)" : "rotate(180deg)", transition: "0.3s" }} />
+          <ArrowLeftToLine style={{ transform: open ? "rotate(0deg)" : "rotate(180deg)", transition: "0.3s", transformOrigin: "center" }} />
         </IconButton>
       </Box>
 
-      <List sx={{ px: 2, flexGrow: 1 }}>
+      <List sx={{ px: 2 }}>
         {menuItems.map((item) => {
           const match = matchPath(
             { path: normalize(item.path), end: true },
@@ -146,11 +129,15 @@ export default function UserSidebar() {
                     mr: open ? 2 : 0,
                   }}
                 >
-                  {React.cloneElement(item.icon, {
-                    sx: { fontSize: isSelected ? 22 : 26 }
-                  })}
+                  {React.isValidElement(item.icon)
+                    ? React.cloneElement(item.icon as React.ReactElement<any>, {
+                      sx: { fontSize: isSelected ? 22 : 26 },
+                      htmlColor: isSelected ? "#ffffff" : "#ababab",
+                      style: { fontSize: isSelected ? 22 : 26, color: isSelected ? "#ffffff" : "#ababab" },
+                    })
+                    : item.icon}
                 </ListItemIcon>
-                
+
                 <ListItemText
                   primary={item.text}
                   sx={{
@@ -167,41 +154,6 @@ export default function UserSidebar() {
           );
         })}
       </List>
-      
-      {/* --- 3. Bottom Logout Section (Red Style) --- */}
-      <Box sx={{ p: 2, mb: 1 }}>
-        <ListItemButton
-          onClick={handleLogout}
-          sx={{
-            justifyContent: open ? "flex-start" : "center",
-            borderRadius: 2,
-            px: open ? 2 : 0,
-            "&:hover": { backgroundColor: "rgba(255,255,255,0.05)" }
-          }}
-        >
-          <Box
-             sx={{
-               minWidth: 40,
-               minHeight: 40,
-               display: 'flex',
-               alignItems: 'center',
-               justifyContent: 'center',
-               color: '#ef4444', // Red color for logout icon
-               mr: open ? 2 : 'auto',
-             }}
-          >
-             <Logout sx={{ fontSize: 22 }}/>
-          </Box>
-           
-          <ListItemText 
-            primary="Logout" 
-            sx={{ 
-                opacity: open ? 1 : 0, 
-                color: '#ef4444' // Red color for logout text
-            }} 
-          />
-        </ListItemButton>
-      </Box>
     </Drawer>
   );
 }

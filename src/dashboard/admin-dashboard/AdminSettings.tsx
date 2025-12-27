@@ -131,8 +131,8 @@ const AdminSettings = () => {
   const renderPricing = () => (
     <div className="animate-fadeIn space-y-8">
        <div>
-         <h2 className="text-lg font-bold text-gray-800 mb-1">Pricing Configuration</h2>
-         <p className="text-sm text-gray-400 mb-6">Configure shipping rates for different services and destinations</p>
+         <h2 className="text-[30px] font-bold text-gray-800 mb-1">Pricing Configuration</h2>
+         <p className="text-[18px] text-gray-400 mb-6">Configure shipping rates for different services and destinations</p>
          
          <h3 className="text-gray-500 font-medium mb-4">Cuba Pricing</h3>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -22,14 +22,14 @@ const FAQ: React.FC = () => {
           className="
             text-white
             font-[Avenir_Next_LT_Pro]
-            text-[40px]
+            text-[28px]
             md:text-[60px]
             lg:text-[97px]
             font-[700]
             leading-tight
             md:leading-[90px]
             lg:leading-[116px]
-            tracking-[3px]
+            tracking-[2px]
             md:tracking-[4px]
             lg:tracking-[6.01px]
             text-center
@@ -45,7 +45,7 @@ const FAQ: React.FC = () => {
           <div
             className="
               bg-[#F5C65A]
-              w-[643px]
+              w-[200px] sm:w-[360px] md:w-[520px] lg:w-[643px]
               h-[0px]
               border-t-[3px]
               border-[#F5C65A]
@@ -78,7 +78,7 @@ const FAQ: React.FC = () => {
                   "
                 >
                   rápidos, económicos y seguros Lorem ipsum dolor?
-                </h3>
+                 </h3>
 
                 <p
                   className="

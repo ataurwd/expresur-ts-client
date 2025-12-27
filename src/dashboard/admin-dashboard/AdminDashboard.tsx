@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Logo from "../../assets/Grupo 1.png"; // Ensure this path is correct for your project
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
@@ -17,23 +16,22 @@ import {
 // Importing specific icons to match the design
 import {
   GridView as DashboardIcon,
-  Inventory2Outlined as PackagesIcon,
-  LockOutlined as LockerIcon,
+
   Shuffle as ConsolidateIcon,
   LocalShippingOutlined as ShipmentsIcon,
-  LayersOutlined as LogisticGroupIcon,
-  QrCodeScanner as QrIcon,
-  PersonOutline as UsersIcon,
-  AccountBalanceWalletOutlined as WalletIcon,
-  BarChart as ReportIcon,
+
+
+
+
   ManageAccountsOutlined as InternalUsersIcon,
   AssignmentOutlined as AuditIcon,
   BuildOutlined as ApiIcon,
   SettingsOutlined as SettingsIcon,
-  KeyboardDoubleArrowLeft, 
+  KeyboardDoubleArrowLeft,
   KeyboardDoubleArrowRight,
   Logout,
 } from "@mui/icons-material";
+import { Package, LockKeyholeOpen, Layers, QrCode, Users, Wallet, ChartNoAxesColumnIncreasing } from 'lucide-react';
 
 // Link ইম্পোর্ট করা হয়েছে
 import { useNavigate, useLocation, matchPath, NavLink, Link } from "react-router-dom";
@@ -51,15 +49,15 @@ const collapsedWidth = 70;
 /* Updated Menu Items to match the screenshot exactly */
 const adminMenuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard/admin" },
-  { text: "Packages", icon: <PackagesIcon />, path: "/dashboard/admin-packages" },
-  { text: "Locker", icon: <LockerIcon />, path: "/dashboard/admin-locker" },
+  { text: "Packages", icon: <Package />, path: "/dashboard/admin-packages" },
+  { text: "Locker", icon: <LockKeyholeOpen />, path: "/dashboard/admin-locker" },
   { text: "Consolidations", icon: <ConsolidateIcon />, path: "/dashboard/admin-consolidations" },
   { text: "Shipments", icon: <ShipmentsIcon />, path: "/dashboard/admin-shipments" },
-  { text: "Logistic Group", icon: <LogisticGroupIcon />, path: "/dashboard/logistic-group" },
-  { text: "QR Scanning", icon: <QrIcon />, path: "/dashboard/qr-scanning" },
-  { text: "Users", icon: <UsersIcon />, path: "/dashboard/admin-users" },
-  { text: "Wallet", icon: <WalletIcon />, path: "/dashboard/admin-wallet" },
-  { text: "Report", icon: <ReportIcon />, path: "/dashboard/admin-reports" },
+  { text: "Logistic Group", icon: <Layers />, path: "/dashboard/logistic-group" },
+  { text: "QR Scanning", icon: <QrCode />, path: "/dashboard/qr-scanning" },
+  { text: "Users", icon: <Users />, path: "/dashboard/admin-users" },
+  { text: "Wallet", icon: <Wallet />, path: "/dashboard/admin-wallet" },
+  { text: "Report", icon: <ChartNoAxesColumnIncreasing />, path: "/dashboard/admin-reports" },
   { text: "Internal Users", icon: <InternalUsersIcon />, path: "/dashboard/internal-users" },
   { text: "Audit Logs", icon: <AuditIcon />, path: "/dashboard/audit-logs" },
   { text: "API Integrations", icon: <ApiIcon />, path: "/dashboard/api-integrations" },
@@ -141,7 +139,7 @@ export default function AdminSidebar({
             </Typography>
           </Link>
         )}
-        
+
         <IconButton onClick={handleToggle} sx={{ color: "#fff", p: 0.5 }}>
           {open ? <KeyboardDoubleArrowLeft /> : <KeyboardDoubleArrowRight />}
         </IconButton>
@@ -170,10 +168,10 @@ export default function AdminSidebar({
                   justifyContent: open ? "initial" : "center",
                   px: 0, // Reset padding to handle centering manually
                   borderRadius: "50px", // Rounded styling
-                  
+
                   // Removing default MUI selected background
                   "&.Mui-selected": {
-                    backgroundColor: "transparent", 
+                    backgroundColor: "transparent",
                   },
                   "&.Mui-selected:hover": {
                     backgroundColor: "transparent",
@@ -185,22 +183,22 @@ export default function AdminSidebar({
               >
                 {/* ICON WRAPPER (This handles the orange circle) */}
                 <Box
-                    sx={{
-                        minWidth: 40,
-                        minHeight: 40,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '50%',
-                        backgroundColor: isSelected ? ACTIVE_ORANGE : 'transparent',
-                        color: isSelected ? '#FFF' : '#8faebb', // Text color for inactive icons
-                        mr: open ? 2 : 'auto',
-                        ml: open ? 0 : 'auto',
-                        transition: 'all 0.2s ease-in-out',
-                    }}
+                  sx={{
+                    minWidth: 40,
+                    minHeight: 40,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '50%',
+                    backgroundColor: isSelected ? ACTIVE_ORANGE : 'transparent',
+                    color: isSelected ? '#FFF' : '#8faebb', // Text color for inactive icons
+                    mr: open ? 2 : 'auto',
+                    ml: open ? 0 : 'auto',
+                    transition: 'all 0.2s ease-in-out',
+                  }}
                 >
-                    {/* FIXED: Added <any> to cast the icon */}
-                    {React.cloneElement(item.icon as React.ReactElement<any>, { sx: { fontSize: 22 } })}
+                  {/* FIXED: Added <any> to cast the icon */}
+                  {React.cloneElement(item.icon as React.ReactElement<any>, { sx: { fontSize: 22 } })}
                 </Box>
 
                 {/* TEXT LABEL */}
@@ -236,25 +234,25 @@ export default function AdminSidebar({
           }}
         >
           <Box
-             sx={{
-                minWidth: 40,
-                minHeight: 40,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ef4444', // Red color for logout
-                mr: open ? 2 : 'auto',
-             }}
+            sx={{
+              minWidth: 40,
+              minHeight: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ef4444', // Red color for logout
+              mr: open ? 2 : 'auto',
+            }}
           >
-              <Logout sx={{ fontSize: 22 }}/>
+            <Logout sx={{ fontSize: 22 }} />
           </Box>
-          
-          <ListItemText 
-            primary="Logout" 
-            sx={{ 
-                opacity: open ? 1 : 0, 
-                color: '#ef4444' 
-            }} 
+
+          <ListItemText
+            primary="Logout"
+            sx={{
+              opacity: open ? 1 : 0,
+              color: '#ef4444'
+            }}
           />
         </ListItemButton>
       </Box>

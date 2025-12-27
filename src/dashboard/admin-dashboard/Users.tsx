@@ -7,8 +7,10 @@ import {
   ChevronRight, 
   X,
   User as UserIcon,
-  Trash2  // Added for Delete icon
+  Trash2
 } from 'lucide-react';
+
+import { Helmet } from 'react-helmet';
 
 // --- TYPES ---
 interface UserType {
@@ -35,7 +37,7 @@ const INITIAL_USERS: UserType[] = [
 
 const ITEMS_PER_PAGE = 5;
 
-// --- MODAL COMPONENT (View only now) ---
+// --- MODAL COMPONENT (Updated with larger text) ---
 const UserModal = ({ 
   isOpen, 
   user, 
@@ -49,81 +51,66 @@ const UserModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white rounded-2xl w-full max-w-2xl mx-4 shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-3xl w-full max-w-3xl mx-4 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
         {/* Modal Header */}
-        <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">User Details</h2>
-            <p className="text-sm text-gray-500 mt-1">Viewing customer profile information</p>
-          </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400">
-            <X size={24} />
-          </button>
+        <div className="px-8 py-6 border-b border-transparent">
+          <h2 className="text-xl font-bold text-gray-900">User Details</h2>
+          <p className="text-sm text-gray-500 mt-1">Viewing customer profile information</p>
         </div>
 
         {/* Modal Body */}
-        <div className="p-8 overflow-y-auto custom-scrollbar">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* Field: Name */}
-            <div className="col-span-2">
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
-              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
-                {user.name}
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+          <div className="bg-gray-100 rounded-xl p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              {/* Field: Name */}
+              <div className="col-span-2">
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full name</label>
+                <div className="text-lg font-medium text-gray-900">{user.name}</div>
               </div>
-            </div>
 
-            {/* Field: Email */}
-            <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
-              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
-                {user.email}
+              {/* Field: Email */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email</label>
+                <div className="text-base text-gray-700">{user.email}</div>
               </div>
-            </div>
 
-            {/* Field: Phone */}
-            <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Phone Number</label>
-              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
-                {user.phone}
+              {/* Field: Address */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Address</label>
+                <div className="text-base text-gray-700 leading-relaxed">{user.address}</div>
               </div>
-            </div>
 
-            {/* Field: Locker ID */}
-            <div>
-               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Locker ID</label>
-               <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-500 font-mono">
-                 {user.lockerId}
-               </div>
-            </div>
-
-            {/* Field: Date */}
-            <div>
-               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Registration Date</label>
-               <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-500">
-                 {user.date}
-               </div>
-            </div>
-
-             {/* Field: Address */}
-             <div className="col-span-2">
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Address</label>
-              <div className="w-full p-4 rounded-xl bg-gray-50 border border-transparent text-gray-600">
-                {user.address}
+              {/* Field: Locker ID */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Locker ID</label>
+                <div className="text-base text-gray-700 font-mono">{user.lockerId}</div>
               </div>
-            </div>
 
+              {/* Field: Phone */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Phone</label>
+                <div className="text-base text-gray-700">{user.phone}</div>
+              </div>
+
+              {/* Field: Date */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Registered date</label>
+                <div className="text-base text-gray-700">{user.date}</div>
+              </div>
+
+            </div>
           </div>
         </div>
 
         {/* Modal Footer */}
-        <div className="px-8 py-6 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end">
+        <div className="px-8 py-6 border-t border-transparent bg-white rounded-b-3xl flex justify-end">
           <button 
             type="button" 
             onClick={onClose} 
-            className="px-6 py-2.5 rounded-xl text-gray-500 font-medium hover:bg-white hover:text-gray-800 hover:shadow-sm transition-all border border-transparent hover:border-gray-200"
+            className="text-green-600 font-medium hover:underline"
           >
-            Close
+            Cancel
           </button>
         </div>
       </div>
@@ -140,13 +127,13 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Modal State (View only)
+  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   // --- LOGIC ---
   
-  // 1. Filter Data based on Search
+  // Filter Data based on Search
   const filteredUsers = useMemo(() => {
     return users.filter(user => 
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -155,12 +142,12 @@ const Users = () => {
     );
   }, [searchTerm, users]);
 
-  // 2. Pagination Logic
+  // Pagination Logic
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentUsers = filteredUsers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // 3. Handlers
+  // Handlers
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
@@ -179,20 +166,24 @@ const Users = () => {
     if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
 
-  // --- MODAL HANDLER (View only) ---
   const handleView = (user: UserType) => {
     setSelectedUser(user);
     setIsModalOpen(true);
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
+    <>
+      <Helmet>
+        <title>User Management | EXPRESUR</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-[#F8F9FB] p-8 font-sans text-gray-800">
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">User Management</h1>
-          <p className="text-gray-400 mt-1">Manage all customer and admin accounts</p>
+          <h1 className="text-[30px] font-bold text-gray-900 tracking-tight">User Management</h1>
+          <p className="text-[18px] text-gray-400 mt-1">Manage all customer and admin accounts</p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -214,28 +205,32 @@ const Users = () => {
       </div>
 
       {/* --- CONTROLS --- */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="relative w-full md:w-[400px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search by name, locker ID, date...." 
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); 
-            }}
-            className="w-full bg-white pl-12 pr-4 py-3 rounded-full shadow-sm border-none outline-none focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400 text-sm"
-          />
-        </div>
+      <div className="mb-6">
+        <div className="bg-white p-4 rounded-3xl shadow-sm flex flex-col md:flex-row md:justify-between items-center gap-4">
+          <div className="relative flex-1 md:max-w-[900px] w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input 
+              type="text" 
+              placeholder="Search by name, locker ID, date...." 
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1); 
+              }}
+              className="w-full bg-transparent pl-12 pr-4 py-3 rounded-full border-none outline-none focus:ring-0 placeholder:text-gray-400 text-sm"
+            />
+          </div>
 
-        <button 
-          onClick={handleRefresh}
-          className="flex items-center gap-2 bg-white px-5 py-3 rounded-full shadow-sm text-gray-500 hover:text-gray-800 hover:bg-gray-50 transition-all text-sm font-medium"
-        >
-          <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-          Refresh
-        </button>
+          <div className="flex-shrink-0 md:ml-0 ml-auto">
+            <button 
+              onClick={handleRefresh}
+              className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm text-gray-500 hover:text-gray-800 hover:bg-gray-50 transition-all text-sm font-medium border border-gray-100"
+            >
+              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+              Refresh
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* --- TABLE --- */}
@@ -277,7 +272,6 @@ const Users = () => {
                     <td className="p-6 text-sm text-gray-500">{user.date}</td>
                     <td className="p-6">
                       <div className="flex items-center justify-center gap-2">
-                        {/* Delete button (no functionality) */}
                         <button 
                           className="px-4 py-1.5 rounded-lg bg-red-100 text-red-600 text-xs font-bold hover:bg-red-200 transition-all shadow-sm flex items-center gap-1.5"
                         >
@@ -350,6 +344,7 @@ const Users = () => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 

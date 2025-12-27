@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Box, Plus, X, Calendar, User, Package, Search, Truck } from 'lucide-react';
+import { Box, Plus, X,  Search, Truck, Bell, QrCode, } from 'lucide-react';
 
 /* --- INTERFACE --- */
 interface ConsolidationData {
@@ -43,6 +44,7 @@ const INITIAL_DATA: ConsolidationData[] = [
 ];
 
 const AdminConsolidations = () => {
+  const navigate = useNavigate();
   const [consolidations, setConsolidations] = useState<ConsolidationData[]>(INITIAL_DATA);
   const [activeTab, setActiveTab] = useState<'Pending' | 'History'>('Pending');
   const [search, setSearch] = useState('');
@@ -90,20 +92,25 @@ const AdminConsolidations = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-6 md:p-10 font-sans text-gray-800 relative">
       <Helmet>
-        <title>AdminConsolidations | EXPRESUR</title>
+        <title>Admin Consolidations | EXPRESUR</title>
       </Helmet>
 
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
-          <h1 className="text-[28px] font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
-          <p className="text-gray-400 mt-1 text-[15px]">Handle consolidation requests and prepare for shipping</p>
+          <h1 className="text-[30px] font-bold text-[#111827] tracking-tight leading-tight">Consolidation Management</h1>
+          <p className="text-gray-400 mt-1 text-[20px]">Handle consolidation requests and prepare for shipping</p>
         </div>
-        <div className="flex items-center gap-3 bg-white pl-1 pr-4 py-1.5 rounded-full shadow-sm border border-gray-100">
-          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
-          <div className="hidden md:block">
-            <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
-            <p className="text-xs text-gray-400">tyrion@example.com</p>
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/dashboard/admin-notifications')} className="p-3 bg-white rounded-full shadow-sm hover:bg-gray-50 text-gray-400 transition-colors">
+            <Bell size={20} />
+          </button>
+          <div onClick={() => navigate('/dashboard/admin-notifications')} className="bg-white pl-2 pr-6 py-2 rounded-full shadow-sm flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-10 h-10 rounded-full bg-green-100" />
+            <div className="hidden md:block">
+              <h4 className="text-sm font-bold text-gray-800 leading-tight">Tyrion Lannister</h4>
+              <p className="text-xs text-gray-400">tyrion@example.com</p>
+            </div>
           </div>
         </div>
       </div>
@@ -178,7 +185,7 @@ interface CardProps {
 const ConsolidationCard: React.FC<CardProps> = ({ data, isHistory, onView }) => {
   if (isHistory) {
     return (
-      <div className="bg-white p-7 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col">
+      <div className="bg-white p-8 rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col">
         <div className="flex justify-between items-start mb-6">
           <h3 className="text-xl font-bold text-gray-800">{data.id}</h3>
           <span className="text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide bg-green-100 text-green-800">
@@ -229,7 +236,7 @@ const ConsolidationCard: React.FC<CardProps> = ({ data, isHistory, onView }) => 
 
   // Pending Card
   return (
-    <div className="bg-white p-7 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
+    <div className="bg-white p-8 rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-50 hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
       <div className="flex justify-between items-start mb-5">
         <h3 className="text-xl font-bold text-gray-700 tracking-tight">{data.id}</h3>
         <span className="text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide bg-[#ffedd5] text-[#c2410c]">
@@ -273,18 +280,22 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
-  const [customer, setCustomer] = useState("");
-  const [packages, setPackages] = useState(1);
-  const [weight, setWeight] = useState(5.0);
+  const [customer, ] = useState("");
+  const [weight, ] = useState(5.0);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ customer, packages, weight });
-  };
+  // For create-mode advanced UI
+  const [scanInput, setScanInput] = useState('');
+  const [availablePackages] = useState([
+    { id: 'TRK001234567', desc: 'UPS • 2.5 kg • 30×20×15 cm' },
+    { id: 'TRK001234568', desc: 'UPS • 2.5 kg • 30×20×15 cm' },
+    { id: 'TRK007283945', desc: 'UPS • 4.2 kg • 45×35×25 cm' },
+  ]);
+  const [selectedPackageIds, setSelectedPackageIds] = useState<string[]>([availablePackages[2].id]);
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
+      <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#f8f9fa]">
           <h3 className="text-lg font-bold text-gray-800">
             {mode === 'create' ? 'New Consolidation' : 'Consolidation Details'}
@@ -296,97 +307,94 @@ const Modal: React.FC<ModalProps> = ({ mode, data, onClose, onSubmit }) => {
 
         {mode === 'view' && data ? (
           <div className="p-6 space-y-4">
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-              <div className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">Status</div>
-              <div className={`text-lg font-bold ${data.status === 'Pending' ? 'text-orange-600' : 'text-green-600'}`}>
-                {data.status}
+            <div className="mb-2">
+              <h2 className="text-2xl font-bold text-gray-900">{data.id}</h2>
+              <p className="text-sm text-gray-500">Packages in Consolidation</p>
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+              <div className="grid grid-cols-12 gap-4 items-center text-xs text-gray-400 border-b border-gray-100 pb-3 mb-3">
+                <div className="col-span-4">Tracking</div>
+                <div className="col-span-3">Carrier</div>
+                <div className="col-span-2">Weight</div>
+                <div className="col-span-3 text-right">Created Date</div>
+              </div>
+
+              <div className="space-y-2">
+                {availablePackages.map((pkg, idx) => (
+                  <div
+                    key={pkg.id + idx}
+                    className={`bg-white px-4 py-3 grid grid-cols-12 items-center rounded-lg shadow-sm ${idx < availablePackages.length - 1 ? '' : ''}`}
+                  >
+                    <div className="col-span-4 font-medium text-gray-800">{pkg.id.replace('TRK00','PK-').replace('TRK0','PK-')}</div>
+                    <div className="col-span-3 text-gray-600">UPS</div>
+                    <div className="col-span-2 text-gray-600">2.5 kg</div>
+                    <div className="col-span-3 text-right text-gray-500">{data.date}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <User className="text-gray-400" size={18} />
-                <div>
-                  <div className="text-xs text-gray-400">Customer</div>
-                  <div className="font-medium text-gray-800">{data.customer}</div>
-                </div>
+            <div className="flex items-center justify-between mt-4">
+              <div>
+                <div className="text-xs text-gray-400 mb-1 font-semibold">Status</div>
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${data.status === 'Pending' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
+                  {data.status}
+                </span>
               </div>
-              <div className="flex items-center gap-3">
-                <Calendar className="text-gray-400" size={18} />
-                <div>
-                  <div className="text-xs text-gray-400">Date Requested</div>
-                  <div className="font-medium text-gray-800">{data.date}</div>
-                </div>
+
+              <div>
+                <button onClick={onClose} className="px-4 py-2 rounded-lg bg-white border border-green-100 text-green-600 font-medium hover:bg-green-50">Cancel</button>
               </div>
-              <div className="flex items-center gap-3">
-                <Package className="text-gray-400" size={18} />
-                <div>
-                  <div className="text-xs text-gray-400">Packages & Weight</div>
-                  <div className="font-medium text-gray-800">{data.packages} packages • {data.weight.toFixed(1)} kg</div>
-                </div>
-              </div>
-              {data.contents && (
-                <div>
-                  <div className="text-xs text-gray-400">Contents</div>
-                  <div className="font-medium text-gray-800">{data.contents}</div>
-                </div>
-              )}
-              {data.trackingNumber && (
-                <div className="flex items-center gap-3">
-                  <Truck className="text-gray-400" size={18} />
-                  <div>
-                    <div className="text-xs text-gray-400">Tracking Number</div>
-                    <div className="font-medium text-gray-800">{data.trackingNumber}</div>
-                  </div>
-                </div>
-              )}
             </div>
-            <button onClick={onClose} className="w-full mt-4 bg-gray-100 text-gray-600 py-2.5 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
-              Close
-            </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          // Create-mode: show scan input + selectable package list matching design
+          <div className="p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
-              <input
-                required
-                type="text"
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
-                placeholder="e.g. John Doe"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-2">Scan to Add Package</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="text"
+                  placeholder="Scan Tracking Number"
+                  value={scanInput}
+                  onChange={(e) => setScanInput(e.target.value)}
+                  className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none"
+                />
+                <button onClick={() => { /* simulate scan action */ }} type="button" className="bg-[#166534] text-white p-2 rounded-lg">
+                  <QrCode size={18} />
+                </button>
+              </div>
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Number of Packages</label>
-              <input
-                required
-                type="number"
-                min="1"
-                value={packages}
-                onChange={(e) => setPackages(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
-              />
+              <div className="text-sm text-gray-600 mb-2">Select Packages ({selectedPackageIds.length} selected)</div>
+              <div className="space-y-3">
+                {availablePackages.map(pkg => (
+                  <label key={pkg.id} className="flex items-start gap-3 p-3 bg-white border border-gray-100 rounded-lg">
+                    <input
+                      type="checkbox"
+                      checked={selectedPackageIds.includes(pkg.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) setSelectedPackageIds(prev => [...prev, pkg.id]);
+                        else setSelectedPackageIds(prev => prev.filter(id => id !== pkg.id));
+                      }}
+                      className="mt-1"
+                    />
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-800">{pkg.id}</div>
+                      <div className="text-gray-500 text-xs mt-1">{pkg.desc}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Total Weight (kg)</label>
-              <input
-                required
-                type="number"
-                min="0.1"
-                step="0.1"
-                value={weight}
-                onChange={(e) => setWeight(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
-              />
+
+            <div className="flex justify-end items-center gap-6">
+              <button onClick={onClose} className="text-gray-600">Cancel</button>
+              <button onClick={() => { onSubmit({ customer, packages: selectedPackageIds.length, weight }); }} className="text-green-600 font-semibold">Create</button>
             </div>
-            <div className="pt-2">
-              <button type="submit" className="w-full bg-[#166534] text-white py-2.5 rounded-lg font-semibold hover:bg-[#14532d] transition-colors shadow-md">
-                Create Consolidation
-              </button>
-            </div>
-          </form>
+          </div>
         )}
       </div>
     </div>

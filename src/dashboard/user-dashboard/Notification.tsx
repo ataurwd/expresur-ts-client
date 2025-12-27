@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { Toaster, toast } from 'sonner';
 import { 
   Bell, 
@@ -6,7 +7,8 @@ import {
   MessageCircle, 
   MessageSquare, 
   Mail,
-  Headphones
+  Headphones,
+  Headset
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -77,6 +79,9 @@ const Notification = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
+      <Helmet>
+        <title>Notifications | EXPRESUR</title>
+      </Helmet>
       <Toaster position="top-center" richColors closeButton />
 
       {/* --- Header --- */}
@@ -174,7 +179,7 @@ const Notification = () => {
                {/* Section Header */}
                <div className="mb-8">
                   <div className="flex items-center gap-3 text-gray-400 mb-2">
-                     <Headphones size={20} />
+                     <Headset size={20} />
                      <h3 className="font-medium text-lg text-gray-600">Contact Support</h3>
                   </div>
                   <p className="text-sm text-gray-400 pl-8">Get in touch with our support team.</p>

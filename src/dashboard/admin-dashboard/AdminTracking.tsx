@@ -94,8 +94,8 @@ export default function AdminTracking() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Tracking — Parcels</h1>
-        <p className="text-gray-600 mt-2">Gestión y seguimiento de todos los envíos</p>
+        <h1 className="text-[30px] font-bold text-gray-900">Tracking — Parcels</h1>
+        <p className="text-[18px] text-gray-600 mt-2">Gestión y seguimiento de todos los envíos</p>
       </div>
 
       {/* Filter + Search Section */}
