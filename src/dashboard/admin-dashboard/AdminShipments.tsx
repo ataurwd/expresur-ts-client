@@ -18,15 +18,17 @@ interface Shipment {
   carrier: string;
   estimatedDate: string;
   status: 'Delivered' | 'In Transit' | 'Cancelled' | 'Pending' | 'Assigned';
+  clientId?: string;
+  customerEmail?: string;
 }
 
 const INITIAL_DATA: Shipment[] = [
-  { id: '1', customerName: 'María González', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Delivered' },
-  { id: '2', customerName: 'María González', customerPhone: '+34 612 345 678', packageId: 'PK-0046', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '11/21/2024', status: 'In Transit' },
-  { id: '3', customerName: 'María González', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '7/5/2024', status: 'Cancelled' },
-  { id: '4', customerName: 'María González', customerPhone: '+34 612 345 678', packageId: 'PK-0046', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '11/21/2024', status: 'Pending' },
-  { id: '5', customerName: 'María González', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '7/5/2024', status: 'Assigned' },
-  { id: '6', customerName: 'John Doe', customerPhone: '+1 555 019 283', packageId: 'PK-0048', lockerId: 'LCK-128B', routeFrom: 'Madrid, Spain', routeTo: 'Havana, Cuba', carrier: 'DHL', estimatedDate: '8/10/2024', status: 'In Transit' },
+  { id: '1', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Delivered' },
+  { id: '2', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0046', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '11/21/2024', status: 'In Transit' },
+  { id: '3', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '7/5/2024', status: 'Cancelled' },
+  { id: '4', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0046', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '11/21/2024', status: 'Pending' },
+  { id: '5', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '7/5/2024', status: 'Assigned' },
+  { id: '6', clientId: 'C-0002', customerName: 'John Doe', customerEmail: 'john.doe@example.com', customerPhone: '+1 555 019 283', packageId: 'PK-0048', lockerId: 'LCK-128B', routeFrom: 'Madrid, Spain', routeTo: 'Havana, Cuba', carrier: 'DHL', estimatedDate: '8/10/2024', status: 'In Transit' },
 ];
 
 const AdminShipments = memo(() => {
@@ -161,9 +163,9 @@ const AdminShipments = memo(() => {
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium border-b border-gray-100">
                     <tr>
-                      <th className="p-5 font-normal">Customer</th>
-                      <th className="p-5 font-normal">Package ID</th>
-                      <th className="p-5 font-normal">Locker ID</th>
+                      <th className="p-5 font-normal">Client</th>
+                      <th className="p-5 font-normal">Client ID</th>
+                      <th className="p-5 font-normal">Tracking Number</th>
                       <th className="p-5 font-normal">Route</th>
                       <th className="p-5 font-normal">Carrier</th>
                       <th className="p-5 font-normal">Estimated date</th>
@@ -176,13 +178,13 @@ const AdminShipments = memo(() => {
                       <tr key={item.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors group">
                         <td className="p-5">
                           <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
-                          <div className="text-[13px] text-gray-500">{item.customerPhone}</div>
+                          <div className="text-[13px] text-gray-500">{item.customerEmail || item.customerPhone}</div>
                         </td>
+                        <td className="p-5 text-gray-700">{item.clientId || ''}</td>
                         <td className="p-5 text-gray-700">{item.packageId}</td>
-                        <td className="p-5 text-gray-700">{item.lockerId}</td>
                         <td className="p-5">
                           <div className="text-gray-700 leading-tight">{item.routeFrom.split(',')[0]},</div>
-                          <div className="text-gray-500 text-[13px]">Spain → Havana, Cuba</div>
+                          <div className="text-gray-500 text-[13px]">{item.routeTo}</div>
                         </td>
                         <td className="p-5 text-gray-700">{item.carrier}</td>
                         <td className="p-5 text-gray-700">{item.estimatedDate}</td>
