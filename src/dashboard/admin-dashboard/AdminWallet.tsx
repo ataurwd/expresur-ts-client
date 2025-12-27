@@ -5,10 +5,10 @@ import {
   Filter,
   ChevronRight,
   ChevronDown,
-  X,
   DollarSign,
   FileText,
-  Download
+  Download,
+  ArrowRight
 } from 'lucide-react';
 
 import { Helmet } from 'react-helmet';
@@ -302,6 +302,114 @@ const AdminWallet = () => {
           </button>
         </div>
       </div>
+
+
+      <div className="bg-white rounded-3xl shadow-sm p-8">
+  {/* Header Section */}
+  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+    <h2 className="text-2xl text-gray-500 font-normal">Transaction History</h2>
+    <div className="flex items-center gap-3">
+      <div className="relative">
+        <button
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+          className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg text-sm text-gray-400 hover:bg-gray-100 transition-colors"
+        >
+          {filterPeriod} <ChevronDown size={14} />
+        </button>
+        {isFilterOpen && (
+          <div className="absolute top-full mt-2 right-0 w-40 bg-white shadow-xl rounded-xl border border-gray-100 z-10 py-2">
+            {['All Time', 'This month', 'Last Month'].map(opt => (
+              <button
+                key={opt}
+                className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-green-600 transition-colors"
+                onClick={() => handleFilterSelect(opt)}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      <button className="p-2 bg-gray-50 rounded-full text-gray-400 hover:text-gray-600 transition-colors">
+        <Filter size={18} />
+      </button>
+
+      <button
+        onClick={handleDownload}
+        className="px-6 py-2 bg-[#066333] text-white rounded-lg text-sm font-medium hover:bg-green-900 transition-colors"
+      >
+        Download Report
+      </button>
+      
+      <button className="px-6 py-2 border border-gray-100 text-gray-400 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+        Export
+      </button>
+    </div>
+  </div>
+
+  {/* Table Section */}
+  <div className="overflow-x-auto">
+    <table className="w-full text-left border-collapse">
+      <thead>
+        <tr>
+          <th className="pb-6 pl-2 text-sm font-medium text-gray-400">Date</th>
+          <th className="pb-6 text-sm font-medium text-gray-400">Customer</th>
+          <th className="pb-6 text-sm font-medium text-gray-400">Type</th>
+          <th className="pb-6 text-sm font-medium text-gray-400">Amount</th>
+          <th className="pb-6 text-sm font-medium text-gray-400">Balance After</th>
+          <th className="pb-6 pr-2 text-sm font-medium text-gray-400 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-gray-50">
+        {currentTransactions.map((trx) => (
+          <tr key={trx.id} className="group hover:bg-gray-50/50 transition-colors">
+            <td className="py-6 pl-2 text-sm text-gray-500">{trx.date}</td>
+            <td className="py-6">
+              <div>
+                <div className="font-bold text-gray-700">{trx.customerName}</div>
+                <div className="text-sm text-gray-400">{trx.customerEmail}</div>
+              </div>
+            </td>
+            <td className="py-6 text-sm text-gray-500">{trx.type}</td>
+            <td className="py-6 text-sm text-gray-500">
+              {trx.currency} {trx.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </td>
+            <td className="py-6 text-sm text-gray-500">
+              {trx.currency} {trx.balanceAfter.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </td>
+            <td className="py-6 pr-2 text-right">
+              <button
+                onClick={() => handleView(trx)}
+                className="text-xs px-5 py-2 bg-gray-50 text-gray-400 rounded-full hover:bg-gray-100 hover:text-gray-600 transition-all"
+              >
+                View
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {/* Pagination Section */}
+  <div className="flex justify-end items-center gap-8 mt-10">
+    <button
+      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+      disabled={currentPage === 1}
+      className="text-sm text-gray-400 hover:text-gray-600 disabled:opacity-30 transition-colors"
+    >
+      Previous
+    </button>
+    <button
+      onClick={() => setCurrentPage(p => p + 1)}
+      disabled={currentPage >= totalPages}
+      className="flex items-center gap-2 text-sm text-[#066333] font-medium hover:opacity-80 disabled:opacity-30 transition-all"
+    >
+      Next <ArrowRight size={18} />
+    </button>
+  </div>
+</div>
 
       {/* MODAL - same as before, omitted for brevity but kept in full code */}
       {isModalOpen && selectedTransaction && (

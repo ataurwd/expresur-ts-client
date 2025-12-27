@@ -309,9 +309,9 @@ const Users = () => {
              Previous
            </button>
 
-           <div className="text-sm font-medium text-gray-400">
+           {/* <div className="text-sm font-medium text-gray-400">
               Page {currentPage} of {totalPages === 0 ? 1 : totalPages}
-           </div>
+           </div> */}
 
            <button 
              onClick={handleNext}
