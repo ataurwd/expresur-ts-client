@@ -29,6 +29,7 @@ const Remittances = () => {
   // --- State ---
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<TransferStatus | null>(null);
+  const [showPageIndicator, setShowPageIndicator] = useState(true);
   const itemsPerPage = 5;
 
   // --- Mock Data ---
@@ -62,8 +63,10 @@ const Remittances = () => {
   const handlePageChange = (direction: 'next' | 'prev') => {
     if (direction === 'next' && currentPage < totalPages) {
       setCurrentPage(prev => prev + 1);
+      setShowPageIndicator(false);
     } else if (direction === 'prev' && currentPage > 1) {
       setCurrentPage(prev => prev - 1);
+      setShowPageIndicator(false);
     }
   };
 
@@ -249,7 +252,9 @@ const Remittances = () => {
             >
               Previous
             </button>
-            <span className="text-xs text-gray-400">Page {currentPage} of {totalPages || 1}</span>
+            {showPageIndicator && (
+              <span className="text-xs text-gray-400">Page {currentPage} of {totalPages || 1}</span>
+            )}
             <button
               onClick={() => handlePageChange('next')}
               className={`flex items-center gap-1 transition ${currentPage >= totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-[#005f33] hover:text-[#004d2a]'}`}
