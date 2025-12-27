@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ShoppingBag,
@@ -9,11 +9,15 @@ import {
   Box,
   QrCode,
   LucideIcon,
-  Clock // Added for time icon
+  Clock,
+  X,
+  Trash2,
+  Filter,
+  ListFilter
 } from 'lucide-react';
-
 import { Helmet } from 'react-helmet';
 
+// --- Interfaces ---
 interface ModeConfigType {
   label: string;
   Icon: LucideIcon;
@@ -22,6 +26,17 @@ interface ModeConfigType {
   listLabel: string;
 }
 
+interface ScanHistoryItem {
+  id: string;
+  type: string;
+  customer: string;
+  destination: string;
+  weight: string;
+  time: string;
+  timestamp: number;
+}
+
+// --- Configuration ---
 const MODE_CONFIG: Record<string, ModeConfigType> = {
   package: {
     label: 'Package',
@@ -53,75 +68,106 @@ const MODE_CONFIG: Record<string, ModeConfigType> = {
   }
 };
 
-const NAMES = ['John Martinez', 'Sarah Connor', 'Kyle Reese', 'Rick Deckard', 'Ellen Ripley'];
-const CITIES = ['Cuba - Havana', 'USA - New York', 'Japan - Tokyo', 'UK - London', 'Germany - Berlin'];
+const NAMES = ['John Martinez', 'Sarah Connor', 'Kyle Reese', 'Rick Deckard', 'Ellen Ripley', 'Bruce Wayne'];
+const CITIES = ['Cuba - Havana', 'USA - New York', 'Japan - Tokyo', 'UK - London', 'Germany - Berlin', 'France - Paris'];
 
 const AdminQrCode = () => {
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+  
   const [activeMode, setActiveMode] = useState<string>('package');
+  const [isFilterActive, setIsFilterActive] = useState<boolean>(true); // New State for filtering logic
   const [inputCode, setInputCode] = useState('');
-
-  const [history, setHistory] = useState([
-    {
-      id: 'PKG-2024-987654',
-      type: 'package',
-      customer: 'John Martinez',
-      destination: 'Cuba - Havana',
-      weight: '2.5 kg',
-      time: '9:15:17 AM',
-    },
-    {
-      id: 'CONT-MARITIME-2024-0123',
-      type: 'container',
-      customer: 'John Martinez',
-      destination: 'Cuba - Havana',
-      weight: '500 kg',
-      time: '9:15:17 AM',
-    },
-    {
-      id: 'DEL-2024-321098',
-      type: 'delivery',
-      customer: 'Kyle Reese',
-      destination: 'Japan - Tokyo',
-      weight: '15.7 kg',
-      time: '11:28:33 AM',
-    },
-    {
-      id: 'CONT-MARITIME-2024-0123',
-      type: 'container',
-      customer: 'Ellen Ripley',
-      destination: 'Germany - Berlin',
-      weight: '1200 kg',
-      time: '12:05:50 PM',
+  
+  // Load initial history
+  const [history, setHistory] = useState<ScanHistoryItem[]>(() => {
+    const saved = localStorage.getItem('scanHistory');
+    if (saved) {
+      return JSON.parse(saved);
     }
-  ]);
+    return [
+      {
+        id: 'PKG-2024-987654',
+        type: 'package',
+        customer: 'John Martinez',
+        destination: 'Cuba - Havana',
+        weight: '2.5 kg',
+        time: '9:15:17 AM',
+        timestamp: Date.now()
+      },
+      {
+        id: 'BAG-2024-555555',
+        type: 'bag',
+        customer: 'Sarah Connor',
+        destination: 'USA - Los Angeles',
+        weight: '1.2 kg',
+        time: '10:30:00 AM',
+        timestamp: Date.now() - 1000
+      }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('scanHistory', JSON.stringify(history));
+  }, [history]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [history, activeMode]);
+
+  // --- Logic to Handle Mode Selection ---
+  const handleModeClick = (key: string) => {
+    if (activeMode === key) {
+      // If clicking the SAME button again, toggle the filter (On/Off)
+      setIsFilterActive(!isFilterActive);
+    } else {
+      // If clicking a NEW button, switch mode and turn ON filter
+      setActiveMode(key);
+      setIsFilterActive(true);
+    }
+  };
+
+  // --- Logic to Filter History ---
+  // If isFilterActive is true, show only activeMode items. If false, show ALL.
+  const filteredHistory = isFilterActive 
+    ? history.filter(item => item.type === activeMode)
+    : history;
 
   const getCount = (typeKey: string) => history.filter(h => h.type === typeKey).length;
 
   const handleScan = () => {
     let finalCode = inputCode.trim();
+    const config = MODE_CONFIG[activeMode];
+    
     if (!finalCode) {
-      const prefix = MODE_CONFIG[activeMode]?.prefix || 'SCAN';
       const randomNum = Math.floor(100000 + Math.random() * 900000);
-      finalCode = `${prefix}-2024-${randomNum}`;
+      finalCode = `${config.prefix}-2024-${randomNum}`;
     }
 
     const randomCustomer = NAMES[Math.floor(Math.random() * NAMES.length)];
     const randomCity = CITIES[Math.floor(Math.random() * CITIES.length)];
     const randomWeight = (Math.random() * 10 + 0.5).toFixed(1) + ' kg';
-    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    const now = new Date();
+    const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
 
-    const newEntry = {
+    const newEntry: ScanHistoryItem = {
       id: finalCode,
       type: activeMode,
       customer: randomCustomer,
       destination: randomCity,
       weight: randomWeight,
       time: currentTime,
+      timestamp: now.getTime()
     };
 
-    setHistory([newEntry, ...history]);
+    setHistory(prev => [newEntry, ...prev]);
     setInputCode('');
+    // When scanning new item, auto-enable filter to show what was just scanned?
+    // Optional: setIsFilterActive(true); 
+  };
+
+  const deleteItem = (timestamp: number) => {
+    setHistory(prev => prev.filter(item => item.timestamp !== timestamp));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -161,34 +207,47 @@ const AdminQrCode = () => {
         </div>
       </div>
 
-      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* LEFT COLUMN */}
         <div className="lg:col-span-2 space-y-6">
+          
           {/* Scan Mode Selection */}
           <div className="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 className="text-gray-500 mb-4">Scan Mode</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-gray-500">Scan Mode</h2>
+              <span className={`text-xs px-2 py-1 rounded ${isFilterActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                {isFilterActive ? 'Filtering ON' : 'Showing ALL History'}
+              </span>
+            </div>
+            
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.keys(MODE_CONFIG).map((key) => {
                 const config = MODE_CONFIG[key];
-                const isActive = activeMode === key;
+                // Button is active if it's the scanning mode.
+                // We add visual cue if it's also filtering.
+                const isActiveMode = activeMode === key;
                 const IconComponent = config.Icon;
 
                 return (
                   <button
                     key={key}
-                    onClick={() => setActiveMode(key)}
+                    onClick={() => handleModeClick(key)}
                     className={`flex flex-col items-center justify-center py-8 px-4 rounded-xl border-2 transition-all duration-200 ${
-                      isActive
+                      isActiveMode
                         ? 'border-orange-300 bg-white shadow-md transform scale-[1.02]'
                         : 'border-transparent bg-gray-50 hover:bg-gray-100'
-                    }`}
+                    } relative`}
                   >
-                    <span className={`mb-3 ${isActive ? 'text-gray-800 font-medium' : 'text-gray-500'}`}>
+                    {/* Visual indicator dot if this mode is actively filtering */}
+                    {isActiveMode && isFilterActive && (
+                       <span className="absolute top-3 right-3 w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
+                    )}
+
+                    <span className={`mb-3 ${isActiveMode ? 'text-gray-800 font-medium' : 'text-gray-500'}`}>
                       {config.label}
                     </span>
-                    <div className={isActive ? 'text-gray-800' : 'text-gray-400'}>
-                      <IconComponent size={32} strokeWidth={isActive ? 1.5 : 2} />
+                    <div className={isActiveMode ? 'text-gray-800' : 'text-gray-400'}>
+                      <IconComponent size={32} strokeWidth={isActiveMode ? 1.5 : 2} />
                     </div>
                   </button>
                 );
@@ -199,6 +258,7 @@ const AdminQrCode = () => {
               <h2 className="text-gray-500 mb-2">Scan or Enter Code</h2>
               <div className="flex gap-3">
                 <input
+                  ref={inputRef}
                   type="text"
                   value={inputCode}
                   onChange={(e) => setInputCode(e.target.value)}
@@ -216,42 +276,64 @@ const AdminQrCode = () => {
             </div>
           </div>
 
-          {/* Updated Scan History */}
+          {/* Scan History (Dynamic Header) */}
           <div className="bg-white p-6 rounded-2xl shadow-sm">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-gray-500">Scan History ({history.length})</h2>
-              <button
-                onClick={() => setHistory([])}
-                className="text-xs text-red-400 hover:text-red-600"
-              >
-                Clear History
-              </button>
+              <div className="flex items-center gap-2">
+                <h2 className="text-gray-500">
+                  {isFilterActive ? `${MODE_CONFIG[activeMode].label} History` : 'All History'}
+                </h2>
+                <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold">
+                  {filteredHistory.length}
+                </span>
+                
+                {/* Visual icon to show if filtered */}
+                {isFilterActive ? (
+                  <Filter size={16} className="text-orange-400 ml-1" />
+                ) : (
+                  <ListFilter size={16} className="text-gray-300 ml-1" />
+                )}
+              </div>
+              
+              {history.length > 0 && (
+                <button
+                  onClick={() => setHistory([])}
+                  className="flex items-center gap-1 text-xs text-red-400 hover:text-red-600 transition-colors"
+                >
+                  <Trash2 size={14} /> Clear All
+                </button>
+              )}
             </div>
 
             <div className="space-y-4">
-              {history.length === 0 ? (
+              {filteredHistory.length === 0 ? (
                 <div className="text-center py-12 text-gray-300">
                   <Scan size={48} className="mx-auto mb-2 opacity-20" />
-                  <p>No scans yet today</p>
+                  <p>No {isFilterActive ? MODE_CONFIG[activeMode].label.toLowerCase() : ''} scans found</p>
                 </div>
               ) : (
-                history.map((item, index) => {
+                filteredHistory.map((item) => {
                   const config = MODE_CONFIG[item.type] || MODE_CONFIG['package'];
                   const IconComponent = config.Icon;
 
                   return (
                     <div
-                      key={index}
-                      className="bg-gray-50 rounded-2xl p-6 flex items-start gap-5 animate-fadeIn"
+                      key={item.timestamp}
+                      className="bg-gray-50 rounded-2xl p-6 flex items-start gap-5 animate-fadeIn group relative"
                     >
-                      {/* Left Icon */}
+                       <button 
+                         onClick={() => deleteItem(item.timestamp)}
+                         className="absolute top-4 right-4 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-1"
+                         title="Remove item"
+                       >
+                         <X size={18} />
+                       </button>
+
                       <div className="p-4 bg-white rounded-2xl shadow-sm">
                         <IconComponent size={24} className="text-gray-500" />
                       </div>
 
-                      {/* Content */}
                       <div className="flex-1">
-                        {/* ID + Badge */}
                         <div className="flex items-center gap-3 mb-4">
                           <span className="text-xl font-bold text-gray-900">{item.id}</span>
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${config.colorClass}`}>
@@ -259,7 +341,6 @@ const AdminQrCode = () => {
                           </span>
                         </div>
 
-                        {/* Details */}
                         <div className="space-y-2 text-gray-600">
                           <p className="text-sm">
                             <span className="font-medium text-gray-700">Customer:</span> {item.customer}
@@ -267,13 +348,15 @@ const AdminQrCode = () => {
                           <p className="text-sm">
                             <span className="font-medium text-gray-700">Destination:</span> {item.destination}
                           </p>
-                          <p className="text-sm">
-                            <span className="font-medium text-gray-700">Weight:</span> {item.weight}
-                          </p>
-                          <p className="text-sm flex items-center gap-2 text-gray-500">
-                            <Clock size={14} />
-                            {item.time}
-                          </p>
+                          <div className="flex gap-4">
+                            <p className="text-sm">
+                              <span className="font-medium text-gray-700">Weight:</span> {item.weight}
+                            </p>
+                            <p className="text-sm flex items-center gap-2 text-gray-500">
+                              <Clock size={14} />
+                              {item.time}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -286,11 +369,10 @@ const AdminQrCode = () => {
 
         {/* RIGHT COLUMN */}
         <div className="space-y-6">
-          {/* Quick Stats Card */}
           <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col items-center text-center h-[380px] relative transition-colors">
             <h2 className="text-gray-500 w-full text-left">Quick Stats</h2>
             <div className="mt-8">
-              <p className="text-gray-500 mb-2">Today's Scans</p>
+              <p className="text-gray-500 mb-2">Total Scans</p>
               <p className="text-6xl font-bold text-gray-800 tracking-tight">{history.length}</p>
             </div>
             <div className="mt-8 mb-auto text-gray-200">
@@ -302,7 +384,6 @@ const AdminQrCode = () => {
             </div>
           </div>
 
-          {/* Scan Types List */}
           <div className="bg-white p-6 rounded-2xl shadow-sm">
             <div className="flex items-center gap-2 mb-6">
               <div className="p-1.5 bg-gray-100 rounded text-gray-400">
@@ -312,11 +393,15 @@ const AdminQrCode = () => {
             </div>
             <div className="space-y-4">
               {Object.keys(MODE_CONFIG).map(key => (
-                <div key={key} className="flex justify-between items-center group">
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">
+                <div 
+                  key={key} 
+                  onClick={() => handleModeClick(key)}
+                  className={`flex justify-between items-center group cursor-pointer p-2 rounded ${activeMode === key ? 'bg-gray-50' : ''}`}
+                >
+                  <span className={`transition-colors ${activeMode === key ? 'text-gray-900 font-medium' : 'text-gray-400 group-hover:text-gray-600'}`}>
                     {MODE_CONFIG[key].listLabel}
                   </span>
-                  <span className="text-gray-800 font-bold bg-gray-50 px-2 py-1 rounded min-w-[30px] text-center">
+                  <span className={`font-bold px-2 py-1 rounded min-w-[30px] text-center ${activeMode === key ? 'bg-white shadow-sm text-gray-900' : 'bg-gray-50 text-gray-800'}`}>
                     {getCount(key)}
                   </span>
                 </div>
@@ -326,7 +411,6 @@ const AdminQrCode = () => {
         </div>
       </div>
 
-      {/* Animation */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
