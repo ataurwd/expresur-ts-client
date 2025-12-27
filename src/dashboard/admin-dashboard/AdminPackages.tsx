@@ -15,7 +15,9 @@ type PackageData = {
   itemName: string;
   itemDesc: string;
   customerName: string;
+  clientId?: string;
   customerPhone: string;
+  customerEmail?: string;
   category: string;
   price: string;
   created: string;
@@ -37,12 +39,12 @@ type Note = {
 
 /** ---------------- Initial Data ---------------- */
 const INITIAL_PACKAGES: PackageData[] = [
-  { id: "1", trackingId: "ORD-1001", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Delivered" },
-  { id: "2", trackingId: "ORD-1003", itemName: "Local SMB", itemDesc: "Strong in local control and analytics.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Small Businesses", price: "29", created: "2024-11-21", status: "In Transit" },
-  { id: "3", trackingId: "ORD-1005", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Cancelled" },
-  { id: "4", trackingId: "ORD-1006", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "In Transit" },
-  { id: "5", trackingId: "ORD-1007", itemName: "Pro Enterprise", itemDesc: "Full scale solution.", customerName: "John Doe", customerPhone: "+1 555 019 283", category: "Enterprise", price: "99", created: "2024-08-10", status: "Delivered" },
-  { id: "6", trackingId: "ORD-1008", itemName: "Micro Test", itemDesc: "Single item shipment.", customerName: "Jane Smith", customerPhone: "+44 7700 900077", category: "Micro", price: "12", created: "2024-09-15", status: "Delivered" },
+  { id: "ORD 1001", clientId: '0001002', trackingId: "ORD-1001", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Delivered" },
+  { id: "ORD 1002", clientId: '0001003', trackingId: "ORD-1003", itemName: "Local SMB", itemDesc: "Strong in local control and analytics.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Small Businesses", price: "29", created: "2024-11-21", status: "In Transit" },
+  { id: "ORD 1003", clientId: '0001004', trackingId: "ORD-1005", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Cancelled" },
+  { id: "ORD 1004", clientId: '0001005', trackingId: "ORD-1006", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "In Transit" },
+  { id: "ORD 1005", clientId: '0001006', trackingId: "ORD-1007", itemName: "Pro Enterprise", itemDesc: "Full scale solution.", customerName: "John Doe", customerEmail: "john.doe@example.com", customerPhone: "+1 555 019 283", category: "Enterprise", price: "99", created: "2024-08-10", status: "Delivered" },
+  { id: "ORD 1006", clientId: '0001007', trackingId: "ORD-1008", itemName: "Micro Test", itemDesc: "Single item shipment.", customerName: "Jane Smith", customerEmail: "jane.smith@example.com", customerPhone: "+44 7700 900077", category: "Micro", price: "12", created: "2024-09-15", status: "Delivered" },
 ];
 
 export default function PackageManagement() {
@@ -280,14 +282,12 @@ export default function PackageManagement() {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium">
                   <tr>
-                    <SortableHeader label="Item" sortKey="itemName" currentSort={sortConfig} onSort={handleSort} />
-                    <SortableHeader label="Customer" sortKey="customerName" currentSort={sortConfig} onSort={handleSort} />
-                    <th className="p-5 font-normal">Tracking Number</th>
-                    <th className="p-5 font-normal">Category</th>
-                    <SortableHeader label="Price" sortKey="price" currentSort={sortConfig} onSort={handleSort} />
-                    <SortableHeader label="Created" sortKey="created" currentSort={sortConfig} onSort={handleSort} />
-                    {/* <SortableHeader label="Status" sortKey="status" currentSort={sortConfig} onSort={handleSort} /> */}
-                    <th className="p-5 font-normal text-right">Actions</th>
+                    <th className="p-5 font-normal text-[16px]">Order</th>
+                    <th className="p-5 font-normal text-[16px]">Client ID</th>
+                    <th className="p-5 font-normal text-[16px]">Client</th>
+                    <th className="p-5 font-normal text-[16px]">Tracking Number</th>
+                    <th className="p-5 font-normal text-[16px]">Created date</th>
+                    <th className="p-5 font-normal text-right text-[16px]">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="text-[14px] divide-y divide-gray-50">
@@ -301,18 +301,14 @@ export default function PackageManagement() {
                     const buttonBg = isEven ? 'bg-[#f6f6f6]' : 'bg-[#f6f6f6]';
                     return (
                       <tr key={item.id} className={`${rowBg} transition-colors group`}>
+                        <td className="p-5 text-gray-700">{item.id}</td>
+                        <td className="p-5 text-gray-700">{item.clientId || ''}</td>
                         <td className="p-5">
-                          <div className={`font-bold ${primaryText} mb-0.5`}>{item.itemName}</div>
-                          <div className={`${secondaryText} leading-tight`}>{item.itemDesc}</div>
+                          <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
+                          <div className="text-[13px] text-gray-500">{item.customerEmail || item.customerPhone}</div>
                         </td>
-                        <td className="p-5">
-                          <div className={`font-bold ${primaryText} mb-0.5`}>{item.customerName}</div>
-                          <div className={`${secondaryText}`}>{item.customerPhone}</div>
-                        </td>
-                        <td className={`p-5 ${cellText}`}>{item.trackingId}</td>
-                        <td className={`p-5 ${cellText}`}>{item.category}</td>
-                        <td className={`p-5 ${cellText}`}>${item.price} USD</td>
-                        <td className={`p-5 ${cellText}`}>{item.created}</td>
+                        <td className="p-5 text-gray-700">{item.trackingId}</td>
+                        <td className="p-5 text-gray-700">{item.created}</td>
                         {/* <td className="p-5"><StatusBadge status={item.status} /></td> */}
                         <td className={`p-5 text-right`}>
                           <div className={`flex items-center justify-end gap-2 ${actionText}`}>
@@ -324,7 +320,7 @@ export default function PackageManagement() {
                     );
                   }) : (
                     <tr>
-                      <td colSpan={8} className="p-10 text-center text-gray-400">No packages found.</td>
+                      <td colSpan={6} className="p-10 text-center text-gray-400">No packages found.</td>
                     </tr>
                   )}
                 </tbody>
