@@ -6,7 +6,8 @@ import {
   MessageCircle, 
   MessageSquare, 
   Mail,
-  Headphones
+  Headphones,
+  Headset
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -174,7 +175,7 @@ const Notification = () => {
                {/* Section Header */}
                <div className="mb-8">
                   <div className="flex items-center gap-3 text-gray-400 mb-2">
-                     <Headphones size={20} />
+                     <Headset size={20} />
                      <h3 className="font-medium text-lg text-gray-600">Contact Support</h3>
                   </div>
                   <p className="text-sm text-gray-400 pl-8">Get in touch with our support team.</p>
