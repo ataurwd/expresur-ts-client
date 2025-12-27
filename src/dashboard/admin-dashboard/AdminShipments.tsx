@@ -2,7 +2,7 @@ import React, { memo, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, ChevronDown, ChevronRight, Check,
-  Truck, X, Clock, Box, Package, Bell,
+  Truck, X, Clock, Box, Package, Bell, ArrowRight
 } from 'lucide-react';
 
 import { Helmet } from 'react-helmet';
@@ -252,83 +252,85 @@ const StatusBadge = ({ status }: { status: Shipment['status'] }) => {
   return <div className={`flex items-center gap-2 ${color} font-medium text-[13px]`}>{icon} {status}</div>;
 };
 
-/* View-only modal (keep identical to original view) */
-const ShipmentViewModal = ({ data, onClose }: { data: Shipment; onClose: () => void }) => {
+
+const ShipmentViewModal = ({ data, onClose }: { data: any; onClose: () => void }) => {
   const timelineSteps = [
-    { status: 'Assigned', time: '7/22/2025 10:43AM', active: true, icon: <Package className="w-4 h-4" /> },
-    { status: 'Pending', time: '7/22/2025 10:44AM', active: true, icon: <Clock className="w-4 h-4" /> },
-    { status: 'In Transit', time: '7/22/2025 10:54AM', active: true, icon: <Truck className="w-4 h-4" /> },
-    { status: 'Cancelled', time: '7/22/2025 10:34AM', active: false, icon: <X className="w-4 h-4" /> },
-    { status: 'Delivered', time: '7/22/2025 10:34AM', active: true, icon: <Check className="w-4 h-4" /> },
+    { status: 'Assigned', time: '7/22/2025 10:43AM', active: true, color: 'text-purple-600', icon: <Package size={14} /> },
+    { status: 'Pending', time: '7/22/2025 10:44AM', active: true, color: 'text-orange-500', icon: <Clock size={14} /> },
+    { status: 'In Transit', time: '7/22/2025 10:54AM', active: true, color: 'text-blue-500', icon: <Truck size={14} /> },
+    { status: 'Canceled', time: '7/22/2025 10:34AM', active: false, color: 'text-green-600', icon: <X size={14} /> },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden">
-        <div className="bg-[#F9FAFB] px-8 py-5 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-gray-900">Shipment Details</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X size={24} /></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden border border-gray-100">
+        {/* Header */}
+        <div className="px-8 py-6">
+          <h2 className="text-2xl font-normal text-gray-500">Shipment Details</h2>
         </div>
 
-        <div className="p-8 space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <div>
-                <div className="text-sm text-gray-500 font-medium">Customer</div>
-                <div className="font-semibold text-gray-900">{data.customerName}</div>
-                <div className="text-sm text-gray-500">{data.customerPhone}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500 font-medium">Tracking Number</div>
-                <div className="font-semibold text-gray-900">{data.lockerId}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500 font-medium">Route</div>
-                <div className="font-semibold text-gray-900">{data.routeFrom} → {data.routeTo}</div>
+        <div className="px-8 pb-8 space-y-6">
+          {/* Details Card */}
+          <div className="bg-gray-50/50 rounded-2xl p-6 grid grid-cols-2 gap-y-6 gap-x-4">
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Customer</div>
+              <div className="font-bold text-gray-700">{data.customerName || 'Maria González'}</div>
+              <div className="text-xs text-gray-400">{data.customerEmail || 'maria.g@gmail.com'}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Tracking Number</div>
+              <div className="font-bold text-gray-700 text-sm">{data.lockerId || 'LCK-12TA'}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Route</div>
+              <div className="font-bold text-gray-700 text-sm">
+                {data.routeFrom || 'Barcelona, Spain'} → {data.routeTo || 'Havana, Cuba'}
               </div>
             </div>
-
-            <div className="space-y-4">
-              <div>
-                <div className="text-sm text-gray-500 font-medium">Carrier</div>
-                <div className="font-semibold text-gray-900">{data.carrier}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500 font-medium">Estimated date</div>
-                <div className="font-semibold text-gray-900">{data.estimatedDate}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500 font-medium">Status</div>
-                <div className="mt-1 inline-block px-3 py-1 rounded-full text-[13px] font-semibold bg-green-100 text-green-600">{data.status}</div>
-              </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Carrier</div>
+              <div className="font-bold text-gray-700 text-sm">{data.carrier || 'UPS'}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Estimated date</div>
+              <div className="font-bold text-gray-700 text-sm">{data.estimatedDate || '7/5/2024'}</div>
             </div>
           </div>
 
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Shipment status Timeline</h3>
-            <div className="relative">
+          {/* Timeline Card */}
+          <div className="bg-gray-50/50 rounded-2xl p-6">
+            <h3 className="text-[16px] text-gray-400 font-normal mb-6">Shipment status Timeline</h3>
+            <div className="relative pl-4 border-l-2 border-gray-200 ml-2 space-y-8">
               {timelineSteps.map((step, index) => (
-                <div key={index} className="flex items-center gap-4 mb-6 last:mb-0">
-                  <div className="relative flex flex-col items-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step.active ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
-                      {step.icon}
+                <div key={index} className="relative flex items-start gap-4">
+                  {/* Dot on the line */}
+                  <div className={`absolute -left-[25px] mt-1.5 w-4 h-4 rounded-full border-2 border-white ${step.active ? 'bg-green-600' : 'bg-gray-300'}`} />
+                  
+                  <div className="flex-1 flex gap-3">
+                    <div className={`${step.color} mt-1`}>{step.icon}</div>
+                    <div>
+                      <div className={`text-sm font-bold ${step.color}`}>{step.status}</div>
+                      <div className="text-[10px] text-gray-400 tracking-tight uppercase">{step.time}</div>
                     </div>
-                    {index < timelineSteps.length - 1 && (
-                      <div className={`absolute top-10 left-1/2 -translate-x-1/2 w-0.5 h-16 ${step.active ? 'bg-green-200' : 'bg-gray-200'}`} />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className={`font-medium ${step.active ? 'text-gray-900' : 'text-gray-400'}`}>{step.status}</div>
-                    <div className="text-sm text-gray-500">{step.time}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex justify-end gap-4 pt-6 border-t border-gray-100">
-            <button onClick={onClose} className="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg font-medium hover:bg-gray-200 transition">Cancel</button>
-            <button className="px-6 py-3 text-white bg-green-600 rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2"><Package size={18} /> Go to Packages</button>
+          {/* Footer Actions */}
+          <div className="flex justify-end items-center gap-6 pt-4">
+            <button 
+              onClick={onClose} 
+              className="text-[18px] text-gray-400 hover:text-gray-600 font-normal transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              className="px-4 py-2.5 text-[#066333] rounded-lg text-[18px] font-normal transition-all flex items-center gap-2"
+            >
+              Go to Packages 
+            </button>
           </div>
         </div>
       </div>
