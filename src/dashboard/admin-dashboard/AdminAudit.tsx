@@ -257,16 +257,16 @@ const AdminAudit = () => {
             </thead>
             <tbody>
               {currentLogs.map((log) => (
-                <tr key={log.id} className="group hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-none">
-                  <td className="py-5 pl-4 text-sm text-gray-600">{log.user}</td>
+                <tr key={log.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors group border-b border-gray-50 last:border-none">
+                  <td className="py-5 pl-4 text-sm text-gray-700">{log.user}</td>
                   <td className="py-5 text-sm text-gray-500">{log.date}</td>
                   <td className="py-5">
                     <div className="flex flex-col">
-                      <span className="text-sm text-gray-600">{log.entityType}</span>
+                      <span className="text-sm text-gray-700">{log.entityType}</span>
                       <span className="text-xs text-gray-400 font-mono">{log.entityId}</span>
                     </div>
                   </td>
-                  <td className="py-5 text-sm text-gray-600 max-w-[250px]">{log.description}</td>
+                  <td className="py-5 text-sm text-gray-700 max-w-[250px]">{log.description}</td>
                   <td className={`py-5 text-sm font-medium ${getEventColor(log.event)}`}>
                     {log.event}
                   </td>

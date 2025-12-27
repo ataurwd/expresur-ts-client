@@ -248,8 +248,8 @@ const AdminWallet = () => {
             </thead>
             <tbody>
               {currentTransactions.map((trx) => (
-                <tr key={trx.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="py-5 pl-4 text-sm text-gray-600">{trx.date}</td>
+                <tr key={trx.id} className="border-b border-gray-100 odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors">
+                  <td className="py-5 pl-4 text-sm text-gray-700">{trx.date}</td>
                   <td className="py-5">
                     <div>
                       <div className="font-medium text-gray-900">{trx.customerName}</div>
@@ -265,10 +265,10 @@ const AdminWallet = () => {
                       {trx.type}
                     </span>
                   </td>
-                  <td className="py-5 text-sm text-gray-600">
+                  <td className="py-5 text-sm text-gray-700">
                     {trx.currency} {trx.amount.toFixed(2)}
                   </td>
-                  <td className="py-5 text-sm text-gray-600">
+                  <td className="py-5 text-sm text-gray-700">
                     {trx.currency} {trx.balanceAfter.toFixed(2)}
                   </td>
                   <td className="py-5 pr-4 text-right">

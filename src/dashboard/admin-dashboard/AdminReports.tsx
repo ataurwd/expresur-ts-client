@@ -301,7 +301,7 @@ export default function PackageTrackingDashboard() {
             </thead>
             <tbody>
               {paged.map((row) => (
-                <tr key={`${row.paymentId}-${row.packageId}`} className="border-b border-gray-100 hover:bg-gray-50 transition">
+                <tr key={`${row.paymentId}-${row.packageId}`} className="border-b border-gray-100 odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
                   <td className="py-5 pl-4 text-sm text-gray-900 font-medium">{row.paymentId}</td>
                   <td className="py-5 text-sm text-gray-900 font-medium">{row.packageId}</td>
                   <td className="py-5">
@@ -311,7 +311,7 @@ export default function PackageTrackingDashboard() {
                     </div>
                   </td>
                   <td className="py-5 text-sm text-gray-900 font-medium">{row.amount}</td>
-                  <td className="py-5 text-sm text-gray-600">{row.date}</td>
+                  <td className="py-5 text-sm text-gray-700">{row.date}</td>
                   <td className="py-5">
                     <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${getStatusColor(row.status)}`}>
                       <span className="text-base">{getStatusIcon(row.status)}</span>

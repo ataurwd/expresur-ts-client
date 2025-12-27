@@ -173,19 +173,19 @@ const AdminShipments = memo(() => {
                   </thead>
                   <tbody className="text-[14px] divide-y divide-gray-50">
                     {paginatedData.length > 0 ? paginatedData.map((item) => (
-                      <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
+                      <tr key={item.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors group">
                         <td className="p-5">
                           <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
                           <div className="text-[13px] text-gray-500">{item.customerPhone}</div>
                         </td>
-                        <td className="p-5 text-gray-600">{item.packageId}</td>
-                        <td className="p-5 text-gray-600">{item.lockerId}</td>
+                        <td className="p-5 text-gray-700">{item.packageId}</td>
+                        <td className="p-5 text-gray-700">{item.lockerId}</td>
                         <td className="p-5">
-                          <div className="text-gray-600 leading-tight">{item.routeFrom.split(',')[0]},</div>
+                          <div className="text-gray-700 leading-tight">{item.routeFrom.split(',')[0]},</div>
                           <div className="text-gray-500 text-[13px]">Spain → Havana, Cuba</div>
                         </td>
-                        <td className="p-5 text-gray-600">{item.carrier}</td>
-                        <td className="p-5 text-gray-600">{item.estimatedDate}</td>
+                        <td className="p-5 text-gray-700">{item.carrier}</td>
+                        <td className="p-5 text-gray-700">{item.estimatedDate}</td>
                         <td className="p-5"><StatusBadge status={item.status} /></td>
                         <td className="p-5 text-right">
                           <div className="flex items-center justify-end gap-2">
