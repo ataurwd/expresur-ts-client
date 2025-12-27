@@ -189,8 +189,8 @@ const AdminShipments = memo(() => {
                         <td className="p-5"><StatusBadge status={item.status} /></td>
                         <td className="p-5 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <button onClick={() => handleOpenModal(item, 'edit')} className="bg-white border border-green-100 text-green-600 px-3 py-1.5 rounded text-xs font-semibold hover:bg-green-50 transition-colors">Edit</button>
-                            <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded text-xs font-medium transition-colors">View</button>
+                            <button onClick={() => handleOpenModal(item, 'edit')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded-[18px] text-xs font-semibold hover:bg-green-50 transition-colors">Edit</button>
+                            <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-3 py-1.5 rounded-[18px] text-xs font-medium transition-colors">View</button>
 
                           </div>
                         </td>
