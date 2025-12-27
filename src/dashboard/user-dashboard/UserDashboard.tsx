@@ -14,11 +14,12 @@ import {
 import {
   DirectionsBoatFilledOutlined,
   SettingsOutlined,
-  Shuffle as ConsolidateIcon
-
+  Shuffle as ConsolidateIcon,
+  Logout // <--- Import Logout Icon
 } from "@mui/icons-material";
-// Link ইম্পোর্ট করা হয়েছে এখানে
-import { useLocation, matchPath, NavLink, Link, } from "react-router-dom";
+
+// useNavigate ইম্পোর্ট করুন
+import { useLocation, matchPath, NavLink, Link, useNavigate } from "react-router-dom";
 
 import { LayoutDashboard, ArrowLeftToLine, LockKeyholeOpen, Package, Wallet, Layers } from 'lucide-react';
 
@@ -45,9 +46,17 @@ const menuItems: MenuItem[] = [
 export default function UserSidebar() {
   const [open, setOpen] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleToggle = () => setOpen((prev) => !prev);
   const normalize = (p: string) => (p ? p.replace(/\/+$/, "") : p);
+
+  // Logout Function
+  const handleLogout = () => {
+    // Add your logout logic here
+    console.log("Logged out");
+    navigate("/login");
+  };
 
   const BG_GREEN = "#025939";
   const ACTIVE_ORANGE = "#fb923c";
@@ -68,12 +77,16 @@ export default function UserSidebar() {
           overflowX: "hidden",
           borderRight: "none",
           borderRadius: "0 24px 24px 0",
+          // 👇 এই লাইনগুলো যোগ করা হয়েছে লেআউট ফিক্স করার জন্য
+          display: "flex",
+          flexDirection: "column", 
+          height: "100vh", 
         },
       }}
     >
+      {/* --- Top Section (Logo & Toggle) --- */}
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 3, mb: 2 }}>
         {open && (
-
           <Link to="/" style={{ textDecoration: "none" }}>
             <Typography
               variant="h5"
@@ -93,7 +106,8 @@ export default function UserSidebar() {
         </IconButton>
       </Box>
 
-      <List sx={{ px: 2 }}>
+      {/* --- Middle Section (Menu Items) --- */}
+      <List sx={{ px: 2, flexGrow: 1 }}> {/* flexGrow: 1 লিস্টকে যতটা সম্ভব জায়গা নিতে দেবে */}
         {menuItems.map((item) => {
           const match = matchPath(
             { path: normalize(item.path), end: true },
@@ -154,6 +168,42 @@ export default function UserSidebar() {
           );
         })}
       </List>
+      
+      {/* --- Bottom Section (Logout) --- */}
+      {/* marginTop: "auto" দিলে এটি একদম নিচে চলে যাবে */}
+      <Box sx={{ p: 2, mb: 2, marginTop: "auto" }}> 
+        <ListItemButton
+          onClick={handleLogout}
+          sx={{
+            justifyContent: open ? "flex-start" : "center",
+            borderRadius: 2,
+            px: open ? 2 : 0,
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.05)" }
+          }}
+        >
+          <Box
+            sx={{
+              minWidth: 40,
+              minHeight: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ef4444', 
+              mr: open ? 2 : 'auto',
+            }}
+          >
+            <Logout sx={{ fontSize: 22 }} />
+          </Box>
+
+          <ListItemText
+            primary="Logout"
+            sx={{
+              opacity: open ? 1 : 0,
+              color: '#ef4444'
+            }}
+          />
+        </ListItemButton>
+      </Box>
     </Drawer>
   );
 }
