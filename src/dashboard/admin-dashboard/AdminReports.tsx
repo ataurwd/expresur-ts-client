@@ -339,7 +339,7 @@ export default function PackageTrackingDashboard() {
         
 
         {/* Pagination */}
-        <div className="flex justify-end items-center gap-6 mt-8 pt-4 border-t border-gray-100">
+        <div className="flex justify-end items-center gap-6 mt-8 pt-2">
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
