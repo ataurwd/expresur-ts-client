@@ -1,13 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { toast } from 'sonner'; // Toaster removed to avoid duplicates
-import { 
-  Bell, 
-  Search, 
-  Clock, 
-  CheckCircle, 
-  RefreshCw, 
-  ArrowRight, 
-  XCircle
+import {
+  Bell,
+  Search,
+  Clock,
+  CheckCircle,
+  RefreshCw,
+  ArrowRight,
+  XCircle,
+  CheckSquare,
+  RotateCw
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -44,7 +46,7 @@ const Remittances = () => {
   const filteredTransfers = useMemo(() => {
     if (!statusFilter) return transfers;
     if (statusFilter === 'Processing') {
-        return transfers.filter(t => t.status === 'Processing' || t.status === 'In Transit');
+      return transfers.filter(t => t.status === 'Processing' || t.status === 'In Transit');
     }
     return transfers.filter(t => t.status === statusFilter);
   }, [transfers, statusFilter]);
@@ -67,10 +69,10 @@ const Remittances = () => {
 
   const handleFilterClick = (status: TransferStatus) => {
     if (statusFilter === status) {
-      setStatusFilter(null); 
+      setStatusFilter(null);
     } else {
       setStatusFilter(status);
-      setCurrentPage(1); 
+      setCurrentPage(1);
     }
   };
 
@@ -83,7 +85,7 @@ const Remittances = () => {
         return { color: 'text-orange-400', icon: <Clock size={16} /> };
       case 'In Transit':
       case 'Processing':
-        return { color: 'text-gray-500', icon: <RefreshCw size={16} /> }; 
+        return { color: 'text-gray-500', icon: <RefreshCw size={16} /> };
       default:
         return { color: 'text-gray-500', icon: <Search size={16} /> };
     }
@@ -91,7 +93,7 @@ const Remittances = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
-      
+
       {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 
       {/* --- Header --- */}
@@ -102,7 +104,7 @@ const Remittances = () => {
         </div>
 
         <div className="flex items-center gap-6 mt-6 md:mt-0">
-          
+
           {/* Notification Bell with Link */}
           <Link to="/dashboard/notifications">
             <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
@@ -110,10 +112,10 @@ const Remittances = () => {
               <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
           </Link>
-          
+
           <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
-               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover" />
             </div>
             <div>
               <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
@@ -124,69 +126,67 @@ const Remittances = () => {
       </div>
 
       <div className=" mx-auto space-y-8">
-        
-        {/* --- Transfer Status Section (Interactive Filters) --- */}
-        <div>
+
+
+
+        <div className="p-4 bg-white rounded-3xl shadow-sm border border-gray-100">
           <div className="flex justify-between items-center mb-6">
-             <h3 className="text-lg font-medium text-gray-700">Transfer Status</h3>
-             {statusFilter && (
-               <button 
-                 onClick={() => setStatusFilter(null)} 
-                 className="text-sm text-red-500 flex items-center gap-1 hover:underline"
-               >
-                 <XCircle size={14} /> Clear Filter
-               </button>
-             )}
+            <h3 className="text-xl font-semibold text-gray-600">Transfer Status</h3>
+            {statusFilter && (
+              <button
+                onClick={() => setStatusFilter(null)}
+                className="text-sm text-red-500 flex items-center gap-1 hover:underline"
+              >
+                <XCircle size={14} /> Clear Filter
+              </button>
+            )}
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
             {/* Card 1: Processing */}
-            <div 
+            <div
               onClick={() => handleFilterClick('Processing')}
-              className={`p-6 rounded-3xl shadow-sm border relative h-32 flex flex-col justify-between cursor-pointer transition-all active:scale-[0.98] ${
-                statusFilter === 'Processing' ? 'bg-gray-50 border-gray-300 ring-1 ring-gray-200' : 'bg-white border-gray-100 hover:border-gray-200'
-              }`}
+              className={`p-8 rounded-[2rem] h-44 flex flex-col justify-between cursor-pointer transition-all active:scale-[0.98] bg-[#f7f7f7] border-2 ${statusFilter === 'Processing' ? 'border-gray-300' : 'border-transparent'
+                }`}
             >
-               <div className="flex justify-between items-start">
-                  <span className={`font-medium ${statusFilter === 'Processing' ? 'text-gray-800' : 'text-gray-600'}`}>Processing</span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${statusFilter === 'Processing' ? 'bg-gray-200 text-gray-600' : 'bg-gray-50 text-gray-400'}`}>
-                     <Search size={16} />
-                  </div>
-               </div>
-               <p className="text-xs text-gray-400">Your transfer is in progress.</p>
+              <div className="flex justify-between items-start">
+                <span className="text-2xl font-semibold text-gray-500">Processing</span>
+                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">
+                  <RotateCw size={20} />
+                </div>
+              </div>
+              <p className="text-base text-gray-400">Your transfer is in progress.</p>
             </div>
 
             {/* Card 2: Delayed */}
-            <div 
+            <div
               onClick={() => handleFilterClick('Delayed')}
-              className={`p-6 rounded-3xl shadow-sm border relative h-32 flex flex-col justify-between cursor-pointer transition-all active:scale-[0.98] ${
-                statusFilter === 'Delayed' ? 'bg-orange-50 border-orange-200 ring-1 ring-orange-300' : 'bg-white border-gray-100 hover:border-gray-200'
-              }`}
+              className={`p-8 rounded-[2rem] h-44 flex flex-col justify-between cursor-pointer transition-all active:scale-[0.98] bg-[#f7f7f7] border-2 ${statusFilter === 'Delayed' ? 'border-gray-300' : 'border-transparent'
+                }`}
             >
-               <div className="flex justify-between items-start">
-                  <span className={`font-medium ${statusFilter === 'Delayed' ? 'text-orange-700' : 'text-gray-600'}`}>Delayed</span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${statusFilter === 'Delayed' ? 'bg-orange-200 text-orange-600' : 'bg-gray-50 text-gray-400'}`}>
-                     <Clock size={16} />
-                  </div>
-               </div>
-               <p className={`text-xs ${statusFilter === 'Delayed' ? 'text-orange-600' : 'text-gray-400'}`}>Transfer delayed. Please wait.</p>
+              <div className="flex justify-between items-start">
+                <span className="text-2xl font-semibold text-gray-500">Delayed</span>
+                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">
+                  <Clock size={20} />
+                </div>
+              </div>
+              <p className="text-base text-gray-400">Transfer delayed. Please wait.</p>
             </div>
 
             {/* Card 3: Delivered */}
-            <div 
+            <div
               onClick={() => handleFilterClick('Delivered')}
-              className={`p-6 rounded-3xl shadow-sm border relative h-32 flex flex-col justify-between cursor-pointer transition-all active:scale-[0.98] ${
-                statusFilter === 'Delivered' ? 'bg-green-50 border-green-200 ring-1 ring-green-300' : 'bg-white border-gray-100 hover:border-gray-200'
-              }`}
+              className={`p-8 rounded-[2rem] h-44 flex flex-col justify-between cursor-pointer transition-all active:scale-[0.98] bg-[#f7f7f7] border-2 ${statusFilter === 'Delivered' ? 'border-gray-300' : 'border-transparent'
+                }`}
             >
-               <div className="flex justify-between items-start">
-                  <span className={`font-medium ${statusFilter === 'Delivered' ? 'text-green-700' : 'text-gray-600'}`}>Delivered</span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${statusFilter === 'Delivered' ? 'bg-green-200 text-green-600' : 'bg-gray-50 text-gray-400'}`}>
-                     <CheckCircle size={16} />
-                  </div>
-               </div>
-               <p className={`text-xs ${statusFilter === 'Delivered' ? 'text-green-600' : 'text-gray-400'}`}>Money delivered.</p>
+              <div className="flex justify-between items-start">
+                <span className="text-2xl font-semibold text-gray-500">Delivered</span>
+                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">
+                  <CheckSquare size={20} />
+                </div>
+              </div>
+              <p className="text-base text-gray-400">Money delivered.</p>
             </div>
 
           </div>
@@ -242,7 +242,7 @@ const Remittances = () => {
 
           {/* Pagination */}
           <div className="flex justify-end items-center gap-6 mt-12 text-sm font-medium select-none">
-            <button 
+            <button
               onClick={() => handlePageChange('prev')}
               className={`transition ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-gray-700'}`}
               disabled={currentPage === 1}
@@ -250,7 +250,7 @@ const Remittances = () => {
               Previous
             </button>
             <span className="text-xs text-gray-400">Page {currentPage} of {totalPages || 1}</span>
-            <button 
+            <button
               onClick={() => handlePageChange('next')}
               className={`flex items-center gap-1 transition ${currentPage >= totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-[#005f33] hover:text-[#004d2a]'}`}
               disabled={currentPage >= totalPages}
