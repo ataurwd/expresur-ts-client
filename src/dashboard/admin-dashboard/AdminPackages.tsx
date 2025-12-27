@@ -271,75 +271,78 @@ export default function PackageManagement() {
         </div>
 
         {/* TABLE */}
-        <div className="bg-white rounded-xl overflow-hidden mb-4 min-h-[400px]">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium">
-                <tr>
-                  <SortableHeader label="Item" sortKey="itemName" currentSort={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Customer" sortKey="customerName" currentSort={sortConfig} onSort={handleSort} />
-                  <th className="p-5 font-normal">Tracking Number</th>
-                  <th className="p-5 font-normal">Category</th>
-                  <SortableHeader label="Price" sortKey="price" currentSort={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Created" sortKey="created" currentSort={sortConfig} onSort={handleSort} />
-                  {/* <SortableHeader label="Status" sortKey="status" currentSort={sortConfig} onSort={handleSort} /> */}
-                  <th className="p-5 font-normal text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="text-[14px] divide-y divide-gray-50">
-                {paginatedData.length > 0 ? paginatedData.map((item, idx) => {
-                  const isEven = idx % 2 === 0;
-                  const rowBg = isEven ? 'bg-white' : 'bg-[#f6f6f6]';
-                  const primaryText = isEven ? 'text-gray-900' : 'text-gray-900';
-                  const secondaryText = isEven ? 'text-[13px] text-gray-500' : 'text-[13px] text-gray-500';
-                  const cellText = isEven ? 'text-gray-600' : 'text-gray-600';
-                  const actionText = isEven ? 'text-gray-500' : 'text-gray-500';
-                  const buttonBg = isEven ? 'bg-[#f6f6f6]' : 'bg-[#f6f6f6]';
-                  return (
-                    <tr key={item.id} className={`${rowBg} transition-colors group`}>
-                      <td className="p-5">
-                        <div className={`font-bold ${primaryText} mb-0.5`}>{item.itemName}</div>
-                        <div className={`${secondaryText} leading-tight`}>{item.itemDesc}</div>
-                      </td>
-                      <td className="p-5">
-                        <div className={`font-bold ${primaryText} mb-0.5`}>{item.customerName}</div>
-                        <div className={`${secondaryText}`}>{item.customerPhone}</div>
-                      </td>
-                      <td className={`p-5 ${cellText}`}>{item.trackingId}</td>
-                      <td className={`p-5 ${cellText}`}>{item.category}</td>
-                      <td className={`p-5 ${cellText}`}>${item.price} USD</td>
-                      <td className={`p-5 ${cellText}`}>{item.created}</td>
-                      {/* <td className="p-5"><StatusBadge status={item.status} /></td> */}
-                      <td className={`p-5 text-right`}>
-                        <div className={`flex items-center justify-end gap-2 ${actionText}`}>
-                          <button onClick={() => handleOpenModal(item, 'notes')} className={`hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>Notes</button>
-                          <button onClick={() => handleOpenModal(item, 'view')} className={`hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>View</button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                }) : (
-                  <tr>
-                    <td colSpan={8} className="p-10 text-center text-gray-400">No packages found.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
 
-        {/* PAGINATION */}
-        <div className="flex justify-between items-center mt-6 text-[14px] border-t border-gray-100 pt-4">
-          <span className="text-gray-400">Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</span>
-          <div className="flex items-center gap-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              className="text-gray-400 hover:text-gray-600 disabled:opacity-50 px-3 py-1"
-            >
-              Previous
-            </button>
-            {/* {Array.from({ length: totalPages }).map((_, idx) => (
+        <div className="p-4 bg-white rounded-[18px]">
+          {/* TABLE */}
+          <div className="bg-white rounded-xl overflow-hidden mb-4 min-h-[400px]">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium">
+                  <tr>
+                    <SortableHeader label="Item" sortKey="itemName" currentSort={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Customer" sortKey="customerName" currentSort={sortConfig} onSort={handleSort} />
+                    <th className="p-5 font-normal">Tracking Number</th>
+                    <th className="p-5 font-normal">Category</th>
+                    <SortableHeader label="Price" sortKey="price" currentSort={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Created" sortKey="created" currentSort={sortConfig} onSort={handleSort} />
+                    {/* <SortableHeader label="Status" sortKey="status" currentSort={sortConfig} onSort={handleSort} /> */}
+                    <th className="p-5 font-normal text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[14px] divide-y divide-gray-50">
+                  {paginatedData.length > 0 ? paginatedData.map((item, idx) => {
+                    const isEven = idx % 2 === 0;
+                    const rowBg = isEven ? 'bg-white' : 'bg-[#f6f6f6]';
+                    const primaryText = isEven ? 'text-gray-900' : 'text-gray-900';
+                    const secondaryText = isEven ? 'text-[13px] text-gray-500' : 'text-[13px] text-gray-500';
+                    const cellText = isEven ? 'text-gray-600' : 'text-gray-600';
+                    const actionText = isEven ? 'text-gray-500' : 'text-gray-500';
+                    const buttonBg = isEven ? 'bg-[#f6f6f6]' : 'bg-[#f6f6f6]';
+                    return (
+                      <tr key={item.id} className={`${rowBg} transition-colors group`}>
+                        <td className="p-5">
+                          <div className={`font-bold ${primaryText} mb-0.5`}>{item.itemName}</div>
+                          <div className={`${secondaryText} leading-tight`}>{item.itemDesc}</div>
+                        </td>
+                        <td className="p-5">
+                          <div className={`font-bold ${primaryText} mb-0.5`}>{item.customerName}</div>
+                          <div className={`${secondaryText}`}>{item.customerPhone}</div>
+                        </td>
+                        <td className={`p-5 ${cellText}`}>{item.trackingId}</td>
+                        <td className={`p-5 ${cellText}`}>{item.category}</td>
+                        <td className={`p-5 ${cellText}`}>${item.price} USD</td>
+                        <td className={`p-5 ${cellText}`}>{item.created}</td>
+                        {/* <td className="p-5"><StatusBadge status={item.status} /></td> */}
+                        <td className={`p-5 text-right`}>
+                          <div className={`flex items-center justify-end gap-2 ${actionText}`}>
+                            <button onClick={() => handleOpenModal(item, 'notes')} className={`hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>Notes</button>
+                            <button onClick={() => handleOpenModal(item, 'view')} className={`hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors ${buttonBg}`}>View</button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  }) : (
+                    <tr>
+                      <td colSpan={8} className="p-10 text-center text-gray-400">No packages found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* PAGINATION */}
+          <div className="flex justify-between items-center mt-6 text-[14px] border-t border-gray-100 pt-4">
+            <span className="text-gray-400">Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</span>
+            <div className="flex items-center gap-2">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className="text-gray-400 hover:text-gray-600 disabled:opacity-50 px-3 py-1"
+              >
+                Previous
+              </button>
+              {/* {Array.from({ length: totalPages }).map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentPage(idx + 1)}
@@ -348,30 +351,33 @@ export default function PackageManagement() {
                 {idx + 1}
               </button>
             ))} */}
-            <button
-              disabled={currentPage === totalPages || totalPages === 0}
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              className="text-[#16a34a] font-semibold flex items-center gap-1 hover:text-[#15803d] disabled:opacity-50 px-3 py-1"
-            >
-              Next <ChevronRight size={16} />
-            </button>
+              <button
+                disabled={currentPage === totalPages || totalPages === 0}
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                className="text-[#16a34a] font-semibold flex items-center gap-1 hover:text-[#15803d] disabled:opacity-50 px-3 py-1"
+              >
+                Next <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* MODAL */}
-        {isModalOpen && currentPackage && (
-          <Modal
-            isOpen={isModalOpen}
-            mode={modalMode}
-            data={currentPackage}
-            onClose={() => setIsModalOpen(false)}
-            onSave={handleSave}
-            onDelete={handleDelete}
-            notes={notesMap[currentPackage.id] || []}
-            onAddNote={addNoteToPackage}
-          />
-        )}
+          {/* MODAL */}
+          {isModalOpen && currentPackage && (
+            <Modal
+              isOpen={isModalOpen}
+              mode={modalMode}
+              data={currentPackage}
+              onClose={() => setIsModalOpen(false)}
+              onSave={handleSave}
+              onDelete={handleDelete}
+              notes={notesMap[currentPackage.id] || []}
+              onAddNote={addNoteToPackage}
+            />
+          )}
+        </div>
       </div>
+
+
     </>
   );
 }
