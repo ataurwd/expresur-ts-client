@@ -163,14 +163,14 @@ const AdminShipments = memo(() => {
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium border-b border-gray-100">
                     <tr>
-                      <th className="p-5 font-normal">Client</th>
-                      <th className="p-5 font-normal">Client ID</th>
-                      <th className="p-5 font-normal">Tracking Number</th>
-                      <th className="p-5 font-normal">Route</th>
-                      <th className="p-5 font-normal">Carrier</th>
-                      <th className="p-5 font-normal">Estimated date</th>
-                      <th className="p-5 font-normal">Status</th>
-                      <th className="p-5 font-normal text-right">Actions</th>
+                      <th className="p-5 font-normal text-[16px]">Client</th>
+                      <th className="p-5 font-normal text-[16px]">Client ID</th>
+                      <th className="p-5 font-normal text-[16px]">Tracking Number</th>
+                      <th className="p-5 font-normal text-[16px]">Route</th>
+                      <th className="p-5 font-normal text-[16px]">Carrier</th>
+                      <th className="p-5 font-normal text-[16px]">Estimated date</th>
+                      <th className="p-5 font-normal text-[16px]">Status</th>
+                      <th className="p-5 font-normal text-right text-[16px]">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="text-[14px] divide-y divide-gray-50">
