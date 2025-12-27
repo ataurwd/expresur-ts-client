@@ -339,7 +339,7 @@ export default function PackageManagement() {
             >
               Previous
             </button>
-            {Array.from({ length: totalPages }).map((_, idx) => (
+            {/* {Array.from({ length: totalPages }).map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentPage(idx + 1)}
@@ -347,7 +347,7 @@ export default function PackageManagement() {
               >
                 {idx + 1}
               </button>
-            ))}
+            ))} */}
             <button
               disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
