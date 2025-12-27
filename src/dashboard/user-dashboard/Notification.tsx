@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { Toaster, toast } from 'sonner';
 import { 
   Bell, 
@@ -78,6 +79,9 @@ const Notification = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
+      <Helmet>
+        <title>Notifications | EXPRESUR</title>
+      </Helmet>
       <Toaster position="top-center" richColors closeButton />
 
       {/* --- Header --- */}

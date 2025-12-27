@@ -12,6 +12,7 @@ import {
   Plus
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 // --- Types ---
 interface Package {
@@ -88,6 +89,9 @@ const Locker: React.FC = () => {
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10">
 
       {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
+      <Helmet>
+        <title>My Locker | EXPRESUR</title>
+      </Helmet>
 
       {/* --- Header --- */}
       <div className=" mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">

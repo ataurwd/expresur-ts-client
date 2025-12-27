@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { toast } from 'sonner'; // Toaster removed to avoid duplicates
 import {
   Bell,
@@ -100,6 +101,9 @@ const Consolidate = () => {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-40">
+      <Helmet>
+        <title>Consolidations | EXPRESUR</title>
+      </Helmet>
 
       {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
 

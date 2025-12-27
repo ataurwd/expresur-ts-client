@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { toast } from 'sonner';
 import {
   Bell, Box, Truck, Wallet, Layers,
@@ -103,6 +104,9 @@ const DashboardUser = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f7f7] p-6 md:p-10 font-sans text-gray-800 relative">
+      <Helmet>
+        <title>Dashboard | EXPRESUR</title>
+      </Helmet>
 
       {/* --- MODAL FOR ADDING PACKAGE --- */}
       {/* {isModalOpen && (

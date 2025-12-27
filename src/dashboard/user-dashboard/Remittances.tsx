@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { toast } from 'sonner'; // Toaster removed to avoid duplicates
 import {
   Bell,
@@ -98,6 +99,9 @@ const Remittances = () => {
     <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
 
       {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
+      <Helmet>
+        <title>Remittances | EXPRESUR</title>
+      </Helmet>
 
       {/* --- Header --- */}
       <div className="mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
