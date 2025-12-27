@@ -23,12 +23,12 @@ interface Shipment {
 }
 
 const INITIAL_DATA: Shipment[] = [
-  { id: '1', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Delivered' },
-  { id: '2', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0046', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '11/21/2024', status: 'In Transit' },
-  { id: '3', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '7/5/2024', status: 'Cancelled' },
-  { id: '4', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0046', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '11/21/2024', status: 'Pending' },
-  { id: '5', clientId: 'C-0001', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'PK-0047', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '7/5/2024', status: 'Assigned' },
-  { id: '6', clientId: 'C-0002', customerName: 'John Doe', customerEmail: 'john.doe@example.com', customerPhone: '+1 555 019 283', packageId: 'PK-0048', lockerId: 'LCK-128B', routeFrom: 'Madrid, Spain', routeTo: 'Havana, Cuba', carrier: 'DHL', estimatedDate: '8/10/2024', status: 'In Transit' },
+  { id: '1', clientId: '0001002', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'LCK-127A', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Delivered' },
+  { id: '2', clientId: '0001003', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'LCK-127A', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '11/21/2024', status: 'In Transit' },
+  { id: '3', clientId: '0001004', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'LCK-127A', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '7/5/2024', status: 'Cancelled' },
+  { id: '4', clientId: '0001005', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678', packageId: 'LCK-127A', lockerId: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '11/21/2024', status: 'Pending' },
+  { id: '5', clientId: '0001006', customerName: 'María González', customerEmail: 'maria.g@example.com', customerPhone: '+34 612 345 678 ', packageId:'LCK-127A' , lockerId:'LCK-127A' , routeFrom:'Barcelona, Spain' , routeTo:'Havana, Cuba' , carrier:'USPS' , estimatedDate:'7/5/2024' , status:'Assigned'},
+  { id:'6' , clientId:'0001007' , customerName:'John Doe' , customerEmail:'john.doe@example.com' , customerPhone:'+1 555 019 283' , packageId:'LCK-127A' , lockerId:'LCK-7777777777777' , routeFrom:'Madrid, Spain' , routeTo:'Havana, Cuba' , carrier:'DHL' , estimatedDate:'8/10/2024' , status:'In Transit'},
 ];
 
 const AdminShipments = memo(() => {
