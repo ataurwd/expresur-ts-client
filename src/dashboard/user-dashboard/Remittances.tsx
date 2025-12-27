@@ -199,10 +199,10 @@ const Remittances = () => {
             <span className="text-xs text-gray-400">Showing {currentData.length} of {filteredTransfers.length}</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-[18px] overflow-hidden">
             <table className="w-full text-left border-collapse ">
               <thead>
-                <tr className="border-b border-gray-50 text-xs text-gray-400 uppercase tracking-wider font-medium bg-[#f6f6f6] ">
+                <tr className="border-b border-gray-50 text-xs text-gray-400 uppercase tracking-wider font-medium bg-[#f6f6f6] rounded-[18px]">
                   <th className="py-4 pl-2 font-medium">Recipient</th>
                   <th className="py-4 font-medium">Amount</th>
                   <th className="py-4 font-medium">Status</th>
