@@ -282,7 +282,7 @@ export default function PackageManagement() {
                   <th className="p-5 font-normal">Category</th>
                   <SortableHeader label="Price" sortKey="price" currentSort={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Created" sortKey="created" currentSort={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Status" sortKey="status" currentSort={sortConfig} onSort={handleSort} />
+             
                   <th className="p-5 font-normal text-right">Actions</th>
                 </tr>
               </thead>
@@ -301,7 +301,7 @@ export default function PackageManagement() {
                     <td className="p-5 text-gray-600">{item.category}</td>
                     <td className="p-5 text-gray-600">${item.price} USD</td>
                     <td className="p-5 text-gray-600">{item.created}</td>
-                    <td className="p-5"><StatusBadge status={item.status} /></td>
+                  
                     <td className="p-5 text-right">
                       <div className="flex items-center justify-end gap-2 text-gray-500">
                         <button onClick={() => handleOpenModal(item, 'notes')} className="hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">Notes</button>
@@ -321,7 +321,7 @@ export default function PackageManagement() {
 
         {/* PAGINATION */}
         <div className="flex justify-between items-center mt-6 text-[14px] border-t border-gray-100 pt-4">
-          <span className="text-gray-400">Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</span>
+          <span className="text-gray-400"></span>
           <div className="flex items-center gap-2">
             <button
               disabled={currentPage === 1}
@@ -329,16 +329,8 @@ export default function PackageManagement() {
               className="text-gray-400 hover:text-gray-600 disabled:opacity-50 px-3 py-1"
             >
               Previous
-            </button>
-            {Array.from({ length: totalPages }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentPage(idx + 1)}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors ${currentPage === idx + 1 ? 'bg-[#166534] text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
-              >
-                {idx + 1}
-              </button>
-            ))}
+           
+           </button>
             <button
               disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
