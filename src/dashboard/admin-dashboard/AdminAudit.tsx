@@ -244,15 +244,15 @@ const AdminAudit = () => {
 
         {/* Table */}
         <div className="overflow-x-auto flex-grow">
-          <table className="w-full text-left border-collapse">
-            <thead>
+          <table className="w-full text-left rounded-3xl border-collapse">
+            <thead className='bg-gray-100 '>
               <tr className="border-b border-gray-50">
-                <th className="py-4 pl-4 text-xs font-normal text-gray-400">User</th>
-                <th className="py-4 text-xs font-normal text-gray-400">Date</th>
-                <th className="py-4 text-xs font-normal text-gray-400">Entity</th>
-                <th className="py-4 text-xs font-normal text-gray-400">Description</th>
-                <th className="py-4 text-xs font-normal text-gray-400">Event</th>
-                <th className="py-4 pr-4 text-xs font-normal text-gray-400 text-right">Actions</th>
+                <th className="py-4 pl-4 text-xs font-normal ">User</th>
+                <th className="py-4 text-xs font-normal ">Date</th>
+                <th className="py-4 text-xs font-normal ">Entity</th>
+                <th className="py-4 text-xs font-normal ">Description</th>
+                <th className="py-4 text-xs font-normal ">Event</th>
+                <th className="py-4 pr-4 text-xs font-normal  text-right">Actions</th>
               </tr>
             </thead>
             <tbody>

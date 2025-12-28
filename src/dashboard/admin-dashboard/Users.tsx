@@ -206,7 +206,7 @@ const Users = () => {
                       <td className="p-6 text-[14px] text-gray-500 align-top">{user.date}</td>
                       <td className="p-6 align-top pr-8">
                         <div className="flex items-center justify-end gap-3 opacity-80 group-hover:opacity-100 transition-opacity">
-                          <button className="px-4 py-1.5 rounded-md bg-[#F5F5F5] text-red-500 text-xs font-bold hover:bg-red-50 transition-colors flex items-center gap-1">
+                          <button className="px-4 py-1.5 rounded-md bg-[#F5F5F5]  text-xs font-bold hover:bg-red-50 transition-colors flex items-center gap-1">
                             <Trash2 size={12} /> Delete
                           </button>
                           <button 
