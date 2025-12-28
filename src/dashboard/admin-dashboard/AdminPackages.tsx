@@ -15,7 +15,9 @@ type PackageData = {
   itemName: string;
   itemDesc: string;
   customerName: string;
+  clientId?: string;
   customerPhone: string;
+  customerEmail?: string;
   category: string;
   price: string;
   created: string;
@@ -37,12 +39,12 @@ type Note = {
 
 /** ---------------- Initial Data ---------------- */
 const INITIAL_PACKAGES: PackageData[] = [
-  { id: "1", trackingId: "ORD-1001", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Delivered" },
-  { id: "2", trackingId: "ORD-1003", itemName: "Local SMB", itemDesc: "Strong in local control and analytics.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Small Businesses", price: "29", created: "2024-11-21", status: "In Transit" },
-  { id: "3", trackingId: "ORD-1005", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Cancelled" },
-  { id: "4", trackingId: "ORD-1006", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "In Transit" },
-  { id: "5", trackingId: "ORD-1007", itemName: "Pro Enterprise", itemDesc: "Full scale solution.", customerName: "John Doe", customerPhone: "+1 555 019 283", category: "Enterprise", price: "99", created: "2024-08-10", status: "Delivered" },
-  { id: "6", trackingId: "ORD-1008", itemName: "Micro Test", itemDesc: "Single item shipment.", customerName: "Jane Smith", customerPhone: "+44 7700 900077", category: "Micro", price: "12", created: "2024-09-15", status: "Delivered" },
+  { id: "ORD 1001", clientId: '0001002', trackingId: "ORD-1001", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Delivered" },
+  { id: "ORD 1002", clientId: '0001003', trackingId: "ORD-1003", itemName: "Local SMB", itemDesc: "Strong in local control and analytics.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Small Businesses", price: "29", created: "2024-11-21", status: "In Transit" },
+  { id: "ORD 1003", clientId: '0001004', trackingId: "ORD-1005", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "Cancelled" },
+  { id: "ORD 1004", clientId: '0001005', trackingId: "ORD-1006", itemName: "Starter Light", itemDesc: "Very economical for testing.", customerName: "Maria González", customerEmail: "maria.g@example.com", customerPhone: "+34 612 345 678", category: "Micro", price: "19", created: "2024-07-05", status: "In Transit" },
+  { id: "ORD 1005", clientId: '0001006', trackingId: "ORD-1007", itemName: "Pro Enterprise", itemDesc: "Full scale solution.", customerName: "John Doe", customerEmail: "john.doe@example.com", customerPhone: "+1 555 019 283", category: "Enterprise", price: "99", created: "2024-08-10", status: "Delivered" },
+  { id: "ORD 1006", clientId: '0001007', trackingId: "ORD-1008", itemName: "Micro Test", itemDesc: "Single item shipment.", customerName: "Jane Smith", customerEmail: "jane.smith@example.com", customerPhone: "+44 7700 900077", category: "Micro", price: "12", created: "2024-09-15", status: "Delivered" },
 ];
 
 export default function PackageManagement() {
@@ -208,152 +210,151 @@ export default function PackageManagement() {
           </div>
         </div>
 
-        {/* ACTIONS BAR */}
-        <div className="flex flex-col xl:flex-row justify-between items-center gap-4 mb-6">
-          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-            {/* All Button */}
-            <button
-              onClick={() => setStatusFilter("All Status")}
-              className={`px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors ${statusFilter === 'All Status' ? 'bg-[#166534] text-white' : 'bg-[#F9FAFB] text-gray-500 hover:bg-gray-100'}`}
-            >
-              All
-            </button>
-
-            {/* Status Dropdown */}
-            <div className="relative">
+        <div className="p-4 bg-white rounded-[18px]">
+          {/* ACTIONS BAR */}
+          <div className="flex flex-col xl:flex-row justify-between items-center gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+              {/* All Button */}
               <button
-                onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-40 justify-between"
+                onClick={() => setStatusFilter("All Status")}
+                className={`px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors ${statusFilter === 'All Status' ? 'bg-[#166534] text-white' : 'bg-[#F9FAFB] text-gray-500 hover:bg-gray-100'}`}
               >
-                {statusFilter} <ChevronDown size={16} className="text-gray-400" />
+                All
               </button>
 
-              {/* Dropdown Menu */}
-              {isStatusDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 overflow-hidden">
-                  {["All Status", "Delivered", "In Transit", "Cancelled"].map(status => (
-                    <div
-                      key={status}
-                      onClick={() => { setStatusFilter(status); setIsStatusDropdownOpen(false); }}
-                      className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700 hover:text-green-700 transition-colors"
-                    >
-                      {status}
+              {/* Status Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+                  className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 transition border border-transparent hover:border-gray-200 w-40 justify-between"
+                >
+                  {statusFilter} <ChevronDown size={16} className="text-gray-400" />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isStatusDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsStatusDropdownOpen(false)}></div>
+                    <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 overflow-hidden">
+                      {["All Status", "Delivered", "In Transit", "Cancelled"].map(status => (
+                        <div
+                          key={status}
+                          onClick={() => { setStatusFilter(status); setIsStatusDropdownOpen(false); }}
+                          className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700 hover:text-green-700 transition-colors"
+                        >
+                          {status}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Backdrop to close dropdown on click outside */}
-              {isStatusDropdownOpen && (
-                <div className="fixed inset-0 z-10" onClick={() => setIsStatusDropdownOpen(false)}></div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium">
-              01/11/24 <Calendar size={16} className="text-gray-400 ml-2" />
-            </div>
-
-            <div className="relative flex-1 xl:flex-none">
-              <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={query}
-                onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
-                className="pl-10 pr-4 py-2.5 bg-[#F9FAFB] rounded-lg text-sm font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 w-full xl:w-80"
-              />
-            </div>
-          </div>
-
-          <button onClick={() => handleOpenModal(null, 'add')} className="bg-[#166534] hover:bg-[#14532d] text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition w-full xl:w-auto justify-center shadow-sm">
-            <Plus size={18} /> Add Package
-          </button>
-        </div>
-
-        {/* TABLE */}
-        <div className="bg-white rounded-xl overflow-hidden mb-4 min-h-[400px]">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium">
-                <tr>
-                  <SortableHeader label="Item" sortKey="itemName" currentSort={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Customer" sortKey="customerName" currentSort={sortConfig} onSort={handleSort} />
-                  <th className="p-5 font-normal">Tracking Number</th>
-                  <th className="p-5 font-normal">Category</th>
-                  <SortableHeader label="Price" sortKey="price" currentSort={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Created" sortKey="created" currentSort={sortConfig} onSort={handleSort} />
-             
-                  <th className="p-5 font-normal text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="text-[14px] divide-y divide-gray-50">
-                {paginatedData.length > 0 ? paginatedData.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
-                    <td className="p-5">
-                      <div className="font-bold text-gray-900 mb-0.5">{item.itemName}</div>
-                      <div className="text-[13px] text-gray-500 leading-tight">{item.itemDesc}</div>
-                    </td>
-                    <td className="p-5">
-                      <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
-                      <div className="text-[13px] text-gray-500">{item.customerPhone}</div>
-                    </td>
-                    <td className="p-5 text-gray-600">{item.trackingId}</td>
-                    <td className="p-5 text-gray-600">{item.category}</td>
-                    <td className="p-5 text-gray-600">${item.price} USD</td>
-                    <td className="p-5 text-gray-600">{item.created}</td>
-                  
-                    <td className="p-5 text-right">
-                      <div className="flex items-center justify-end gap-2 text-gray-500">
-                        <button onClick={() => handleOpenModal(item, 'notes')} className="hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">Notes</button>
-                        <button onClick={() => handleOpenModal(item, 'view')} className="hover:bg-gray-100 hover:text-blue-600 px-3 py-1 rounded-md text-[13px] font-medium transition-colors bg-[#F9FAFB]">View</button>
-                      </div>
-                    </td>
-                  </tr>
-                )) : (
-                  <tr>
-                    <td colSpan={8} className="p-10 text-center text-gray-400">No packages found.</td>
-                  </tr>
+                  </>
                 )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              </div>
 
-        {/* PAGINATION */}
-        <div className="flex justify-between items-center mt-6 text-[14px] border-t border-gray-100 pt-4">
-          <span className="text-gray-400"></span>
-          <div className="flex items-center gap-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              className="text-gray-400 hover:text-gray-600 disabled:opacity-50 px-3 py-1"
-            >
-              Previous
-           
-           </button>
-            <button
-              disabled={currentPage === totalPages || totalPages === 0}
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              className="text-[#16a34a] font-semibold flex items-center gap-1 hover:text-[#15803d] disabled:opacity-50 px-3 py-1"
-            >
-              Next <ChevronRight size={16} />
+              <div className="flex items-center gap-3 bg-[#F9FAFB] text-gray-500 px-4 py-2.5 rounded-lg text-sm font-medium">
+                01/11/24 <Calendar size={16} className="text-gray-400 ml-2" />
+              </div>
+
+              <div className="relative flex-1 xl:flex-none">
+                <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={query}
+                  onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
+                  className="pl-10 pr-4 py-2.5 bg-[#F9FAFB] rounded-lg text-sm font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 w-full xl:w-80"
+                />
+              </div>
+            </div>
+
+            <button onClick={() => handleOpenModal(null, 'add')} className="bg-[#166534] hover:bg-[#14532d] text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition w-full xl:w-auto justify-center shadow-sm">
+              <Plus size={18} /> Add Package
             </button>
           </div>
-        </div>
 
-        {/* MODAL */}
-        {isModalOpen && currentPackage && (
-          <Modal
-            isOpen={isModalOpen}
-            mode={modalMode}
-            data={currentPackage}
-            onClose={() => setIsModalOpen(false)}
-            onSave={handleSave}
-            onDelete={handleDelete}
-            notes={notesMap[currentPackage.id] || []}
-            onAddNote={addNoteToPackage}
-          />
-        )}
+          {/* TABLE */}
+          <div className="bg-white rounded-xl overflow-hidden mb-4 min-h-[400px]">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium">
+                  <tr>
+                    <th className="p-5 font-normal text-[16px]">Order</th>
+                    <th className="p-5 font-normal text-[16px]">Client ID</th>
+                    <th className="p-5 font-normal text-[16px]">Client</th>
+                    <th className="p-5 font-normal text-[16px]">Tracking Number</th>
+                    <th className="p-5 font-normal text-[16px]">Created date</th>
+                    <th className="p-5 font-normal text-right text-[16px]">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[14px] divide-y divide-gray-50">
+                  {paginatedData.length > 0 ? paginatedData.map((item, idx) => {
+                    const isEven = idx % 2 === 0;
+                    const rowBg = isEven ? 'bg-white' : 'bg-[#f6f6f6]';
+                    const actionText = isEven ? 'text-gray-500' : 'text-gray-500';
+                    const buttonBg = isEven ? 'bg-[#f6f6f6]' : 'bg-[#f6f6f6]';
+                    return (
+                      <tr key={item.id} className={`${rowBg} transition-colors group`}>
+                        <td className="p-5 text-gray-700">{item.id}</td>
+                        <td className="p-5 text-gray-700">{item.clientId || ''}</td>
+                        <td className="p-5">
+                          <div className="font-bold text-gray-900 mb-0.5">{item.customerName}</div>
+                          <div className="text-[13px] text-gray-500">{item.customerEmail || item.customerPhone}</div>
+                        </td>
+                        <td className="p-5 text-gray-700">{item.trackingId}</td>
+                        <td className="p-5 text-gray-700">{item.created}</td>
+                        <td className={`p-5 text-right`}>
+                          <div className={`flex items-center justify-end gap-2 ${actionText}`}>
+                            <button onClick={() => handleOpenModal(item, 'notes')} className={`hover:bg-gray-100 hover:text-green-700 px-3 py-1 rounded-[18px] text-[13px] font-medium transition-colors ${buttonBg}`}>Notes</button>
+                            <button onClick={() => handleOpenModal(item, 'view')} className={`hover:bg-gray-100 hover:text-green-600 px-3 py-1 rounded-[18px] text-[13px] font-medium transition-colors ${buttonBg}`}>View</button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  }) : (
+                    <tr>
+                      <td colSpan={6} className="p-10 text-center text-gray-400">No packages found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* PAGINATION */}
+          <div className="flex justify-between items-center mt-6 text-[14px] border-t border-gray-100 pt-4">
+            <span className="text-gray-400">Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredData.length)} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</span>
+            <div className="flex items-center gap-2">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className="text-gray-400 hover:text-gray-600 disabled:opacity-50 px-3 py-1"
+              >
+                Previous
+              </button>
+
+              <button
+                disabled={currentPage === totalPages || totalPages === 0}
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                className="text-[#16a34a] font-semibold flex items-center gap-1 hover:text-[#15803d] disabled:opacity-50 px-3 py-1"
+              >
+                Next <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* MODAL */}
+          {isModalOpen && currentPackage && (
+            <Modal
+              isOpen={isModalOpen}
+              mode={modalMode}
+              data={currentPackage}
+              onClose={() => setIsModalOpen(false)}
+              onSave={handleSave}
+              onDelete={handleDelete}
+              notes={notesMap[currentPackage.id] || []}
+              onAddNote={addNoteToPackage}
+            />
+          )}
+        </div>
       </div>
     </>
   );
@@ -369,30 +370,6 @@ const StatCard = ({ title, value, icon, valueClass, iconWrapperClass, titleClass
     </div>
     <div className={`${valueClass || 'text-[32px] font-medium'} text-gray-900 tracking-tight`}>{value}</div>
   </div>
-);
-
-const StatusBadge = ({ status }: { status: string }) => {
-  const styles = {
-    Delivered: { color: "text-[#4ade80]", icon: <Check size={14} strokeWidth={3} /> },
-    "In Transit": { color: "text-[#3b82f6]", icon: <div className="w-3.5 h-3.5 border-[1.5px] border-[#3b82f6] rounded-full flex items-center justify-center"><span className="text-[8px] font-bold">i</span></div> },
-    Cancelled: { color: "text-[#ef4444]", icon: <X size={14} strokeWidth={3} /> },
-  };
-  const style = styles[status as keyof typeof styles] || { color: "text-gray-500", icon: null };
-
-  return (
-    <div className={`flex items-center gap-2 ${style.color} font-medium text-[13px]`}>
-      {style.icon} {status}
-    </div>
-  );
-};
-
-const SortableHeader = ({ label, sortKey, currentSort, onSort }: any) => (
-  <th className="p-5 font-normal cursor-pointer hover:bg-gray-100 transition-colors select-none" onClick={() => onSort(sortKey)}>
-    <div className="flex items-center gap-1">
-      {label}
-      <ArrowUpDown size={12} className={`transition-opacity ${currentSort.key === sortKey ? 'opacity-100' : 'opacity-30'}`} />
-    </div>
-  </th>
 );
 
 /* --- MODAL --- */

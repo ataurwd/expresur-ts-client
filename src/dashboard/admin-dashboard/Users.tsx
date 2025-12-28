@@ -5,7 +5,9 @@ import {
   RefreshCw, 
   Bell, 
   ChevronRight, 
-  X
+  X,
+  User as UserIcon,
+  Trash2
 } from 'lucide-react';
 
 import { Helmet } from 'react-helmet';
@@ -22,7 +24,7 @@ interface UserType {
   date: string;
 }
 
-// --- MOCK DATA (Exact Match with Screenshot) ---
+// --- MOCK DATA ---
 const INITIAL_USERS: UserType[] = [
   { id: 1, name: 'Rahim Khan', lockerId: 'LKR-1001', email: 'rahim.khan@example.com', phone: '+8801711000001', addressLine1: 'Mirpur 10,', addressLine2: 'Dhaka, Bangladesh • Dhaka', date: '2025/10/12' },
   { id: 2, name: 'Ayesha Begum', lockerId: 'LKR-1002', email: 'ayesha.begum@example.com', phone: '+8801711000002', addressLine1: 'Banani DOHS,', addressLine2: 'Dhaka, Bangladesh • Dhaka', date: '2025/10/12' },
@@ -187,7 +189,12 @@ const Users = () => {
                   currentUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50/80 transition-colors group">
                       <td className="p-6 text-[14px] text-gray-600 font-medium pl-8 align-top">
-                        {user.name}
+                         <div className="flex items-center gap-2">
+                           <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                             <UserIcon size={14} />
+                           </div>
+                           {user.name}
+                         </div>
                       </td>
                       <td className="p-6 text-[14px] text-gray-500 align-top">{user.lockerId}</td>
                       <td className="p-6 text-[14px] text-gray-500 align-top">{user.email}</td>
@@ -199,8 +206,8 @@ const Users = () => {
                       <td className="p-6 text-[14px] text-gray-500 align-top">{user.date}</td>
                       <td className="p-6 align-top pr-8">
                         <div className="flex items-center justify-end gap-3 opacity-80 group-hover:opacity-100 transition-opacity">
-                          <button className="px-4 py-1.5 rounded-md bg-[#F5F5F5] text-gray-400 text-xs font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors">
-                            Delete
+                          <button className="px-4 py-1.5 rounded-md bg-[#F5F5F5] text-red-500 text-xs font-bold hover:bg-red-50 transition-colors flex items-center gap-1">
+                            <Trash2 size={12} /> Delete
                           </button>
                           <button 
                             onClick={() => { setSelectedUser(user); setIsModalOpen(true); }}

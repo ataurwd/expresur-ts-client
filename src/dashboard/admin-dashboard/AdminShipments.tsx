@@ -6,11 +6,12 @@ import {
 } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
-// 1. Interface Update
+// --- 1. Interface & Data Setup ---
 interface Shipment {
   id: string;
   clientName: string;
   clientEmail: string;
+  clientPhone?: string;
   clientId: string;
   trackingNumber: string;
   routeFrom: string;
@@ -20,15 +21,16 @@ interface Shipment {
   status: 'Delivered' | 'In Transit' | 'Cancelled' | 'Pending' | 'Assigned';
 }
 
-// 2. Data Updated to match Image Rows exactly
 const INITIAL_DATA: Shipment[] = [
-  { id: '1', clientName: 'María González', clientEmail: 'maria@gmail.com', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Delivered' },
-  { id: '2', clientName: 'María González', clientEmail: 'maria@gmail.com', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'In Transit' },
-  { id: '3', clientName: 'María González', clientEmail: 'maria@gmail.com', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Cancelled' },
-  { id: '4', clientName: 'María González', clientEmail: 'maria@gmail.com', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Pending' },
-  { id: '5', clientName: 'María González', clientEmail: 'maria@gmail.com', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Assigned' },
+  { id: '1', clientName: 'María González', clientEmail: 'maria@gmail.com', clientPhone: '+34 612 345 678', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'UPS', estimatedDate: '7/5/2024', status: 'Delivered' },
+  { id: '2', clientName: 'María González', clientEmail: 'maria@gmail.com', clientPhone: '+34 612 345 678', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '11/21/2024', status: 'In Transit' },
+  { id: '3', clientName: 'María González', clientEmail: 'maria@gmail.com', clientPhone: '+34 612 345 678', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '7/5/2024', status: 'Cancelled' },
+  { id: '4', clientName: 'María González', clientEmail: 'maria@gmail.com', clientPhone: '+34 612 345 678', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'FedEx', estimatedDate: '11/21/2024', status: 'Pending' },
+  { id: '5', clientName: 'María González', clientEmail: 'maria@gmail.com', clientPhone: '+34 612 345 678', clientId: '0001002', trackingNumber: 'LCK-127A', routeFrom: 'Barcelona, Spain', routeTo: 'Havana, Cuba', carrier: 'USPS', estimatedDate: '7/5/2024', status: 'Assigned' },
+  { id: '6', clientName: 'John Doe', clientEmail: 'john.doe@example.com', clientPhone: '+1 555 019 283', clientId: '0001007', trackingNumber: 'LCK-777B', routeFrom: 'Madrid, Spain', routeTo: 'Havana, Cuba', carrier: 'DHL', estimatedDate: '8/10/2024', status: 'In Transit' },
 ];
 
+// --- 2. Main Component ---
 const AdminShipments = memo(() => {
   const navigate = useNavigate();
   const [data, setData] = useState<Shipment[]>(INITIAL_DATA);
@@ -38,10 +40,12 @@ const AdminShipments = memo(() => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const [modal, setModal] = useState<{ open: boolean; mode: 'view' ; data: Shipment | null }>({
+  // Modal State
+  const [modal, setModal] = useState<{ open: boolean; mode: 'view' | 'edit'; data: Shipment | null }>({
     open: false, mode: 'view', data: null
   });
 
+  // Filter Logic
   const filteredData = useMemo(() => {
     return data.filter(item => {
       const matchSearch =
@@ -54,12 +58,13 @@ const AdminShipments = memo(() => {
     });
   }, [data, search, statusFilter, carrierFilter]);
 
+  // Pagination Logic
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const stats = { total: 857, delivered: 100, inTransit: 11, pending: 15 };
 
-  const handleOpenModal = (item: Shipment, mode: 'view') => {
+  const handleOpenModal = (item: Shipment, mode: 'view' | 'edit') => {
     setModal({ open: true, mode, data: item });
   };
 
@@ -159,7 +164,6 @@ const AdminShipments = memo(() => {
           <div className="rounded-xl overflow-hidden border border-gray-50">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                {/* Table Header - Exact Color & Font */}
                 <thead className="bg-[#F9FAFB] text-gray-400 text-[13px] font-medium border-b border-gray-100">
                   <tr>
                     <th className="p-5 font-normal">Client</th>
@@ -175,42 +179,25 @@ const AdminShipments = memo(() => {
                 <tbody className="text-[14px] divide-y divide-gray-50">
                   {paginatedData.length > 0 ? paginatedData.map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
-                      {/* Client */}
                       <td className="p-5 align-top">
                         <div className="font-bold text-gray-800 text-[14px]">{item.clientName}</div>
                         <div className="text-[13px] text-gray-400 mt-0.5">{item.clientEmail}</div>
                       </td>
-                      
-                      {/* Client ID */}
                       <td className="p-5 align-top text-gray-500">{item.clientId}</td>
-                      
-                      {/* Tracking Number */}
                       <td className="p-5 align-top text-gray-500">{item.trackingNumber}</td>
-                      
-                      {/* Route - Wrapped lines like image */}
                       <td className="p-5 align-top">
                         <div className="text-gray-600 leading-tight mb-0.5">{item.routeFrom.split(',')[0]},</div>
                         <div className="text-gray-400 text-[13px]">{item.routeFrom.split(',')[1]} → {item.routeTo}</div>
                       </td>
-                      
-                      {/* Carrier */}
                       <td className="p-5 align-top text-gray-500">{item.carrier}</td>
-                      
-                      {/* Date */}
                       <td className="p-5 align-top text-gray-500">{item.estimatedDate}</td>
-                      
-                      {/* Status - No Badge, Just Text & Icon */}
                       <td className="p-5 align-top">
                         <StatusBadge status={item.status} />
                       </td>
-                      
-                      {/* Actions - Edit (White) / View (Gray) */}
                       <td className="p-5 align-top text-right">
                         <div className="flex items-center justify-end gap-2">
-                         
-                           <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded-full text-xs font-medium transition-colors">
-                             View
-                           </button>
+                           <button onClick={() => handleOpenModal(item, 'edit')} className="bg-white border border-gray-100 hover:border-gray-300 text-gray-500 px-4 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm">Edit</button>
+                           <button onClick={() => handleOpenModal(item, 'view')} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded-full text-xs font-medium transition-colors">View</button>
                         </div>
                       </td>
                     </tr>
@@ -231,16 +218,21 @@ const AdminShipments = memo(() => {
           </div>
         </div>
 
-        {/* MODAL COMPONENTS (Hidden for brevity, assuming same as before) */}
+        {/* MODAL COMPONENTS */}
         {modal.open && modal.data && (
-           <ShipmentEditModal data={modal.data} onClose={() => setModal({ ...modal, open: false })} />
+          modal.mode === 'view' ? (
+             <ShipmentViewModal data={modal.data} onClose={() => setModal({ ...modal, open: false })} />
+          ) : (
+             <ShipmentEditModal data={modal.data} onClose={() => setModal({ ...modal, open: false })} />
+          )
         )}
       </div>
     </>
   );
 });
 
-/* STAT CARD */
+// --- 3. Sub Components ---
+
 const StatCard = ({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) => (
   <div className="bg-[#F9FAFB] p-6 rounded-[24px] flex flex-col justify-between h-[130px] relative">
     <div className="flex justify-between items-start">
@@ -251,38 +243,103 @@ const StatCard = ({ label, value, icon }: { label: string; value: string; icon: 
   </div>
 );
 
-/* STATUS BADGE - EXACT IMAGE MATCH (No Background Pill) */
 const StatusBadge = ({ status }: { status: Shipment['status'] }) => {
   const configs: Record<Shipment['status'], { color: string; icon: React.ReactNode }> = {
     Delivered: { color: 'text-green-500', icon: <Check size={15} strokeWidth={3} /> },
     'In Transit': { color: 'text-blue-500', icon: <Truck size={15} /> },
     Cancelled: { color: 'text-red-500', icon: <X size={15} strokeWidth={3} /> },
-    Pending: { color: 'text-orange-400', icon: <Info size={15} strokeWidth={2.5} /> }, // Orange 'i'
+    Pending: { color: 'text-orange-400', icon: <Info size={15} strokeWidth={2.5} /> },
     Assigned: { color: 'text-purple-500', icon: <Package size={15} /> },
   };
   const { color, icon } = configs[status];
-  
-  // Removed bg-color classes to match the clean look of the image
+  return <div className={`flex items-center gap-2 ${color} font-medium text-[13px]`}>{icon} {status}</div>;
+};
+
+const ShipmentViewModal = ({ data, onClose }: { data: Shipment; onClose: () => void }) => {
+  const timelineSteps = [
+    { status: 'Assigned', time: '7/22/2025 10:43AM', active: true, color: 'text-purple-600', icon: <Package size={14} /> },
+    { status: 'Pending', time: '7/22/2025 10:44AM', active: true, color: 'text-orange-500', icon: <Clock size={14} /> },
+    { status: 'In Transit', time: '7/22/2025 10:54AM', active: true, color: 'text-blue-500', icon: <Truck size={14} /> },
+    { status: 'Canceled', time: '7/22/2025 10:34AM', active: false, color: 'text-gray-400', icon: <X size={14} /> },
+  ];
+
   return (
-    <div className={`flex items-center gap-2 ${color} font-medium text-[14px]`}>
-      {icon} {status}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden border border-gray-100">
+        <div className="px-8 py-6">
+          <h2 className="text-2xl font-normal text-gray-500">Shipment Details</h2>
+        </div>
+
+        <div className="px-8 pb-8 space-y-6">
+          <div className="bg-gray-50/50 rounded-2xl p-6 grid grid-cols-2 gap-y-6 gap-x-4">
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Customer</div>
+              <div className="font-bold text-gray-700">{data.clientName}</div>
+              <div className="text-xs text-gray-400">{data.clientEmail}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Tracking Number</div>
+              <div className="font-bold text-gray-700 text-sm">{data.trackingNumber}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Route</div>
+              <div className="font-bold text-gray-700 text-sm">{data.routeFrom} → {data.routeTo}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Carrier</div>
+              <div className="font-bold text-gray-700 text-sm">{data.carrier}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Estimated date</div>
+              <div className="font-bold text-gray-700 text-sm">{data.estimatedDate}</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 font-medium mb-1">Status</div>
+               <div className="inline-block"><StatusBadge status={data.status} /></div>
+            </div>
+          </div>
+
+          {/* Timeline Card */}
+          <div className="bg-gray-50/50 rounded-2xl p-6">
+            <h3 className="text-[16px] text-gray-400 font-normal mb-6">Shipment status Timeline</h3>
+            <div className="relative pl-4 border-l-2 border-gray-200 ml-2 space-y-8">
+              {timelineSteps.map((step, index) => (
+                <div key={index} className="relative flex items-start gap-4">
+                  <div className={`absolute -left-[25px] mt-1.5 w-4 h-4 rounded-full border-2 border-white ${step.active ? 'bg-green-600' : 'bg-gray-300'}`} />
+                  <div className="flex-1 flex gap-3">
+                    <div className={`${step.color} mt-1`}>{step.icon}</div>
+                    <div>
+                      <div className={`text-sm font-bold ${step.color}`}>{step.status}</div>
+                      <div className="text-[10px] text-gray-400 tracking-tight uppercase">{step.time}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end items-center gap-6 pt-4">
+            <button onClick={onClose} className="text-[15px] text-gray-400 hover:text-gray-600 font-normal transition-colors">Cancel</button>
+            <button onClick={onClose} className="px-4 py-2.5 text-[#066333] rounded-lg text-[15px] font-medium transition-all flex items-center gap-2 hover:bg-green-50">Go to Packages <ChevronRight size={16}/></button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-/* EDIT MODAL (Simplified for display) */
 const ShipmentEditModal = ({ data, onClose }: { data: Shipment; onClose: () => void }) => {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] p-4">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="font-bold text-lg">Edit Shipment</h3>
-                    <button onClick={onClose}><X size={20} className="text-gray-400"/></button>
+                    <button onClick={onClose}><X size={20} className="text-gray-400 hover:text-gray-600"/></button>
                 </div>
                 <p className="text-gray-500 mb-6">Editing details for {data.clientName}...</p>
                 <div className="flex justify-end gap-3">
-                    <button onClick={onClose} className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg text-sm font-medium">Cancel</button>
-                    <button onClick={onClose} className="px-4 py-2 text-white bg-green-600 rounded-lg text-sm font-medium">Save</button>
+                    <button onClick={onClose} className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg text-sm font-medium hover:bg-gray-200">Cancel</button>
+                    <button onClick={onClose} className="px-4 py-2 text-white bg-green-600 rounded-lg text-sm font-medium hover:bg-green-700">Save</button>
                 </div>
             </div>
         </div>

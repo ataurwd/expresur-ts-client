@@ -107,38 +107,38 @@ const InternalUsersRoles = memo(() => {
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     {STAFF_DATA.map((member) => (
-                                        <tr key={member.id}>
-                                            <td className="py-4 flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-semibold text-lg">
-                                                    {member.name.charAt(0)}
-                                                </div>
-                                                <div>
-                                                    <div className="font-bold text-gray-700 text-[14px]">{member.name}</div>
-                                                    <div className="text-[12px] text-gray-400">{member.subRole}</div>
-                                                </div>
-                                            </td>
-                                            <td className="py-4 text-gray-500 text-[14px]">{member.role}</td>
-                                            <td className="py-4 text-gray-500 text-[14px]">{member.joinedDate}</td>
-                                            <td className="py-4">
-                                                <span className={`flex items-center gap-2 text-[14px] font-medium ${member.status === 'Active' ? 'text-green-500' : 'text-red-500'}`}>
-                                                    <span className={`w-1.5 h-1.5 rounded-full ${member.status === 'Active' ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                    {member.status}
-                                                </span>
-                                            </td>
-                                            <td className="py-4 text-right">
-                                                <button className="text-gray-400 text-[13px] font-medium bg-[#F8F8F8] px-4 py-1.5 rounded-full border border-gray-100">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                            <tr key={member.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors">
+                                                <td className="py-4 flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-semibold text-lg">
+                                                        {member.name.charAt(0)}
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-bold text-gray-700 text-[14px]">{member.name}</div>
+                                                        <div className="text-[12px] text-gray-400">{member.subRole}</div>
+                                                    </div>
+                                                </td>
+                                                <td className="py-4 text-gray-700 text-[14px]">{member.role}</td>
+                                                <td className="py-4 text-gray-700 text-[14px]">{member.joinedDate}</td>
+                                                <td className="py-4">
+                                                    <span className={`flex items-center gap-2 text-[14px] font-medium ${member.status === 'Active' ? 'text-green-500' : 'text-red-500'}`}>
+                                                        <span className={`w-1.5 h-1.5 rounded-full ${member.status === 'Active' ? 'bg-green-500' : 'bg-red-500'}`} />
+                                                        {member.status}
+                                                    </span>
+                                                </td>
+                                                <td className="py-4 text-right">
+                                                    <button className="text-gray-500 text-[13px] font-medium bg-[#F8F8F8] px-4 py-1.5 rounded-full border border-gray-100">
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </table>
                         </div>
 
                         <div className="flex justify-end items-center mt-8 gap-8">
                             <button className="text-[14px] text-gray-300">Previous</button>
-                            <button className="text-[14px] text-green-600 font-bold flex items-center gap-1">
+                            <button className="text-[14px] text-green-600 font-normal flex items-center gap-1">
                                 Next <span className="text-lg">→</span>
                             </button>
                         </div>

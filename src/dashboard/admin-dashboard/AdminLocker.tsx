@@ -171,16 +171,16 @@ const AdminLocker = () => {
             </thead>
             <tbody className="text-[14px] divide-y divide-gray-50">
               {paginatedData.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition-colors group">
-                  <td className="p-5 text-gray-600">{item.clientId}</td>
+                <tr key={index} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-colors group">
+                  <td className="p-5 text-gray-700">{item.clientId}</td>
                   <td className="p-5">
                     <div className="font-bold text-gray-900 mb-0.5">{item.clientName}</div>
                     <div className="text-[13px] text-gray-500">{item.clientEmail}</div>
                   </td>
-                  <td className="p-5 text-gray-600">{item.trackingNumber}</td>
-                  <td className="p-5 text-gray-600">{item.lockerId}</td>
-                  <td className="p-5 text-gray-600">{item.totalPackages}</td>
-                  <td className="p-5 text-gray-600">{item.createdDate}</td>
+                  <td className="p-5 text-gray-700">{item.trackingNumber}</td>
+                  <td className="p-5 text-gray-700">{item.lockerId}</td>
+                  <td className="p-5 text-gray-700">{item.totalPackages}</td>
+                  <td className="p-5 text-gray-700">{item.createdDate}</td>
                   <td className="p-5 text-right">
                     <button onClick={() => { setSelectedLocker(item); setIsViewOpen(true); }} className="bg-[#F3F4F6] hover:bg-gray-200 text-gray-500 px-4 py-1.5 rounded text-xs font-medium transition-colors">
                       View
