@@ -5,7 +5,6 @@ import {
   Search,
   Plus,
   ArrowRight,
-  ArrowLeft,
   Package,
   Truck,
   CheckCircle,
