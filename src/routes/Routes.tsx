@@ -260,12 +260,12 @@ const Routes = createBrowserRouter([
   },
   {
     path: "waehouse",
-    element: <Waehouse/>,
+    element: <WarehouseDashboard/>,
     children: [
-      {
-        path: "warehouseDashboard",
-        element: <WarehouseDashboard />,
-      },
+      // {
+      //   path: "warehouseDashboard",
+      //   element: <WarehouseDashboard />,
+      // },
      {
         path: "intake",
         element: <Intake />,
