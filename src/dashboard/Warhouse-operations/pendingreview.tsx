@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown, Calendar, ArrowRight, AlertCircle, Clock, XCircle, RotateCcw } from 'lucide-react';
+import { ArrowRight, AlertCircle, Clock, XCircle, RotateCcw } from 'lucide-react';
 
 const PendingReview: React.FC = () => {
   // Data structure matching Frame 2147226101 (Issue tracking)
