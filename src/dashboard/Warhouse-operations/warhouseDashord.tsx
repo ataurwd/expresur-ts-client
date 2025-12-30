@@ -21,7 +21,7 @@ const WarehouseDashboard = () => {
   ];
 
   return (
-    <div className="w-full bg-white p-4">
+    <div className="w-full bg-[#f6f6f6] p-4">
       {/* SECTION 1: THE GREEN PART (Sidebar.png) */}
       <header className="bg-[#005e2b] rounded-[10px] px-6 py-4 flex justify-between items-center shadow-sm">
         <div className="flex items-center">
@@ -57,7 +57,7 @@ const WarehouseDashboard = () => {
 
       {/* SECTION 2: THE MENU PART (Logo.png) */}
       <nav className="mt-4 px-4">
-        <ul className="flex items-center justify-between w-full">
+        <ul className="flex items-center justify-between w-full p-4 bg-white rounded-[10px] shadow-sm">
           {menuItems.map((item) => (
             <li key={item}>
               <button
