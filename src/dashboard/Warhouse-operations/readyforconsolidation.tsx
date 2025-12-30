@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, X, Check, RotateCcw, Box, HelpCircle } from 'lucide-react';
+import { ArrowRight, X, Check, RotateCcw, Box,  } from 'lucide-react';
 
 const ReadyForConsolidation = () => {
     const tableData = [
