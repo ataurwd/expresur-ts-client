@@ -45,6 +45,9 @@ import AdminApi from "../dashboard/admin-dashboard/AdminApi";
 import Remittances from "../dashboard/user-dashboard/Remittances";
 import Notification from "../dashboard/user-dashboard/Notification";
 import InternalUsersRoles from "../dashboard/admin-dashboard/InternalUsersRoles";
+import Waehouse from "../layout/waehouse";
+import Intake from "../dashboard/Warhouse-operations/Intake"
+import WarehouseDashboard from "../dashboard/Warhouse-operations/warhouseDashord";
 
 const Routes = createBrowserRouter([
   {
@@ -250,6 +253,21 @@ const Routes = createBrowserRouter([
       }
     ],
   },
+  {
+    path: "waehouse",
+    element: <Waehouse/>,
+    children: [
+      {
+        path: "intake",
+        element: <Intake />,
+      },
+      {
+        path: "warehouseDashboard",
+        element: <WarehouseDashboard />,
+      },
+    ],
+  },
+ 
 ]);
 
 export default Routes;
