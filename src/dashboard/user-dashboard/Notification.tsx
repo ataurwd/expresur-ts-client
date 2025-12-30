@@ -3,12 +3,12 @@ import { Helmet } from 'react-helmet';
 import { Toaster, toast } from 'sonner';
 import { 
   Bell, 
-  Filter, 
+  Filter, // For the filter icon in notifications
   MessageCircle, 
   MessageSquare, 
   Mail,
-  Headphones,
-  Headset
+  Headset,
+  Menu // Hamburger menu icon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -78,159 +78,140 @@ const Notification = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
+    <div className="min-h-screen bg-[#F9FAFB] font-sans text-gray-800 pb-20 relative">
       <Helmet>
         <title>Notifications | EXPRESUR</title>
       </Helmet>
       <Toaster position="top-center" richColors closeButton />
 
-      {/* --- Header --- */}
-      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Notifications & Support Panel</h1>
-          <p className="text-gray-400 mt-2 text-sm">System alerts and important messages</p>
+      {/* --- TOP HEADER (Matches Screenshot) --- */}
+      <div className="bg-[#F9FAFB] p-5 sticky top-0 z-30 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+           {/* Menu Icon */}
+           <button className="text-gray-600">
+             <Menu size={24} />
+           </button>
+           {/* EXPRESUR Logo Text */}
+           <h1 className="text-2xl font-black text-[#F97316] tracking-tight ml-4">EXPRESUR</h1>
         </div>
-
-        <div className="flex items-center gap-6 mt-6 md:mt-0">
-           {/* Notification Bell */}
-           <Link to="/dashboard/notifications">
-            <button className="relative p-2.5 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.05)] hover:bg-gray-50 border border-gray-100 transition">
-              <Bell size={20} className="text-gray-600" />
-              {unreadCount > 0 && (
-                <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-              )}
-            </button>
-           </Link>
-          
-          {/* User Profile */}
-          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.05)] cursor-pointer hover:shadow-md transition">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
-               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover"/>
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
-              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
-            </div>
-          </div>
+        
+        <div className="flex items-center gap-4">
+             {/* Bell Icon */}
+             <Link to="/dashboard/notifications" className="relative p-2 bg-white rounded-full shadow-sm">
+                <Bell size={20} className="text-gray-400" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                )}
+             </Link>
+             {/* Profile Image */}
+             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-9 h-9 rounded-full border border-green-100 bg-white" />
         </div>
       </div>
 
-      <div className=" mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="px-5 space-y-6">
         
-        {/* --- Left Column: Notifications List (Now inside a Card like Support) --- */}
-        <div className="lg:col-span-2">
-           <div className="bg-white rounded-[30px] p-8 shadow-[0_4px_30px_rgba(0,0,0,0.02)] border border-gray-100">
-             
-             {/* Section Header */}
-             <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3 text-gray-400">
-                   <Bell size={20} />
-                   <h3 className="font-medium text-lg text-gray-600">Notifications</h3>
+        {/* --- Page Title --- */}
+        <div className="mt-2">
+            <h1 className="text-[26px] font-bold text-[#1F2937] leading-tight">Notifications & Support Panel</h1>
+            <p className="text-gray-400 text-sm mt-1">System alerts and important messages</p>
+        </div>
+
+        {/* --- Notifications Section --- */}
+        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100/50">
+           
+           {/* Section Header */}
+           <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-3">
+                 <div className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-400">
+                    <Bell size={16} />
+                 </div>
+                 <h3 className="text-lg font-medium text-gray-600">Notifications</h3>
+              </div>
+              <button className="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 transition">
+                 <Filter size={14} />
+              </button>
+           </div>
+
+           {/* Tabs (All / Unread) */}
+           <div className="flex items-center gap-2 mb-6">
+              <button 
+                onClick={() => setFilter('all')}
+                className={`px-5 py-2 rounded-lg text-xs font-bold transition shadow-sm ${filter === 'all' ? 'bg-[#005f33] text-white' : 'bg-gray-100 text-gray-500'}`}
+              >
+                All
+              </button>
+              <button 
+                onClick={() => setFilter('unread')}
+                className={`px-5 py-2 rounded-lg text-xs font-bold transition ${filter === 'unread' ? 'bg-[#005f33] text-white' : 'bg-[#F3F4F6] text-gray-400'}`}
+              >
+                Unread ({unreadCount})
+              </button>
+           </div>
+
+           {/* List */}
+           <div className="space-y-3">
+              {filteredNotifications.map((notif) => (
+                <div key={notif.id} className="bg-[#F9FAFB] p-5 rounded-[20px] border border-transparent">
+                   <div className="flex flex-wrap justify-between items-baseline mb-2">
+                      <h4 className="text-gray-700 font-bold text-[15px]">{notif.title}</h4>
+                      <span className="text-[11px] text-gray-400">{notif.time}</span>
+                   </div>
+                   <p className="text-[13px] text-gray-400 font-medium leading-relaxed">{notif.desc}</p>
                 </div>
-                <button className="p-2 bg-gray-50 rounded-full text-gray-400 hover:bg-gray-100 transition">
-                   <Filter size={16} />
-                </button>
-             </div>
-
-             {/* Filter Tabs */}
-             <div className="flex items-center gap-3 mb-6">
-                <button 
-                  onClick={() => setFilter('all')}
-                  className={`px-5 py-1.5 rounded-lg text-xs font-bold transition ${filter === 'all' ? 'bg-[#005f33] text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
-                >
-                  All
-                </button>
-                <button 
-                  onClick={() => setFilter('unread')}
-                  className={`px-5 py-1.5 rounded-lg text-xs font-bold transition ${filter === 'unread' ? 'bg-[#005f33] text-white' : 'bg-[#F3F4F6] text-gray-400 hover:bg-gray-200'}`}
-                >
-                  Unread ({unreadCount})
-                </button>
-             </div>
-
-             {/* Notification Cards List */}
-             <div className="space-y-3">
-                {filteredNotifications.length > 0 ? (
-                  filteredNotifications.map((notif) => (
-                    <div 
-                      key={notif.id} 
-                      className="bg-[#F9FAFB] p-6 rounded-[20px] border border-transparent transition hover:border-gray-100 cursor-default"
-                    >
-                       <div className="flex items-baseline gap-2 mb-1.5">
-                          <h4 className="text-gray-600 font-bold text-[15px] tracking-tight">{notif.title}</h4>
-                          <span className="text-xs text-gray-400 font-normal">{notif.time}</span>
-                       </div>
-                       <p className="text-sm text-gray-400 font-medium leading-relaxed">{notif.desc}</p>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-12 text-gray-400 bg-[#F9FAFB] rounded-[20px]">
-                     <p>No notifications found.</p>
-                  </div>
-                )}
-             </div>
+              ))}
            </div>
         </div>
 
-        {/* --- Right Column: Contact Support --- */}
-        <div className="lg:col-span-1">
-           <div className="bg-white rounded-[30px] p-8 shadow-[0_4px_30px_rgba(0,0,0,0.02)] border border-gray-100 h-fit sticky top-6">
+        {/* --- Contact Support Section --- */}
+        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100/50 pb-8">
+           
+           {/* Section Header */}
+           <div className="mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                 <div className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-400">
+                    <Headset size={16} />
+                 </div>
+                 <h3 className="text-lg font-medium text-gray-600">Contact Support</h3>
+              </div>
+              <p className="text-[13px] text-gray-400 pl-11">Get in touch with our support team.</p>
+           </div>
+
+           {/* Support Buttons */}
+           <div className="space-y-3">
               
-               {/* Section Header */}
-               <div className="mb-8">
-                  <div className="flex items-center gap-3 text-gray-400 mb-2">
-                     <Headset size={20} />
-                     <h3 className="font-medium text-lg text-gray-600">Contact Support</h3>
+              {/* WhatsApp (Green) */}
+              <button onClick={() => handleSupportClick('WhatsApp')} className="w-full bg-[#2E8B57] text-white p-4 rounded-[20px] flex items-center gap-4 text-left shadow-md active:scale-[0.98] transition">
+                  <div className="bg-white/20 p-2.5 rounded-full">
+                     <MessageCircle size={20} />
                   </div>
-                  <p className="text-sm text-gray-400 pl-8">Get in touch with our support team.</p>
-               </div>
+                  <div>
+                     <h4 className="font-bold text-[15px]">WhatsApp</h4>
+                     <p className="text-[11px] text-white/80 mt-0.5">+1 (555) 123-4567</p>
+                  </div>
+              </button>
 
-               {/* Support Options */}
-               <div className="space-y-4">
-                  
-                  {/* WhatsApp */}
-                  <button 
-                    onClick={() => handleSupportClick('WhatsApp')}
-                    className="w-full bg-[#238652] hover:bg-[#1e7547] text-white p-5 rounded-2xl flex items-center gap-4 text-left transition shadow-md active:scale-[0.99] group"
-                  >
-                     <div className="bg-white/20 p-2.5 rounded-full group-hover:bg-white/30 transition">
-                        <MessageCircle size={20} strokeWidth={2.5} />
-                     </div>
-                     <div>
-                        <h4 className="font-bold text-[15px]">WhatsApp</h4>
-                        <p className="text-xs text-white/80 mt-1 font-medium">+1 (555) 123-4567</p>
-                     </div>
-                  </button>
+              {/* Live Chat (Blue) */}
+              <button onClick={() => handleSupportClick('Live Chat')} className="w-full bg-[#4A6FA5] text-white p-4 rounded-[20px] flex items-center gap-4 text-left shadow-md active:scale-[0.98] transition">
+                  <div className="bg-white/20 p-2.5 rounded-full">
+                     <MessageSquare size={20} />
+                  </div>
+                  <div>
+                     <h4 className="font-bold text-[15px]">Live Chat</h4>
+                     <p className="text-[11px] text-white/80 mt-0.5">Chat with an agent.</p>
+                  </div>
+              </button>
 
-                  {/* Live Chat */}
-                  <button 
-                    onClick={() => handleSupportClick('Live Chat')}
-                    className="w-full bg-[#5876a6] hover:bg-[#4a648f] text-white p-5 rounded-2xl flex items-center gap-4 text-left transition shadow-md active:scale-[0.99] group"
-                  >
-                     <div className="bg-white/20 p-2.5 rounded-full group-hover:bg-white/30 transition">
-                        <MessageSquare size={20} strokeWidth={2.5} />
-                     </div>
-                     <div>
-                        <h4 className="font-bold text-[15px]">Live Chat</h4>
-                        <p className="text-xs text-white/80 mt-1 font-medium">Chat with an agent.</p>
-                     </div>
-                  </button>
+              {/* Email Support (Light Blue) */}
+              <button onClick={() => handleSupportClick('Email')} className="w-full bg-[#8FA3C3] text-white p-4 rounded-[20px] flex items-center gap-4 text-left shadow-md active:scale-[0.98] transition">
+                  <div className="bg-white/20 p-2.5 rounded-full">
+                     <Mail size={20} />
+                  </div>
+                  <div>
+                     <h4 className="font-bold text-[15px]">Email Support</h4>
+                     <p className="text-[11px] text-white/90 mt-0.5">support@example.com</p>
+                  </div>
+              </button>
 
-                  {/* Email Support */}
-                  <button 
-                    onClick={() => handleSupportClick('Email')}
-                    className="w-full bg-[#a2b6d3] hover:bg-[#91a6c4] text-white p-5 rounded-2xl flex items-center gap-4 text-left transition shadow-md active:scale-[0.99] group"
-                  >
-                     <div className="bg-white/20 p-2.5 rounded-full group-hover:bg-white/30 transition">
-                        <Mail size={20} strokeWidth={2.5} />
-                     </div>
-                     <div>
-                        <h4 className="font-bold text-[15px]">Email Support</h4>
-                        <p className="text-xs text-white/90 mt-1 font-medium">support@example.com</p>
-                     </div>
-                  </button>
-
-               </div>
            </div>
         </div>
 
