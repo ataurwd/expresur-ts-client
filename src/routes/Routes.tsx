@@ -259,9 +259,15 @@ const Routes = createBrowserRouter([
   },
 {
     path: "waehouse",
-    element: <Waehouse />, 
+    element: <Waehouse />, // এই কম্পোনেন্টের ভেতরেই ড্যাশবোর্ড থাকবে
     children: [
-
+       // ❌ এই অংশটি মুছে ফেলো বা কমেন্ট করে দাও, এটা আর লাগবে না
+       // {
+       //   path: "warehouseDashboard",
+       //   element: <WarehouseDashboard />,
+       // },
+       
+       // ✅ বাকিগুলো ঠিক থাকবে
        {
          path: "intake",
          element: <Intake />,
