@@ -61,7 +61,7 @@ const WarehouseDashboard = () => {
 
       {/* SECTION 2: THE MENU PART */}
       <nav className="mt-4">
-        <ul className="flex items-center justify-between w-full p-4 bg-white rounded-[10px] shadow-sm">
+        <ul className="flex items-center justify-between w-full py-4 px-5 bg-white rounded-[10px] shadow-sm">
           {menuItems.map((item) => (
             <li key={item.label}>
               <button
