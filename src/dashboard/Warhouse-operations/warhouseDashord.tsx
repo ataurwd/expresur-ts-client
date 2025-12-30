@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Settings, ChevronDown } from 'lucide-react';
 
 interface MenuItem {
@@ -36,9 +36,11 @@ const WarehouseDashboard = () => {
       {/* SECTION 1: THE GREEN PART */}
       <header className="bg-[#005e2b] rounded-[10px] px-6 py-4 flex justify-between items-center shadow-sm">
         <div className="flex items-center">
-          <h1 className="text-[#f18a21] text-2xl font-extrabold tracking-tighter">
-            EXPRESUR
-          </h1>
+          <Link to="/" className="inline-block">
+            <h1 className="text-[#f18a21] text-2xl font-extrabold tracking-tighter">
+              EXPRESUR
+            </h1>
+          </Link>
           <div className="h-6 w-[1px] bg-white/30 mx-5"></div>
           <h2 className="text-white text-lg font-medium">
             Warehouse Operations
