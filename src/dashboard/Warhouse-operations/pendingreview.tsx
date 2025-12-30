@@ -1,23 +1,23 @@
-import React from 'react';
-import { ArrowRight, AlertCircle, Clock, XCircle, RotateCcw } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, AlertCircle, Clock, XCircle, RotateCcw, UserMinus } from 'lucide-react';
 
 const PendingReview: React.FC = () => {
-  // Data structure matching Frame 2147226101 (Issue tracking)
+  // State for handling the popup
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
   const reviewData = [
-    { id: 'PKG123456', status: 'Unassign', issue: 'Abnormal delays', date: 'April 12, 2025', time: '5 min ago', color: 'text-[#9b1c1c]', icon: <RotateCcw size={14} /> },
+    { id: 'PKG123456', status: 'Unassign', issue: 'Unassign Client', date: 'April 12, 2025', time: '5 min ago', color: 'text-[#9b1c1c]', icon: <RotateCcw size={14} /> },
     { id: 'PKG123456', status: 'Scan Mismatch', issue: 'Scanning discrepancies', date: 'April 12, 2025', time: '5 min ago', color: 'text-[#c27803]', icon: <AlertCircle size={14} /> },
     { id: 'PKG123456', status: 'Delay', issue: 'Abnormal delays', date: 'April 12, 2025', time: '5 min ago', color: 'text-[#c27803]', icon: <Clock size={14} /> },
-    { id: 'PKG123456', status: 'Error', issue: 'Abnormal delays', date: 'April 12, 2025', time: '5 min ago', color: 'text-[#9b1c1c]', icon: <XCircle size={14} /> },
+    { id: 'PKG123456', status: 'Error', issue: 'System Error', date: 'April 12, 2025', time: '5 min ago', color: 'text-[#9b1c1c]', icon: <XCircle size={14} /> },
     { id: 'PKG123456', status: 'Delay', issue: 'Abnormal delays', date: 'April 12, 2025', time: '5 min ago', color: 'text-[#c27803]', icon: <Clock size={14} /> },
   ];
 
   return (
-    <div className="w-full bg-[#f6f6f6] min-h-screen font-sans pb-10">
+    <div className="relative w-full bg-[#f6f6f6] min-h-screen font-sans pb-10">
       
-      {/* Aligned Container: px-6 matches your WarehouseDashboard exactly */}
       <div className="px-6 py-8">
-        
-        {/* Page Title Section: Transparent background, perfectly aligned */}
+        {/* Page Title Section */}
         <div className="mb-8">
           <h1 className="text-[28px] font-bold text-[#333] tracking-tight">
             Pending Review
@@ -29,10 +29,9 @@ const PendingReview: React.FC = () => {
 
         {/* Main White Card Container */}
         <div className="bg-white rounded-[15px] shadow-sm border border-gray-100/50 overflow-hidden">
-          
           <div className="p-8">
             
-            {/* Action/Filter Buttons - Specific to Pending Review design */}
+            {/* Filter Buttons */}
             <div className="flex items-center gap-4 mb-8">
               <button className="flex items-center gap-2 bg-[#fff8e6] text-[#c27803] px-4 py-2 rounded-lg border border-[#fef0c7] text-[14px] font-medium">
                 <AlertCircle size={16} /> Scan Mismatch
@@ -52,8 +51,8 @@ const PendingReview: React.FC = () => {
               </button>
             </div>
 
-            {/* Table Section: Zebra styling and alignment */}
-            <div className="w-full overflow-x-auto  shadow-sm rounded-lg border border-gray-100">
+            {/* Table Section */}
+            <div className="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-100">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="text-gray-400 text-[14px] font-normal border-b border-gray-50">
@@ -82,7 +81,10 @@ const PendingReview: React.FC = () => {
                         {item.date} <span className="mx-1">-</span> {item.time}
                       </td>
                       <td className="px-4 py-6 text-right">
-                        <button className="bg-[#f5f5f5] text-gray-400 px-6 py-1.5 rounded-full text-[13px] hover:bg-gray-200 transition-colors">
+                        <button 
+                          onClick={() => setSelectedItem(item)}
+                          className="bg-[#f5f5f5] text-gray-400 px-6 py-1.5 rounded-full text-[13px] hover:bg-gray-200 transition-colors"
+                        >
                           View
                         </button>
                       </td>
@@ -92,7 +94,7 @@ const PendingReview: React.FC = () => {
               </table>
             </div>
 
-            {/* Pagination Footer aligned with Content */}
+            {/* Pagination Footer */}
             <div className="flex items-center justify-end mt-10 gap-8 px-4">
               <button className="text-gray-300 text-[14px] hover:text-gray-600 transition-colors">
                 Previous
@@ -105,6 +107,51 @@ const PendingReview: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* POPUP MODAL */}
+      {selectedItem && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white w-full max-w-[600px] rounded-[24px] p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
+            {/* Modal Header */}
+            <h2 className="text-[28px] font-bold text-[#666] mb-6">Pending Review</h2>
+            
+            {/* Gray Content Card */}
+            <div className="bg-[#f8f8f8] rounded-[20px] p-8 grid grid-cols-2 gap-y-10">
+              <div>
+                <p className="text-gray-400 text-[14px] mb-1">Package ID</p>
+                <p className="text-[#666] font-semibold text-[16px]">{selectedItem.id}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-[14px] mb-1">Issue Type</p>
+                <p className="text-[#666] font-semibold text-[16px]">{selectedItem.issue}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-[14px] mb-1">Arrival Date</p>
+                <p className="text-[#666] font-semibold text-[16px]">
+                  {selectedItem.date} - <span className="text-gray-400 font-normal">{selectedItem.time}</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-[14px] mb-1">Status</p>
+                <div className={`flex items-center gap-2 font-semibold ${selectedItem.color}`}>
+                  <UserMinus size={18} />
+                  <span>{selectedItem.status}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-end mt-8">
+              <button 
+                onClick={() => setSelectedItem(null)}
+                className="text-gray-400 font-medium text-[17px] hover:text-gray-600 px-6 py-2 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
