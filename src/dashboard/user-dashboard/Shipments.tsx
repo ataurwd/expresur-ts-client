@@ -92,7 +92,7 @@ const Shipments = () => {
       {/* --- MOBILE HEADER --- */}
       <div className="xl:hidden bg-white p-4 sticky top-0 z-20 shadow-sm flex justify-between items-center mb-6">
         <div>
-           <h1 className="text-xl font-bold text-[#F97316]">EXPRESUR</h1>
+           <h1 className="text-xl font-bold text-[#F97316] ml-14">EXPRESUR</h1>
         </div>
         <div className="flex items-center gap-3">
              <Link to="/dashboard/notifications" className="relative p-2 bg-gray-50 rounded-full">
