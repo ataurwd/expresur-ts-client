@@ -47,7 +47,6 @@ import Notification from "../dashboard/user-dashboard/Notification";
 import InternalUsersRoles from "../dashboard/admin-dashboard/InternalUsersRoles";
 import Waehouse from "../layout/waehouse";
 import Intake from "../dashboard/Warhouse-operations/Intake"
-import WarehouseDashboard from "../dashboard/Warhouse-operations/warhouseDashord";
 import ScanningCenter from "../dashboard/Warhouse-operations/ScanningCenter";
 import Inwarehousepackages from "../dashboard/Warhouse-operations/Inwarehousepackages";
 import Pendingreview from "../dashboard/Warhouse-operations/pendingreview";
