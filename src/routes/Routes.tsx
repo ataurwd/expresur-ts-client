@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
 import Consolidate from "../dashboard/user-dashboard/Consolidate";
 import CreateShipment from "../dashboard/user-dashboard/CreateShipment";
@@ -262,6 +262,10 @@ const Routes = createBrowserRouter([
     element: <Waehouse />, // এই কম্পোনেন্টের ভেতরেই ড্যাশবোর্ড থাকবে
     children: [
        {
+         index: true,
+         element: <Intake />,
+       },
+       {
          path: "intake",
          element: <Intake />,
        },
@@ -287,6 +291,11 @@ const Routes = createBrowserRouter([
        },
     ],
 },
+  {
+    // Accept capitalized URL and redirect to the lowercase route
+    path: "Waehouse",
+    element: <Navigate to="/waehouse/intake" replace />,
+  },
  
 ]);
 
