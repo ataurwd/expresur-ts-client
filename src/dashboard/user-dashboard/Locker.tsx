@@ -123,69 +123,6 @@ const Locker: React.FC = () => {
       <div className=" mx-auto space-y-8">
 
         {/* --- Locker Details Card --- */}
-        {/* <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100">
-          
-        
-          <div className="flex justify-between items-center mb-6 border-b border-gray-50 pb-6">
-            <span className="text-gray-500 font-medium text-base">Locker ID</span>
-            <span className="text-gray-800 font-bold text-lg">LCK-127A</span>
-          </div>
-
-          <h3 className="text-lg font-medium text-gray-500 mb-6">Locker Shipping Address</h3>
-
-         
-          <div className="space-y-3 w-full"> 
-            {[
-              "Maria González",
-              "123 Warehouse Ave",
-              "Suite 456 (Locker ID: US123456)",
-              "Miami, FL 33152",
-              "+1 (305) 555-7890"
-            ].map((text, index) => (
-              <div key={index} className="flex items-center justify-between group py-1">
-                <span className="text-gray-800 font-medium text-[15px]">{text}</span>
-                <button 
-                  onClick={() => handleCopy(text)}
-                  className="flex items-center gap-2 text-[11px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 px-4 py-2 rounded-lg border border-gray-100 hover:bg-green-50 hover:text-[#005f33] hover:border-green-100 transition active:scale-95 ml-4"
-                >
-                  <Copy size={14} /> Copy
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 bg-[#FFFBEB] border border-[#FEF3C7] rounded-xl p-4 flex items-center gap-4 text-[#92400E]">
-            <div className="w-8 h-8 rounded-full bg-[#FDE68A] flex items-center justify-center flex-shrink-0">
-               <AlertCircle size={18} className="text-[#B45309]" />
-            </div>
-            <span className="text-sm font-semibold">Use this address to receive your packages.</span>
-          </div>
-        </div> */}
-
-        {/* --- Add Tracking Input --- */}
-        {/* <div className="bg-white rounded-3xl p-5 shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col md:flex-row items-center gap-4">
-            <input 
-              type="text" 
-              value={trackingInput}
-              onChange={(e) => setTrackingInput(e.target.value)}
-              placeholder="Enter Tracking number ....." 
-              className="flex-1 bg-[#F9FAFB] border-none outline-none text-gray-700 px-6 py-4 rounded-xl focus:ring-2 focus:ring-green-100 transition placeholder-gray-400 font-medium"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault(); 
-                  handleAddTracking();
-                }
-              }}
-            />
-            <button 
-              onClick={handleAddTracking}
-              className="bg-[#005f33] hover:bg-[#004d2a] text-white px-8 py-4 rounded-xl font-semibold text-sm w-full md:w-auto transition-all shadow-lg shadow-green-900/10 active:scale-95 flex items-center justify-center gap-2"
-            >
-              <Plus size={18} /> Add Tracking
-            </button>
-        </div> */}
-
-        {/* --- Locker Details Card --- */}
         <div className="bg-[#F9FAFB] rounded-3xl p-8 border border-gray-100 shadow-sm">
 
           {/* Locker ID Row */}
