@@ -12,7 +12,8 @@ interface HistoryItemProps {
 
 const Intake: React.FC = () => {
   return (
-    <div className="w-full bg-[#f8f9fa] min-h-screen p-8">
+    <div className="w-full bg-[#f6f6f6] min-h-screen p-4">
+      <div className="">
       {/* Page Title Section */}
       <div className="mb-8">
         <h1 className="text-[28px] font-bold text-[#333] tracking-tight">
@@ -98,6 +99,7 @@ const Intake: React.FC = () => {
             />
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
