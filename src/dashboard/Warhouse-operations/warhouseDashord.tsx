@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Settings, ChevronDown } from 'lucide-react';
 
 const WarehouseDashboard = () => {
   const [activeTab, setActiveTab] = useState("Intake / Receiving");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    console.log("Logged out");
+    navigate("/login");
+  };
 
   const menuItems = [
     "Intake / Receiving",
@@ -41,7 +48,7 @@ const WarehouseDashboard = () => {
           <div className="h-6 w-[1px] bg-white/30"></div>
           
           {/* Logout Section with Gear Icon */}
-          <button className="flex items-center space-x-2 hover:opacity-80 transition">
+          <button onClick={handleLogout} className="flex items-center space-x-2 hover:opacity-80 transition">
             <Settings size={22} strokeWidth={2} />
             <span className="text-lg font-normal">Logout</span>
           </button>
