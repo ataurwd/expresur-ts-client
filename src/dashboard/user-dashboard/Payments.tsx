@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { toast } from 'sonner'; // Toaster removed
+import { toast } from 'sonner';
 import {
   Bell,
   DollarSign,
   Plus,
   Send,
+  Wallet,
+  Eye,
   ArrowRight,
-  Wallet
+  ArrowLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 // --- Types ---
 interface Transaction {
@@ -18,7 +21,6 @@ interface Transaction {
   date: string;
   amount: string;
   status?: string;
-  // Extra details for modal
   name: string;
   email: string;
 }
@@ -27,6 +29,8 @@ const Payments = () => {
   // --- State ---
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // Added pagination state
+  const itemsPerPage = 5;
 
   // --- Mock Data ---
   const transactions: Transaction[] = [
@@ -57,6 +61,15 @@ const Payments = () => {
       name: 'John Smith',
       email: 'john.smith@example.com'
     },
+    {
+      id: 'TXN-004',
+      type: 'Deposit',
+      details: 'Wire Transfer',
+      date: '8/5/2024',
+      amount: '$1200',
+      name: 'Tyrion Lannister',
+      email: 'tyrion@example.com'
+    },
   ];
 
   // --- Handlers ---
@@ -74,239 +87,154 @@ const Payments = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-20">
+    <div className="min-h-screen bg-[#F9FAFB] font-sans text-gray-800 pb-20 relative">
+      <Helmet>
+        <title>Financial Overview | EXPRESUR</title>
+      </Helmet>
 
-      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
-
-      {/* --- Header --- */}
-      <div className="mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      {/* --- MOBILE HEADER --- */}
+      <div className="xl:hidden bg-white p-4 sticky top-0 z-20 shadow-sm flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Financial Overview</h1>
-          <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
+           <h1 className="text-xl font-bold text-[#F97316] ml-14">EXPRESUR</h1>
         </div>
-
-        <div className="flex items-center gap-6 mt-6 md:mt-0">
-          {/* Notification Bell with Link */}
-          <Link to="/dashboard/notifications">
-            <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
-              <Bell size={20} className="text-gray-600" />
-              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-            </button>
-          </Link>
-
-          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
-              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
-            </div>
-          </div>
+        <div className="flex items-center gap-3">
+             <Link to="/dashboard/notifications" className="relative p-2 bg-gray-50 rounded-full">
+                <Bell size={20} className="text-gray-500" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 border border-white rounded-full"></span>
+             </Link>
+             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-8 h-8 rounded-full border border-green-100" />
         </div>
       </div>
 
-      <div className=" mx-auto space-y-8">
-
-        {/* --- Stats Cards Grid --- */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative">
-             <div className="flex justify-between items-start mb-4">
-                <span className="text-gray-500 font-medium">Current Balance</span>
-                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
-                   <DollarSign size={16} />
-                </div>
-             </div>
-             <h2 className="text-3xl font-bold text-gray-900">$0.00</h2>
-             <p className="text-xs font-medium text-green-500 mt-2">+12% from last period</p>
+      <div className="px-4 md:px-10 space-y-6 md:space-y-8">
+        
+        {/* --- DESKTOP Header --- */}
+        <div className="hidden xl:flex justify-between items-center mb-10 pt-10">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Financial Overview</h1>
+            <p className="text-gray-500 mt-2 text-sm">Track your packages</p>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative">
-             <div className="flex justify-between items-start mb-4">
-                <span className="text-gray-500 font-medium">Total Deposits</span>
-                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
-                   <DollarSign size={16} />
-                </div>
-             </div>
-             <h2 className="text-3xl font-bold text-gray-900">$0.00</h2>
-             <p className="text-xs font-medium text-red-500 mt-2">-3% from last period</p>
-          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/dashboard/notifications">
+              <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+                <Bell size={20} className="text-gray-600" />
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+              </button>
+            </Link>
 
-          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative">
-             <div className="flex justify-between items-start mb-4">
-                <span className="text-gray-500 font-medium">Total Spent</span>
-                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
-                   <DollarSign size={16} />
-                </div>
-             </div>
-             <h2 className="text-3xl font-bold text-gray-900">$0.00</h2>
-             <p className="text-xs font-medium text-green-500 mt-2">+15% from last period</p>
-          </div>
-
-  
-          <div className="bg-white p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 relative flex flex-col justify-between">
-             <span className="text-gray-500 font-medium mb-6 block">Account Status</span>
-             <div>
-                <div className="flex items-center gap-2 mb-1">
-                   <span className="w-3 h-3 rounded-full bg-green-500 block"></span>
-                </div>
-                <span className="text-sm text-gray-400">Active</span>
-             </div>
-          </div>
-
-        </div> */}
-
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[28px]">
-
-          {/* Card 1: Current Balance */}
-          <div className="bg-[#f6f6f6] p-7 rounded-[28px] flex flex-col justify-between min-h-[160px]">
-            <div className="flex justify-between items-start">
-              <span className="text-[#6b6b6b] text-[17px] font-medium">Current Balance</span>
-              <div className="w-8 h-8 rounded-full bg-[#e5e5e5] flex items-center justify-center text-[#a3a3a3]">
-                <DollarSign size={14} strokeWidth={3} />
+            <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
+              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
+                <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
               </div>
             </div>
-            <div className="mt-2">
-              <h2 className="text-[40px] font-bold text-[#111111] leading-tight">$0.00</h2>
-              <p className="text-[13px] font-medium text-[#46cf68] mt-1">+12% from last period</p>
-            </div>
           </div>
-
-          {/* Card 2: Total Deposits */}
-          <div className="bg-[#f6f6f6] p-7 rounded-[28px] flex flex-col justify-between min-h-[160px]">
-            <div className="flex justify-between items-start">
-              <span className="text-[#6b6b6b] text-[17px] font-medium">Total Deposits</span>
-              <div className="w-8 h-8 rounded-full bg-[#e5e5e5] flex items-center justify-center text-[#a3a3a3]">
-                <DollarSign size={14} strokeWidth={3} />
-              </div>
-            </div>
-            <div className="mt-2">
-              <h2 className="text-[40px] font-bold text-[#111111] leading-tight">$0.00</h2>
-              <p className="text-[13px] font-medium text-[#ef4444] mt-1">-3% from last period</p>
-            </div>
-          </div>
-
-          {/* Card 3: Total Spent */}
-          <div className="bg-[#f6f6f6] p-7 rounded-[28px] flex flex-col justify-between min-h-[160px]">
-            <div className="flex justify-between items-start">
-              <span className="text-[#6b6b6b] text-[17px] font-medium">Total Spent</span>
-              <div className="w-8 h-8 rounded-full bg-[#e5e5e5] flex items-center justify-center text-[#a3a3a3]">
-                <DollarSign size={14} strokeWidth={3} />
-              </div>
-            </div>
-            <div className="mt-2">
-              <h2 className="text-[40px] font-bold text-[#111111] leading-tight">$0.00</h2>
-              <p className="text-[13px] font-medium text-[#46cf68] mt-1">+15% from last period</p>
-            </div>
-          </div>
-
-          {/* Card 4: Account Status */}
-          <div className="bg-[#f6f6f6] p-7 rounded-[28px] flex flex-col justify-between min-h-[160px]">
-            <span className="text-[#6b6b6b] text-[17px] font-medium">Account Status</span>
-            <div className="mt-2">
-              <div className="w-4 h-4 rounded-full bg-[#46cf68] mb-2"></div>
-              <span className="text-[#a3a3a3] text-[13px] font-medium">Active</span>
-            </div>
-          </div>
-
         </div>
 
-        {/* --- Action Buttons Grid --- */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <button
-            onClick={() => handleActionClick('Add Funds')}
-            className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group hover:border-gray-200 transition"
-          >
-            <span className="text-gray-600 font-medium">Add Funds</span>
-            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 transition">
-              <Plus size={16} />
-            </div>
-          </button>
+        {/* --- Mobile Title --- */}
+        <div className="xl:hidden">
+            <h1 className="text-2xl font-bold text-gray-900">Financial Overview</h1>
+            <p className="text-gray-500 text-sm">Track your packages</p>
+        </div>
 
-          <button
-            onClick={() => handleActionClick('Pay with wallet')}
-            className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group hover:border-gray-200 transition"
-          >
-            <span className="text-gray-600 font-medium">Pay with wallet</span>
-            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 transition">
-              <CreditCard size={16} />
+        {/* --- Stats Grid --- */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+          {/* Card 1 */}
+          <div className="bg-white p-4 lg:p-6 rounded-[20px] lg:rounded-[24px] shadow-sm border border-gray-100 flex flex-col justify-between min-h-[140px]">
+            <div className="flex justify-between items-start">
+              <span className="text-gray-600 text-sm lg:text-[16px] font-medium">Current Balance</span>
+              <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                <DollarSign size={14} />
+              </div>
             </div>
-          </button>
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-[#111827]">$0.00</h2>
+              <p className="text-[11px] lg:text-xs font-medium text-[#22C55E] mt-1">+12% from last period</p>
+            </div>
+          </div>
+          {/* Card 2 */}
+          <div className="bg-white p-4 lg:p-6 rounded-[20px] lg:rounded-[24px] shadow-sm border border-gray-100 flex flex-col justify-between min-h-[140px]">
+            <div className="flex justify-between items-start">
+              <span className="text-gray-600 text-sm lg:text-[16px] font-medium">Total Deposits</span>
+              <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                <DollarSign size={14} />
+              </div>
+            </div>
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-[#111827]">$0.00</h2>
+              <p className="text-[11px] lg:text-xs font-medium text-[#EF4444] mt-1">-3% from last period</p>
+            </div>
+          </div>
+          {/* Card 3 */}
+          <div className="bg-white p-4 lg:p-6 rounded-[20px] lg:rounded-[24px] shadow-sm border border-gray-100 flex flex-col justify-between min-h-[140px]">
+            <div className="flex justify-between items-start">
+              <span className="text-gray-600 text-sm lg:text-[16px] font-medium">Total Spent</span>
+              <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                <DollarSign size={14} />
+              </div>
+            </div>
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-[#111827]">$0.00</h2>
+              <p className="text-[11px] lg:text-xs font-medium text-[#22C55E] mt-1">+15% from last period</p>
+            </div>
+          </div>
+          {/* Card 4 */}
+          <div className="bg-white p-4 lg:p-6 rounded-[20px] lg:rounded-[24px] shadow-sm border border-gray-100 flex flex-col justify-between min-h-[140px]">
+            <span className="text-gray-600 text-sm lg:text-[16px] font-medium">Account Status</span>
+            <div>
+              <div className="w-4 h-4 rounded-full bg-[#22C55E] mb-2"></div>
+              <span className="text-gray-400 text-xs lg:text-[13px] font-normal">Active</span>
+            </div>
+          </div>
+        </div>
 
-          <button
-            onClick={() => handleActionClick('Send Remittance')}
-            className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group hover:border-gray-200 transition"
-          >
-            <span className="text-gray-600 font-medium">Send Remittance</span>
-            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 transition">
-              <Send size={16} />
-            </div>
+        {/* --- Action Buttons --- */}
+        <div className="flex flex-col gap-3">
+          <button onClick={() => handleActionClick('Add Funds')} className="bg-white p-4 lg:p-5 rounded-[16px] border border-gray-100 flex items-center justify-between group hover:bg-gray-50 transition shadow-sm">
+            <span className="text-gray-600 text-[15px] lg:text-lg font-normal">Add Funds</span>
+            <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition bg-[#F9FAFB]"><Plus size={16} /></div>
           </button>
-        </div> */}
-
-        {/* --- Action Buttons Grid --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white rounded-[28px]">
-          <button
-            onClick={() => handleActionClick('Add Funds')}
-            className="bg-[#F8F8F8] p-6 rounded-[20px] border border-gray-100 flex items-center justify-between group hover:bg-[#F3F3F3] transition-all duration-200"
-          >
-            <span className="text-[#666666] text-lg font-normal">Add Funds</span>
-            <div className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition">
-              <Plus size={18} strokeWidth={1.5} />
-            </div>
+          <button onClick={() => handleActionClick('Pay with wallet')} className="bg-white p-4 lg:p-5 rounded-[16px] border border-gray-100 flex items-center justify-between group hover:bg-gray-50 transition shadow-sm">
+            <span className="text-gray-600 text-[15px] lg:text-lg font-normal">Pay with wallet</span>
+            <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition bg-[#F9FAFB]"><Wallet size={16} /></div>
           </button>
-
-          <button
-            onClick={() => handleActionClick('Pay with wallet')}
-            className="bg-[#F8F8F8] p-6 rounded-[20px] border border-gray-100 flex items-center justify-between group hover:bg-[#F3F3F3] transition-all duration-200"
-          >
-            <span className="text-[#666666] text-lg font-normal">Pay with wallet</span>
-            <div className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition">
-              <Wallet size={18} strokeWidth={1.5} />
-            </div>
-          </button>
-
-          <button
-            onClick={() => handleActionClick('Send Remittance')}
-            className="bg-[#F8F8F8] p-6 rounded-[20px] border border-gray-100 flex items-center justify-between group hover:bg-[#F3F3F3] transition-all duration-200"
-          >
-            <span className="text-[#666666] text-lg font-normal">Send Remittance</span>
-            <div className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition">
-              <Send size={18} strokeWidth={1.5} />
-            </div>
+          <button onClick={() => handleActionClick('Send Remittance')} className="bg-white p-4 lg:p-5 rounded-[16px] border border-gray-100 flex items-center justify-between group hover:bg-gray-50 transition shadow-sm">
+            <span className="text-gray-600 text-[15px] lg:text-lg font-normal">Send Remittance</span>
+            <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-gray-300 transition bg-[#F9FAFB]"><Send size={16} /></div>
           </button>
         </div>
 
-        {/* --- Recent Transaction Table --- */}
-        {/* <div className="bg-white rounded-3xl p-8 shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-gray-100 min-h-[400px]">
-          <h3 className="text-lg font-medium text-gray-700 mb-8">Recent Transaction</h3>
+        {/* --- RECENT TRANSACTION TABLE (IMPROVED) --- */}
+        <div className="bg-white rounded-[24px] lg:rounded-[32px] p-5 lg:p-8 shadow-sm border border-gray-100 min-h-[400px]">
+          <h3 className="text-lg lg:text-xl font-bold text-gray-600 mb-6 lg:mb-8">Recent Transaction</h3>
 
-          <div className="overflow-x-auto">
+          {/* DESKTOP Table */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-50 text-xs text-gray-400 uppercase tracking-wider font-medium">
-                  <th className="py-4 pl-2 font-medium w-1/4">Type</th>
+                <tr className="bg-[#F9FAFB] text-[15px] text-gray-400 font-medium">
+                  <th className="py-4 pl-6 rounded-l-2xl font-medium w-1/4">Type</th>
                   <th className="py-4 font-medium w-1/4">Details</th>
-                  <th className="py-4 font-medium w-1/4">Date</th>
-                  <th className="py-4 font-medium w-1/6">Amount</th>
-                  <th className="py-4 font-medium text-right pr-2">Amount</th>
+                  <th className="py-4 font-medium w-1/4">Amount</th>
+                  <th className="py-4 pr-6 text-right rounded-r-2xl font-medium w-1/4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="text-sm">
+              <tbody className="text-[15px]">
                 {transactions.map((tx, idx) => (
-                  <tr key={idx} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition">
-                    <td className="py-6 pl-2 text-gray-500 font-medium">{tx.type}</td>
-                    <td className="py-6 text-gray-500">{tx.details}</td>
-                    <td className="py-6 text-gray-500">{tx.date}</td>
-                    <td className="py-6 text-gray-500">{tx.amount}</td>
-                    <td className="py-6 text-right pr-2">
+                  <tr key={idx} className="border-b border-gray-50 last:border-none hover:bg-gray-50/50 transition-colors">
+                    <td className="py-5 pl-6 text-gray-600 font-normal">{tx.type}</td>
+                    <td className="py-5 text-gray-500 font-normal">{tx.details}</td>
+                    <td className="py-5 text-gray-600 font-medium">{tx.amount}</td>
+                    <td className="py-5 pr-6 text-right">
                       <button
                         onClick={() => handleViewTransaction(tx)}
-                        className="bg-[#F9FAFB] text-gray-400 px-6 py-2 rounded-lg text-xs font-medium hover:bg-gray-100 hover:text-gray-600 transition"
+                        className="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition"
                       >
-                        View
+                        <Eye size={20} />
                       </button>
                     </td>
                   </tr>
@@ -315,147 +243,92 @@ const Payments = () => {
             </table>
           </div>
 
-        
-          <div className="flex justify-end items-center gap-6 mt-12 text-sm font-medium select-none">
-            <button
-              className="text-gray-300 cursor-not-allowed"
-              disabled
-            >
+          {/* MOBILE List View (Better Design) */}
+          <div className="lg:hidden space-y-0">
+             {/* Header Row */}
+             <div className="flex bg-[#F9FAFB] p-3 rounded-t-xl text-[11px] font-semibold text-gray-400 mb-1">
+                <div className="w-[30%] pl-2">Type</div>
+                <div className="w-[40%]">Details</div>
+                <div className="w-[20%] text-right">Amount</div>
+                <div className="w-[10%]"></div>
+             </div>
+
+             {transactions.map((tx, idx) => (
+                 <div key={idx} className="flex items-center justify-between p-4 border-b border-gray-50 last:border-none">
+                     <div className="w-[30%] text-[13px] text-gray-700 font-medium">{tx.type}</div>
+                     <div className="w-[40%] text-[13px] text-gray-500 truncate pr-2">{tx.details}</div>
+                     <div className="w-[20%] text-[13px] text-gray-700 font-bold text-right">{tx.amount}</div>
+                     <div className="w-[10%] text-right">
+                        <button 
+                            onClick={() => handleViewTransaction(tx)}
+                            className="text-gray-400 hover:text-gray-600 p-1"
+                        >
+                            <Eye size={18} />
+                        </button>
+                     </div>
+                 </div>
+             ))}
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-end items-center gap-6 mt-8 lg:mt-12 text-sm font-normal">
+            <button className="text-gray-400 hover:text-gray-600 transition disabled:opacity-30" disabled>
               Previous
             </button>
-            <button
-              className="flex items-center gap-1 text-[#005f33] hover:text-[#004d2a] transition"
-            >
+            <button className="flex items-center gap-2 text-[#006D35] font-medium hover:text-[#005a2c] transition">
               Next <ArrowRight size={16} strokeWidth={2} />
             </button>
           </div>
-
-        </div> */}
-
-        {/* --- Recent Transaction Table --- */}
-<div className="bg-white rounded-[32px] p-8 shadow-sm border border-gray-50 min-h-[400px]">
-  <h3 className="text-xl font-normal text-gray-600 mb-8">Recent Transaction</h3>
-
-  <div className="overflow-x-auto">
-    <table className="w-full text-left border-separate border-spacing-y-2">
-      <thead>
-        <tr className="bg-[#F8F8F8] text-sm text-gray-400 font-normal">
-          <th className="py-5 pl-6 rounded-l-[16px] font-normal">Type</th>
-          <th className="py-5 font-normal">Details</th>
-          <th className="py-5 font-normal">Date</th>
-          <th className="py-5 font-normal">Amount</th>
-          <th className="py-5 pr-6 text-right rounded-r-[16px] font-normal">Amount</th>
-        </tr>
-      </thead>
-      <tbody className="text-sm">
-        {transactions.map((tx, idx) => (
-          <tr key={idx} className="hover:bg-gray-50/50 transition-colors group">
-            <td className="py-6 pl-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.type}</td>
-            <td className="py-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.details}</td>
-            <td className="py-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.date}</td>
-            <td className="py-6 text-gray-500 font-normal border-b border-gray-50 group-last:border-0">{tx.amount}</td>
-            <td className="py-6 pr-6 text-right border-b border-gray-50 group-last:border-0">
-              <button
-                onClick={() => handleViewTransaction(tx)}
-                className="bg-[#F8F8F8] text-gray-400 px-6 py-2 rounded-full text-xs font-normal hover:bg-[#F3F3F3] hover:text-gray-600 transition"
-              >
-                View
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-
-  {/* Pagination */}
-  <div className="flex justify-end items-center gap-8 mt-12 text-sm font-normal">
-    <button
-      className="text-gray-400 hover:text-gray-600 transition disabled:opacity-30"
-      disabled
-    >
-      Previous
-    </button>
-    <button
-      className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 transition"
-    >
-      Next <ArrowRight size={18} strokeWidth={1.5} />
-    </button>
-  </div>
-</div>
+        </div>
 
       </div>
-
-    
 
       {/* --- TRANSACTION DETAILS MODAL --- */}
-{isModalOpen && selectedTransaction && (
-  <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4 font-sans">
-    <div className="bg-white rounded-[32px] w-full max-w-3xl p-10 shadow-xl relative animate-in fade-in zoom-in duration-200">
-      
-      {/* Title */}
-      <h2 className="text-2xl font-normal text-gray-600 mb-6">Transaction Details</h2>
-
-      {/* Inner Gray Card */}
-      <div className="bg-[#F8F8F8] rounded-[24px] p-8 mb-8">
-        <div className="grid grid-cols-2 gap-y-8 gap-x-4">
-
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Name</p>
-            <p className="text-base font-normal text-gray-600">{selectedTransaction.name}</p>
+      {isModalOpen && selectedTransaction && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-50 p-4 font-sans">
+          <div className="bg-white rounded-[24px] lg:rounded-[32px] w-full max-w-lg p-6 lg:p-8 shadow-xl relative animate-in fade-in zoom-in duration-200">
+            <h2 className="text-xl font-medium text-gray-600 mb-6">Transaction Details</h2>
+            <div className="bg-[#F9FAFB] rounded-[20px] p-6 mb-6">
+              <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+                <div className="col-span-1">
+                  <p className="text-[11px] text-gray-400 mb-1">Name</p>
+                  <p className="text-[13px] text-gray-600 break-words">{selectedTransaction.name}</p>
+                </div>
+                <div className="col-span-1">
+                  <p className="text-[11px] text-gray-400 mb-1">Email</p>
+                  <p className="text-[13px] text-gray-600 break-all">{selectedTransaction.email}</p>
+                </div>
+                <div className="col-span-1">
+                  <p className="text-[11px] text-gray-400 mb-1">Type</p>
+                  <p className="text-[13px] text-gray-600">{selectedTransaction.type}</p>
+                </div>
+                <div className="col-span-1">
+                  <p className="text-[11px] text-gray-400 mb-1">Details</p>
+                  <p className="text-[13px] text-gray-600">{selectedTransaction.details}</p>
+                </div>
+                <div className="col-span-1">
+                  <p className="text-[11px] text-gray-400 mb-1">Date</p>
+                  <p className="text-[13px] text-gray-600">{selectedTransaction.date}</p>
+                </div>
+                <div className="col-span-1">
+                  <p className="text-[11px] text-gray-400 mb-1">Amount</p>
+                  <p className="text-[13px] text-gray-600">{selectedTransaction.amount}</p>
+                </div>
+              </div>
+              <div className="mt-6">
+                <button onClick={handleDownloadReceipt} className="bg-[#006D35] text-white px-5 py-2.5 rounded-lg text-xs font-medium hover:bg-[#005a2c] transition shadow-sm">
+                  Download Receipt
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <button onClick={() => setIsModalOpen(false)} className="text-[#006D35] text-base font-normal hover:text-[#005a2c] transition">
+                Cancel
+              </button>
+            </div>
           </div>
-
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Email</p>
-            <p className="text-base font-normal text-gray-600">{selectedTransaction.email}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Type</p>
-            <p className="text-base font-normal text-gray-600">{selectedTransaction.type}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Details</p>
-            <p className="text-base font-normal text-gray-600">{selectedTransaction.details}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Date</p>
-            <p className="text-base font-normal text-gray-600">{selectedTransaction.date}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Amount</p>
-            <p className="text-base font-normal text-gray-600">{selectedTransaction.amount}</p>
-          </div>
-
         </div>
-
-        {/* Download Receipt Button */}
-        <div className="mt-8">
-          <button
-            onClick={handleDownloadReceipt}
-            className="bg-[#006837] text-white px-6 py-3 rounded-[12px] text-sm font-medium hover:bg-[#00522b] transition shadow-sm"
-          >
-            Download Receipt
-          </button>
-        </div>
-      </div>
-
-      {/* Cancel Button (Bottom Right) */}
-      <div className="flex justify-end pr-2">
-        <button
-          onClick={() => setIsModalOpen(false)}
-          className="text-[#2D7A4D] text-lg font-normal hover:text-[#1e5334] transition"
-        >
-          Cancel
-        </button>
-      </div>
-
-    </div>
-  </div>
-)}
+      )}
 
     </div>
   );
