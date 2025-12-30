@@ -12,8 +12,6 @@ import {
   SvgIconProps,
   useMediaQuery,
   useTheme,
-  AppBar,
-  Toolbar
 } from "@mui/material";
 import {
   DirectionsBoatFilledOutlined,
