@@ -131,6 +131,7 @@ const fakeUsersFromDB = [
     role: "user",
     password: "123456",
   },
+  
 ];
 
 interface User {

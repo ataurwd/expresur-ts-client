@@ -45,6 +45,14 @@ import AdminApi from "../dashboard/admin-dashboard/AdminApi";
 import Remittances from "../dashboard/user-dashboard/Remittances";
 import Notification from "../dashboard/user-dashboard/Notification";
 import InternalUsersRoles from "../dashboard/admin-dashboard/InternalUsersRoles";
+import Waehouse from "../layout/waehouse";
+import Intake from "../dashboard/Warhouse-operations/Intake"
+import WarehouseDashboard from "../dashboard/Warhouse-operations/warhouseDashord";
+import ScanningCenter from "../dashboard/Warhouse-operations/ScanningCenter";
+import Inwarehousepackages from "../dashboard/Warhouse-operations/Inwarehousepackages";
+import Pendingreview from "../dashboard/Warhouse-operations/pendingreview";
+import Readyforconsolidation from "../dashboard/Warhouse-operations/readyforconsolidation";
+import Readyforshipment from "../dashboard/Warhouse-operations/readyforshipment";
 
 const Routes = createBrowserRouter([
   {
@@ -250,6 +258,41 @@ const Routes = createBrowserRouter([
       }
     ],
   },
+  {
+    path: "waehouse",
+    element: <Waehouse/>,
+    children: [
+      {
+        path: "warehouseDashboard",
+        element: <WarehouseDashboard />,
+      },
+     {
+        path: "intake",
+        element: <Intake />,
+      },
+      {
+        path: "ScanningCenter",
+        element: <ScanningCenter/>,
+      },
+      {
+        path: "inwarehousepackages",
+        element: <Inwarehousepackages />,
+      },
+      {
+        path: "pendingreview",
+        element: <Pendingreview />,
+      },
+      {
+        path: "readyforconsolidation",
+        element: <Readyforconsolidation />,
+      },
+      {
+        path: "readyforshipment",
+        element: <Readyforshipment />,
+      },
+    ],
+  },
+ 
 ]);
 
 export default Routes;
