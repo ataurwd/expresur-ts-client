@@ -18,10 +18,10 @@ import {
   SettingsOutlined,
   Shuffle as ConsolidateIcon,
   Logout,
-  Menu as MenuIcon // মোবাইল মেনু আইকন
+  Menu as MenuIcon,
+  Close as CloseIcon // ১. Close আইকন ইম্পোর্ট করা হলো
 } from "@mui/icons-material";
 
-// useNavigate ইম্পোর্ট করুন
 import { useLocation, matchPath, NavLink, Link, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ArrowLeftToLine, LockKeyholeOpen, Package, Wallet, Layers } from 'lucide-react';
 
@@ -46,16 +46,13 @@ const menuItems: MenuItem[] = [
 ];
 
 export default function UserSidebar() {
-  // ডেস্কটপ কলাপস স্টেট
   const [open, setOpen] = useState(true);
-  // মোবাইল ড্রয়ার ওপেন/ক্লোজ স্টেট
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
   
-  // চেক করা হচ্ছে ডিভাইসটি মোবাইল কিনা (md = 900px এর নিচে হলে মোবাইল ধরবে)
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleToggle = () => setOpen((prev) => !prev);
@@ -71,10 +68,11 @@ export default function UserSidebar() {
   const BG_GREEN = "#025939";
   const ACTIVE_ORANGE = "#fb923c";
 
-  // --- ড্রয়ারের ভেতরের কন্টেন্ট (মোবাইল এবং ডেস্কটপ উভয়ের জন্য এক) ---
+  // --- ড্রয়ারের ভেতরের কন্টেন্ট ---
   const drawerContent = (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%", overflowX: "hidden" }}>
-      {/* --- Top Section (Logo & Toggle) --- */}
+      
+      {/* --- Top Section (Logo & Toggle/Close) --- */}
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 3, mb: 2 }}>
         {(open || isMobile) && (
           <Link to="/" style={{ textDecoration: "none" }}>
@@ -92,10 +90,17 @@ export default function UserSidebar() {
           </Link>
         )}
         
-        {/* ডেস্কটপে কলাপস বাটন দেখাবে, মোবাইলে ক্রস বাটন বা হাইড থাকবে */}
+        {/* ডেস্কটপে কলাপস বাটন */}
         {!isMobile && (
           <IconButton onClick={handleToggle} sx={{ color: "#fff" }}>
             <ArrowLeftToLine style={{ transform: open ? "rotate(0deg)" : "rotate(180deg)", transition: "0.3s" }} />
+          </IconButton>
+        )}
+
+        {/* ২. মোবাইলে Close (X) বাটন যোগ করা হলো */}
+        {isMobile && (
+          <IconButton onClick={handleMobileToggle} sx={{ color: "#fff" }}>
+            <CloseIcon />
           </IconButton>
         )}
       </Box>
@@ -114,7 +119,6 @@ export default function UserSidebar() {
               <ListItemButton
                 component={NavLink}
                 to={item.path}
-                // মোবাইলে মেনুতে ক্লিক করলে ড্রয়ার বন্ধ হবে
                 onClick={() => isMobile && setMobileOpen(false)}
                 sx={{
                   minHeight: 54,
@@ -204,17 +208,21 @@ export default function UserSidebar() {
 
   return (
     <>
-      {/* --- Mobile Menu Trigger Button (কেবল মোবাইলে দেখাবে) --- */}
+      {/* --- Mobile Menu Trigger Button --- */}
       <Box
         sx={{
-          display: { xs: "block", md: "none" }, // ডেস্কটপে হাইড থাকবে
+          display: { xs: "block", md: "none" },
           position: "fixed",
           top: 16,
           left: 16,
           zIndex: 1200,
           bgcolor: "white",
           borderRadius: "50%",
-          boxShadow: 1
+          boxShadow: 1,
+          width: 40, // বাটন সাইজ ফিক্স করা হলো যাতে দেখতে সুন্দর লাগে
+          height: 40,
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <IconButton onClick={handleMobileToggle} sx={{ color: BG_GREEN }}>
@@ -227,17 +235,17 @@ export default function UserSidebar() {
         component="nav"
         sx={{ width: { md: open ? drawerWidth : collapsedWidth }, flexShrink: { md: 0 } }}
       >
-        {/* 1. Mobile Drawer (Temporary) */}
+        {/* 1. Mobile Drawer */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleMobileToggle}
-          ModalProps={{ keepMounted: true }} // মোবাইলে পারফরম্যান্স ভালো করার জন্য
+          ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: "block", md: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: drawerWidth, // মোবাইলে সবসময় ফুল উইডথ
+              width: drawerWidth,
               backgroundColor: BG_GREEN,
               color: "#fff",
               borderRadius: "0 24px 24px 0",
@@ -247,12 +255,12 @@ export default function UserSidebar() {
           {drawerContent}
         </Drawer>
 
-        {/* 2. Desktop Drawer (Permanent) */}
+        {/* 2. Desktop Drawer */}
         <Drawer
           variant="permanent"
           open={open}
           sx={{
-            display: { xs: "none", md: "block" }, // মোবাইলে হাইড থাকবে
+            display: { xs: "none", md: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: open ? drawerWidth : collapsedWidth,
