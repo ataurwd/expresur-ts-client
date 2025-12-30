@@ -22,7 +22,7 @@ const ScanningCenter: React.FC = () => {
     ];
 
     return (
-        <div className="w-full bg-[#fcfcfc] min-h-screen p-8 font-sans">
+        <div className="w-full min-h-screen p-8 font-sans">
             {/* Page Title Section */}
             <div className="mb-8">
                 <h1 className="text-[28px] font-bold text-[#333] tracking-tight">Scanning Center</h1>
