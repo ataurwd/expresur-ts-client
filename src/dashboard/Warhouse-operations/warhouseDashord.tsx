@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings, ChevronDown } from 'lucide-react';
 
-// ১. এখানে MenuItem এর টাইপ ডিফাইন করা হলো
 interface MenuItem {
   label: string;
   path: string;
