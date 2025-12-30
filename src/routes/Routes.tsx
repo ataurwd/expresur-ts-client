@@ -258,40 +258,43 @@ const Routes = createBrowserRouter([
       }
     ],
   },
-  {
+{
     path: "waehouse",
-    element: <WarehouseDashboard/>,
+    element: <Waehouse />, // এই কম্পোনেন্টের ভেতরেই ড্যাশবোর্ড থাকবে
     children: [
-      // {
-      //   path: "warehouseDashboard",
-      //   element: <WarehouseDashboard />,
-      // },
-     {
-        path: "intake",
-        element: <Intake />,
-      },
-      {
-        path: "ScanningCenter",
-        element: <ScanningCenter/>,
-      },
-      {
-        path: "inwarehousepackages",
-        element: <Inwarehousepackages />,
-      },
-      {
-        path: "pendingreview",
-        element: <Pendingreview />,
-      },
-      {
-        path: "readyforconsolidation",
-        element: <Readyforconsolidation />,
-      },
-      {
-        path: "readyforshipment",
-        element: <Readyforshipment />,
-      },
+       // ❌ এই অংশটি মুছে ফেলো বা কমেন্ট করে দাও, এটা আর লাগবে না
+       // {
+       //   path: "warehouseDashboard",
+       //   element: <WarehouseDashboard />,
+       // },
+       
+       // ✅ বাকিগুলো ঠিক থাকবে
+       {
+         path: "intake",
+         element: <Intake />,
+       },
+       {
+         path: "ScanningCenter",
+         element: <ScanningCenter/>,
+       },
+       {
+         path: "inwarehousepackages",
+         element: <Inwarehousepackages />,
+       },
+       {
+         path: "pendingreview",
+         element: <Pendingreview />,
+       },
+       {
+         path: "readyforconsolidation",
+         element: <Readyforconsolidation />,
+       },
+       {
+         path: "readyforshipment",
+         element: <Readyforshipment />,
+       },
     ],
-  },
+},
  
 ]);
 
