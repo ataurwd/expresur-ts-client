@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ChevronDown, Calendar, ArrowRight } from 'lucide-react';
 
 const Inwarehousepackages: React.FC = () => {
+  // State to manage which package is being viewed in the popup
+  const [selectedPackage, setSelectedPackage] = useState<any>(null);
+
   const packageData = [
     { id: 'PKG123456', client: 'Juan Perez', status: 'Delivered', color: 'text-green-500', time: '5 min ago' },
     { id: 'PKG123456', client: 'Juan Perez', status: 'Pending', color: 'text-orange-400', time: '25 min ago' },
@@ -11,11 +14,10 @@ const Inwarehousepackages: React.FC = () => {
   ];
 
   return (
-    <div className="w-full bg-[#f6f6f6] min-h-screen font-sans">
-      {/* Aligned Container: Using px-6 to match your Dashboard Navbar exactly */}
+    <div className="relative w-full bg-[#f6f6f6] min-h-screen font-sans">
       <div className="px-6 py-10">
         
-        {/* Page Title Section: Now aligns with the EXPRESUR logo */}
+        {/* Page Title Section */}
         <div className="mb-10 bg-transparent">
           <h1 className="text-[32px] font-bold text-[#333] tracking-tight">
             In-Warehouse Packages
@@ -27,11 +29,9 @@ const Inwarehousepackages: React.FC = () => {
 
         {/* MAIN WHITE CARD */}
         <div className="bg-white rounded-[15px] shadow-sm border border-gray-100/50 overflow-hidden">
-          
-          {/* Internal Padding of the Card */}
           <div className="p-10">
             
-            {/* Filter Row: Aligns with the title above */}
+            {/* Filter Row */}
             <div className="flex items-center gap-4 mb-10">
               <div className="flex items-center gap-10 bg-[#f1f1f1] px-4 py-2 rounded-lg cursor-pointer">
                 <span className="text-gray-400 text-[14px]">Client</span>
@@ -56,7 +56,7 @@ const Inwarehousepackages: React.FC = () => {
               </button>
             </div>
 
-            {/* Table Section: Zebra styling matches your reference image */}
+            {/* Table Section */}
             <div className="w-full">
               <table className="w-full border-collapse">
                 <thead>
@@ -81,7 +81,10 @@ const Inwarehousepackages: React.FC = () => {
                       </td>
                       <td className="py-6 px-4 text-gray-400 text-[14px]">{pkg.time}</td>
                       <td className="py-6 px-4 text-right">
-                        <button className="bg-[#f5f5f5] text-gray-400 px-6 py-1.5 rounded-full text-[13px] font-medium hover:bg-gray-200">
+                        <button 
+                          onClick={() => setSelectedPackage(pkg)}
+                          className="bg-[#f5f5f5] text-gray-400 px-6 py-1.5 rounded-full text-[13px] font-medium hover:bg-gray-200 transition-colors"
+                        >
                           View
                         </button>
                       </td>
@@ -104,6 +107,52 @@ const Inwarehousepackages: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* POPUP MODAL - Matches Reference Image Exactly */}
+      {selectedPackage && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
+          <div className="bg-white w-full max-w-[600px] rounded-[24px] p-8 shadow-xl">
+            {/* Modal Heading */}
+            <h2 className="text-[28px] font-bold text-[#777] mb-6">Package Details</h2>
+            
+            {/* Inner Gray Container */}
+            <div className="bg-[#f8f8f8] rounded-[18px] p-8 grid grid-cols-2 gap-y-10">
+              {/* Customer Column */}
+              <div>
+                <p className="text-gray-400 text-[14px] mb-1">Customer</p>
+                <p className="text-[#666] font-medium text-[16px]">{selectedPackage.client}</p>
+              </div>
+              {/* Package ID Column */}
+              <div>
+                <p className="text-gray-400 text-[14px] mb-1">Package ID</p>
+                <p className="text-[#666] font-medium text-[16px]">{selectedPackage.id}</p>
+              </div>
+              {/* Last Update Column */}
+              <div>
+                <p className="text-gray-400 text-[14px] mb-1">Last Update</p>
+                <p className="text-[#666] font-medium text-[16px]">{selectedPackage.time}</p>
+              </div>
+              {/* Status Column */}
+              <div>
+                <p className="text-gray-400 text-[14px] mb-2">Status</p>
+                <div className="inline-flex items-center bg-[#dcfce7] text-[#22c55e] px-4 py-1.5 rounded-full text-[14px] font-medium">
+                  {selectedPackage.status}
+                </div>
+              </div>
+            </div>
+
+            {/* Cancel Button Footer */}
+            <div className="flex justify-end mt-10">
+              <button 
+                onClick={() => setSelectedPackage(null)}
+                className="text-gray-400 font-medium text-[18px] hover:text-gray-600 transition-colors px-4"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
