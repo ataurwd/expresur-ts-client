@@ -62,6 +62,8 @@ const ReadyForConsolidation = () => {
                         </div>
                     </div>
 
+                    
+
                     {/* RIGHT SIDE: Sidebar */}
                     <div className="space-y-6">
                         
