@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { toast } from 'sonner'; // Toaster removed to avoid duplicates
+import { toast } from 'sonner';
 import {
   Bell,
   Check,
@@ -33,7 +33,7 @@ const Consolidate = () => {
       from: 'Shanghai, China',
       to: 'Sydney, Australia',
       receivedDate: 'Dec 15, 2024',
-      weight: 10,
+      weight: 2.5,
       isSelected: false
     },
     {
@@ -42,25 +42,16 @@ const Consolidate = () => {
       from: 'Shanghai, China',
       to: 'Sydney, Australia',
       receivedDate: 'Dec 15, 2024',
-      weight: 5,
-      isSelected: true
-    },
-    {
-      id: '3',
-      packageId: 'ORD-1002',
-      from: 'Beijing, China',
-      to: 'Dhaka, BD',
-      receivedDate: 'Dec 16, 2024',
-      weight: 2.5,
+      weight: 10,
       isSelected: false
     },
     {
-      id: '4',
-      packageId: 'ORD-1003',
-      from: 'London, UK',
-      to: 'NY, USA',
-      receivedDate: 'Dec 17, 2024',
-      weight: 1.5,
+      id: '3',
+      packageId: 'ORD-1001',
+      from: 'Shanghai, China',
+      to: 'Sydney, Australia',
+      receivedDate: 'Dec 15, 2024',
+      weight: 5,
       isSelected: false
     },
   ]);
@@ -99,159 +90,151 @@ const Consolidate = () => {
     currentPage * itemsPerPage
   );
 
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  };
+
   return (
-    <div className="min-h-screen bg-[#F3F4F6] font-sans text-gray-800 p-6 md:p-10 relative pb-40">
+    <div className="min-h-screen bg-[#F9FAFB] font-sans text-gray-800 pb-20 relative">
       <Helmet>
-        <title>Consolidations | EXPRESUR</title>
+        <title>Consolidation | EXPRESUR</title>
       </Helmet>
 
-      {/* NOTE: <Toaster /> removed to use the global one in App/Layout */}
-
-      {/* --- Header --- */}
-      <div className="mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      {/* --- MOBILE HEADER (Matches other pages) --- */}
+      <div className="xl:hidden bg-white p-4 sticky top-0 z-20 shadow-sm flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Consolidation</h1>
-          <p className="text-gray-500 mt-2 text-sm">Manage consolidations</p>
+           <h1 className="text-xl font-bold text-[#F97316] ml-14">EXPRESUR</h1>
         </div>
-
-        <div className="flex items-center gap-6 mt-6 md:mt-0">
-          {/* Notification Bell with Link */}
-          <Link to="/dashboard/notifications">
-            <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
-              <Bell size={20} className="text-gray-600" />
-              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-            </button>
-          </Link>
-
-          <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
-              <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
-            </div>
-          </div>
+        <div className="flex items-center gap-3">
+             <Link to="/dashboard/notifications" className="relative p-2 bg-gray-50 rounded-full">
+                <Bell size={20} className="text-gray-500" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 border border-white rounded-full"></span>
+             </Link>
+             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-8 h-8 rounded-full border border-green-100" />
         </div>
       </div>
 
-      <div className=" mx-auto space-y-6">
+      <div className="px-4 md:px-10 space-y-6 md:space-y-8">
+        
+        {/* --- DESKTOP Header --- */}
+        <div className="hidden xl:flex justify-between items-center mb-10 pt-10">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Consolidation</h1>
+            <p className="text-gray-500 mt-2 text-sm">Manage consolidations</p>
+          </div>
 
+          <div className="flex items-center gap-6">
+            <Link to="/dashboard/notifications">
+              <button className="relative p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-50 border border-gray-100 transition">
+                <Bell size={20} className="text-gray-600" />
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+              </button>
+            </Link>
 
-        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 min-h-[500px] relative">
-          <h3 className="text-2xl font-bold text-gray-800">Request Consolidation</h3>
-          <p className="text-gray-500 mt-2 mb-8 text-sm">Select packages to consolidate into a single shipment</p>
+            <div className="flex items-center gap-3 bg-white pl-2 pr-6 py-2 rounded-full border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition">
+              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden border border-green-200">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyrion" alt="User" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-gray-900 leading-none">Tyrion Lannister</h4>
+                <span className="text-xs text-gray-400 mt-1 block">tyrion@example.com</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        {/* --- Mobile Title --- */}
+        <div className="xl:hidden">
+            <h1 className="text-2xl font-bold text-gray-900">Consolidation</h1>
+            <p className="text-gray-500 text-sm">Manage consolidations</p>
+        </div>
 
+        {/* --- Consolidation Request Section --- */}
+        <div className="bg-white rounded-[24px] md:rounded-[32px] p-5 md:p-8 shadow-sm border border-gray-100 min-h-[500px]">
+          
+          <h3 className="text-xl font-medium text-gray-700 mb-1">Request Consolidation</h3>
+          <p className="text-gray-400 text-sm mb-6 md:mb-8">Select packages to consolidate into a single shipment</p>
+
+          {/* Package List */}
           <div className="space-y-4">
             {currentData.map((pkg) => (
               <div
                 key={pkg.id}
-                className={`flex justify-between items-start p-5 rounded-xl border transition-all cursor-pointer ${pkg.isSelected ? 'bg-gray-50 border-gray-200' : 'bg-[#F9FAFB] border-transparent hover:border-gray-200'
-                  }`}
                 onClick={() => toggleSelection(pkg.id)}
+                className={`relative p-5 md:p-6 rounded-[20px] transition-all cursor-pointer border ${
+                  pkg.isSelected ? 'bg-gray-50 border-gray-200' : 'bg-[#F9FAFB] border-transparent hover:border-gray-100'
+                }`}
               >
                 <div className="flex items-start gap-4">
-
-                  <div className={`mt-1 w-5 h-5 rounded-[4px] border flex items-center justify-center transition-colors ${pkg.isSelected ? 'bg-[#005f33] border-[#005f33]' : 'border-gray-300 bg-transparent'
-                    }`}>
-                    {pkg.isSelected && <Check size={14} className="text-white" strokeWidth={3} />}
+                  {/* Checkbox */}
+                  <div className={`mt-1 w-6 h-6 rounded-md border flex items-center justify-center transition-colors flex-shrink-0 ${
+                    pkg.isSelected ? 'bg-[#005f33] border-[#005f33]' : 'border-gray-300 bg-white'
+                  }`}>
+                    {pkg.isSelected && <Check size={16} className="text-white" strokeWidth={3} />}
                   </div>
 
-
-                  <div>
-                    <h4 className="text-base font-bold text-gray-700 mb-2">{pkg.packageId}</h4>
-                    <div className="text-sm text-gray-500 space-y-1">
-                      <p><span className="font-medium text-gray-600">From:</span> {pkg.from}</p>
-                      <p><span className="font-medium text-gray-600">To:</span> {pkg.to}</p>
-                      <p><span className="font-medium text-gray-600">Received:</span> {pkg.receivedDate}</p>
+                  {/* Content */}
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start mb-2">
+                       <h4 className="text-lg font-medium text-gray-700">{pkg.packageId}</h4>
+                       <span className="text-base font-medium text-gray-600">{pkg.weight} kg</span>
+                    </div>
+                    
+                    <div className="text-sm text-gray-400 space-y-1">
+                      <p><span className="font-medium text-gray-500">From:</span> {pkg.from}</p>
+                      <p><span className="font-medium text-gray-500">To:</span> {pkg.to}</p>
+                      <p><span className="font-medium text-gray-500">Received:</span> {pkg.receivedDate}</p>
                     </div>
                   </div>
-                </div>
-
-
-                <div className="text-sm font-bold text-gray-800 mt-1">
-                  {pkg.weight} kg
                 </div>
               </div>
             ))}
           </div>
 
-
-          <div className="flex justify-end items-center gap-6 mt-10 text-sm font-medium select-none mb-4">
+          {/* Pagination */}
+          <div className="flex justify-end items-center gap-6 mt-8 md:mt-10">
             <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className={`transition ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`text-sm transition ${currentPage === 1 ? 'text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
             >
               Previous
             </button>
             <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              onClick={handleNextPage}
               disabled={currentPage === totalPages || totalPages === 0}
-              className={`flex items-center gap-1 transition ${currentPage === totalPages || totalPages === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-[#005f33] hover:text-[#004d2a]'}`}
+              className={`text-sm flex items-center gap-2 transition font-medium ${currentPage === totalPages || totalPages === 0 ? 'text-gray-300' : 'text-[#005f33]'}`}
             >
-              Next <ArrowRight size={16} strokeWidth={2} />
+              Next <ArrowRight size={16} />
             </button>
           </div>
         </div>
 
-
-
-        {/* --- Summary Footer Section --- */}
-        {/* <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-           <div className="flex justify-between items-end mb-6">
-             
-              <div>
-                <p className="text-[#005f33] font-bold text-sm mb-1">Selected Packages</p>
-         
-                <p className="text-3xl font-bold text-gray-900">{summary.count}</p>
-              </div>
-
-   
-              <div className="text-right">
-                <p className="text-[#005f33] font-bold text-sm mb-1">Total Weight</p>
-        
-                <p className="text-3xl font-bold text-[#005f33]">{summary.weight} <span className="text-xl">kg</span></p>
-              </div>
-           </div>
-
-
-           <button 
-              onClick={handleCreateShipment}
-              className="w-full bg-[#005f33] hover:bg-[#004d2a] text-white py-4 rounded-xl font-bold text-sm transition-all shadow-md active:scale-[0.99]"
-           >
-              Create shipment
-           </button>
-        </div> */}
-
-
-        {/* --- Selected Packages Summary Card --- */}
-        <div className="bg-[#F9FAFB] rounded-[2.5rem] p-8 border border-gray-100 shadow-sm">
-          <div className="flex justify-between items-start mb-12">
-            {/* Left Side: Count */}
+        {/* --- Summary Footer Card --- */}
+        {/* Only show if items are selected (Optional UX choice, currently always showing per request structure) */}
+        <div className="bg-[#F9FAFB] rounded-[24px] md:rounded-[32px] p-6 md:p-8 border border-gray-100 shadow-sm mb-10">
+          <div className="flex justify-between items-start mb-8">
             <div>
-              <p className="text-[#005f33] font-medium text-xl mb-4">Selected Packages</p>
-              {/* Matched to large 5xl size in image */}
-              <p className="text-5xl font-semibold text-[#005f33] leading-none">
+              <p className="text-[#005f33] font-medium text-sm md:text-lg mb-2">Selected Packages</p>
+              <p className="text-3xl md:text-5xl font-semibold text-[#005f33]">
                 {summary.count}
               </p>
             </div>
-
-            {/* Right Side: Weight */}
             <div className="text-right">
-              <p className="text-[#005f33] font-medium text-xl mb-4">Total Weight</p>
-              {/* Matched to large 5xl size in image */}
-              <p className="text-5xl font-semibold text-[#005f33] leading-none">
-                {summary.weight} <span className="text-4xl ml-1">kg</span>
+              <p className="text-[#005f33] font-medium text-sm md:text-lg mb-2">Total Weight</p>
+              <p className="text-3xl md:text-5xl font-semibold text-[#005f33]">
+                {summary.weight} <span className="text-xl md:text-3xl">kg</span>
               </p>
             </div>
           </div>
 
-          {/* Full Width Button - Matched to image rounded corners and dark green */}
           <button
             onClick={handleCreateShipment}
-            className="w-full bg-[#005f33] hover:bg-[#004d2a] text-white py-3 rounded-2xl font-medium text-lg transition-all active:scale-[0.98] shadow-sm"
+            className="w-full bg-[#005f33] hover:bg-[#004d2a] text-white py-3.5 rounded-xl font-medium text-base transition-all active:scale-[0.98] shadow-sm"
           >
             Create shipment
           </button>
