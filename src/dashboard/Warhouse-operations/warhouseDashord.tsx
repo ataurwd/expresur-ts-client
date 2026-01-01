@@ -17,12 +17,12 @@ const WarehouseDashboard = () => {
   };
 
   const menuItems: MenuItem[] = [
-    { label: "Intake / Receiving", path: "/waehouse/intake" },
-    { label: "Scanning Center", path: "/waehouse/ScanningCenter" },
-    { label: "In-Warehouse Packages", path: "/waehouse/inwarehousepackages" },
-    { label: "Pending Review", path: "/waehouse/pendingreview" },
-    { label: "Ready for Consolidation", path: "/waehouse/readyforconsolidation" },
-    { label: "Ready for Shipment", path: "/waehouse/readyforshipment" }
+    { label: "Intake / Receiving", path: "/warehouse/intake" },
+    { label: "Scanning Center", path: "/warehouse/ScanningCenter" },
+    { label: "In-Warehouse Packages", path: "/warehouse/inwarehousepackages" },
+    { label: "Pending Review", path: "/warehouse/pendingreview" },
+    { label: "Ready for Consolidation", path: "/warehouse/readyforconsolidation" },
+    { label: "Ready for Shipment", path: "/warehouse/readyforshipment" }
   ];
 
   // ২. এখানে (item: MenuItem) বলে দেওয়া হয়েছে
