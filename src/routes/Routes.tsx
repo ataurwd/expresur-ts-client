@@ -258,7 +258,7 @@ const Routes = createBrowserRouter([
     ],
   },
 {
-    path: "waehouse",
+    path: "warehouse",
     element: <Waehouse />, // এই কম্পোনেন্টের ভেতরেই ড্যাশবোর্ড থাকবে
     children: [
        {
@@ -293,8 +293,8 @@ const Routes = createBrowserRouter([
 },
   {
     // Accept capitalized URL and redirect to the lowercase route
-    path: "Waehouse",
-    element: <Navigate to="/waehouse/intake" replace />,
+    path: "warehouse ",
+    element: <Navigate to="/warehouse /intake" replace />,
   },
  
 ]);
