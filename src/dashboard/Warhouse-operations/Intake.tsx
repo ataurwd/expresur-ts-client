@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { QrCode, CheckCircle2, Info, Search, CheckSquare } from 'lucide-react';
 
 // 1. Define an Interface for the History Item props
@@ -13,6 +14,9 @@ interface HistoryItemProps {
 const Intake: React.FC = () => {
   return (
     <div className="w-full bg-[#f6f6f6] min-h-screen p-4">
+      <Helmet>
+        <title>Intake / Receiving — Warehouse</title>
+      </Helmet>
       <div className="">
       {/* Page Title Section */}
       <div className="mb-8">

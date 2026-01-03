@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useNavigate, Link } from 'react-router-dom';
 import { Settings, ChevronDown } from 'lucide-react';
 
@@ -33,6 +34,9 @@ const WarehouseDashboard = () => {
 
   return (
     <div className="w-full bg-[#f6f6f6] p-4">
+      <Helmet>
+        <title>Warehouse Operations — Dashboard</title>
+      </Helmet>
       {/* SECTION 1: THE GREEN PART */}
       <header className="bg-[#005e2b] rounded-[10px] px-6 py-4 flex justify-between items-center shadow-sm">
         <div className="flex items-center">

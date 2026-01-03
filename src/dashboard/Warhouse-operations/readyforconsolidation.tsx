@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { ArrowRight, X, Check, RotateCcw, Box,  } from 'lucide-react';
 
 const ReadyForConsolidation = () => {
@@ -13,6 +14,9 @@ const ReadyForConsolidation = () => {
 
     return (
         <div className="w-full bg-[#f6f6f6] min-h-screen font-sans pb-10">
+            <Helmet>
+                <title>Ready for Consolidation — Warehouse</title>
+            </Helmet>
             {/* Page Title Section - Aligned with your red line margin */}
             <div className="px-6 py-8">
                 <div className="mb-8 bg-transparent">

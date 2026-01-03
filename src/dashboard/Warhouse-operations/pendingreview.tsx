@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { ArrowRight, AlertCircle, Clock, XCircle, RotateCcw, UserMinus } from 'lucide-react';
 
 const PendingReview: React.FC = () => {
@@ -15,6 +16,9 @@ const PendingReview: React.FC = () => {
 
   return (
     <div className="relative w-full bg-[#f6f6f6] min-h-screen font-sans pb-10">
+      <Helmet>
+        <title>Pending Review — Warehouse</title>
+      </Helmet>
       
       <div className="px-6 py-8">
         {/* Page Title Section */}

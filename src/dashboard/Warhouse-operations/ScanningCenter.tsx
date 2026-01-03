@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { Package, ShoppingBag, Database, QrCode, Truck, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
 // Define the interface for the StatusButton props
@@ -23,6 +24,9 @@ const ScanningCenter: React.FC = () => {
 
     return (
         <div className="w-full min-h-screen p-8 font-sans">
+            <Helmet>
+                <title>Scanning Center — Warehouse</title>
+            </Helmet>
             {/* Page Title Section */}
             <div className="mb-8">
                 <h1 className="text-[28px] font-bold text-[#333] tracking-tight">Scanning Center</h1>

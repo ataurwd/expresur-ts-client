@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { ChevronDown, Calendar, ArrowRight } from 'lucide-react';
 
 const Inwarehousepackages: React.FC = () => {
@@ -15,6 +16,9 @@ const Inwarehousepackages: React.FC = () => {
 
   return (
     <div className="relative w-full bg-[#f6f6f6] min-h-screen font-sans">
+      <Helmet>
+        <title>In-Warehouse Packages — Warehouse</title>
+      </Helmet>
       <div className="px-6 py-10">
         
         {/* Page Title Section */}
