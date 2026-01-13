@@ -167,13 +167,126 @@
 
 
 
+// import React from 'react';
+
+// // Import your images here
+// import boxHero from '../../assets/imges2/Grupo 1648.png';
+// import step01Img from '../../assets/imges2/Group 3.png';
+// import step02Img from '../../assets/imges2/Gemini_Generated_Image_t769rgt769rgt769-removebg-preview 1.png';
+// import step03Img from '../../assets/imges2/Grupo 1648.png';
+// import aliExpressLogo from '../../assets/imges2/64px-Aliexpress_logo.svg.png';
+// import amazonLogo from '../../assets/imges2/64px-Amazon_logo.svg.png';
+// import bestbuyLogo from '../../assets/imges2/64px-Best_Buy_Logo.svg 1.png';
+// import ebayLogo from '../../assets/imges2/64px-EBay_logo.svg.png';
+// import sheinLogo from '../../assets/imges2/64px-Shein_Logo_2017.svg.png';
+// import walmartLogo from '../../assets/imges2/64px-Walmart_logo_(2025).svg.png';
+
+// const FullCasilleroPage = () => {
+//   return (
+//     <div className="w-full bg-white min-h-screen font-sans">
+      
+//       {/* ====================== HEADER BANNER SECTION ====================== */}
+//       <div 
+//         className="w-full h-[350px] md:h-[500px] flex items-center justify-between px-6 md:px-20 relative overflow-hidden"
+//         style={{
+//           background: 'linear-gradient(90deg, #0b5b39 0%, #207e55 40%, #f7941d 100%)',
+//         }}
+//       >
+//         <div className="z-10">
+//           <h1 className="text-white text-5xl md:text-8xl font-bold leading-tight tracking-tighter">
+//             Mi Dirección <br /> USA
+//           </h1>
+//         </div>
+
+//         <div className="absolute right-0 bottom-0 md:relative md:w-1/2 flex justify-end items-end h-full">
+//           <img 
+//             src={boxHero} 
+//             alt="Hero Illustration" 
+//             className="w-[250px] md:w-[600px] object-contain transform translate-y-10 md:translate-y-20 translate-x-10"
+//           />
+//         </div>
+//       </div>
+
+//       {/* ====================== GREEN INFO SECTION ====================== */}
+//       <div className="max-w-7xl mx-auto px-4 py-16">
+//         <div className="bg-[#005c35] rounded-[40px] md:rounded-[60px] p-8 md:p-16 text-center text-white shadow-xl">
+          
+//           {/* Top Description (Can be replaced with an <img>) */}
+//           <div className="max-w-4xl mx-auto mb-10">
+//             <p className="text-sm md:text-base leading-relaxed opacity-90">
+//               rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed 
+//               diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi 
+//               enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea 
+//               commodo consequat.
+//             </p>
+//           </div>
+
+//           {/* Call to Action Button */}
+//           <button className="bg-[#f59a23] hover:bg-orange-600 text-white font-bold py-3 px-10 rounded-xl transition-all mb-20 uppercase text-xs tracking-widest shadow-lg">
+//             Get Your US Address
+//           </button>
+
+//           {/* Steps Grid */}
+//           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-4 mb-20">
+            
+//             {/* Step 01 */}
+//             <div className="flex flex-col items-center">
+//               <div className="h-48 md:h-64 flex items-center justify-center mb-6">
+//                 <img src={step01Img} alt="Step 01" className="max-h-full object-contain" />
+//               </div>
+//               <h3 className="text-[#f59a23] text-xl font-black mb-2 uppercase">Step 01</h3>
+//               <p className="text-sm px-4 opacity-90">Shop at any store in the United States.</p>
+//               {/* If using image for sentence: <img src={step01Desc} className="h-6" /> */}
+//             </div>
+
+//             {/* Step 02 */}
+//             <div className="flex flex-col items-center">
+//               <div className="h-48 md:h-64 flex items-center justify-center mb-6">
+//                 <img src={step02Img} alt="Step 02" className="max-h-full object-contain" />
+//               </div>
+//               <h3 className="text-[#f59a23] text-xl font-black mb-2 uppercase">Step 02</h3>
+//               <p className="text-sm px-4 opacity-90">Use your EXPRESUR address at checkout.</p>
+//             </div>
+
+//             {/* Step 03 */}
+//             <div className="flex flex-col items-center">
+//               <div className="h-48 md:h-64 flex items-center justify-center mb-6">
+//                 <img src={step03Img} alt="Step 03" className="max-h-full object-contain" />
+//               </div>
+//               <h3 className="text-[#f59a23] text-xl font-black mb-2 uppercase">Step 03</h3>
+//               <p className="text-sm px-4 opacity-90">We receive and register your packages at our warehouse.</p>
+//             </div>
+
+//           </div>
+
+//           {/* Logo Strip Container */}
+//           <div className="bg-white rounded-2xl py-6 md:py-8 px-6 flex items-center justify-center">
+//             <div className="w-full max-w-5xl flex items-center justify-between gap-4 flex-wrap">
+//               <img src={ebayLogo} alt="ebay" className="h-8 md:h-10 object-contain" />
+//               <img src={aliExpressLogo} alt="aliexpress" className="h-8 md:h-10 object-contain" />
+//               <img src={amazonLogo} alt="amazon" className="h-8 md:h-10 object-contain" />
+//               <img src={walmartLogo} alt="walmart" className="h-8 md:h-10 object-contain" />
+//               <img src={sheinLogo} alt="shein" className="h-8 md:h-10 object-contain" />
+//               <img src={bestbuyLogo} alt="bestbuy" className="h-8 md:h-10 object-contain" />
+//             </div>
+//           </div>
+
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default FullCasilleroPage;
+
+
 import React from 'react';
 
-// Import your images here
+// Your provided imports
 import boxHero from '../../assets/imges2/Grupo 1648.png';
 import step01Img from '../../assets/imges2/Group 3.png';
 import step02Img from '../../assets/imges2/Gemini_Generated_Image_t769rgt769rgt769-removebg-preview 1.png';
-import step03Img from '../../assets/imges2/Grupo 1648.png';
+import step03Img from '../../assets/imges2/Grupo 1648.png'; // Using the box image for Step 03 as per your import
 import aliExpressLogo from '../../assets/imges2/64px-Aliexpress_logo.svg.png';
 import amazonLogo from '../../assets/imges2/64px-Amazon_logo.svg.png';
 import bestbuyLogo from '../../assets/imges2/64px-Best_Buy_Logo.svg 1.png';
@@ -181,99 +294,113 @@ import ebayLogo from '../../assets/imges2/64px-EBay_logo.svg.png';
 import sheinLogo from '../../assets/imges2/64px-Shein_Logo_2017.svg.png';
 import walmartLogo from '../../assets/imges2/64px-Walmart_logo_(2025).svg.png';
 
-// If you are using images for the sentences as well:
-// import step01Desc from '../../assets/step01_desc.png'; 
-// import step02Desc from '../../assets/step02_desc.png';
-// import step03Desc from '../../assets/step03_desc.png';
-
 const FullCasilleroPage = () => {
   return (
-    <div className="w-full bg-white min-h-screen font-sans">
+    <div className="w-full bg-white min-h-screen font-sans overflow-x-hidden">
       
       {/* ====================== HEADER BANNER SECTION ====================== */}
       <div 
-        className="w-full h-[350px] md:h-[500px] flex items-center justify-between px-6 md:px-20 relative overflow-hidden"
+        className="w-full h-[400px] md:h-[550px] flex items-center justify-between px-6 md:px-24 relative"
         style={{
-          background: 'linear-gradient(90deg, #0b5b39 0%, #207e55 40%, #f7941d 100%)',
+          background: 'linear-gradient(90deg, #0b5b39 0%, #207e55 45%, #f7941d 100%)',
         }}
       >
-        <div className="z-10">
-          <h1 className="text-white text-5xl md:text-8xl font-bold leading-tight tracking-tighter">
+        <div className="z-10 mt-[-40px]">
+          <h1 className="text-white text-6xl md:text-8xl font-bold leading-[0.9] tracking-tighter">
             Mi Dirección <br /> USA
           </h1>
         </div>
 
-        <div className="absolute right-0 bottom-0 md:relative md:w-1/2 flex justify-end items-end h-full">
+        {/* Hero Illustration with slight bottom-right bleed to match image */}
+        <div className="absolute right-0 bottom-[-20px] md:right-10 md:bottom-[-40px] z-20">
           <img 
             src={boxHero} 
             alt="Hero Illustration" 
-            className="w-[250px] md:w-[600px] object-contain transform translate-y-10 md:translate-y-20 translate-x-10"
+            className="w-[300px] md:w-[650px] object-contain drop-shadow-2xl"
           />
         </div>
       </div>
 
+      {/* ====================== SPACER WITH DOT PATTERN ====================== */}
+      {/* This mimics the small black dots seen in the transition of your image */}
+      <div className="w-full h-16 relative bg-white">
+          <div className="absolute right-1/4 top-0 opacity-20">
+              <div className="grid grid-cols-4 gap-1">
+                  {[...Array(12)].map((_, i) => <div key={i} className="w-1 h-1 bg-black rounded-full"></div>)}
+              </div>
+          </div>
+      </div>
+
       {/* ====================== GREEN INFO SECTION ====================== */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="bg-[#005c35] rounded-[40px] md:rounded-[60px] p-8 md:p-16 text-center text-white shadow-xl">
+      <div className="max-w-7xl mx-auto px-4 pb-20">
+        <div className="bg-[#005c35] rounded-[40px] md:rounded-[50px] p-10 md:p-20 text-center text-white shadow-2xl relative">
           
-          {/* Top Description (Can be replaced with an <img>) */}
-          <div className="max-w-4xl mx-auto mb-10">
-            <p className="text-sm md:text-base leading-relaxed opacity-90">
+          {/* Top Text Description */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <p className="text-sm md:text-[17px] leading-relaxed font-light">
               rápidos, económicos y seguros Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed 
               diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi 
               enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea 
-              commodo consequat.
+              commodo consequat.
             </p>
           </div>
 
-          {/* Call to Action Button */}
-          <button className="bg-[#f59a23] hover:bg-orange-600 text-white font-bold py-3 px-10 rounded-xl transition-all mb-20 uppercase text-xs tracking-widest shadow-lg">
-            Get Your US Address
-          </button>
+          {/* Orange Call to Action Button */}
+          <div className="flex justify-center mb-24">
+            <button className="bg-[#f7941d] hover:bg-orange-500 text-white font-bold py-3.5 px-12 rounded-xl transition-all uppercase text-[13px] tracking-widest shadow-lg">
+              Get Your US Address
+            </button>
+          </div>
 
           {/* Steps Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-4 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 mb-24">
             
             {/* Step 01 */}
             <div className="flex flex-col items-center">
-              <div className="h-48 md:h-64 flex items-center justify-center mb-6">
+              <div className="h-44 md:h-52 flex items-center justify-center mb-8">
                 <img src={step01Img} alt="Step 01" className="max-h-full object-contain" />
               </div>
-              <h3 className="text-[#f59a23] text-xl font-black mb-2 uppercase">Step 01</h3>
-              <p className="text-sm px-4 opacity-90">Shop at any store in the United States.</p>
-              {/* If using image for sentence: <img src={step01Desc} className="h-6" /> */}
+              <h3 className="text-[#f7941d] text-2xl font-black mb-3">Step 01</h3>
+              <p className="text-[15px] px-8 leading-snug font-medium">Shop at any store in the United States.</p>
             </div>
 
             {/* Step 02 */}
             <div className="flex flex-col items-center">
-              <div className="h-48 md:h-64 flex items-center justify-center mb-6">
+              <div className="h-44 md:h-52 flex items-center justify-center mb-8">
                 <img src={step02Img} alt="Step 02" className="max-h-full object-contain" />
               </div>
-              <h3 className="text-[#f59a23] text-xl font-black mb-2 uppercase">Step 02</h3>
-              <p className="text-sm px-4 opacity-90">Use your EXPRESUR address at checkout.</p>
+              <h3 className="text-[#f7941d] text-2xl font-black mb-3">Step 02</h3>
+              <p className="text-[15px] px-8 leading-snug font-medium">Use your EXPRESUR address at checkout.</p>
             </div>
 
             {/* Step 03 */}
             <div className="flex flex-col items-center">
-              <div className="h-48 md:h-64 flex items-center justify-center mb-6">
+              <div className="h-44 md:h-52 flex items-center justify-center mb-8">
                 <img src={step03Img} alt="Step 03" className="max-h-full object-contain" />
               </div>
-              <h3 className="text-[#f59a23] text-xl font-black mb-2 uppercase">Step 03</h3>
-              <p className="text-sm px-4 opacity-90">We receive and register your packages at our warehouse.</p>
+              <h3 className="text-[#f7941d] text-2xl font-black mb-3">Step 03</h3>
+              <p className="text-[15px] px-8 leading-snug font-medium">We receive and register your packages at our warehouse.</p>
             </div>
 
           </div>
 
-          {/* Logo Strip Container */}
-          <div className="bg-white rounded-2xl py-6 md:py-8 px-6 flex items-center justify-center">
-            <div className="w-full max-w-5xl flex items-center justify-between gap-4 flex-wrap">
-              <img src={ebayLogo} alt="ebay" className="h-8 md:h-10 object-contain" />
-              <img src={aliExpressLogo} alt="aliexpress" className="h-8 md:h-10 object-contain" />
-              <img src={amazonLogo} alt="amazon" className="h-8 md:h-10 object-contain" />
-              <img src={walmartLogo} alt="walmart" className="h-8 md:h-10 object-contain" />
-              <img src={sheinLogo} alt="shein" className="h-8 md:h-10 object-contain" />
-              <img src={bestbuyLogo} alt="bestbuy" className="h-8 md:h-10 object-contain" />
+          {/* White Logo Strip Container */}
+          <div className="bg-white rounded-2xl py-8 px-10 shadow-inner flex items-center justify-center">
+            <div className="w-full max-w-5xl flex items-center justify-between gap-6 flex-wrap md:flex-nowrap">
+              <img src={ebayLogo} alt="ebay" className="h-7 md:h-10 w-auto object-contain" />
+              <img src={aliExpressLogo} alt="aliexpress" className="h-7 md:h-9 w-auto object-contain" />
+              <img src={amazonLogo} alt="amazon" className="h-7 md:h-11 w-auto object-contain" />
+              <img src={walmartLogo} alt="walmart" className="h-7 md:h-10 w-auto object-contain" />
+              <img src={sheinLogo} alt="shein" className="h-7 md:h-8 w-auto object-contain" />
+              <img src={bestbuyLogo} alt="bestbuy" className="h-8 md:h-12 w-auto object-contain" />
             </div>
+          </div>
+
+          {/* Bottom Dot Pattern (matches image design) */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-20">
+              <div className="grid grid-cols-6 gap-1">
+                  {[...Array(18)].map((_, i) => <div key={i} className="w-1.5 h-1.5 bg-black rounded-full"></div>)}
+              </div>
           </div>
 
         </div>
