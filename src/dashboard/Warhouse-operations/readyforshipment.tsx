@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { ArrowRight, X, Check, Box, Truck, Package, Layers } from 'lucide-react';
 
 const ReadyForShipment = () => {
@@ -13,6 +14,9 @@ const ReadyForShipment = () => {
 
     return (
         <div className="w-full bg-[#f6f6f6] min-h-screen font-sans pb-10">
+            <Helmet>
+                <title>Ready for Shipment — Warehouse</title>
+            </Helmet>
             {/* Page Title Section - Aligned to your red line margin */}
             <div className="px-6 py-8">
                 <div className="mb-8">
