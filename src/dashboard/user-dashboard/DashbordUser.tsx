@@ -201,7 +201,7 @@ const DashboardUser = () => {
               <h3 className="text-lg md:text-[20px] font-bold text-gray-700 mb-4 md:mb-6">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
                 {[
-                  { title: "Add Tracking", desc: "Add more packages", icon: <Box size={22} />, action: () => setIsModalOpen(true) },
+                  { title: "Add Tracking", desc: "Add more packages", icon: <Box size={22}  />, action: () => {} },
                   { title: "Consolidate", desc: "Create Consolidates", icon: <Layers size={22} />, action: () => {} },
                   { title: "Create Shipment", desc: "Add more shipment", icon: <Truck size={22} />, action: () => {} }
                 ].map((item, idx) => (

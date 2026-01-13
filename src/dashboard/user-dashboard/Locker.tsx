@@ -222,7 +222,7 @@ const Locker: React.FC = () => {
           </div>
         </div>
 
-        {/* --- Add Tracking Input --- */}
+        {/* --- Add Tracking Input ---
         <div className="bg-[#F9FAFB] rounded-2xl p-2 border border-gray-100 shadow-sm flex flex-col md:flex-row items-stretch md:items-center gap-2 mt-8">
           <input
             type="text"
@@ -243,7 +243,7 @@ const Locker: React.FC = () => {
           >
             Add Tracking
           </button>
-        </div>
+        </div> */}
 
         {/* --- Packages Section --- */}
         <div className="bg-white rounded-[24px] md:rounded-3xl p-5 md:p-8 shadow-sm border border-gray-100 min-h-[500px] flex flex-col">
